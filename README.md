@@ -31,3 +31,19 @@ test = NameAll()
 test.run()
 ```
 
+# Class DrawPig
+
+This code is modified from a blog(https://www.cnblogs.com/nowgood/p/turtle.html#_nav_11, [@](https://www.cnblogs.com/nowgood/p/turtle.html#4084602) 江城青椒肉丝), I just change the code into a moduled one, it would be more easy-reading and understanding.
+
+It is used for drawing a cut pig, you should use it with the following code:
+
+```python
+from mytools imort DrawPig
+pig = DrawPig()
+pig.cutePig()
+```
+
+Finally, you can get a cute pig as it shows below:
+
+![pig](figures/pig.png)
+
