@@ -7,6 +7,9 @@ https://blog.csdn.net/Tona_ZM/article/details/79463284
 
 # class TurtlePlay
 ## User Guide
+
+### Draw Squares
+
 It is easy to use TurtlePlay, for example:
 ```python
 from mytools imort TurtlePlay
@@ -15,9 +18,25 @@ play.test()
 ```
 After running the above code, you will see an animation.
 
-Finally,  we will get a figure as the following shows:
+Finally,  we will get a figure as the following one shows:
 
 ![test](figures/test.png)
+
+### Draw Polygons
+
+It is easy to use TurtlePlay, for example:
+
+```python
+from mytools imort TurtlePlay
+play = TurtlePlay()
+play.testPolygon()
+```
+
+After running the above code, you will see polygons are drawn one after another.
+
+Finally,  we will get a figure as the following one shows. (Note that there is a polygon for each unit)
+
+![polygon5](/Users/huangdeping/c/02_python/44_mytools/figures/polygon5.png)
 
 # Class NameAll
 
