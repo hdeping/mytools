@@ -20,4 +20,5 @@ from .NameAll import NameAll
 from .DrawPig import DrawPig
 from .MyCommon import MyCommon
 from .Excel import Excel
+from .Triangle import Triangle
 
