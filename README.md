@@ -1,11 +1,109 @@
+[TOC]
+
 # Introduction to mytools module
+
 my own tools for gui, math calculations and so on. If you have a linux or Macos environment, you should move the mytools
 directory to a directory within PYTHONPATH(you can edit it in a .bashrc
 or .zshrc file). If you have a windows environment, you can edit PYTHONPATH
 following the guide as it shows in the link: 
 https://blog.csdn.net/Tona_ZM/article/details/79463284
 
+# class MyCommon
+
+## Introduction
+
+It is a collection of some common used functions, I pack them into a class called MyCommon. Some functions such as setDirs, loadJson, writeJson are highly-frequent used,  someone can inheritate this class if someone want to use the functions.
+
+A simple example was displayed below:
+
+```python
+from mytools import MyCommon
+test = MyCommon()
+filename = "test.txt"
+data = test.loadJson(filename)
+```
+
+## Methods
+
+Latestly, there are 7 kinds of methods in the class. They are introduced in the following contexts.
+
+### setDirs
+
+Input: a relative or absolute path,  string type
+
+Return: None, but self.dirs is changed
+
+The parameter self.dirs would be reset in the function
+
+### setFilename
+
+Input: a file name, string type
+
+Return: None, but self.filename is changed
+
+The parameter self.filename would be reset by the full path in the function.
+
+### setFileDirs
+
+Input: a full path of the file name, string type
+
+Return: None, but self.filename is changed
+
+The parameter self.filename would be reset by the full path in the function.
+
+### getCommon
+
+Input: Two dicts with dicts type
+
+Return: a dictionary with dicts type
+
+A dictionary with common keys as keys and  the value-differences as values was returned in the function. For example:
+
+```python
+A = {"a":10,"b":20}
+B = {"a":20,"c":10}
+C = self.getCommon(A,B)
+# C would be {"a":10}
+```
+
+
+
+### writeJson
+
+Input: data with dicts type, and a filename with string type
+
+Return: None, but data was written into a file with json type	
+
+### loadJson
+
+Input: a filename with string type
+
+Return: data with dicts type
+
+### writeCSV
+
+Input: data with array type, and a filename with string type
+
+Return: None, but data was written into a  file with csv format
+
+# class Excel
+
+## Introdution
+
+This class was based on the python module xlrd and xlwt. It is used for manipulate the excel files. Usually, wps or office excel could be very slow,  if the xls file is a little bit large(such as 100M Bytes).  Furthermore, when we want do a little bit advanced operations to our data, . This class would make our operations much more quick, even we do not have a good PC comfiguration.
+
+A simple example was displayed below:
+
+```python
+from Excel import Excel
+excel = Excel()
+excel.writeDictsXlsx()
+```
+
+
+
 # class TurtlePlay
+
 ## User Guide
 
 ### Draw Squares
