@@ -95,10 +95,28 @@ This class was based on the python module xlrd and xlwt. It is used for manipula
 A simple example was displayed below:
 
 ```python
-from Excel import Excel
+from mytools import Excel
 excel = Excel()
 excel.writeDictsXlsx()
 ```
+
+# class Triangle 
+
+## Introduction
+
+It is a set of functions for triangle computations. In this module , you can get the radius and the center coordinate of the inscribed, escribed as well as circumscribed circles of a triangle when the coordinates of the vertices were given. Furthermore, you can get the line equations of the middle lines, orthogonal lines, middle orthogonal lines or bisection lines. There are 44 methods in this module.
+
+A simple example was displayed below:
+
+```python
+from mytools import Triangle
+triangle = Triangle()
+triangle.run()
+```
+
+After running the above code, an image like this would be generated:
+
+![triangle](figures/triangle.png)
 
 
 
