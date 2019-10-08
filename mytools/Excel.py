@@ -37,6 +37,8 @@ class Excel(MyCommon):
         print(self.filename + " opened")
         self.total_data = xlrd.open_workbook(self.filename)
 
+        return
+
     def init(self,filename):
         self.setFilename(filename)
         self.loadData()
@@ -65,6 +67,8 @@ class Excel(MyCommon):
         self.Sheet1 = Sheet1
         self.Sheet2 = Sheet2
         self.Sheet3 = Sheet3
+
+        return
     def getMatch(self):
         dict1 = self.getFeeDicts(self.Sheet1, 3, -2)
         dict2 = self.getFeeDicts(self.Sheet2, 2, -3)
@@ -89,6 +93,7 @@ class Excel(MyCommon):
             key = key.replace("\t","")
             res[key] = value
         self.writeJson(res, "new_%s" % (filename))
+        return
     def writeCommon(self, dict1, dict2, filename):
         res = self.getCommon(dict1, dict2)
         self.writeJson(res, filename)
@@ -142,6 +147,7 @@ class Excel(MyCommon):
                 booksheet.write(i,j,table_array[i][j])
 
         workbook.save(filename)
+        return
 
     def writeDictsXlsx(self):
 
@@ -171,6 +177,8 @@ class Excel(MyCommon):
 
         filename = "运费对比结果.xls"
         workbook.save(filename)
+
+        return
 
     # booksheet: class of the sheet of the excel
     # dicts: data
@@ -373,6 +381,8 @@ class Excel(MyCommon):
         # sum of all
         booksheet.write(rows+1,cols+2,int(np.sum(data)))
 
+        return
+
     # 所有内容输出成一个xls格式excel文件:
     # 输入:
     #       data       : 原始数据数组,大小是 (3225,29)
@@ -396,3 +406,5 @@ class Excel(MyCommon):
             self.writeSpeciesSheet(workbook,key,final_data[key],rowsAndCols)
 
         workbook.save(filename)
+
+        return
