@@ -18,4 +18,6 @@
 from .TurtlePlay import TurtlePlay
 from .NameAll import NameAll
 from .DrawPig import DrawPig
+from .MyCommon import MyCommon
+from .Excel import Excel
 
