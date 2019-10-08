@@ -86,6 +86,25 @@ Input: data with array type, and a filename with string type
 
 Return: None, but data was written into a  file with csv format
 
+# class DrawCurve 
+
+## Introduction
+
+I write some functions to manipulate matplotlib more easily since 2016.10. Several months ago, I begin to pack those functions into  a class so that I can manage functions more conveniently.
+
+Here is a simple example to use this class:
+
+```python
+from mytools import DrawCurve
+test = DrawCurve()
+test.setDataFileName("data.txt")
+test.draw()
+```
+
+After running the script, you will get an image as below:
+
+![curve](figures/curve.png)
+
 # class Excel
 
 ## Introdution
