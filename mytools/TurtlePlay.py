@@ -8,9 +8,10 @@
     @author       : Deping Huang
     @mail address : xiaohengdao@gmail.com
     @date         : 2019-10-07 00:10:36
+                    2019-10-09 10:15:11
     @project      : turtle animation
     @version      : 1.0
-    @source file  : main.py
+    @source file  : TurtlePlay.py
 
 ============================
 """
@@ -21,55 +22,89 @@ import os
 
 
 class TurtlePlay():
-    """docstring for TurtlePlay"""
-    def __init__(self):
-        super(TurtlePlay, self).__init__() 
-        # theta: rotation angle for each time
+    """
+    docstring for TurtlePlay
+    It is module for presentation of the usage of turtle module
+    """
+    def __init__(self):      
+        """
+        self.theta: 
+            rotation angle for each time
+        self.speed:
+            frames per second
+            such as : self.speed = 4
+            the panel will be drawed 4 times in a second
+        self.length:
+            length of the line
+        self.number:
+            cycles number 
+
+        All the above parameters were initialized to be None
+        """  
+        super(TurtlePlay, self).__init__()       
         self.theta = None 
-        # frames per second
-        # such as : self.speed = 4
-        # the panel will be drawed 4 times in a second
-        self.speed = None
-        # length of the line
+        self.speed = None  
         self.length = None
-        # cycles number 
         self.number = None
     
-    # initialize the parameters   
+       
     def initParas(self):
+        """
+        initialize the parameters
+        """
+        
         self.setColor(['red','blue'])
         self.setParas(35,50,100,4)
 
         return
-    # set the color for 
-    # input: colors, array with two items
-    # such as : ["red","red"]
+    
+    
+    
     def setColor(self,colors):
+        """
+        set the color 
+        input: colors, array with two items
+        such as : ["red","red"]
+        """
         turtle.color(colors[0],colors[1])
 
         return 
-    # set the rotation angle
+
     def setTheta(self,theta):
+        """
+        set the rotation angle
+        """
         self.theta = theta
         return 
 
-    # set the length of the line
+    
     def setLength(self,length):
+        """
+        set the length of the line
+        """
         self.length = length
         return
-    # set the number of cycles
+    
     def setNumber(self,number):
+        """
+        set the number of cycles
+        """
         self.number = number
         return
 
-    # set the fps(frames per second)
     def setSpeed(self,speed):
+        """
+        set the fps(frames per second)
+        """
         self.speed = speed
         turtle.speed(speed)
         return
 
-    # draw the pattern
     def draw(self):
+        """
+        draw the pattern
+        length is smaller and smaller in each step
+        """
         i = 0
         while i < self.number:
             # print(i)
@@ -78,23 +113,26 @@ class TurtlePlay():
             turtle.right(self.theta)
             i += 1
 
-    # write the image into ps and pdf
-    # ps2pdf is a linux command which 
-    # converts a .ps file into a .pdf one
-    def writeImage(self):    
-
+    
+    def writeImage(self): 
+        """
+        write the image into ps and pdf
+        ps2pdf is a linux command which 
+        converts a .ps file into a .pdf one
+        """
         cv = turtle.getcanvas()
         filename = "new.ps"
-        print("write to ",filename)
-        
+        print("write to ",filename)      
         cv.postscript(file = filename,colormode='color')
-        
         command = "ps2pdf %s"%(filename)
         print(command)
         os.system(command)
 
-    # draw a square
     def square(self):
+        """
+        draw a single square
+        with the shape turtle
+        """
         for i in range(4):
             turtle.forward(self.length)
             turtle.shape('turtle')
@@ -102,8 +140,12 @@ class TurtlePlay():
 
         return
         
-    # draw a polygon
+    
     def polygon(self,n):
+        """
+        draw a single polygon
+        with the shape turtle
+        """
         for i in range(n):
             turtle.forward(self.length)
             turtle.shape('turtle')
@@ -111,8 +153,11 @@ class TurtlePlay():
 
         return
 
-    # draw squares
     def drawSquares(self):
+        """
+        draw squares
+        add length by 3.5 after drawing a square
+        """
         for i in range(self.number):
             self.square()
             turtle.right(5)
@@ -120,8 +165,12 @@ class TurtlePlay():
 
         return
 
-    # draw polygons 
+    
     def drawPolygons(self,n):
+        """
+        draw polygons 
+        add length by 3.5 after drawing a polygon
+        """
         for i in range(self.number):
             self.polygon(n)
             turtle.right(5)
@@ -129,8 +178,12 @@ class TurtlePlay():
 
         return
 
-    # set all the parameters
+    
     def setParas(self,theta,length,number,speed):
+        """
+        setup for all the parameters
+        including theta, length, number and speed
+        """
         self.setTheta(theta)
         self.setLength(length)
         self.setNumber(number)
@@ -138,8 +191,12 @@ class TurtlePlay():
 
         return 
     
-    # print out all the parameters
+    
     def printParas(self):
+        """
+        print out all the parameters
+        including theta, length, number and speed
+        """
         print("theta: ",self.theta)
         print("length: ",self.length)
         print("number: ",self.number)
@@ -147,16 +204,22 @@ class TurtlePlay():
 
         return
     
-    # test for drawing the squares  
     def test(self):
+        """
+        test for drawing the squares
+        """
         self.setColor(['red','blue'])
         self.setParas(90, 50, 60, 8)
         # self.draw()
         self.drawSquares()
         self.writeImage()
     
-    # test for drawing the polygons
+    
     def testPolygon(self):
+        """
+        test for drawing the polygons
+        n was set to be 5
+        """      
         n = 5
         theta = 360/n
         self.setColor(['red','blue'])
