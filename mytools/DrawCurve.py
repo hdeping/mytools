@@ -24,35 +24,49 @@ import sys
 import os
 
 class DrawCurve():
-    """docstring for DrawCurve"""
+    """docstring for DrawCurve
+    It is used for visualization of scientific data
+    """
     def __init__(self):
+        """
+        self.lineList:
+            list for the line types
+        self.typeNum:
+            length of self.lineList
+        self.colorList:
+            list for the colors
+        self.colorNum:
+            length of self.colorList
+
+        the line type:
+            o: circle point
+            p: pegagon point
+            h: hexagon point
+            ^: triangal point(angle up)
+            v: triangal point(angle down)
+            >: triangal point(angle right)
+            <: triangal point(angle left)
+            -: solid line
+            --: dash line
+        """
         super(DrawCurve, self).__init__()
-        
-        # the line type
-        # o: circle point
-        # p: pegagon point
-        # h: hexagon point
-        # ^: triangal point(angle up)
-        # v: triangal point(angle down)
-        # >: triangal point(angle right)
-        # <: triangal point(angle left)
-        # -: solid line
-        # --: dash line
-        self.lineList = ['^-','o-','p-','h-']
-        #lineList = ['-','-','-','-']
-        self.typeNum = len(self.lineList)
-        # color list
+        self.lineList  = ['^-','o-','p-','h-']
+        self.typeNum   = len(self.lineList)
         self.colorList = ['b','#CD6600','#FF00FF', '#00FFFF', '#808000', 
-                '#800080','r','g', '#008080','k', '#8a977b','#1d8308']
-        # length of the color list
-        self.colorNum = len(self.colorList)
+                          '#800080','r','g', '#008080','k', '#8a977b','#1d8308']
+        self.colorNum  = len(self.colorList)
     def setDataFileName(self,dataFileName):
+        """
+        setup for the dataFileName
+        """
         self.dataFileName = dataFileName
         return
-    # get the filename of the output png 
-    # corresponding to how many images exists in the 
-    # current directory
     def getFileName(self):
+        """
+        get the filename of the output png 
+        corresponding to how many images exists in the 
+        current directory
+        """
         fileList = os.listdir('.')
         num = 1
         for name  in fileList:
@@ -65,6 +79,10 @@ class DrawCurve():
         return name 
         
     def plotData(self):
+        """
+        load data from self.dataFileName and 
+        plot the data with lines
+        """
         try:
             data = np.loadtxt(self.dataFileName,delimiter=',',dtype=float)
         except UnboundLocalError:
@@ -78,10 +96,14 @@ class DrawCurve():
                      label = 'data'+str(i),linewidth=2)
         return
 
-    # function for drawing
-    # settings of plt 
     def draw(self):
+        """
+        function for drawing
+        """
         plt.figure(1,figsize=(9,9))
+        # set sizes 
+        self.setSizes(32,28,24)
+
         # title
         self.setCurveTitle()
         # x,y labels 
@@ -95,23 +117,46 @@ class DrawCurve():
         for output in name :
             plt.savefig(output,dpi=300)
         plt.show()
+
+    def setSizes(self,titleSize,labelSize,tickSize):
+        """
+        setup for the fontsizes of title, labels
+        and ticks
+        """
+        self.titleSize  = titleSize
+        self.labelSize  = labelSize
+        self.tickSize   = tickSize
+
+        return
     def setCurveTitle(self):
-        plt.title('Data',fontsize=32)
+        """
+        setup for the title of the curve
+        """
+        plt.title('Data',fontsize=self.titleSize)
         return
 
     def setCurveLabels(self):
-        plt.xlabel('x',fontsize=28)
-        plt.ylabel('y',fontsize=28)
+        """
+        setup for the labels of the curve
+        """
+        plt.xlabel('x',fontsize=self.labelSize)
+        plt.ylabel('y',fontsize=self.labelSize)
 
         return
     def setCurveTicks(self):
-        plt.xticks(fontsize=24)
-        plt.yticks(fontsize=24)
+        """
+        setup for the ticks of the curve
+        """
+        plt.xticks(fontsize=self.tickSize)
+        plt.yticks(fontsize=self.tickSize)
         #plt.axis([0,5,0,20]);
 
         return
 
     def setCurveLegends(self):
+        """
+        setup for the legends of the curve
+        """
         leg = plt.legend(loc="upper center",fontsize = 20)
         ii = 0
         for text in leg.get_texts():
@@ -120,8 +165,10 @@ class DrawCurve():
         plt.grid(True)
 
         return
-    # bars 
     def barsData(self,filename):
+        """
+        visual the data with bars
+        """
         try:
             data = np.loadtxt(filename,delimiter=',',dtype=float)
         except UnboundLocalError:
@@ -133,10 +180,13 @@ class DrawCurve():
         index = np.arange(n_groups)  
         opacity = 0.4  
         bar_width = 0.35  
-        plt.bar(index ,posts  ,bar_width,  alpha=opacity,color='r',label='发帖数')
+        plt.bar(index ,posts  ,bar_width,  
+                alpha=opacity,color='r',label='发帖数')
 
-    # bins
-    def binsData():
+    def histData():
+        """
+        get a histagram
+        """
         plt.figure(1,figsize=(9,9))
         plt.xlim([-5.0,5.0])
         plt.ylim([0.0,0.5])
@@ -149,8 +199,10 @@ class DrawCurve():
             plt.savefig(name,dpi=300)
         plt.show() 
 
-    # get the B-spline of the scatter point
     def splineData(filename):
+        """
+        get the B-spline of the scatter point
+        """
         try:
             data = np.loadtxt(filename,delimiter=',',dtype=float)
         except UnboundLocalError:
@@ -173,6 +225,9 @@ class DrawCurve():
         return 
 
     def test(self):
+        """
+        test for the DrawCurve module
+        """
         if len(sys.argv) == 1:
             print("Please input a file")
         else:
