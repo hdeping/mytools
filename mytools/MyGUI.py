@@ -38,9 +38,9 @@ class MyGUI(Triangle):
         self.window = tkinter.Tk()
         self.window.title("三角形面积计算器")
         self.window.geometry("480x480")
-        self.tkLengt = []
+        self.tkLengths = []
         for i in range(3):
-            self.tkLengt.append(tkinter.StringVar())
+            self.tkLengths.append(tkinter.StringVar())
 
         self.width = 17
         self.height = 5
@@ -102,7 +102,7 @@ class MyGUI(Triangle):
         function for entry settings
         """
         entry = tkinter.Entry(self.window,
-                              textvariable=self.tkLength[index],
+                              textvariable=self.tkLengths[index],
                               width=self.width)
         entry.grid(row=row,column=col,
                    sticky=tkinter.N + tkinter.S)
