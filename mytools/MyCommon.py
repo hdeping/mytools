@@ -15,6 +15,7 @@
 ============================
 """
 import json
+import yaml
 
 
 class MyCommon():
@@ -62,7 +63,7 @@ class MyCommon():
         return res
     def writeJson(self, data, filename):
         """
-        write dicts data into a file
+        write dicts data into a json file
         input: data, dicts type
                filename, string type
 
@@ -85,8 +86,59 @@ class MyCommon():
         fp.close()
 
         return data
-    # 
-    # 
+
+    def loadFile(self, filename):
+        """
+        load data from the file
+        If it is a yml or yaml type,
+        yaml module would be used,
+        if it is a json type, json module
+        would be used, any other formats are not 
+        supported
+        input: filename, string type
+        return: data, dicts type
+        """
+        print("load data from file ",filename)
+        fp = open(filename,"r")
+        if filename.endswith("json"):
+            data = json.load(fp)
+        elif filename.endswith("yml") or filename.endswith("yaml"):
+            data = yaml.load(fp)
+        else:
+            data = None 
+            print("format wrong with ",filename)
+            
+        fp.close()
+
+        return data
+
+    def writeFile(self, data, filename):
+        """
+        write data to the file.
+        If it is a yml or yaml type,
+        yaml module would be used,
+        if it is a json type, json module
+        would be used, any other formats are not 
+        supported.
+        write dicts data into a json file
+        input: data, dicts type
+               filename, string type
+
+        """
+        print("write to file ",filename)
+        fp = open(filename,"w")
+        if filename.endswith("json"):
+            json.dump(data,fp,indent=4)
+        elif filename.endswith("yml") or filename.endswith("yaml"):
+            yaml.dump(data,fp)
+        else:
+            data = None 
+            print("format wrong with ",filename)
+        
+        fp.close()
+
+        return
+     
     def writeCSV(self, table_array, filename):
         """
         把数组写成csv文件输出，以tab符作为间隔符号
