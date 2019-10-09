@@ -319,6 +319,7 @@ class Triangle():
 
     def getInsCenter(self):
         """
+        get the centers of the inscribed circle of the triangle
         """
         results = 0 
         for i in range(3):
@@ -328,6 +329,7 @@ class Triangle():
 
     def getEsCenters(self):
         """
+        get three centers of the escribed circle of the triangle
         """
         results = 0 
         self.esCenters = []
@@ -346,6 +348,7 @@ class Triangle():
         return
     def getOrthoPoints(self):
         """
+        get three orthogonal points of  the triangle
         """
         self.getOrthoLines()
         self.getSideLines()
@@ -361,6 +364,7 @@ class Triangle():
 
     def getOrthoCenter(self):
         """
+        get the orthogonal center of the triangle
         """
         self.getOrthoLines()
         line1 = self.orthoLines[0]
