@@ -132,10 +132,10 @@ class MyGUI(Triangle):
         a = float(self.lengths[0].get())
         b = float(self.lengths[1].get())
         c = float(self.lengths[2].get())
-        self.setLength(a,b,c)
+        self.setLengths(a,b,c)
         if self.isTriangle():
-            area = self.getArea()
-            text = "area is %.2f\n"%(area)
+            self.getArea()
+            text = "area is %.2f\n"%(self.area)
             # text = "triangle (%.2f,%.2f,%.2f), area is %.2f"%(a,b,c,area)
             # self.label.configure(text=text)
             self.text.insert(tkinter.END,text)
