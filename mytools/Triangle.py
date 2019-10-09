@@ -372,9 +372,9 @@ class Triangle():
         """
         array[0],array[-1] = array[-1],array[0]
         return
-    # weight point of the triangle
     def getWeightPoint(self):
         """
+        weight point of the triangle
         """
         point = np.average(self.vertices,axis=0)
         self.weightCenter = point
@@ -400,13 +400,15 @@ class Triangle():
 
     def getInsRadius(self):
         """
+        get the radius of the inscribed circle of the triangle
         """
         self.getArea()
         p = self.getPerimeter() / 2 
         self.insRadius = self.area / p 
         return 
-    def getEsRadius(self):
+    def getEsRadii(self):
         """
+        get three radii of the escribed circle of the triangle
         """
         self.getArea()
         p = self.getPerimeter() / 2 
@@ -504,7 +506,7 @@ class Triangle():
         self.testBisect()
 
         self.getInsRadius()
-        self.getEsRadius()
+        self.getEsRadii()
         print(self.insRadius,self.esRadii)
         print("旁心",self.esCenters)
         self.draw()
@@ -650,7 +652,7 @@ class Triangle():
         self.getCircumCenter()
         self.getBisectLines()
         self.getInsRadius()
-        self.getEsRadius()
+        self.getEsRadii()
         self.getWeightPoint()
         self.getCircumRadius()
         self.getOrthoCenter()
