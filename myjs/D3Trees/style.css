@@ -1,0 +1,65 @@
+/*
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-05-05 02:10:49
+    @project      : tree artist
+    @version      : 0.1
+    @source file  : style.css
+
+    --------------------- 
+作者：风火一回 
+来源：CSDN 
+原文：https://blog.csdn.net/mafan121/article/details/50435530 
+版权声明：本文为博主原创文章，转载请附上博文链接！
+
+============================
+*/
+
+body{
+    background: steelblue;
+}
+
+.node circle {
+  fill: #fff;
+  stroke: purple;
+  stroke-width: 1.5px;
+}
+
+.node rect {
+  /*fill: rgb(30,222,50,240);*/
+  /*fill:white;*/
+  stroke: purple;
+  fill-opacity:0.75;
+  stroke-opacity:0.5;
+  stroke-width: 2px;
+
+}
+ 
+.node {
+  font: 12px sans-serif;
+}
+ 
+.link {
+  fill: red;
+  fill-opacity:0.5;
+  stroke:blue;
+  stroke-opacity:0.2;
+  stroke-width: 5px;
+}
+.text{
+  /*fill:blue;*/
+  font-size:35px;
+}
+.link_text{
+  /*fill:cyan;*/
+  fill:black;
+  font-size:25px;
+}
+
+svg{
+    /*background: linear-gradient(to right,white,grey,white);*/
+    /*background: #ffebcd;*/
+    background: white;
+}
