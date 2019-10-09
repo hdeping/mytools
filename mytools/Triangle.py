@@ -159,10 +159,10 @@ class Triangle():
         dist = np.linalg.norm(vertix)
         return dist
     
-    # judge if it is a triangle
-    # a + b > c -> (a+b+c)/2 > c
     def isTriangle(self):
         """
+        judge if it is a triangle
+        a + b > c -> (a+b+c)/2 > c
         """
         lengths = np.array(self.lengths)
         p       = sum(lengths)/2 
@@ -172,9 +172,9 @@ class Triangle():
             print("%.2f,%.2f,%.2f can not construct a triangle"%(tuple(lengths)))
             return False
 
-    # get the area of the triangle
     def getArea(self):
         """
+        get the area of the triangle
         """
         if self.isTriangle():
             p = sum(self.lengths)/2 
@@ -185,18 +185,22 @@ class Triangle():
             return
         else:
             return 
-    # (x1,y1), (x2,y2) 
-    # (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
-    # (y2 - y1)(x - x1) + (x1 - x2)(y - y1)
     def getVerticesLine(self,vertix1,vertix2):
         """
+        (x1,y1), (x2,y2) 
+        (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
+        (y2 - y1)(x - x1) + (x1 - x2)(y - y1)
+        input: two vertices
+        return: a line [A,B,C]
         """
         A = vertix2[1] - vertix1[1]
         B = vertix1[0] - vertix2[0]
         return self.getVertixSlope(vertix1, [A,B]) 
-    # get the line with a vertix and slope
     def getVertixSlope(self,vertix1,slope):
         """
+        get the line with a vertix and slope
+        input: vertix [x,y] and a slope [A,B]
+        return: a line [A,B,C]
         """
         A = slope[0]
         B = slope[1]
@@ -205,6 +209,9 @@ class Triangle():
         return line
     def getInterVertix(self,line1,line2):
         """
+        get the intersection of two lines
+        input: two lines
+        return: a point
         """
         data = []
         data.append(line1)   
@@ -214,40 +221,44 @@ class Triangle():
         result = np.linalg.solve(data[:2,:2],-data[:,2])
         return result
 
-    # center of the circum circle
-    # intersect point of two middle orthogonal lines
     def getCircumCenter(self):
         """
+        center of the circum circle
+        intersection point of two middle orthogonal lines
         """
         line1 = self.getMidOrthoLine(self.vertices[0],self.vertices[1])
         line2 = self.getMidOrthoLine(self.vertices[0],self.vertices[2])
         point = self.getInterVertix(line1, line2)
         return point
 
-    # middle point of two points
     def getMidPoint(self,vertix1,vertix2):
         """
+        middle point of two points
         """
         vertix  = (vertix1 + vertix2)/2 
         return vertix
-    # middle orthogonal line
     def getMidOrthoLine(self,vertix1,vertix2):
         """
+        get a middle orthogonal line
+        input: two points
+        return: a line
         """
         vertix = self.getMidPoint(vertix1,vertix2)
         line = self.getVertixSlope(vertix,vertix2 - vertix1)
         return line
 
-    #  a point vertix3 on the line, 
-    #  which is orthogonal to the one through vertix1 and vertix2 
     def getOrthoLine(self,vertix1,vertix2,vertix3):
         """
+        get the orthogonal line give three  vertices
+        a point vertix3 on the line, 
+        which is orthogonal to the one through vertix1 and vertix2 
         """
         line = self.getVertixSlope(vertix3,vertix2 - vertix1)
         return line
 
     def getOrthoLineByIndex(self,i,j,k):
         """
+        get the orthogonal line give three indeces of the vertices
         """
         vertix1 = self.vertices[i]
         vertix2 = self.vertices[j]
@@ -270,6 +281,7 @@ class Triangle():
         return 
     def getMidLines(self):
         """
+        get three middle lines
         """
         self.midLines  = []
         # get lines
@@ -285,6 +297,7 @@ class Triangle():
 
     def getSideLines(self):
         """
+        get three side lines
         """
         self.sideLines  = []
         # get lines
@@ -297,6 +310,7 @@ class Triangle():
 
     def getMidOrthoLines(self):
         """
+        get three middle orthogonal lines
         """
         self.midOrthoLines = []
 
@@ -308,6 +322,9 @@ class Triangle():
 
     def getCircumCenter(self):
         """
+        get the center of the circumscribed circle of the triangle,
+        which is the intersection point of two middle orthogonal
+        lines
         """
         self.getMidOrthoLines()
 
@@ -319,7 +336,10 @@ class Triangle():
 
     def getInsCenter(self):
         """
-        get the centers of the inscribed circle of the triangle
+        get the center of the inscribed circle of the triangle
+        s = (aA+bB+cC)/2
+        p = (a+b+c)/2
+        p_r = s/p
         """
         results = 0 
         for i in range(3):
@@ -330,6 +350,12 @@ class Triangle():
     def getEsCenters(self):
         """
         get three centers of the escribed circle of the triangle
+        s = (aA+bB+cC)/2
+        p = (a+b+c)/2
+        p_rA = (s - aA)/(p - a)
+        p_rB = (s - bB)/(p - b)
+        p_rC = (s - cC)/(p - c)
+
         """
         results = 0 
         self.esCenters = []
