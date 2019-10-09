@@ -22,4 +22,5 @@ from .MyCommon import MyCommon
 from .Excel import Excel
 from .Triangle import Triangle
 from .DrawCurve import DrawCurve
+from .GetDoc import GetDoc
 
