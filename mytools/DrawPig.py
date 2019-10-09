@@ -20,9 +20,11 @@
 import turtle
 import os
 from .TurtlePlay import TurtlePlay
-# draw a pig
+
 class DrawPig(TurtlePlay):
-    """docstring for DrawPig"""
+    """docstring for DrawPig
+    draw a pig
+    """
     def __init__(self):
         super(DrawPig, self).__init__()
     def drawPigInit(self):
@@ -68,6 +70,9 @@ class DrawPig(TurtlePlay):
 
         return
     def fillRegion(self,radius,color=None):
+        """
+        fill a region with a circle
+        """
         turtle.begin_fill()
         turtle.circle(radius)
         if color:
@@ -158,6 +163,11 @@ class DrawPig(TurtlePlay):
         return
 
     def setPigColors(self):
+        """
+        set the colors for the body,
+        feet, face, nose and mouth of 
+        the pig
+        """
         self.bodyColor = (255, 155, 192)
         self.feetColor = (240,128,128)
         self.faceColor = "pink"
@@ -255,6 +265,8 @@ class DrawPig(TurtlePlay):
     # input: lines, 2d array
     # such as : [[0,90],[90,2]...]
     def drawLines(self,lines):
+        """
+        """
         turtle.pu()
         for line in lines:
             turtle.seth(line[0])
@@ -262,13 +274,18 @@ class DrawPig(TurtlePlay):
         turtle.pd()
         return 
     def drawCircles(self,centers):
+        """
+        draw circles given the centers
+        """
         for center in centers:
             turtle.circle(center[0],center[1])
         return
     def cutePig(self):
-        # draw the noses, head, ears
-        # eyes, cheek, mouth, body, hands
-        # feet and tail of the pig
+        """
+        draw the noses, head, ears
+        eyes, cheek, mouth, body, hands
+        feet and tail of the pig
+        """
         self.setPigColors()
         self.drawPigInit()
         self.drawPigNoses()
