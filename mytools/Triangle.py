@@ -149,6 +149,12 @@ class Triangle():
             self.lengths.append(length)
             
         return
+    def setLengths(self,a,b,c):
+        """
+        set the lengths given three values
+        """
+        self.lengths = [a,b,c]
+        return
     def printLengths(self):
         """
         print out three lengths of the triangle
