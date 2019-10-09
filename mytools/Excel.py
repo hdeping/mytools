@@ -27,23 +27,44 @@ import json
 from .MyCommon import MyCommon
 
 
-# Dealing with Excel files with xlrd and xlwt module
 class Excel(MyCommon):
+    """
+    Dealing with Excel files with xlrd and xlwt module
+    Some functions are inheritated from MyCommon
+    """
     def __init__(self):
+        """
+        self.dirs:
+            the directory where we read and save our data
+        self.total_data:
+            parameter for the excel data
+        """
         super(Excel, self).__init__()
         self.dirs = "D:\\code\\圆圆\\"
 
     def loadData(self):
+        """
+        load data from self.filename,
+        and get self.total_data
+        """
         print(self.filename + " opened")
         self.total_data = xlrd.open_workbook(self.filename)
 
         return
 
     def init(self,filename):
+        """
+        set the filename and get self.total_data
+        from the file
+        """
         self.setFilename(filename)
         self.loadData()
         return
     def getSheets(self):
+        """
+        get three arrays from three sheets of 
+        the two xlsx files
+        """
         t1 = time.time()
         filename = "天地精华6月账单7.11.xlsx"
         self.init(filename)
@@ -70,6 +91,10 @@ class Excel(MyCommon):
 
         return
     def getMatch(self):
+        """
+        compare three sheets and get the data
+        with common keys
+        """
         dict1 = self.getFeeDicts(self.Sheet1, 3, -2)
         dict2 = self.getFeeDicts(self.Sheet2, 2, -3)
         dict3 = self.getFeeDicts(self.Sheet3, 1, -2)
@@ -79,11 +104,13 @@ class Excel(MyCommon):
 
         return
 
-    # get rid of "\t" in the key of a dictionary
-    # read dicts from the filename
-    # print the new dicts to a new file
 
     def getNewDict(self, filename):
+        """
+        get rid of "\t" in the key of a dictionary
+        read dicts from the filename
+        print the new dicts to a new file
+        """
         dicts = self.loadJson(filename)
         res = {}
         for key in dicts:
@@ -95,18 +122,35 @@ class Excel(MyCommon):
         self.writeJson(res, "new_%s" % (filename))
         return
     def writeCommon(self, dict1, dict2, filename):
+        """
+        write data with common keys into a file
+        input: two dicts and a filename
+        """
         res = self.getCommon(dict1, dict2)
         self.writeJson(res, filename)
         return
 
     def getFeeDicts(self, sheet, i, j):
+        """
+        get a dict from two arrays
+        such as , ["a","b"], [1,2] --->
+        {"a":1,"b":2}
+        intput: sheet, a 2D array
+                i,j, index of two columns of the sheet
+        """
         keys = sheet[1:,i]
         values = sheet[1:,j]
         res = self.getDicts(keys, values)
 
         return res
-    # 把表格转化为数组形式
     def table2Array(self, sheet_name):
+        """
+        把表格转化为数组形式
+        input: sheet_name, name of the sheet
+
+        data in the sheet_name would be extracted
+        to a array from the self.total_data
+        """
 
         data = []
         origin_table = self.total_data.sheet_by_name(sheet_name)
@@ -130,10 +174,15 @@ class Excel(MyCommon):
 
         return data
 
-    # 把数组输出成xls格式文件
-    # 暂时不支持输出xlsx格式，必要的话
-    # 暂时可用excel将xls转化成xlsx
     def writeXlsx(self, table_array, filename, sheet_name):
+        """
+        把数组输出成xls格式文件
+        暂时不支持输出xlsx格式，必要的话
+        暂时可用excel将xls转化成xlsx
+        input: table_array, array type
+               filename, name of the xls file
+               sheet_name, name of the sheet
+        """
 
         workbook = xlwt.Workbook(encoding='utf-8')
         booksheet = workbook.add_sheet(sheet_name, cell_overwrite_ok=True)
@@ -150,6 +199,16 @@ class Excel(MyCommon):
         return
 
     def writeDictsXlsx(self):
+        """
+        load dicts from json files and 
+        write array into a xls file
+        names = [["商家出库单号","运费"],
+                 ["外部单号","京东C端运费"],
+                 ["原始单号","运费"],
+                 ["2与1对比单号","2减去1运费差额"],
+                 ["3与1对比单号","3减去1运费差额"],
+                 ["3与2对比单号","3减去2运费差额"]]
+        """
 
         sheet_name = "汇总"
         workbook = xlwt.Workbook(encoding='utf-8')
@@ -180,11 +239,13 @@ class Excel(MyCommon):
 
         return
 
-    # booksheet: class of the sheet of the excel
-    # dicts: data
-    # names: array, ["name1","name2"]
-    # index: index of the column
     def writeSheet(self, booksheet, dicts, names, index):
+        """
+        booksheet: class of the sheet of the excel
+        dicts: data
+        names: array, ["name1","name2"]
+        index: index of the column
+        """
 
         booksheet.write(0,index, names[0])
         booksheet.write(0,index + 1, names[1])
@@ -195,8 +256,10 @@ class Excel(MyCommon):
 
         return
 
-    # 得到所有配送门店类型
     def getStoreKeys(self, data, first_row_dicts):
+        """
+        得到所有配送门店类型
+        """
 
         res = []
         store_col = first_row_dicts['配送门店']
@@ -206,14 +269,15 @@ class Excel(MyCommon):
                 res.append(key)
         return res
 
-    # 将原始数据数组进行拆分
-    # 得到一个字典
-    # 键是配送门店名称，
-    # 值是 二维数据
-    # 每一行是一个订单
-    # 每一列是相应订单的品相，日期，数量
-
     def splitData(self, data, first_row_dicts, dicts_species):
+        """
+        将原始数据数组进行拆分
+        得到一个字典
+        键是配送门店名称，
+        值是 二维数据
+        每一行是一个订单
+        每一列是相应订单的品相，日期，数量
+        """
         new_data_dicts = {}
         # split data into a dict
         # with stores id as keys
@@ -248,19 +312,23 @@ class Excel(MyCommon):
         all_species.sort()
         return new_data_dicts,all_species
 
-    # 得到第一行（更新时间，数量等关键字）对应的列数
-    # 返回一个字典
-    #  比如  res['订单'] = 0等信息
     def getFirstRowDicts(data):
+        """
+        得到第一行（更新时间，数量等关键字）对应的列数
+        返回一个字典
+         比如  res['订单'] = 0等信息
+        """
         res = {}
         for i,line in enumerate(data[0]):
             res[line] = i
         return res
 
-    # 基础数据中
-    # 货品名称和品相的对应关系
-    # 返回一个字典
     def getFoundamentalDicts(self, data):
+        """
+        基础数据中
+        货品名称和品相的对应关系
+        返回一个字典
+        """
         res = {}
 
         for line in data:
@@ -269,26 +337,32 @@ class Excel(MyCommon):
             res[key] = value
 
         return res
-    # 一个一维字符串数组转为字典
     def arr2Dicts(self, arr):
+        """
+        一个一维字符串数组转为字典
+        """
         res = {}
         for i,line in enumerate(arr):
             res[line] = i
         return res
 
-    # keys, values ---> dicts
     def getDicts(self, keys, values):
+        """
+        keys, values ---> dicts
+        """
         res = {}
         for key,value in zip(keys,values):
             res[key] = float(value)
         return res
 
-    # 输入:
-    #     splitted_data: 分割后的数据
-    #     all_species  : 品相
-    #     dates        : 日期，从"1日"到"31日"
-
     def getStatiData(self, splitted_data, all_species, dates):
+        """
+        输入:
+            splitted_data: 分割后的数据
+            all_species  : 品相
+            dates        : 日期，从"1日"到"31日"
+        """
+
         # get rows dicts (species)
         rows_dicts = arr_to_dicts(all_species)
         cols_dicts = arr_to_dicts(dates)
@@ -317,13 +391,14 @@ class Excel(MyCommon):
 
         return stati_data
 
-    # 写入一个sheet
-    # 输入:
-    #       workbook: excel类
-    #       key     : sheet名称
-    #       data    : 待写入数组
-
     def writeSheetOld(self, workbook, key, data):
+        """
+        写入一个sheet
+        输入:
+              workbook: excel类
+              key     : sheet名称
+              data    : 待写入数组
+        """
         booksheet = workbook.add_sheet(key, cell_overwrite_ok=True)
 
         # 原始数据
@@ -335,19 +410,22 @@ class Excel(MyCommon):
             for j in range(cols):
                 # print('index',i,j)
                 booksheet.write(i,j,data[i][j])
-    # 写入一个sheet，记录统计信息
-    # 输入:
-    #       workbook   : excel类
-    #       key        : sheet名称，这里是一个配送门店
-    #       data       : 待写入数组，大小是(13,31)
-    #       rowsAndCols: 数组，第一行是品相数组，长度为13
-    #                         第二行是日期数组，长度为31
 
     def writeSpeciesSheet(self, workbook, key, data, rowsAndCols):
-        # 格式
-        # 门店名称 品相 1日 2日。。。。。 31日  合计配送数量
-        #         。。。。。。。。。。。。。。。。。。。。
-        #         合计
+        """
+        写入一个sheet，记录统计信息
+        输入:
+              workbook   : excel类
+              key        : sheet名称，这里是一个配送门店
+              data       : 待写入数组，大小是(13,31)
+              rowsAndCols: 数组，第一行是品相数组，长度为13
+                                第二行是日期数组，长度为31
+
+        格式:
+        门店名称 品相 1日 2日。。。。。 31日  合计配送数量
+                。。。。。。。。。。。。。。。。。。。。
+                合计
+        """
 
         booksheet = workbook.add_sheet(key, cell_overwrite_ok=True)
 
@@ -383,15 +461,16 @@ class Excel(MyCommon):
 
         return
 
-    # 所有内容输出成一个xls格式excel文件:
-    # 输入:
-    #       data       : 原始数据数组,大小是 (3225,29)
-    #       final_data : 处理后的数组字典
-    #       filename   : 输出文件名称，比如 "final.xls"
-    #       rowsAndCols: 数组，第一行是品相数组，长度为13
-    #                         第二行是日期数组，长度为31
-
     def writeTotalXls(self, data, final_data, filename, rowsAndCols):
+        """
+        所有内容输出成一个xls格式excel文件:
+        输入:
+              data       : 原始数据数组,大小是 (3225,29)
+              final_data : 处理后的数组字典
+              filename   : 输出文件名称，比如 "final.xls"
+              rowsAndCols: 数组，第一行是品相数组，长度为13
+                                第二行是日期数组，长度为31
+        """
 
         workbook = xlwt.Workbook(encoding='utf-8')
 
