@@ -63,21 +63,19 @@ class Triangle():
         self.esCenters:
             three centers of the escribed circle of the triangle
         self.esRadii:
-            three radiuses of the escribed circle of the triangle
+            three radii of the escribed circle of the triangle
         self.orthoCenter:
-
+            the orthogonal center of the triangle
         self.weightCenter:
-
+            the weight center of the triangle
         self.circumRadius:
-
+            the radius of the circumscribed circle
         self.circumCenter:
-
+            the center of the circumscribed circle
         self.orthoPoints:
-
-        self.orthoCenter:
-
+            three orthogonal points of the triangle
         self.orders:
-
+            indeces of the three vertix-vertix pairs
         """
         super(Triangle, self).__init__()
         vertices = np.array([[3,0],[0,4],[0,0]])
