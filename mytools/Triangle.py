@@ -369,6 +369,8 @@ class Triangle():
         return
     def getNewOrder(self,array):
         """
+        get the inverse order of a array
+        with a length 3
         """
         array[0],array[-1] = array[-1],array[0]
         return
@@ -382,6 +384,7 @@ class Triangle():
 
     def getCosines(self):
         """
+        get three cosine values of the angles
         """
         self.cosines = []
         for i,j in self.orders:
@@ -391,6 +394,10 @@ class Triangle():
     
     def getCosineByIndex(self,i,j):
         """
+        get cosine values give the indeces of vertices
+        input: indeces i and j, the third one should be
+                3 - i - j
+        return: the cosine value of the angle
         """
         a = self.lengths[i]
         b = self.lengths[j]
