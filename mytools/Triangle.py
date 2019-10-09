@@ -105,6 +105,7 @@ class Triangle():
 
     def setVertices(self,vertices):
         """
+        setup for the coordinate of vertices
         """
         print("set vertices to ",vertices)
         
@@ -114,6 +115,7 @@ class Triangle():
         return 
     def printVertices(self):
         """
+        print out three vertices of the triangle
         """
         labels = ["A","B","C"]
         prefix = "vertix"
@@ -123,6 +125,9 @@ class Triangle():
         return 
     def printArray(self,prefix,labels,array):
         """
+        input: prefix, such as "length"
+        input: labels, such as ["A"]
+        array: array type, such as [1] or [[1,2]]
         """
         number = len(array)
         assert len(labels) == number
@@ -130,9 +135,9 @@ class Triangle():
             print("%s %s: "%(prefix,labels[i]),array[i])
 
         return
-    # get three side length
     def getLengths(self):
         """
+        get three side length of the triangle
         """
         self.lengths = []
         
@@ -145,6 +150,7 @@ class Triangle():
         return
     def printLengths(self):
         """
+        print out three lengths of the triangle
         """
         labels = ["AB","AC","BC"]
         prefix = "length"
@@ -154,6 +160,7 @@ class Triangle():
 
     def getDist(self,vertix1,vertix2):
         """
+        get the L2 distance of two vertices
         """
         vertix = vertix1 - vertix2
         dist = np.linalg.norm(vertix)
