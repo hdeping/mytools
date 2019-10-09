@@ -252,9 +252,11 @@ class DrawPig(TurtlePlay):
 
         return 
 
-    # input: lines, 2d array
-    # such as : [[0,90],[90,2]...]
     def drawLines(self,lines):
+        """
+        input: lines, 2d array
+        such as : [[0,90],[90,2]...]
+        """
         turtle.pu()
         for line in lines:
             turtle.seth(line[0])
