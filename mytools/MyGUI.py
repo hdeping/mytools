@@ -20,12 +20,20 @@ import tkinter
 from tkinter import messagebox
 import tkinter.ttk as ttk
 from .Triangle import Triangle
-# from Triangle import Triangle
 
 class MyGUI(Triangle):
     """
+    my gui based on tkinter
     """
     def __init__(self):
+        """
+        self.window:
+            the tkinter window
+        self.height:
+            height of the window
+        self.width:
+            width of the window
+        """
         super(MyGUI, self).__init__()
         self.window = tkinter.Tk()
         self.window.title("三角形面积计算器")
@@ -38,6 +46,9 @@ class MyGUI(Triangle):
         self.height = 5
 
     def interface(self):
+        """
+        main function for interface design
+        """
         texts = ["一","二","三"]
         prefix = "请输入边长"
         for i in range(3):
@@ -52,13 +63,18 @@ class MyGUI(Triangle):
         self.window.mainloop()
         return
     def setText(self):
+        """
+        set text box
+        """
         self.text = tkinter.Text(self.window,
                             background="lightblue",
                             width=self.width,
                             height=self.height)
         self.text.grid(row=3,column=1)
-    # function for label settings
     def setLabel(self,text,row,col):
+        """
+        function for label settings
+        """
         self.label = tkinter.Label(self.window,
                                    text=text,
                                    background="lightgreen",
@@ -70,8 +86,10 @@ class MyGUI(Triangle):
             self.label.grid(row=row, column=col,
                             sticky=tkinter.N + tkinter.S)
         return
-    # function for entry settings
     def setEntry(self,index,row,col):
+        """
+        function for entry settings
+        """
         entry = tkinter.Entry(self.window,
                               textvariable=self.lengths[index],
                               width=self.width)
@@ -79,8 +97,10 @@ class MyGUI(Triangle):
                    sticky=tkinter.N + tkinter.S)
 
         return
-    # function for button settings
     def setButton(self,text=None):
+        """
+        function for button settings
+        """
         button = tkinter.Button(self.window,
                                 text = "计算面积",
                                 width=self.width,
@@ -93,6 +113,11 @@ class MyGUI(Triangle):
                     columnspan = 2)
         return
     def show(self):
+        """
+        binding function for the command
+        area is calculated and displayed 
+        in the text box
+        """
         a = float(self.lengths[0].get())
         b = float(self.lengths[1].get())
         c = float(self.lengths[2].get())
