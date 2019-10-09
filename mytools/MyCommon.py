@@ -16,39 +16,27 @@
 """
 import json
 
-
+# my common functions
 class MyCommon():
-    """docstring for MyCommon
-    In this module, I pack some frequenty used functions
-    """
+    """docstring for MyCommon"""
     def __init__(self):
         super(MyCommon, self).__init__()
+    # setup for the data directory
     def setDirs(self,dirs):
-        """
-        setup for the data directory
-        """
         self.dirs = dirs
         return
+    # setup for the filename with relative path
     def setFilename(self,filename):
-        """
-        setup for the filename with relative path
-        input: filename, such as "data.txt"
-        """
         self.filename = self.dirs + filename
         return
+    # setup for the filename with absolute path
     def setFileDirs(self,filename):
-        """
-        setup for the filename with absolute path
-        input: filename, such as "/home/test/data.txt"
-        """
         self.filename = filename
         return
+    # get the common key of the two dicts
+    # and get a dicts with the difference value
+    # as a new value.
     def getCommon(self, dict1, dict2):
-        """
-        get the common key of the two dicts
-        and get a dicts with the difference value
-        as a new value.
-        """
         print("length 1: ",len(dict1))
         print("length 2: ",len(dict2))
 
@@ -61,41 +49,24 @@ class MyCommon():
         print("common length: ",common_length)
         return res
     def writeJson(self, data, filename):
-        """
-        write dicts data into a file
-        input: data, dicts type
-               filename, string type
-
-        """
         print("write to file ",filename)
         fp = open(filename,"w")
         json.dump(data,fp,indent=4)
         fp.close()
 
         return
+    # load data from the json file
     def loadJson(self, filename):
-        """
-        load data from the json file
-        input: filename, string type
-        return: data, dicts type
-        """
         print("load data from file ",filename)
         fp = open(filename,"r")
         data = json.load(fp)
         fp.close()
 
         return data
-    # 
-    # 
+    # 把数组写成csv文件输出，以tab符作为间隔符号
+    # 同时，应去除原始文本中多余的tab符
     def writeCSV(self, table_array, filename):
-        """
-        把数组写成csv文件输出，以tab符作为间隔符号
-        同时，应去除原始文本中多余的tab符
 
-        write the array into a csv file with the tab as 
-        delimiters. On the same time, extraordinary tabs 
-        are deliminated.
-        """
         with open(filename,'w') as fp:
             # get the csv files with '\t' as seperator
 

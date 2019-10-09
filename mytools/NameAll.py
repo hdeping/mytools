@@ -17,20 +17,17 @@
 
 import os
 import sys
+
 import re
 
+# rename the files in the current
+# directory
 class NameAll():
-    """docstring for Rename
-    rename the files in the current directory
-    """
+    """docstring for Rename"""
     def __init__(self):
         super(NameAll, self).__init__()
     
     def getCurrentFiles(self):
-        """
-        get the filenames in the current directory,
-        with the help of ls command
-        """
         filenames = os.popen("ls")
         filenames = filenames.read()
         filenames = filenames.split('\n')
@@ -39,12 +36,10 @@ class NameAll():
 
         return filenames
 
+    # get the suffix of a string
+    # such as : foo.xxx -> -3
+    # filename[-3:] = "xxx"
     def getSuffixIndex(self,filename):
-        """
-        get the suffix of a string
-        such as : foo.xxx -> -3
-        filename[-3:] = "xxx"
-        """
         # print("------ %s -------"%(filename))
         for i in range(1,7):
             if filename[-i] == '.':
@@ -52,54 +47,35 @@ class NameAll():
                 return res
         return -1
 
+    # array to string
+    # ["a",'b','c'] -> 'abc'
     def arr2string(self,arr):
-        """
-        array to string
-        ["a",'b','c'] -> 'abc'
-        one line is enough 
-        string = "".join(arr)
-        """
         # string = ""
         # for word in arr:
         #     string = string + word
         string = "".join(arr)
         return string 
 
+    # get standar string
+    # "ab ac ab" -> "AbAcAb"
     def getStdStr(self,filename):
-        """
-        get a standard string
-        "ab ac ab" -> "AbAcAb"
-        input: filename, string type
-        return: a new string
-        """
         # get the capital form of a string array
         # ["a",'b','c'] -> ["A",'B','C']
         filename = self.getCapitalize(filename)
         filename = self.arr2string(filename)
         return filename
 
+    # get the capitalized format of a word
     def normallize(self,name):
-        """
-        get the capitalized format of a word
-        """
         return name.capitalize()
 
-    def getCapitalize(self,filename):
-        """
-        get the capitalized format of a string array
-        map function is used here
-        filename = list(map(self.normallize,filename))
-        """   
+    # get the capitalized format of a string array
+    def getCapitalize(self,filename):   
         filename = list(map(self.normallize,filename))
         return filename
 
+    # "a .. ? b ..pdf" -> "AB.pdf"
     def getNewFilename(self,filename):
-        """
-        get the new filename of a old one,
-        characters like [?()[]'\"{}#&/\\,. would
-        be deliminated
-        "a .. ? b ..pdf" -> "AB.pdf"
-        """
         suffix_start = self.getSuffixIndex(filename)
         # get rid of the redundant characters
         #name = re.sub(r"[?()[]'\"{}#&/\\,.]",'',filename)
@@ -116,10 +92,6 @@ class NameAll():
         return output
         
     def run(self):
-        """
-        rename the files with the help of mv 
-        command after we get the new names
-        """
         filenames = self.getCurrentFiles() 
         print(filenames)
 
