@@ -30,9 +30,9 @@ class MyGUI(Triangle):
         self.window:
             the tkinter window
         self.height:
-            height of the window
+            height of the widget
         self.width:
-            width of the window
+            width of the widget
         """
         super(MyGUI, self).__init__()
         self.window = tkinter.Tk()
@@ -45,6 +45,17 @@ class MyGUI(Triangle):
         self.width = 17
         self.height = 5
 
+    def setWidgetSize(self,width,height):
+        """
+        setup for the height and the width 
+        of the tkinter window
+        """
+
+        self.width  = width
+        self.height = height
+
+        return
+        
     def interface(self):
         """
         main function for interface design
