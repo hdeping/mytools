@@ -20,11 +20,6 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
-
-
-
-
-
 class Triangle():
     """docstring for Triangle
     There are a set of tools to deal with triangles, to get
@@ -84,31 +79,30 @@ class Triangle():
         """
         super(Triangle, self).__init__()
         vertices = np.array([[3,0],[0,4],[0,0]])
-        self.vertices = vertices
-        self.lengths  = None
-        self.angles   = None 
-        self.cosines  = None 
-        self.area     = None
+        self.vertices      = vertices
+        self.lengths       = None
+        self.angles        = None 
+        self.cosines       = None 
+        self.area          = None
 
         self.sideLines     = None
-        self.orthoLines    = None 
         self.midLines      = None 
         self.midOrthoLines = None 
         self.orthoLines    = None
         self.bisectLines   = None
 
-        self.insCenter    = None 
-        self.insRadius    = None 
-        self.esCenters    = None 
-        self.esRadius     = None 
-        self.orthoCenter  = None 
-        self.weightCenter = None
-        self.circumRadius = None
-        self.circumCenter = None
+        self.insCenter     = None 
+        self.insRadius     = None 
+        self.esCenters     = None 
+        self.esRadii       = None 
+        self.orthoCenter   = None 
+        self.weightCenter  = None
+        self.circumRadius  = None
+        self.circumCenter  = None
 
-        self.orthoPoints = None
-        self.orthoCenter = None
-        self.orders      = [[0,1],[0,2],[1,2]]
+        self.orthoPoints   = None
+        self.orthoCenter   = None
+        self.orders        = [[0,1],[0,2],[1,2]]
 
     def setVertices(self,vertices):
         """
@@ -463,17 +457,18 @@ class Triangle():
         """
         self.getArea()
         p = self.getPerimeter() / 2 
-        self.esRadius = []
+        self.esRadii = []
 
         for i in range(3):
             radius = self.area / (p - self.lengths[i])
-            self.esRadius.append(radius)
+            self.esRadii.append(radius)
 
-        self.getNewOrder(self.esRadius)
+        self.getNewOrder(self.esRadii)
         return 
 
     def getBisectLines(self):
         """
+        get six angular bisectors of the triangleof the triangle
         """
         self.getInsCenter()
         self.getEsCenters()
@@ -497,6 +492,7 @@ class Triangle():
 
     def getCircumRadius(self):
         """
+        get the radius of the circumscribed cricle of the triangle
         """
         self.getArea()
         result = 1/4/self.area
@@ -509,6 +505,7 @@ class Triangle():
 
     def getPerimeter(self):
         """
+        get the perimeter of the triangle
         """
         result = sum(self.lengths)
         return result
@@ -554,8 +551,6 @@ class Triangle():
         self.testBisect()
 
         self.getInsRadius()
-        self.getEsRadius()
-        print(self.insRadius,self.esRadius)
         self.getEsRadii()
         print(self.insRadius,self.esRadii)
         print("旁心",self.esCenters)
@@ -610,6 +605,8 @@ class Triangle():
 
     def isOrtho(self,line1,line2):
         """
+        input: two lines
+        return: bool, if two lines are orthogonal
         """
         vec1 = np.array(line1[:2])
         vec2 = np.array(line2[:2])
@@ -627,6 +624,9 @@ class Triangle():
 
     def getVerticeAngle(self,vertex1,vertex2,vertex3):
         """
+        input: three vertices
+        return: cosine value of the angle
+        the second vertix is the center of the angle
         """
         vec1 = vertex1 - vertex2
         vec2 = vertex3 - vertex2
@@ -636,6 +636,9 @@ class Triangle():
         return
     def getVectorAngle(self,vec1,vec2):
         """
+        input: two vectors
+        return: cosine value of their angle
+        \cos\theta = A\dot B/(||A|| * ||B||)
         """
         angle = np.dot(vec1,vec2)
         angle = angle/np.linalg.norm(vec1)
@@ -643,6 +646,7 @@ class Triangle():
         return angle
     def printTriInfo(self):
         """
+        print out the properties of the triangle
         """
         print("vertices: ",self.vertices)
         print("lengths: ",self.lengths)
@@ -658,7 +662,7 @@ class Triangle():
         print("insCenter: ",self.insCenter)
         print("insRadius: ",self.insRadius)
         print("esCenters: ",self.esCenters)
-        print("esRadius: ",self.esRadius)
+        print("esRadius: ",self.esRadii)
         print("orthoCenter: ",self.orthoCenter)
         print("weightCenter: ",self.weightCenter)
         print("circumRadius: ",self.circumRadius)
@@ -669,6 +673,7 @@ class Triangle():
 
     def getAngles(self):
         """
+        get three angles of the triangle
         """
         self.getCosines()
         self.angles = []
@@ -680,6 +685,8 @@ class Triangle():
 
     def run(self):
         """
+        get the properties of the triangle 
+        and print them out
         """
         self.setVertices([[3,0],[0,4],[0,1]])
         self.getLengths()
