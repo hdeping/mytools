@@ -38,9 +38,9 @@ class MyGUI(Triangle):
         self.window = tkinter.Tk()
         self.window.title("三角形面积计算器")
         self.window.geometry("480x480")
-        self.lengths = []
+        self.tkLengt = []
         for i in range(3):
-            self.lengths.append(tkinter.StringVar())
+            self.tkLengt.append(tkinter.StringVar())
 
         self.width = 17
         self.height = 5
@@ -102,7 +102,7 @@ class MyGUI(Triangle):
         function for entry settings
         """
         entry = tkinter.Entry(self.window,
-                              textvariable=self.lengths[index],
+                              textvariable=self.tkLength[index],
                               width=self.width)
         entry.grid(row=row,column=col,
                    sticky=tkinter.N + tkinter.S)
@@ -129,9 +129,9 @@ class MyGUI(Triangle):
         area is calculated and displayed 
         in the text box
         """
-        a = float(self.lengths[0].get())
-        b = float(self.lengths[1].get())
-        c = float(self.lengths[2].get())
+        a = float(self.tkLengths[0].get())
+        b = float(self.tkLengths[1].get())
+        c = float(self.tkLengths[2].get())
         self.setLengths(a,b,c)
         if self.isTriangle():
             self.getArea()
