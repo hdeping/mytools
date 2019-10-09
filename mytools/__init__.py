@@ -24,4 +24,6 @@ from .Triangle import Triangle
 from .DrawCurve import DrawCurve
 from .GetDoc import GetDoc
 from .MyGUI import MyGUI
+from .DistanceMeasure import  DistanceMeasure
+
 
