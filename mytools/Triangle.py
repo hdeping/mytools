@@ -27,13 +27,60 @@ import matplotlib.pyplot as plt
 
 class Triangle():
     """docstring for Triangle
-    tools to deal with triangles
-    circum circle
-    inscribed circle
-    escribed circles
+    There are a set of tools to deal with triangles, to get
+    the all kinds of properties of a triangle, you can get 
+    area, perimeter, radius or center of the inscribed circle,
+    circumscribed circle or escribed circles. You can get 
+    lengths, angles, cosine values of the angles. Also, you can
+    get the equations of orthogonal lines, middle lines, middle
+    orthogonal lines or angular bisectors.
     """
     def __init__(self):
         """
+        In this module, a point is denoted by [a,b],
+        and a line is denoted by [A,B,C]
+        Parameters used in this module are listed here:
+        self.vertices:
+            three vertices of the triangle
+        self.lengths:
+            lengths of the three sides of the triangle
+        self.angles:
+            three angles (0-180) of the triangle
+        self.cosines:
+            cosine values of the three angles
+        self.area:
+            the area of the triangle
+        self.sideLines:
+            three sides of the triangle
+        self.orthoLines:
+            three orthogal lines of the triangle
+        self.midLines:
+            three middle lines of the triangle
+        self.midOrthoLines:
+            three middle orthogonal lines of the triangle
+        self.bisectLines:
+            three inner angular bisectors  
+            and three outer angular bisectors
+        self.insCenter:
+            the center of the inscribed circle of the triangle
+        self.insRadius:
+            the radius of the inscribed circle of the triangle
+        self.esCenters:
+            three centers of the escribed circle of the triangle
+        self.esRadii:
+            three radii of the escribed circle of the triangle
+        self.orthoCenter:
+            the orthogonal center of the triangle
+        self.weightCenter:
+            the weight center of the triangle
+        self.circumRadius:
+            the radius of the circumscribed circle
+        self.circumCenter:
+            the center of the circumscribed circle
+        self.orthoPoints:
+            three orthogonal points of the triangle
+        self.orders:
+            indeces of the three vertix-vertix pairs
         """
         super(Triangle, self).__init__()
         vertices = np.array([[3,0],[0,4],[0,0]])
@@ -65,6 +112,7 @@ class Triangle():
 
     def setVertices(self,vertices):
         """
+        setup for the coordinate of vertices
         """
         print("set vertices to ",vertices)
         
@@ -74,6 +122,7 @@ class Triangle():
         return 
     def printVertices(self):
         """
+        print out three vertices of the triangle
         """
         labels = ["A","B","C"]
         prefix = "vertix"
@@ -83,6 +132,9 @@ class Triangle():
         return 
     def printArray(self,prefix,labels,array):
         """
+        input: prefix, such as "length"
+        input: labels, such as ["A"]
+        array: array type, such as [1] or [[1,2]]
         """
         number = len(array)
         assert len(labels) == number
@@ -90,9 +142,9 @@ class Triangle():
             print("%s %s: "%(prefix,labels[i]),array[i])
 
         return
-    # get three side length
     def getLengths(self):
         """
+        get three side length of the triangle
         """
         self.lengths = []
         
@@ -105,6 +157,7 @@ class Triangle():
         return
     def printLengths(self):
         """
+        print out three lengths of the triangle
         """
         labels = ["AB","AC","BC"]
         prefix = "length"
@@ -114,15 +167,16 @@ class Triangle():
 
     def getDist(self,vertix1,vertix2):
         """
+        get the L2 distance of two vertices
         """
         vertix = vertix1 - vertix2
         dist = np.linalg.norm(vertix)
         return dist
     
-    # judge if it is a triangle
-    # a + b > c -> (a+b+c)/2 > c
     def isTriangle(self):
         """
+        judge if it is a triangle
+        a + b > c -> (a+b+c)/2 > c
         """
         lengths = np.array(self.lengths)
         p       = sum(lengths)/2 
@@ -132,9 +186,9 @@ class Triangle():
             print("%.2f,%.2f,%.2f can not construct a triangle"%(tuple(lengths)))
             return False
 
-    # get the area of the triangle
     def getArea(self):
         """
+        get the area of the triangle
         """
         if self.isTriangle():
             p = sum(self.lengths)/2 
@@ -145,18 +199,22 @@ class Triangle():
             return
         else:
             return 
-    # (x1,y1), (x2,y2) 
-    # (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
-    # (y2 - y1)(x - x1) + (x1 - x2)(y - y1)
     def getVerticesLine(self,vertix1,vertix2):
         """
+        (x1,y1), (x2,y2) 
+        (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
+        (y2 - y1)(x - x1) + (x1 - x2)(y - y1)
+        input: two vertices
+        return: a line [A,B,C]
         """
         A = vertix2[1] - vertix1[1]
         B = vertix1[0] - vertix2[0]
         return self.getVertixSlope(vertix1, [A,B]) 
-    # get the line with a vertix and slope
     def getVertixSlope(self,vertix1,slope):
         """
+        get the line with a vertix and slope
+        input: vertix [x,y] and a slope [A,B]
+        return: a line [A,B,C]
         """
         A = slope[0]
         B = slope[1]
@@ -165,6 +223,9 @@ class Triangle():
         return line
     def getInterVertix(self,line1,line2):
         """
+        get the intersection of two lines
+        input: two lines
+        return: a point
         """
         data = []
         data.append(line1)   
@@ -174,40 +235,44 @@ class Triangle():
         result = np.linalg.solve(data[:2,:2],-data[:,2])
         return result
 
-    # center of the circum circle
-    # intersect point of two middle orthogonal lines
     def getCircumCenter(self):
         """
+        center of the circum circle
+        intersection point of two middle orthogonal lines
         """
         line1 = self.getMidOrthoLine(self.vertices[0],self.vertices[1])
         line2 = self.getMidOrthoLine(self.vertices[0],self.vertices[2])
         point = self.getInterVertix(line1, line2)
         return point
 
-    # middle point of two points
     def getMidPoint(self,vertix1,vertix2):
         """
+        middle point of two points
         """
         vertix  = (vertix1 + vertix2)/2 
         return vertix
-    # middle orthogonal line
     def getMidOrthoLine(self,vertix1,vertix2):
         """
+        get a middle orthogonal line
+        input: two points
+        return: a line
         """
         vertix = self.getMidPoint(vertix1,vertix2)
         line = self.getVertixSlope(vertix,vertix2 - vertix1)
         return line
 
-    #  a point vertix3 on the line, 
-    #  which is orthogonal to the one through vertix1 and vertix2 
     def getOrthoLine(self,vertix1,vertix2,vertix3):
         """
+        get the orthogonal line give three  vertices
+        a point vertix3 on the line, 
+        which is orthogonal to the one through vertix1 and vertix2 
         """
         line = self.getVertixSlope(vertix3,vertix2 - vertix1)
         return line
 
     def getOrthoLineByIndex(self,i,j,k):
         """
+        get the orthogonal line give three indeces of the vertices
         """
         vertix1 = self.vertices[i]
         vertix2 = self.vertices[j]
@@ -230,6 +295,7 @@ class Triangle():
         return 
     def getMidLines(self):
         """
+        get three middle lines
         """
         self.midLines  = []
         # get lines
@@ -245,6 +311,7 @@ class Triangle():
 
     def getSideLines(self):
         """
+        get three side lines
         """
         self.sideLines  = []
         # get lines
@@ -257,6 +324,7 @@ class Triangle():
 
     def getMidOrthoLines(self):
         """
+        get three middle orthogonal lines
         """
         self.midOrthoLines = []
 
@@ -268,6 +336,9 @@ class Triangle():
 
     def getCircumCenter(self):
         """
+        get the center of the circumscribed circle of the triangle,
+        which is the intersection point of two middle orthogonal
+        lines
         """
         self.getMidOrthoLines()
 
@@ -279,6 +350,10 @@ class Triangle():
 
     def getInsCenter(self):
         """
+        get the center of the inscribed circle of the triangle
+        s = (aA+bB+cC)/2
+        p = (a+b+c)/2
+        p_r = s/p
         """
         results = 0 
         for i in range(3):
@@ -288,6 +363,13 @@ class Triangle():
 
     def getEsCenters(self):
         """
+        get three centers of the escribed circle of the triangle
+        s = (aA+bB+cC)/2
+        p = (a+b+c)/2
+        p_rA = (s - aA)/(p - a)
+        p_rB = (s - bB)/(p - b)
+        p_rC = (s - cC)/(p - c)
+
         """
         results = 0 
         self.esCenters = []
@@ -306,6 +388,7 @@ class Triangle():
         return
     def getOrthoPoints(self):
         """
+        get three orthogonal points of  the triangle
         """
         self.getOrthoLines()
         self.getSideLines()
@@ -321,6 +404,7 @@ class Triangle():
 
     def getOrthoCenter(self):
         """
+        get the orthogonal center of the triangle
         """
         self.getOrthoLines()
         line1 = self.orthoLines[0]
@@ -329,12 +413,14 @@ class Triangle():
         return
     def getNewOrder(self,array):
         """
+        get the inverse order of a array
+        with a length 3
         """
         array[0],array[-1] = array[-1],array[0]
         return
-    # weight point of the triangle
     def getWeightPoint(self):
         """
+        weight point of the triangle
         """
         point = np.average(self.vertices,axis=0)
         self.weightCenter = point
@@ -342,6 +428,7 @@ class Triangle():
 
     def getCosines(self):
         """
+        get three cosine values of the angles
         """
         self.cosines = []
         for i,j in self.orders:
@@ -351,6 +438,10 @@ class Triangle():
     
     def getCosineByIndex(self,i,j):
         """
+        get cosine values give the indeces of vertices
+        input: indeces i and j, the third one should be
+                3 - i - j
+        return: the cosine value of the angle
         """
         a = self.lengths[i]
         b = self.lengths[j]
@@ -360,13 +451,15 @@ class Triangle():
 
     def getInsRadius(self):
         """
+        get the radius of the inscribed circle of the triangle
         """
         self.getArea()
         p = self.getPerimeter() / 2 
         self.insRadius = self.area / p 
         return 
-    def getEsRadius(self):
+    def getEsRadii(self):
         """
+        get three radii of the escribed circle of the triangle
         """
         self.getArea()
         p = self.getPerimeter() / 2 
@@ -463,6 +556,8 @@ class Triangle():
         self.getInsRadius()
         self.getEsRadius()
         print(self.insRadius,self.esRadius)
+        self.getEsRadii()
+        print(self.insRadius,self.esRadii)
         print("旁心",self.esCenters)
         self.draw()
     def testBisect(self):
@@ -595,7 +690,7 @@ class Triangle():
         self.getCircumCenter()
         self.getBisectLines()
         self.getInsRadius()
-        self.getEsRadius()
+        self.getEsRadii()
         self.getWeightPoint()
         self.getCircumRadius()
         self.getOrthoCenter()
@@ -603,5 +698,4 @@ class Triangle():
 
         self.printTriInfo()
         self.testBisect()
-        self.draw()
-                
+        self.draw()              
