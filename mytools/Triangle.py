@@ -22,10 +22,13 @@ import matplotlib.pyplot as plt
 
 class Triangle():
     """docstring for Triangle
-    tools to deal with triangles
-    circum circle
-    inscribed circle
-    escribed circles
+    There are a set of tools to deal with triangles, to get
+    the all kinds of properties of a triangle, you can get 
+    area, perimeter, radius or center of the inscribed circle,
+    circumscribed circle or escribed circles. You can get 
+    lengths, angles, cosine values of the angles. Also, you can
+    get the equations of orthogonal lines, middle lines, middle
+    orthogonal lines or angular bisectors.
     """
     def __init__(self):
         """
@@ -704,5 +707,4 @@ class Triangle():
 
         self.printTriInfo()
         self.testBisect()
-        self.draw()
-                
+        self.draw()              
