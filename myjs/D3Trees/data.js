@@ -4,28 +4,41 @@
 
     @author       : Deping Huang
     @mail address : xiaohengdao@gmail.com
-    @date         : 2019-05-05 06:13:57
+    @date         : 2019-05-05 06:54:43
     @project      : tree artist
-    @version      : 0.4
+    @version      : 0.5
     @source file  : run.js
 
 ============================
 
 */
 var list = {
-    "纹理=？":["坏瓜","触感=？","根蒂=？"],
-    "触感=？":["坏瓜","好瓜"],
-    "根蒂=？":["坏瓜","色泽=？","好瓜"],
-    "色泽=？":["好瓜","触感=？","坏瓜"],
-    "触感=？1":["坏瓜","好瓜"]
+    "1":["坏瓜","2","3"],
+    "2":["坏瓜","好瓜"],
+    "3":["坏瓜","4","好瓜"],
+    "4":["好瓜","5","坏瓜"],
+    "5":["坏瓜","好瓜"]
 };
-// var parents = ["纹理=？","触感=？","根蒂=？",
-//                "色泽=？","触感=？"];
-var parents = ["触感=？","根蒂=？",
-               "色泽=？","触感=？1"];
+var tran = {
+    "1":"纹理=？",
+    "2":"触感=？",
+    "3":"根蒂=？",
+    "4":"色泽=？",
+    "5":"触感=？"
+};
+// var parents = ["纹理","触感","根蒂",
+//                "色泽","触感"];
+// var parents = {"2","3",'4',"5"};
+var parents = {
+    "1":"纹理=？",
+    "2":"触感=？",
+    "3":"根蒂=？",
+    "4":"色泽=？",
+    "5":"触感=？"
+};
 
 // var data = {};
-var data = get_json("纹理=？");
+var data = get_json("1");
 console.log(data);
 
 
@@ -33,11 +46,12 @@ console.log(data);
 // get json data recursively
 function get_json(key){
     var data = {};
-    data["name"] = key;
+    data["name"] = tran[key];
     var value = list[key];
     var children = [];
-    for(var i = 0, length1 = value.length; i < length1; i++){
-        console.log(i,value[i] in parents,parents);
+    // for(var i = 0, length1 = value.length; i < length1; i++){
+    for(var length1 = value.length, i = length1 - 1; i >= 0; i--){
+        // console.log(i,value[i],value[i] in parents,parents);
         
         if (value[i] in parents) {
             // get a dict recursively here
