@@ -25,5 +25,5 @@ from .DrawCurve import DrawCurve
 from .GetDoc import GetDoc
 from .MyGUI import MyGUI
 from .DistanceMeasure import  DistanceMeasure
-
+from .GetLines import GetLines
 
