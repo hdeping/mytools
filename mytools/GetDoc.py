@@ -31,7 +31,7 @@ class GetDoc():
             and the others are the members.
         self.outputName:
             It is the name for output file,
-            initialized by "readme.md"
+            initialized by "api.md"
         """
         super(GetDoc, self).__init__()
         
@@ -43,7 +43,7 @@ class GetDoc():
                         "NameAll",
                         "Triangle",
                         "TurtlePlay"]
-        self.ouputName = "readme.md"
+        self.ouputName = "api.md"
 
     def setOutputName(self,outputName): 
         """
