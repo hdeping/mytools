@@ -95,7 +95,3 @@ class OpenFiles():
                 self.run(i)
 
         return
-        
-
-operator = OpenFiles()
-operator.main()
