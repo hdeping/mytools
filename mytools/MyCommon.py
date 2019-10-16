@@ -57,7 +57,7 @@ class MyCommon():
             if line in results:
                 results[line] += 1
             else:
-                results[line] = 0
+                results[line] = 1
 
         return results
     def getCommon(self, dict1, dict2):

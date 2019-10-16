@@ -18,6 +18,7 @@
 import requests
 from lxml import html
 from mytools import MyCommon
+from collections import OrderedDict
 
 class CrawlRecipes(MyCommon):
     """
@@ -121,7 +122,13 @@ class CrawlRecipes(MyCommon):
         print(len(results))
         # print(results)
         numbers = self.getStatiNumber(results)
+        numbers = sorted(numbers.items(),
+                         key = lambda t:t[1],
+                         reverse=True)
+        numbers = OrderedDict(numbers)
+        print(len(numbers))
         print(numbers)
+
 
         return
 
