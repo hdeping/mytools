@@ -34,8 +34,6 @@ class CrawlRecipes(MyCommon):
                         "huicai":7,"yucai":5,"xibeicai":9,"yunguicai":5,
                         "jiangxicai":3,"shanxicai":6,"guangxicai":1,
                         "gangtaicai":4,"other":56}
-        
-
     def getRecipes(self,cuisineName, cuisineUrl, pageNum):
         '''
         1) fench all recipes urls for each cuisine
@@ -71,8 +69,6 @@ class CrawlRecipes(MyCommon):
         self.writeJson(data,resFile)
 
         return
-
-
     def getIngredients(self,recipeUrl): 
         '''
         fench ingredients and its value for each recipe
@@ -94,7 +90,6 @@ class CrawlRecipes(MyCommon):
         value += tree.xpath(regex % (classTypes[1], itemTypes[2]))
         # print(ingredient,value)
         return [ingredient, value]
-
     def run(self):
         """
         docstring for run
@@ -110,9 +105,22 @@ class CrawlRecipes(MyCommon):
         print(total)
 
         return
+    def analyzeData(self):
+        """
+        read data from the json files
+        :return: None
+        """
+        self.dirs = "../data/cuisine/"
+        for key in self.cuisine:
+            filename = key + ".json"
+            data = self.loadJson(self.dirs + filename)
+            print(len(data))
+
+
+        return
     
     
 spider = CrawlRecipes()
-spider.run()
-
+# spider.run()
+spider.analyzeData()
 
