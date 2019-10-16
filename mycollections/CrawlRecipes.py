@@ -110,14 +110,31 @@ class CrawlRecipes(MyCommon):
         read data from the json files
         :return: None
         """
-        self.dirs = "../data/cuisine/"
+        self.dirs = "../../data/cuisine/"
+        results = []
         for key in self.cuisine:
             filename = key + ".json"
             data = self.loadJson(self.dirs + filename)
-            print(len(data))
+            # print(len(data))
+            ingredients = self.getIngredients(data)
+            results.extend(ingredients)
+        print(len(results))
 
 
         return
+
+    def getIngredients(self,data):
+        """
+        get all the ingredients from data
+        :param data: dicts type
+        :return: array type, all the ingredients
+        """
+        results = []
+        for key in data:
+            ingredients = data[key]
+            results.extend(ingredients)
+
+        return results
     
     
 spider = CrawlRecipes()
