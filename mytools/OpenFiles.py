@@ -42,7 +42,7 @@ class OpenFiles():
                             "lisp","cpp","go","f","f90",
                             "java","pl","log","tex","bbl","aux",
                             "bib","sh","php","makefile","Makefile",
-                            "rst"]
+                            "rst","config","gitconfig"]
         self.other_types = {"md":"typora",
                             "pdf":"evince",
                             "ps":"evince",
