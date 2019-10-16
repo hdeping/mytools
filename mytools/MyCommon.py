@@ -44,6 +44,22 @@ class MyCommon():
         """
         self.filename = filename
         return
+    def getStatiNumber(self,dicts):
+        """
+        distill the number from the ingredients array
+        :param ingredients:
+            array type, all the ingredients
+        :return:
+            dicts type, ingredients and their number
+        """
+        results = {}
+        for line in dicts:
+            if line in results:
+                results[line] += 1
+            else:
+                results[line] = 0
+
+        return results
     def getCommon(self, dict1, dict2):
         """
         get the common key of the two dicts

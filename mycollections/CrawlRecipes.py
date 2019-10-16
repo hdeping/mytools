@@ -119,10 +119,12 @@ class CrawlRecipes(MyCommon):
             ingredients = self.getIngredients(data)
             results.extend(ingredients)
         print(len(results))
-        print(results)
-
+        # print(results)
+        numbers = self.getStatiNumber(results)
+        print(numbers)
 
         return
+
 
     def getIngredients(self,data):
         """
