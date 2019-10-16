@@ -62,15 +62,27 @@ class OpenFiles():
         os.system(command)
         return
 
+    def getSuffix(self,arg):
+        """
+        get the suffix of a path
+        for example:
+            main.py --> py
+            .git/main.py --> py
+            dir/main.py --> py
+        """
+        arg = arg.split("/")
+        arg = arg[-1]
+        arg = arg.split(".")
+        arg = arg[-1]
+        return arg 
+        
     def run(self,i):
         """
         input: i, index number of the command parameters
         return: None, filename extensions will be classified 
                 and open with the corresponding command
         """
-        arg = sys.argv[i]
-        arg = arg.split(".")
-        arg = arg[-1]
+        arg = self.getSuffix(sys.argv[i])
         if   arg in self.video_types:
             self.runCommand("mplayer",i)
         elif arg in self.text_types:
