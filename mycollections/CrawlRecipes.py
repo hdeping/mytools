@@ -25,6 +25,13 @@ class CrawlRecipes():
     def __init__(self):
         super(CrawlRecipes, self).__init__()
         self.baseurl = "https://www.meishij.net/china-food/caixi"
+        self.cuisine = {"chuancai":56,"xiangcai":14,"yuecai":24,
+                        "dongbeicai":11,"lucai":21,"zhecai":11,
+                        "sucai":15,"qingzhencai":5,"mincai":17,
+                        "hucai":13,"jingcai":12,"hubeicai":7,
+                        "huicai":7,"yucai":5,"xibeicai":9,"yunguicai":5,
+                        "jiangxicai":3,"shanxicai":6,"guangxicai":1,
+                        "gangtaicai":4,"other":56}
         
 
     def getRecipes(self,cuisineName, cuisineUrl, pageNum):
@@ -61,11 +68,17 @@ class CrawlRecipes():
         '''
         page=requests.Session().get(recipeUrl)
         tree=html.fromstring(page.text)
-        ingredient = tree.xpath('//div[contains(@class, "yl zl clearfix")]/ul/li//h4/a/text()') 
-        value = tree.xpath('//div[contains(@class, "yl zl clearfix")]/ul/li//h4/span/text()')
-        print(ingredient,value)
-        ingredient += tree.xpath('//div[contains(@class, "yl fuliao clearfix")]/ul/li//h4/a/text()') 
-        value += tree.xpath('//div[contains(@class, "yl fuliao clearfix")]/ul/li/span/text()')
+        # '//div[contains(@class, "yl zl clearfix")]/ul/li//h4/a/text()'
+        # '//div[contains(@class, "yl zl clearfix")]/ul/li//h4/span/text()'
+        # '//div[contains(@class, "yl fuliao clearfix")]/ul/li//h4/a/text()'
+        # '//div[contains(@class, "yl fuliao clearfix")]/ul/li/span/text()'
+        regex = '//div[contains(@class, "yl %s clearfix")]/ul/li/%s/text()'
+        classTypes = ["zl","fuliao"]
+        itemTypes = ["/h4/a","/h4/span","span"]
+        ingredient = tree.xpath(regex % (classTypes[0], itemTypes[0])) 
+        value = tree.xpath(regex % (classTypes[0], itemTypes[1]))
+        ingredient += tree.xpath(regex % (classTypes[1], itemTypes[0])) 
+        value += tree.xpath(regex % (classTypes[1], itemTypes[2]))
         print(ingredient,value)
         return [ingredient, value]
 
@@ -74,17 +87,10 @@ class CrawlRecipes():
         docstring for run
         run the spider
         """
-        cuisine = {"chuancai":56,"xiangcai":14,"yuecai":24,
-                   "dongbeicai":11,"lucai":21,"zhecai":11,
-                   "sucai":15,"qingzhencai":5,"mincai":17,
-                   "hucai":13,"jingcai":12,"hubeicai":7,
-                   "huicai":7,"yucai":5,"xibeicai":9,"yunguicai":5,
-                   "jiangxicai":3,"shanxicai":6,"guangxicai":1,
-                   "gangtaicai":4,"other":56}
 
         
         total = 0
-        for (name, page) in cuisine.items():
+        for (name, page) in self.cuisine.items():
             url = self.baseurl + "/" + name
             total += page
             print(name,page)
