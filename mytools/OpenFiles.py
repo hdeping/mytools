@@ -41,7 +41,8 @@ class OpenFiles():
         self.text_types  = ["txt","py","c","h","html","css","js","gh",
                             "lisp","cpp","go","f","f90",
                             "java","pl","log","tex","bbl","aux",
-                            "bib","sh","php"]
+                            "bib","sh","php","makefile","Makefile",
+                            "rst"]
         self.other_types = {"md":"typora",
                             "pdf":"evince",
                             "ps":"evince",
