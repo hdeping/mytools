@@ -17,10 +17,12 @@
 
 import requests
 from lxml import html
+from mytools import MyCommon
 
-class CrawlRecipes():
+class CrawlRecipes(MyCommon):
     """
     crawl recipes from meishij.net
+    method writeJson was heritated from MyCommon
     """
     def __init__(self):
         super(CrawlRecipes, self).__init__()
@@ -42,8 +44,9 @@ class CrawlRecipes():
         Input: String cuisineName, String cuisineUrl, int pageNum
         OutPut: txt
         '''
-        resFile = cuisineName + ".txt"
+        resFile = cuisineName + ".json"
         fp = open(resFile, "w")
+        data = {}
         for i in range(1, pageNum + 1):
             url = cuisineUrl + "/" + "?&page=" + str(i)
             page = requests.Session().get(url)
@@ -55,8 +58,14 @@ class CrawlRecipes():
                 name = recipeName[i]
                 url = recipeUrl[i]
                 [ingredient, value] = self.getIngredients(url)
-                fp.write( ",".join([name] + ingredient + value ) )
-                fp.write("\n") #
+                # fp.write( ",".join([name] + ingredient + value ) )
+                # fp.write("\n") #
+                res = {}
+                res["ingredient"] = ingredient 
+                res["value"] = value 
+                data[name] = res
+
+
         fp.close()
 
 
@@ -87,7 +96,6 @@ class CrawlRecipes():
         docstring for run
         run the spider
         """
-
         
         total = 0
         for (name, page) in self.cuisine.items():
