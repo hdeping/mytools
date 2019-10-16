@@ -44,6 +44,7 @@ class OpenFiles():
                             "bib","sh","php"]
         self.other_types = {"md":"typora",
                             "pdf":"evince",
+                            "ps":"evince",
                             "docx":"wps",
                             "ppt":"wpp",
                             "pptx":"wpp",
