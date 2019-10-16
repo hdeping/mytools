@@ -119,6 +119,7 @@ class CrawlRecipes(MyCommon):
             ingredients = self.getIngredients(data)
             results.extend(ingredients)
         print(len(results))
+        print(results)
 
 
         return
@@ -131,7 +132,7 @@ class CrawlRecipes(MyCommon):
         """
         results = []
         for key in data:
-            ingredients = data[key]
+            ingredients = data[key]["ingredient"]
             results.extend(ingredients)
 
         return results
