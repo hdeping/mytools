@@ -61,6 +61,7 @@ class CrawlRecipes(MyCommon):
                 # fp.write( ",".join([name] + ingredient + value ) )
                 # fp.write("\n") #
                 res = {}
+                res["url"] = url
                 res["ingredient"] = ingredient 
                 res["value"] = value 
                 data[name] = res
