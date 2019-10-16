@@ -53,7 +53,8 @@ class CrawlRecipes(MyCommon):
             regex = '//div[contains(@class, "listtyle1_list clearfix")]/div/a/@%s'
             recipeName = tree.xpath(regex % ("title"))
             recipeUrl  = tree.xpath(regex % ("href"))
-            for ii in range(len(recipeName)):
+            length = len(recipeName)
+            for ii in range(length):
                 name = recipeName[ii]
                 url = recipeUrl[ii]
                 [ingredient, value] = self.getIngredients(url)
@@ -63,7 +64,7 @@ class CrawlRecipes(MyCommon):
                 res["ingredient"] = ingredient 
                 res["value"] = value 
                 data[name] = res
-                print(i,ii,name)
+                print("%d-%d/%d: %s"%(i,ii,length,name))
                 
         resFile = cuisineName + ".json"
         self.writeJson(data,resFile)
