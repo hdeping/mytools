@@ -44,8 +44,7 @@ class CrawlRecipes(MyCommon):
         Input: String cuisineName, String cuisineUrl, int pageNum
         OutPut: txt
         '''
-        resFile = cuisineName + ".json"
-        fp = open(resFile, "w")
+        
         data = {}
         for i in range(1, pageNum + 1):
             url = cuisineUrl + "/" + "?&page=" + str(i)
@@ -64,9 +63,10 @@ class CrawlRecipes(MyCommon):
                 res["ingredient"] = ingredient 
                 res["value"] = value 
                 data[name] = res
+        resFile = cuisineName + ".json"
+        self.writeJson(data,resFile)
 
-
-        fp.close()
+        return
 
 
     def getIngredients(self,recipeUrl): 
@@ -104,6 +104,8 @@ class CrawlRecipes(MyCommon):
             print(name,page)
             self.getRecipes(name, url, page)
         print(total)
+
+        return
     
     
 spider = CrawlRecipes()
