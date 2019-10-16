@@ -70,7 +70,7 @@ class MyCommon():
         """
         print("write to file ",filename)
         fp = open(filename,"w")
-        json.dump(data,fp,indent=4)
+        json.dump(data,fp,indent=4,ensure_ascii=False)
         fp.close()
 
         return
@@ -128,7 +128,7 @@ class MyCommon():
         print("write to file ",filename)
         fp = open(filename,"w")
         if filename.endswith("json"):
-            json.dump(data,fp,indent=4)
+            json.dump(data,fp,indent=4,ensure_ascii=False)
         elif filename.endswith("yml") or filename.endswith("yaml"):
             yaml.dump(data,fp)
         else:
