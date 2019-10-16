@@ -1,0 +1,1713 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>mytools package &#8212; mytools 1.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="mytools-package">
+<h1>mytools package<a class="headerlink" href="#mytools-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mytools.DistanceMeasure">
+<span id="mytools-distancemeasure-module"></span><h2>mytools.DistanceMeasure module<a class="headerlink" href="#module-mytools.DistanceMeasure" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-09-06 19:12:55
+&#64;project      : get some distance measures
+&#64;version      : 0.1
+&#64;source file  : DistanceMeasure.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.DistanceMeasure.DistanceMeasure">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.DistanceMeasure.</code><code class="sig-name descname">DistanceMeasure</code><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for DistanceMeasure
+different kinds of distance measures
+input: number array p</p>
+<blockquote>
+<div><p>number array q</p>
+</div></blockquote>
+<p>return: a float number</p>
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.AddSymmetric">
+<code class="sig-name descname">AddSymmetric</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.AddSymmetric" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Bhattacharyya">
+<code class="sig-name descname">Bhattacharyya</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Bhattacharyya" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Canberra">
+<code class="sig-name descname">Canberra</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Canberra" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Chebyshev">
+<code class="sig-name descname">Chebyshev</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Chebyshev" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.CityBlock">
+<code class="sig-name descname">CityBlock</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.CityBlock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Clark">
+<code class="sig-name descname">Clark</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Clark" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Cosine">
+<code class="sig-name descname">Cosine</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Cosine" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Czekanowski">
+<code class="sig-name descname">Czekanowski</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Czekanowski" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Dice">
+<code class="sig-name descname">Dice</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Dice" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Divergence">
+<code class="sig-name descname">Divergence</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Divergence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Entropy">
+<code class="sig-name descname">Entropy</code><span class="sig-paren">(</span><em class="sig-param">p</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Entropy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Euclidean">
+<code class="sig-name descname">Euclidean</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Euclidean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Fidelity">
+<code class="sig-name descname">Fidelity</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Fidelity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Gower">
+<code class="sig-name descname">Gower</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Gower" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.HarmonicMean">
+<code class="sig-name descname">HarmonicMean</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.HarmonicMean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Hellinger">
+<code class="sig-name descname">Hellinger</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Hellinger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.InnerProduct">
+<code class="sig-name descname">InnerProduct</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.InnerProduct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Intersection">
+<code class="sig-name descname">Intersection</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Intersection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Jaccard">
+<code class="sig-name descname">Jaccard</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Jaccard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Jeffreys">
+<code class="sig-name descname">Jeffreys</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Jeffreys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Jensen">
+<code class="sig-name descname">Jensen</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Jensen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.JensenShannon">
+<code class="sig-name descname">JensenShannon</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.JensenShannon" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.KDivergence">
+<code class="sig-name descname">KDivergence</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.KDivergence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.KulczynskiD">
+<code class="sig-name descname">KulczynskiD</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.KulczynskiD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.KulczynskiS">
+<code class="sig-name descname">KulczynskiS</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.KulczynskiS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.KullbackLeibler">
+<code class="sig-name descname">KullbackLeibler</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.KullbackLeibler" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Lorentzian">
+<code class="sig-name descname">Lorentzian</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Lorentzian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Matusita">
+<code class="sig-name descname">Matusita</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Matusita" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.MaxDist">
+<code class="sig-name descname">MaxDist</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.MaxDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>max distance</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.MinDist">
+<code class="sig-name descname">MinDist</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.MinDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>min distance</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Minkowski">
+<code class="sig-name descname">Minkowski</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em>, <em class="sig-param">exponent</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Minkowski" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Motyka">
+<code class="sig-name descname">Motyka</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Motyka" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Neyman">
+<code class="sig-name descname">Neyman</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Neyman" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Pearson">
+<code class="sig-name descname">Pearson</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Pearson" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.ProbSymmetric">
+<code class="sig-name descname">ProbSymmetric</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.ProbSymmetric" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Ruzicka">
+<code class="sig-name descname">Ruzicka</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Ruzicka" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Soergel">
+<code class="sig-name descname">Soergel</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Soergel" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Sorensen">
+<code class="sig-name descname">Sorensen</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Sorensen" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Squared">
+<code class="sig-name descname">Squared</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Squared" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.SquaredChord">
+<code class="sig-name descname">SquaredChord</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.SquaredChord" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.SquaredEuclidean">
+<code class="sig-name descname">SquaredEuclidean</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.SquaredEuclidean" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Tanimoto">
+<code class="sig-name descname">Tanimoto</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Tanimoto" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.Topsoe">
+<code class="sig-name descname">Topsoe</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.Topsoe" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.WaveHedges">
+<code class="sig-name descname">WaveHedges</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.WaveHedges" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.concate">
+<code class="sig-name descname">concate</code><span class="sig-paren">(</span><em class="sig-param">p</em>, <em class="sig-param">q</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.concate" title="Permalink to this definition">¶</a></dt>
+<dd><p>concatenate two arrays</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DistanceMeasure.DistanceMeasure.test">
+<code class="sig-name descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DistanceMeasure.DistanceMeasure.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>test all the distance measures</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.DrawCurve">
+<span id="mytools-drawcurve-module"></span><h2>mytools.DrawCurve module<a class="headerlink" href="#module-mytools.DrawCurve" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-08-20 07:43:10
+&#64;project      : The module for drawing curves, histgrams,</p>
+<blockquote>
+<div><p>scatter points and so on.</p>
+</div></blockquote>
+<p>&#64;version      : 0.1
+&#64;source file  : DrawCurve.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.DrawCurve.DrawCurve">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.DrawCurve.</code><code class="sig-name descname">DrawCurve</code><a class="headerlink" href="#mytools.DrawCurve.DrawCurve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for DrawCurve
+It is used for visualization of scientific data</p>
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.barsData">
+<code class="sig-name descname">barsData</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.barsData" title="Permalink to this definition">¶</a></dt>
+<dd><p>visual the data with bars</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for drawing</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.getFileName">
+<code class="sig-name descname">getFileName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.getFileName" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the filename of the output png 
+corresponding to how many images exists in the 
+current directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.histData">
+<code class="sig-name descname">histData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.histData" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a histagram</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.plotData">
+<code class="sig-name descname">plotData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.plotData" title="Permalink to this definition">¶</a></dt>
+<dd><p>load data from self.dataFileName and 
+plot the data with lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setCurveLabels">
+<code class="sig-name descname">setCurveLabels</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setCurveLabels" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the labels of the curve</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setCurveLegends">
+<code class="sig-name descname">setCurveLegends</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setCurveLegends" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the legends of the curve</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setCurveTicks">
+<code class="sig-name descname">setCurveTicks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setCurveTicks" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the ticks of the curve</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setCurveTitle">
+<code class="sig-name descname">setCurveTitle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setCurveTitle" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the title of the curve</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setDataFileName">
+<code class="sig-name descname">setDataFileName</code><span class="sig-paren">(</span><em class="sig-param">dataFileName</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setDataFileName" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the dataFileName</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.setSizes">
+<code class="sig-name descname">setSizes</code><span class="sig-paren">(</span><em class="sig-param">titleSize</em>, <em class="sig-param">labelSize</em>, <em class="sig-param">tickSize</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.setSizes" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the fontsizes of title, labels
+and ticks</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.splineData">
+<code class="sig-name descname">splineData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.splineData" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the B-spline of the scatter point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawCurve.DrawCurve.test">
+<code class="sig-name descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawCurve.DrawCurve.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>test for the DrawCurve module</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.DrawPig">
+<span id="mytools-drawpig-module"></span><h2>mytools.DrawPig module<a class="headerlink" href="#module-mytools.DrawPig" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-06 22:59:18</p>
+<blockquote>
+<div><p>2019-10-08 00:05:50</p>
+</div></blockquote>
+<p>&#64;project      : test turtle
+&#64;version      : 0.1
+&#64;source file  : main.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.DrawPig.DrawPig">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.DrawPig.</code><code class="sig-name descname">DrawPig</code><a class="headerlink" href="#mytools.DrawPig.DrawPig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mytools.TurtlePlay.TurtlePlay" title="mytools.TurtlePlay.TurtlePlay"><code class="xref py py-class docutils literal notranslate"><span class="pre">mytools.TurtlePlay.TurtlePlay</span></code></a></p>
+<p>docstring for DrawPig</p>
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.cutePig">
+<code class="sig-name descname">cutePig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.cutePig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawBody">
+<code class="sig-name descname">drawBody</code><span class="sig-paren">(</span><em class="sig-param">height</em>, <em class="sig-param">centers</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawBody" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawCircles">
+<code class="sig-name descname">drawCircles</code><span class="sig-paren">(</span><em class="sig-param">centers</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawCircles" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawLines">
+<code class="sig-name descname">drawLines</code><span class="sig-paren">(</span><em class="sig-param">lines</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: lines, 2d array
+such as : [[0,90],[90,2]…]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigBody">
+<code class="sig-name descname">drawPigBody</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigBody" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigCheek">
+<code class="sig-name descname">drawPigCheek</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigCheek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigEar">
+<code class="sig-name descname">drawPigEar</code><span class="sig-paren">(</span><em class="sig-param">lines</em>, <em class="sig-param">centers</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigEar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigEars">
+<code class="sig-name descname">drawPigEars</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigEars" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigEye">
+<code class="sig-name descname">drawPigEye</code><span class="sig-paren">(</span><em class="sig-param">lines</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigEye" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigEyes">
+<code class="sig-name descname">drawPigEyes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigEyes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigFeet">
+<code class="sig-name descname">drawPigFeet</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigFeet" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigFoot">
+<code class="sig-name descname">drawPigFoot</code><span class="sig-paren">(</span><em class="sig-param">lines</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigFoot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigHands">
+<code class="sig-name descname">drawPigHands</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigHands" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigHead">
+<code class="sig-name descname">drawPigHead</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigHead" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigInit">
+<code class="sig-name descname">drawPigInit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigInit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigMouth">
+<code class="sig-name descname">drawPigMouth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigMouth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigNose">
+<code class="sig-name descname">drawPigNose</code><span class="sig-paren">(</span><em class="sig-param">lines</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigNose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigNoses">
+<code class="sig-name descname">drawPigNoses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigNoses" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.drawPigTail">
+<code class="sig-name descname">drawPigTail</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.drawPigTail" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.fillEar">
+<code class="sig-name descname">fillEar</code><span class="sig-paren">(</span><em class="sig-param">centers</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.fillEar" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.fillRegion">
+<code class="sig-name descname">fillRegion</code><span class="sig-paren">(</span><em class="sig-param">radius</em>, <em class="sig-param">color=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.fillRegion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="mytools.DrawPig.DrawPig.setPigColors">
+<code class="sig-name descname">setPigColors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.DrawPig.DrawPig.setPigColors" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.Excel">
+<span id="mytools-excel-module"></span><h2>mytools.Excel module<a class="headerlink" href="#module-mytools.Excel" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-04-15 09:24:45</p>
+<blockquote>
+<div><p>2019年09月23日 23:15:16
+2019-10-08 09:42:00
+2019年10月08日 10:03:38</p>
+</div></blockquote>
+<p>&#64;project      : tian di jing hua
+&#64;version      : 1.5
+&#64;source file  : function.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.Excel.Excel">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.Excel.</code><code class="sig-name descname">Excel</code><a class="headerlink" href="#mytools.Excel.Excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mytools.MyCommon.MyCommon" title="mytools.MyCommon.MyCommon"><code class="xref py py-class docutils literal notranslate"><span class="pre">mytools.MyCommon.MyCommon</span></code></a></p>
+<p>Dealing with Excel files with xlrd and xlwt module
+Some functions are inheritated from MyCommon</p>
+<dl class="method">
+<dt id="mytools.Excel.Excel.arr2Dicts">
+<code class="sig-name descname">arr2Dicts</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.arr2Dicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>一个一维字符串数组转为字典</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getDicts">
+<code class="sig-name descname">getDicts</code><span class="sig-paren">(</span><em class="sig-param">keys</em>, <em class="sig-param">values</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getDicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>keys, values —&gt; dicts</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getFeeDicts">
+<code class="sig-name descname">getFeeDicts</code><span class="sig-paren">(</span><em class="sig-param">sheet</em>, <em class="sig-param">i</em>, <em class="sig-param">j</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getFeeDicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a dict from two arrays
+such as , [“a”,”b”], [1,2] —&gt;
+{“a”:1,”b”:2}
+intput: sheet, a 2D array</p>
+<blockquote>
+<div><p>i,j, index of two columns of the sheet</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getFirstRowDicts">
+<code class="sig-name descname">getFirstRowDicts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getFirstRowDicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>得到第一行（更新时间，数量等关键字）对应的列数
+返回一个字典</p>
+<blockquote>
+<div><p>比如  res[‘订单’] = 0等信息</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getFoundamentalDicts">
+<code class="sig-name descname">getFoundamentalDicts</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getFoundamentalDicts" title="Permalink to this definition">¶</a></dt>
+<dd><p>基础数据中
+货品名称和品相的对应关系
+返回一个字典</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getMatch">
+<code class="sig-name descname">getMatch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getMatch" title="Permalink to this definition">¶</a></dt>
+<dd><p>compare three sheets and get the data
+with common keys</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getNewDict">
+<code class="sig-name descname">getNewDict</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getNewDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>get rid of ”    ” in the key of a dictionary
+read dicts from the filename
+print the new dicts to a new file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getSheets">
+<code class="sig-name descname">getSheets</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getSheets" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three arrays from three sheets of 
+the two xlsx files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getStatiData">
+<code class="sig-name descname">getStatiData</code><span class="sig-paren">(</span><em class="sig-param">splitted_data</em>, <em class="sig-param">all_species</em>, <em class="sig-param">dates</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getStatiData" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>输入:</dt><dd><p>splitted_data: 分割后的数据
+all_species  : 品相
+dates        : 日期，从”1日”到”31日”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.getStoreKeys">
+<code class="sig-name descname">getStoreKeys</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">first_row_dicts</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.getStoreKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>得到所有配送门店类型</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.init">
+<code class="sig-name descname">init</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the filename and get self.total_data
+from the file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.loadData">
+<code class="sig-name descname">loadData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.loadData" title="Permalink to this definition">¶</a></dt>
+<dd><p>load data from self.filename,
+and get self.total_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.splitData">
+<code class="sig-name descname">splitData</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">first_row_dicts</em>, <em class="sig-param">dicts_species</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.splitData" title="Permalink to this definition">¶</a></dt>
+<dd><p>将原始数据数组进行拆分
+得到一个字典
+键是配送门店名称，
+值是 二维数据
+每一行是一个订单
+每一列是相应订单的品相，日期，数量</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.table2Array">
+<code class="sig-name descname">table2Array</code><span class="sig-paren">(</span><em class="sig-param">sheet_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.table2Array" title="Permalink to this definition">¶</a></dt>
+<dd><p>把表格转化为数组形式
+input: sheet_name, name of the sheet</p>
+<p>data in the sheet_name would be extracted
+to a array from the self.total_data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeCommon">
+<code class="sig-name descname">writeCommon</code><span class="sig-paren">(</span><em class="sig-param">dict1</em>, <em class="sig-param">dict2</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeCommon" title="Permalink to this definition">¶</a></dt>
+<dd><p>write data with common keys into a file
+input: two dicts and a filename</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeDictsXlsx">
+<code class="sig-name descname">writeDictsXlsx</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeDictsXlsx" title="Permalink to this definition">¶</a></dt>
+<dd><p>load dicts from json files and 
+write array into a xls file
+names = [[“商家出库单号”,”运费”],</p>
+<blockquote>
+<div><p>[“外部单号”,”京东C端运费”],
+[“原始单号”,”运费”],
+[“2与1对比单号”,”2减去1运费差额”],
+[“3与1对比单号”,”3减去1运费差额”],
+[“3与2对比单号”,”3减去2运费差额”]]</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeSheet">
+<code class="sig-name descname">writeSheet</code><span class="sig-paren">(</span><em class="sig-param">booksheet</em>, <em class="sig-param">dicts</em>, <em class="sig-param">names</em>, <em class="sig-param">index</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeSheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>booksheet: class of the sheet of the excel
+dicts: data
+names: array, [“name1”,”name2”]
+index: index of the column</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeSheetOld">
+<code class="sig-name descname">writeSheetOld</code><span class="sig-paren">(</span><em class="sig-param">workbook</em>, <em class="sig-param">key</em>, <em class="sig-param">data</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeSheetOld" title="Permalink to this definition">¶</a></dt>
+<dd><p>写入一个sheet
+输入:</p>
+<blockquote>
+<div><p>workbook: excel类
+key     : sheet名称
+data    : 待写入数组</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeSpeciesSheet">
+<code class="sig-name descname">writeSpeciesSheet</code><span class="sig-paren">(</span><em class="sig-param">workbook</em>, <em class="sig-param">key</em>, <em class="sig-param">data</em>, <em class="sig-param">rowsAndCols</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeSpeciesSheet" title="Permalink to this definition">¶</a></dt>
+<dd><p>写入一个sheet，记录统计信息
+输入:</p>
+<blockquote>
+<div><p>workbook   : excel类
+key        : sheet名称，这里是一个配送门店
+data       : 待写入数组，大小是(13,31)
+rowsAndCols: 数组，第一行是品相数组，长度为13</p>
+<blockquote>
+<div><p>第二行是日期数组，长度为31</p>
+</div></blockquote>
+</div></blockquote>
+<p>格式:
+门店名称 品相 1日 2日。。。。。 31日  合计配送数量</p>
+<blockquote>
+<div><p>。。。。。。。。。。。。。。。。。。。。
+合计</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeTotalXls">
+<code class="sig-name descname">writeTotalXls</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">final_data</em>, <em class="sig-param">filename</em>, <em class="sig-param">rowsAndCols</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeTotalXls" title="Permalink to this definition">¶</a></dt>
+<dd><p>所有内容输出成一个xls格式excel文件:
+输入:</p>
+<blockquote>
+<div><p>data       : 原始数据数组,大小是 (3225,29)
+final_data : 处理后的数组字典
+filename   : 输出文件名称，比如 “final.xls”
+rowsAndCols: 数组，第一行是品相数组，长度为13</p>
+<blockquote>
+<div><p>第二行是日期数组，长度为31</p>
+</div></blockquote>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Excel.Excel.writeXlsx">
+<code class="sig-name descname">writeXlsx</code><span class="sig-paren">(</span><em class="sig-param">table_array</em>, <em class="sig-param">filename</em>, <em class="sig-param">sheet_name</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Excel.Excel.writeXlsx" title="Permalink to this definition">¶</a></dt>
+<dd><p>把数组输出成xls格式文件
+暂时不支持输出xlsx格式，必要的话
+暂时可用excel将xls转化成xlsx
+input: table_array, array type</p>
+<blockquote>
+<div><p>filename, name of the xls file
+sheet_name, name of the sheet</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.GetDoc">
+<span id="mytools-getdoc-module"></span><h2>mytools.GetDoc module<a class="headerlink" href="#module-mytools.GetDoc" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-09 10:39:12
+&#64;project      : get the docstring of a module
+&#64;version      : 1.0
+&#64;source file  : GetDoc.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.GetDoc.GetDoc">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.GetDoc.</code><code class="sig-name descname">GetDoc</code><a class="headerlink" href="#mytools.GetDoc.GetDoc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for GetDoc
+convert the docstrings into  a README file</p>
+<dl class="method">
+<dt id="mytools.GetDoc.GetDoc.getNewModule">
+<code class="sig-name descname">getNewModule</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetDoc.GetDoc.getNewModule" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is generater for the module name
+for example, mytools –&gt; mytools</p>
+<blockquote>
+<div><p>Triangle –&gt; mytools.Triangle</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.GetDoc.GetDoc.output">
+<code class="sig-name descname">output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetDoc.GetDoc.output" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert the docstrings into a txt file with 
+the command pydoc</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.GetDoc.GetDoc.setOutputName">
+<code class="sig-name descname">setOutputName</code><span class="sig-paren">(</span><em class="sig-param">outputName</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetDoc.GetDoc.setOutputName" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset self.outputName</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.GetLines">
+<span id="mytools-getlines-module"></span><h2>mytools.GetLines module<a class="headerlink" href="#module-mytools.GetLines" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-09 22:45:14
+&#64;project      : get the lines of python code 
+&#64;version      : 0.1
+&#64;source file  : getLines.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.GetLines.GetLines">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.GetLines.</code><code class="sig-name descname">GetLines</code><a class="headerlink" href="#mytools.GetLines.GetLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for GetLines</p>
+<dl class="method">
+<dt id="mytools.GetLines.GetLines.getValue">
+<code class="sig-name descname">getValue</code><span class="sig-paren">(</span><em class="sig-param">command</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetLines.GetLines.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for getValue
+input: command, a linux command based on wc
+return: total lines of the code</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.GetLines.GetLines.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetLines.GetLines.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for run
+get the total lines of the code</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.GetLines.GetLines.splitNames">
+<code class="sig-name descname">splitNames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.GetLines.GetLines.splitNames" title="Permalink to this definition">¶</a></dt>
+<dd><p>docstring for splitNames
+split filenames into 2d array</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.MyCommon">
+<span id="mytools-mycommon-module"></span><h2>mytools.MyCommon module<a class="headerlink" href="#module-mytools.MyCommon" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-08 10:18:12
+&#64;project      : Some Common Functions Collections
+&#64;version      : 1.0
+&#64;source file  : MyCommon.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.MyCommon.MyCommon">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.MyCommon.</code><code class="sig-name descname">MyCommon</code><a class="headerlink" href="#mytools.MyCommon.MyCommon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for MyCommon
+In this module, I pack some frequenty used functions</p>
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.getCommon">
+<code class="sig-name descname">getCommon</code><span class="sig-paren">(</span><em class="sig-param">dict1</em>, <em class="sig-param">dict2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.getCommon" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the common key of the two dicts
+and get a dicts with the difference value
+as a new value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.loadFile">
+<code class="sig-name descname">loadFile</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.loadFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>load data from the file
+If it is a yml or yaml type,
+yaml module would be used,
+if it is a json type, json module
+would be used, any other formats are not 
+supported
+input: filename, string type
+return: data, dicts type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.loadJson">
+<code class="sig-name descname">loadJson</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.loadJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>load data from the json file
+input: filename, string type
+return: data, dicts type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.setDirs">
+<code class="sig-name descname">setDirs</code><span class="sig-paren">(</span><em class="sig-param">dirs</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.setDirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the data directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.setFileDirs">
+<code class="sig-name descname">setFileDirs</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.setFileDirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the filename with absolute path
+input: filename, such as “/home/test/data.txt”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.setFilename">
+<code class="sig-name descname">setFilename</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.setFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the filename with relative path
+input: filename, such as “data.txt”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.writeCSV">
+<code class="sig-name descname">writeCSV</code><span class="sig-paren">(</span><em class="sig-param">table_array</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.writeCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>把数组写成csv文件输出，以tab符作为间隔符号
+同时，应去除原始文本中多余的tab符</p>
+<p>write the array into a csv file with the tab as 
+delimiters. On the same time, extraordinary tabs 
+are deliminated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.writeFile">
+<code class="sig-name descname">writeFile</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.writeFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>write data to the file.
+If it is a yml or yaml type,
+yaml module would be used,
+if it is a json type, json module
+would be used, any other formats are not 
+supported.
+write dicts data into a json file
+input: data, dicts type</p>
+<blockquote>
+<div><p>filename, string type</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyCommon.MyCommon.writeJson">
+<code class="sig-name descname">writeJson</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyCommon.MyCommon.writeJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>write dicts data into a json file
+input: data, dicts type</p>
+<blockquote>
+<div><p>filename, string type</p>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.MyGUI">
+<span id="mytools-mygui-module"></span><h2>mytools.MyGUI module<a class="headerlink" href="#module-mytools.MyGUI" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:dphuang3&#37;&#52;&#48;iflytek&#46;com">dphuang3<span>&#64;</span>iflytek<span>&#46;</span>com</a></p>
+<blockquote>
+<div><p><a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a></p>
+</div></blockquote>
+<dl class="simple">
+<dt>&#64;date<span class="classifier">2019年09月29日 18:42:05</span></dt><dd><p>2019-10-09 14:09:15</p>
+</dd>
+</dl>
+<p>&#64;project      : GUI for triangle area calculation
+&#64;version      : 0.1
+&#64;source file  : Triangle.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.MyGUI.MyGUI">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.MyGUI.</code><code class="sig-name descname">MyGUI</code><a class="headerlink" href="#mytools.MyGUI.MyGUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mytools.Triangle.Triangle" title="mytools.Triangle.Triangle"><code class="xref py py-class docutils literal notranslate"><span class="pre">mytools.Triangle.Triangle</span></code></a></p>
+<p>my gui based on tkinter</p>
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.interface">
+<code class="sig-name descname">interface</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>main function for interface design</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.setButton">
+<code class="sig-name descname">setButton</code><span class="sig-paren">(</span><em class="sig-param">text=None</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.setButton" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for button settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.setEntry">
+<code class="sig-name descname">setEntry</code><span class="sig-paren">(</span><em class="sig-param">index</em>, <em class="sig-param">row</em>, <em class="sig-param">col</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.setEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for entry settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.setLabel">
+<code class="sig-name descname">setLabel</code><span class="sig-paren">(</span><em class="sig-param">text</em>, <em class="sig-param">row</em>, <em class="sig-param">col</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.setLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>function for label settings</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.setText">
+<code class="sig-name descname">setText</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.setText" title="Permalink to this definition">¶</a></dt>
+<dd><p>set text box</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.setWidgetSize">
+<code class="sig-name descname">setWidgetSize</code><span class="sig-paren">(</span><em class="sig-param">width</em>, <em class="sig-param">height</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.setWidgetSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the height and the width 
+of the tkinter window</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.MyGUI.MyGUI.show">
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.MyGUI.MyGUI.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>binding function for the command
+area is calculated and displayed 
+in the text box</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.NameAll">
+<span id="mytools-nameall-module"></span><h2>mytools.NameAll module<a class="headerlink" href="#module-mytools.NameAll" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-04-10 17:27:39</p>
+<blockquote>
+<div><p>2019-10-07 11:14:02</p>
+</div></blockquote>
+<p>&#64;project      : rename all the files with blanks
+&#64;version      : 1.0
+&#64;source file  : nameall.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.NameAll.NameAll">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.NameAll.</code><code class="sig-name descname">NameAll</code><a class="headerlink" href="#mytools.NameAll.NameAll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for Rename
+rename the files in the current directory</p>
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.arr2string">
+<code class="sig-name descname">arr2string</code><span class="sig-paren">(</span><em class="sig-param">arr</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.arr2string" title="Permalink to this definition">¶</a></dt>
+<dd><p>array to string
+[“a”,’b’,’c’] -&gt; ‘abc’
+one line is enough 
+string = “”.join(arr)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.getCapitalize">
+<code class="sig-name descname">getCapitalize</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.getCapitalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the capitalized format of a string array
+map function is used here
+filename = list(map(self.normallize,filename))</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.getCurrentFiles">
+<code class="sig-name descname">getCurrentFiles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.getCurrentFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the filenames in the current directory,
+with the help of ls command</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.getNewFilename">
+<code class="sig-name descname">getNewFilename</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.getNewFilename" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the new filename of a old one,
+characters like [?()[]’”{}#&amp;/,. would
+be deliminated
+“a .. ? b ..pdf” -&gt; “AB.pdf”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.getStdStr">
+<code class="sig-name descname">getStdStr</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.getStdStr" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a standard string
+“ab ac ab” -&gt; “AbAcAb”
+input: filename, string type
+return: a new string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.getSuffixIndex">
+<code class="sig-name descname">getSuffixIndex</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.getSuffixIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the suffix of a string
+such as : foo.xxx -&gt; -3
+filename[-3:] = “xxx”</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.normallize">
+<code class="sig-name descname">normallize</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.normallize" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the capitalized format of a word</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.NameAll.NameAll.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.NameAll.NameAll.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>rename the files with the help of mv 
+command after we get the new names</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.OpenFiles">
+<span id="mytools-openfiles-module"></span><h2>mytools.OpenFiles module<a class="headerlink" href="#module-mytools.OpenFiles" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-15 16:41:06
+&#64;project      : open files with different filename extensions
+&#64;version      : 1.0
+&#64;source file  : open</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.OpenFiles.OpenFiles">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.OpenFiles.</code><code class="sig-name descname">OpenFiles</code><a class="headerlink" href="#mytools.OpenFiles.OpenFiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>open files with different commands</p>
+<dl class="method">
+<dt id="mytools.OpenFiles.OpenFiles.main">
+<code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.OpenFiles.OpenFiles.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>main function for analyzing
+each command parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.OpenFiles.OpenFiles.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">i</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.OpenFiles.OpenFiles.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: i, index number of the command parameters
+return: None, filename extensions will be classified</p>
+<blockquote>
+<div><p>and open with the corresponding command</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.OpenFiles.OpenFiles.runCommand">
+<code class="sig-name descname">runCommand</code><span class="sig-paren">(</span><em class="sig-param">program</em>, <em class="sig-param">i</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.OpenFiles.OpenFiles.runCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>open the i-th file withe a specific program</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.Triangle">
+<span id="mytools-triangle-module"></span><h2>mytools.Triangle module<a class="headerlink" href="#module-mytools.Triangle" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-08 12:25:35
+&#64;project      : some toolkits for triangle computation
+&#64;version      : 0.1
+&#64;source file  : Triangle.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.Triangle.Triangle">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.Triangle.</code><code class="sig-name descname">Triangle</code><a class="headerlink" href="#mytools.Triangle.Triangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for Triangle
+There are a set of tools to deal with triangles, to get
+the all kinds of properties of a triangle, you can get 
+area, perimeter, radius or center of the inscribed circle,
+circumscribed circle or escribed circles. You can get 
+lengths, angles, cosine values of the angles. Also, you can
+get the equations of orthogonal lines, middle lines, middle
+orthogonal lines or angular bisectors.</p>
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw the triangle, inscribed center
+and three escribed centers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.drawLine">
+<code class="sig-name descname">drawLine</code><span class="sig-paren">(</span><em class="sig-param">point1</em>, <em class="sig-param">point2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.drawLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw the line with two points
+input: two points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getAngles">
+<code class="sig-name descname">getAngles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getAngles" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three angles of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getArea">
+<code class="sig-name descname">getArea</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the area of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getBisectLines">
+<code class="sig-name descname">getBisectLines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getBisectLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get six angular bisectors of the triangleof the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getCircumCenter">
+<code class="sig-name descname">getCircumCenter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getCircumCenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the center of the circumscribed circle of the triangle,
+which is the intersection point of two middle orthogonal
+lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getCircumRadius">
+<code class="sig-name descname">getCircumRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getCircumRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the radius of the circumscribed cricle of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getCosineByIndex">
+<code class="sig-name descname">getCosineByIndex</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">j</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getCosineByIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>get cosine values give the indeces of vertices
+input: indeces i and j, the third one should be</p>
+<blockquote>
+<div><p>3 - i - j</p>
+</div></blockquote>
+<p>return: the cosine value of the angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getCosines">
+<code class="sig-name descname">getCosines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getCosines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three cosine values of the angles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getDist">
+<code class="sig-name descname">getDist</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">vertix2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getDist" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the L2 distance of two vertices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getEsCenters">
+<code class="sig-name descname">getEsCenters</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getEsCenters" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three centers of the escribed circle of the triangle
+s = (aA+bB+cC)/2
+p = (a+b+c)/2
+p_rA = (s - aA)/(p - a)
+p_rB = (s - bB)/(p - b)
+p_rC = (s - cC)/(p - c)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getEsRadii">
+<code class="sig-name descname">getEsRadii</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getEsRadii" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three radii of the escribed circle of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getInsCenter">
+<code class="sig-name descname">getInsCenter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getInsCenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the center of the inscribed circle of the triangle
+s = (aA+bB+cC)/2
+p = (a+b+c)/2
+p_r = s/p</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getInsRadius">
+<code class="sig-name descname">getInsRadius</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getInsRadius" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the radius of the inscribed circle of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getInterVertix">
+<code class="sig-name descname">getInterVertix</code><span class="sig-paren">(</span><em class="sig-param">line1</em>, <em class="sig-param">line2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getInterVertix" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the intersection of two lines
+input: two lines
+return: a point</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getLengths">
+<code class="sig-name descname">getLengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getLengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three side length of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getMidLines">
+<code class="sig-name descname">getMidLines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getMidLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three middle lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getMidOrthoLine">
+<code class="sig-name descname">getMidOrthoLine</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">vertix2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getMidOrthoLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>get a middle orthogonal line
+input: two points
+return: a line</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getMidOrthoLines">
+<code class="sig-name descname">getMidOrthoLines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getMidOrthoLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three middle orthogonal lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getMidPoint">
+<code class="sig-name descname">getMidPoint</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">vertix2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getMidPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>middle point of two points</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getNewOrder">
+<code class="sig-name descname">getNewOrder</code><span class="sig-paren">(</span><em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getNewOrder" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the inverse order of a array
+with a length 3</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getOrthoCenter">
+<code class="sig-name descname">getOrthoCenter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getOrthoCenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the orthogonal center of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getOrthoLine">
+<code class="sig-name descname">getOrthoLine</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">vertix2</em>, <em class="sig-param">vertix3</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getOrthoLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the orthogonal line give three  vertices
+a point vertix3 on the line, 
+which is orthogonal to the one through vertix1 and vertix2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getOrthoLineByIndex">
+<code class="sig-name descname">getOrthoLineByIndex</code><span class="sig-paren">(</span><em class="sig-param">i</em>, <em class="sig-param">j</em>, <em class="sig-param">k</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getOrthoLineByIndex" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the orthogonal line give three indeces of the vertices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getOrthoLines">
+<code class="sig-name descname">getOrthoLines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getOrthoLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three orthogonal lines of the triangle
+AA’, BB’, CC’</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getOrthoPoints">
+<code class="sig-name descname">getOrthoPoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getOrthoPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three orthogonal points of  the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getPerimeter">
+<code class="sig-name descname">getPerimeter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getPerimeter" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the perimeter of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getSideLines">
+<code class="sig-name descname">getSideLines</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getSideLines" title="Permalink to this definition">¶</a></dt>
+<dd><p>get three side lines</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getVectorAngle">
+<code class="sig-name descname">getVectorAngle</code><span class="sig-paren">(</span><em class="sig-param">vec1</em>, <em class="sig-param">vec2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getVectorAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: two vectors
+return: cosine value of their angle
+cos    heta = Adot B/(||A|| * ||B||)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getVerticeAngle">
+<code class="sig-name descname">getVerticeAngle</code><span class="sig-paren">(</span><em class="sig-param">vertex1</em>, <em class="sig-param">vertex2</em>, <em class="sig-param">vertex3</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getVerticeAngle" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: three vertices
+return: cosine value of the angle
+the second vertix is the center of the angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getVerticesLine">
+<code class="sig-name descname">getVerticesLine</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">vertix2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getVerticesLine" title="Permalink to this definition">¶</a></dt>
+<dd><p>(x1,y1), (x2,y2) 
+(y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
+(y2 - y1)(x - x1) + (x1 - x2)(y - y1)
+input: two vertices
+return: a line [A,B,C]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getVertixSlope">
+<code class="sig-name descname">getVertixSlope</code><span class="sig-paren">(</span><em class="sig-param">vertix1</em>, <em class="sig-param">slope</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getVertixSlope" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the line with a vertix and slope
+input: vertix [x,y] and a slope [A,B]
+return: a line [A,B,C]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.getWeightPoint">
+<code class="sig-name descname">getWeightPoint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.getWeightPoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>weight point of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.isOrtho">
+<code class="sig-name descname">isOrtho</code><span class="sig-paren">(</span><em class="sig-param">line1</em>, <em class="sig-param">line2</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.isOrtho" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: two lines
+return: bool, if two lines are orthogonal</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.isTriangle">
+<code class="sig-name descname">isTriangle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.isTriangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>judge if it is a triangle
+a + b &gt; c -&gt; (a+b+c)/2 &gt; c</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.printArray">
+<code class="sig-name descname">printArray</code><span class="sig-paren">(</span><em class="sig-param">prefix</em>, <em class="sig-param">labels</em>, <em class="sig-param">array</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.printArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>input: prefix, such as “length”
+input: labels, such as [“A”]
+array: array type, such as [1] or [[1,2]]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.printLengths">
+<code class="sig-name descname">printLengths</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.printLengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>print out three lengths of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.printTriInfo">
+<code class="sig-name descname">printTriInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.printTriInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>print out the properties of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.printVertices">
+<code class="sig-name descname">printVertices</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.printVertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>print out three vertices of the triangle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the properties of the triangle 
+and print them out</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.setLengths">
+<code class="sig-name descname">setLengths</code><span class="sig-paren">(</span><em class="sig-param">a</em>, <em class="sig-param">b</em>, <em class="sig-param">c</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.setLengths" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the lengths given three values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.setVertices">
+<code class="sig-name descname">setVertices</code><span class="sig-paren">(</span><em class="sig-param">vertices</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.setVertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for the coordinate of vertices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.test">
+<code class="sig-name descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>test the module 
+and draw the triangle, inscribed center
+and three escribed centers</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.Triangle.Triangle.testBisect">
+<code class="sig-name descname">testBisect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.Triangle.Triangle.testBisect" title="Permalink to this definition">¶</a></dt>
+<dd><p>test the bisection lines.
+judge if the inner bisection lines 
+are orthogonal to the outer ones.
+There are three orthogonal pairs.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools.TurtlePlay">
+<span id="mytools-turtleplay-module"></span><h2>mytools.TurtlePlay module<a class="headerlink" href="#module-mytools.TurtlePlay" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-07 00:10:36</p>
+<blockquote>
+<div><p>2019-10-09 10:15:11</p>
+</div></blockquote>
+<p>&#64;project      : turtle animation
+&#64;version      : 1.0
+&#64;source file  : TurtlePlay.py</p>
+</div></blockquote>
+<hr class="docutils" />
+<dl class="class">
+<dt id="mytools.TurtlePlay.TurtlePlay">
+<em class="property">class </em><code class="sig-prename descclassname">mytools.TurtlePlay.</code><code class="sig-name descname">TurtlePlay</code><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>docstring for TurtlePlay
+It is module for presentation of the usage of turtle module</p>
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.draw">
+<code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw the pattern
+length is smaller and smaller in each step</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.drawPolygons">
+<code class="sig-name descname">drawPolygons</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.drawPolygons" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw polygons 
+add length by 3.5 after drawing a polygon</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.drawSquares">
+<code class="sig-name descname">drawSquares</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.drawSquares" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw squares
+add length by 3.5 after drawing a square</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.initParas">
+<code class="sig-name descname">initParas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.initParas" title="Permalink to this definition">¶</a></dt>
+<dd><p>initialize the parameters</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.polygon">
+<code class="sig-name descname">polygon</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.polygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw a single polygon
+with the shape turtle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.printParas">
+<code class="sig-name descname">printParas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.printParas" title="Permalink to this definition">¶</a></dt>
+<dd><p>print out all the parameters
+including theta, length, number and speed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setColor">
+<code class="sig-name descname">setColor</code><span class="sig-paren">(</span><em class="sig-param">colors</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the color 
+input: colors, array with two items
+such as : [“red”,”red”]</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setLength">
+<code class="sig-name descname">setLength</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setLength" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the length of the line</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setNumber">
+<code class="sig-name descname">setNumber</code><span class="sig-paren">(</span><em class="sig-param">number</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the number of cycles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setParas">
+<code class="sig-name descname">setParas</code><span class="sig-paren">(</span><em class="sig-param">theta</em>, <em class="sig-param">length</em>, <em class="sig-param">number</em>, <em class="sig-param">speed</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setParas" title="Permalink to this definition">¶</a></dt>
+<dd><p>setup for all the parameters
+including theta, length, number and speed</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setSpeed">
+<code class="sig-name descname">setSpeed</code><span class="sig-paren">(</span><em class="sig-param">speed</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setSpeed" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the fps(frames per second)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.setTheta">
+<code class="sig-name descname">setTheta</code><span class="sig-paren">(</span><em class="sig-param">theta</em><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.setTheta" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the rotation angle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.square">
+<code class="sig-name descname">square</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.square" title="Permalink to this definition">¶</a></dt>
+<dd><p>draw a single square
+with the shape turtle</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.test">
+<code class="sig-name descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>test for drawing the squares</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.testPolygon">
+<code class="sig-name descname">testPolygon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.testPolygon" title="Permalink to this definition">¶</a></dt>
+<dd><p>test for drawing the polygons
+n was set to be 5</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="mytools.TurtlePlay.TurtlePlay.writeImage">
+<code class="sig-name descname">writeImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#mytools.TurtlePlay.TurtlePlay.writeImage" title="Permalink to this definition">¶</a></dt>
+<dd><p>write the image into ps and pdf
+ps2pdf is a linux command which 
+converts a .ps file into a .pdf one</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mytools">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mytools" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<blockquote>
+<div><p>&#64;author       : Deping Huang
+&#64;mail address : <a class="reference external" href="mailto:xiaohengdao&#37;&#52;&#48;gmail&#46;com">xiaohengdao<span>&#64;</span>gmail<span>&#46;</span>com</a>
+&#64;date         : 2019-10-07 00:27:08
+&#64;project      : my python tools
+&#64;version      : 1.0
+&#64;source file  : __init__.py</p>
+</div></blockquote>
+<hr class="docutils" />
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">mytools</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Deping Huang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/mytools.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
