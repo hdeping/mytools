@@ -147,7 +147,7 @@ class CrawlRecipes(MyCommon):
         return results
     
     
-spider = CrawlRecipes()
+#spider = CrawlRecipes()
 # spider.run()
-spider.analyzeData()
+#spider.analyzeData()
 
