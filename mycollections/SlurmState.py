@@ -47,7 +47,7 @@ class SlurmState():
                          "             No Jobs are running"], 
                         ["             %d GPUs are available",
                          "             No GPUs are available"],
-                        ["             %d Jobs Are Waiting"
+                        ["             %d Jobs Are Waiting",
                          "             No Jobs Are Waiting"]]
 
     def printLines(self,num):
@@ -97,7 +97,7 @@ class SlurmState():
         """
         # update the node info
         
-        self.updateNodeInfo()
+        self.updateNodeInfo(node_state,nodelist)
 
         self.printLines(2)
         # running jobs
@@ -108,7 +108,7 @@ class SlurmState():
         # waiting jobs
         self.printRunningInfo(self.formats[2],self.waiting_num)
         return
-    def updateNodeInfo(self):
+    def updateNodeInfo(self,node_state,nodelist):
         """
         docstring for updateNodeInfo
         """
