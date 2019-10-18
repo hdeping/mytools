@@ -34,6 +34,8 @@ def printNodeInfo(node_state,nodelist):
             continue
         node_state[node] += 1
     # output head
+    print('             |%14s | used gpus | remained gpus |'%(' node list  '))
+    print('             ---------------------------------------------')
     total = 0
     running_jobs = 0
     for node in node_state:
@@ -43,8 +45,28 @@ def printNodeInfo(node_state,nodelist):
         if node == 'slave3gpu1':
             remained_number = 3 - used_number
         total += remained_number
-        print('%s,%d,%d'%(node,used_number,remained_number))
-    print(waiting_num)
+        if remained_number:
+            print('             |%14s |     %d     |       %d       | Available'%(node,used_number,remained_number))
+        else:
+            print('             |%14s |     %d     |       %d       |'%(node,used_number,remained_number))
+    print('             ---------------------------------------------')
+    print('             ---------------------------------------------')
+    # running jobs
+    if running_jobs:
+        print('             ',running_jobs,'Jobs are running')
+    else:
+        print('             No Jobs are running')
+    # remained GPUs
+    if total:
+        print('             ',total,'GPUs are available')
+    else:
+        print('             No GPUs are available')
+    print('             ---------------------------------------------')
+    print('             ---------------------------------------------')
+    if waiting_num:
+        print('             ',waiting_num,"Jobs Are Waiting")
+    else:
+        print("             No Jobs Are Waiting")
 
 # get all nodes
 node_state = getAllNodes()
