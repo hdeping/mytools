@@ -17,3 +17,4 @@
 
 from .CrawlRecipes import CrawlRecipes
 from .Manikon import Manikon
+from .SlurmState import SlurmState
