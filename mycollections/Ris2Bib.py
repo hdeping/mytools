@@ -50,22 +50,15 @@ class Ris2Bib():
             abstract of the document
         self.url:
             url of the document
+
+        self.ris2Bib:
+            dicts, keywords of .ris to .bib file
+        self.bibValues:
+            dicts, information of the document
         """
         super(Ris2Bib, self).__init__()
         self.getRisfile()
             
-        self.author_list   = []
-        self.title         = None
-        self.journal       = None
-        self.volume        = None
-        self.year          = None
-        self.month         = None
-        self.startingpage  = None
-        self.finalpage     = None
-        self.publisher     = None
-        self.doi           = None
-        self.abstract      = None
-        self.url           = None
         self.ris2Bib = {
             "AU" : "author",
             "TI" : "title",
@@ -82,13 +75,12 @@ class Ris2Bib():
             "UR" : "url"
         }
         self.bibValues = {
-            "author"       : None,
+            "author"       : [],
             "title"        : None,
             "journal"      : None,
             "volume"       : None,
             "year"         : None,
-            "startingpage" : None,
-            "finalpage"    : None,
+            "pages"        : [None,None],
             "doi"          : None, 
             "publisher"    : None,
             "abstract"     : None,
@@ -131,31 +123,21 @@ class Ris2Bib():
                     pass
                 else:
                     field = data[0].strip(' ')
+                    field = self.ris2Bib[field]
                     value = data[1].strip(' ').strip('\n').strip('\r')
                     #print case
-                    if field == 'AU':
-                        self.author_list.append(value)
-                    elif field == 'TI':
-                        self.title = value
-                    elif field == 'JA' or field == 'JO':
-                        self.journal = value
-                    elif field == 'VL':
-                        self.volume = value
-                    elif field == 'PY':
-                        self.year=value.rsplit('/')[0]
-                        #month=value.rsplit('/')[1]
-                    elif field == 'SP':
-                        self.startingpage = value
-                    elif field == 'EP':
-                        self.finalpage = value
-                    elif field == 'L3' or field == 'DO':
-                        self.doi = value
-                    elif field == 'PB':
-                        self.publisher = value
-                    elif field == 'AB':
-                        self.abstract = value
-                    elif field == 'UR':
-                        self.url = value
+                    if field == 'author':
+                        self.bibValues[field].append(value)
+                    elif field == 'year':
+                        value = value.rsplit('/')[0]
+                        self.bibValues[field] = value
+                    elif field == 'startingpage':
+                        self.bibValues["pages"][0] = value
+                    elif field == 'finalpage':
+                        self.bibValues["pages"][1] = value
+                    elif field in self.ris2Bib:
+                        self.bibValues[field] = value
+                    
         return
     def tranDocInfo(self):
         """
