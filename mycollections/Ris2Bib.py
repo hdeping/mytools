@@ -121,33 +121,35 @@ class Ris2Bib():
         """
         # dealing with the data
         lines=[]
-        firstauthor=author_list[0].rsplit(',')[0].strip(' ')
+        firstauthor = self.author_list[0].rsplit(',')[0].strip(' ')
 
         lines.append('@article{'+firstauthor.lower()+year+',')
 
-        authorline=' '*4 + 'author={' + ' and '.join(author_list)+'},'
+        authorline=' '*4 + 'author={' + ' and '.join(self.author_list)+'},'
         lines.append(authorline)
-        if title is not None:
-            lines.append(' '*4 + 'title={' + title + '},')
-        if journal is not None:
-            lines.append(' '*4 + 'journal={' + journal + '},')
-        if volume is not None:
-            lines.append(' '*4 + 'volume={' + volume + '},')
-        if startingpage is not None and finalpage is not None:
-            lines.append(' '*4 + 'pages={' + startingpage + '--'+finalpage+'},')
-        if year is not None:
-            lines.append(' '*4 + 'year={' + year + '},')
-        if doi is not None:
-            lines.append(' '*4 + 'doi={' + doi + '},')
+        if self.title is not None:
+            lines.append("    title = {%s}," % self.title)
+        if self.journal is not None:
+            lines.append("    journal = {%s}," % self.journal)
+        if self.volume is not None:
+            lines.append("    volume = {%s}," % self.volume)
+        if self.startingpage is not None and self.finalpage is not None:
+            pages = (self.startingpage,self.finalpage)
+            lines.append("    pages = {%s--%s}," % pages)
+        if self.year is not None:
+            lines.append("    year = {%s}," % self.year)
+        if self.doi is not None:
+            lines.append("    doi = {%s}," % self.doi)
         # publisher
-        if publisher is not None:
-            lines.append(' '*4 + 'publisher={' + publisher + '},')
+        if self.publisher is not None:
+            lines.append("    publisher = {%s}," % self.publisher)
         # abstract
-        if abstract is not None:
-            lines.append(' '*4 + 'abstract={' + abstract + '},')
+        if self.abstract is not None:
+            lines.append("    abstract = {%s}," % self.abstract)
         # url
-        if url is not None:
-            lines.append(' '*4 + 'url={' + url + '}')
+        if self.url is not None:
+            lines.append("    rul = {%s}," % self.url)
+            
         lines.append('}\n')
         return lines
     def printLines(self,lines):
