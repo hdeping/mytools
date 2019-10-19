@@ -26,35 +26,12 @@ class Ris2Bib():
         """
         self.risfile:
             name of the .ris file
-        self.author_list:
-            lists for the authors
-        self.title:
-            title of the reference
-        self.journal:
-            journal name 
-        self.volume:
-            volume of the reference
-        self.year:
-            published year
-        self.month:
-            published month
-        self.startingpage:
-            starting page of the reference
-        self.finalpage:
-            ending page of the reference
-        self.publisher:
-            publisher of the document
-        self.doi:
-            doi of the document
-        self.abstract:
-            abstract of the document
-        self.url:
-            url of the document
-
         self.ris2Bib:
             dicts, keywords of .ris to .bib file
         self.bibValues:
-            dicts, information of the document
+            dicts, information of the document,
+            author, title, journal, volume, pages,
+            year, doi, publisher, abstract, url
         """
         super(Ris2Bib, self).__init__()
         self.getRisfile()
@@ -96,7 +73,8 @@ class Ris2Bib():
         """
         try:
             self.risfile       = sys.argv[1]
-        except IndexError:
+        except In
+        dexError:
             print("Please input a file !")
             print("such as: python3 Ris2Bib.py foo.ris")
             sys.exit()
@@ -147,34 +125,24 @@ class Ris2Bib():
         """
         # dealing with the data
         lines=[]
-        firstauthor = self.author_list[0].rsplit(',')[0].strip(' ')
-        name = (firstauthor.lower(),self.year)
-        lines.append('@article{%s%s,' % name)
-        authors   = ' and '.join(self.author_list)
-        authorline = "    author = {%s}," % authors 
-        lines.append(authorline)
-        if self.title is not None:
-            lines.append("    title = {%s}," % self.title)
-        if self.journal is not None:
-            lines.append("    journal = {%s}," % self.journal)
-        if self.volume is not None:
-            lines.append("    volume = {%s}," % self.volume)
-        if self.startingpage is not None and self.finalpage is not None:
-            pages = (self.startingpage,self.finalpage)
-            lines.append("    pages = {%s--%s}," % pages)
-        if self.year is not None:
-            lines.append("    year = {%s}," % self.year)
-        if self.doi is not None:
-            lines.append("    doi = {%s}," % self.doi)
-        # publisher
-        if self.publisher is not None:
-            lines.append("    publisher = {%s}," % self.publisher)
-        # abstract
-        if self.abstract is not None:
-            lines.append("    abstract = {%s}," % self.abstract)
-        # url
-        if self.url is not None:
-            lines.append("    url = {%s}," % self.url)
+        for key in self.bibValues:
+            value = self.bibValues[key]
+            if key == "author":
+                firstauthor = value[0].rsplit(',')[0].strip(' ')
+                name = (firstauthor.lower(),self.year)
+                lines.append('@article{%s%s,' % name)
+                authors   = ' and '.join(value)
+                authorline = "    author = {%s}," % authors 
+                lines.append(authorline)
+            elif key == "pages":
+                if value[0] is not None and Value[1] is not None:
+                    value = tuple(value)
+                    line  = "    pages = {%s--%s}," % value
+                    lines.append(line)
+            else:
+                if value is not None:
+                    line = "    %s = {%s}," % (key,value)
+                    lines.append(line)
             
         lines.append('}\n')
         return lines
