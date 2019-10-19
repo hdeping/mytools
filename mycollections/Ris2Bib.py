@@ -57,6 +57,7 @@ class Ris2Bib():
         except IndexError:
             print("Please input a file !")
             print("such as: python3 Ris2Bib.py foo.ris")
+            sys.exit()
             
         self.author_list   = []
         self.title         = None
