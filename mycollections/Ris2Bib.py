@@ -148,7 +148,7 @@ class Ris2Bib():
             lines.append("    abstract = {%s}," % self.abstract)
         # url
         if self.url is not None:
-            lines.append("    rul = {%s}," % self.url)
+            lines.append("    url = {%s}," % self.url)
             
         lines.append('}\n')
         return lines
