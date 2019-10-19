@@ -66,6 +66,21 @@ class Ris2Bib():
         self.doi           = None
         self.abstract      = None
         self.url           = None
+        self.ris2Bib = {
+            "AU" : "author",
+            "TI" : "title",
+            "JA" : "journal",
+            "JO" : "journal",
+            "VL" : "volume",
+            "PY" : "year",
+            "SP" : "startingpage",
+            "EP" : "finalpage",
+            "L3" : "doi",
+            "DO" : "doi",
+            "PB" : "publisher",
+            "AB" : "abstract",
+            "UR" : "url"
+        }
 
         return
 
