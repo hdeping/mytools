@@ -122,10 +122,10 @@ class Ris2Bib():
         # dealing with the data
         lines=[]
         firstauthor = self.author_list[0].rsplit(',')[0].strip(' ')
-
-        lines.append('@article{'+firstauthor.lower()+year+',')
-
-        authorline=' '*4 + 'author={' + ' and '.join(self.author_list)+'},'
+        name = (firstauthor.lower(),self.year)
+        lines.append('@article{%s%s,' % name)
+        authors   = ' and '.join(self.author_list)
+        authorline = "    author = {%s}," % authors 
         lines.append(authorline)
         if self.title is not None:
             lines.append("    title = {%s}," % self.title)
