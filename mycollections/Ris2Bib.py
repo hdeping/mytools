@@ -73,6 +73,13 @@ class Ris2Bib():
         self.url           = None
 
         return
+    def setFilename(self,filename):
+        """
+        docstring for setFilename
+        set the risfile
+        """
+        self.risfile = filename
+        return
     def getDocInfo(self):
         """
         docstring for getDocInfo
