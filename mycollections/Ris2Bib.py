@@ -52,12 +52,7 @@ class Ris2Bib():
             url of the document
         """
         super(Ris2Bib, self).__init__()
-        try:
-            self.risfile       = sys.argv[1]
-        except IndexError:
-            print("Please input a file !")
-            print("such as: python3 Ris2Bib.py foo.ris")
-            sys.exit()
+        self.getRisfile()
             
         self.author_list   = []
         self.title         = None
@@ -73,10 +68,24 @@ class Ris2Bib():
         self.url           = None
 
         return
+
+    def getRisfile(self):
+        """
+        docstring for getRisfile
+        get the risfile from the command line input
+        """
+        try:
+            self.risfile       = sys.argv[1]
+        except IndexError:
+            print("Please input a file !")
+            print("such as: python3 Ris2Bib.py foo.ris")
+            sys.exit()
+        return
     def setFilename(self,filename):
         """
         docstring for setFilename
-        set the risfile
+        set the risfile from the method 
+        argument
         """
         self.risfile = filename
         return
