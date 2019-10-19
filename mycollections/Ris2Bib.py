@@ -22,7 +22,7 @@ class Ris2Bib():
     """
     transfer .ris file to a .bib one
     """
-    def __init__(self,filename):
+    def __init__(self):
         """
         self.risfile:
             name of the .ris file
@@ -52,8 +52,12 @@ class Ris2Bib():
             url of the document
         """
         super(Ris2Bib, self).__init__()
-
-        self.risfile       = filename
+        try:
+            self.risfile       = sys.argv[1]
+        except IndexError:
+            print("Please input a file !")
+            print("such as: python3 Ris2Bib.py foo.ris")
+            
         self.author_list   = []
         self.title         = None
         self.journal       = None
@@ -169,5 +173,5 @@ class Ris2Bib():
         
         return
 
-ris = Ris2Bib(sys.argv[1])
+ris = Ris2Bib()
 ris.run()
