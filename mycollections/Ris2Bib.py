@@ -81,6 +81,19 @@ class Ris2Bib():
             "AB" : "abstract",
             "UR" : "url"
         }
+        self.bibValues = {
+            "author"       : None,
+            "title"        : None,
+            "journal"      : None,
+            "volume"       : None,
+            "year"         : None,
+            "startingpage" : None,
+            "finalpage"    : None,
+            "doi"          : None, 
+            "publisher"    : None,
+            "abstract"     : None,
+            "url"          : None
+        }
 
         return
 
