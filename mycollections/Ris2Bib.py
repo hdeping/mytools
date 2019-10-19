@@ -37,6 +37,7 @@ class Ris2Bib():
         self.getRisfile()
             
         self.ris2Bib = {
+            "TY" : "JOUR",
             "AU" : "author",
             "TI" : "title",
             "JA" : "journal",
@@ -49,7 +50,8 @@ class Ris2Bib():
             "DO" : "doi",
             "PB" : "publisher",
             "AB" : "abstract",
-            "UR" : "url"
+            "UR" : "url",
+            "DA" : "date"
         }
         self.bibValues = {
             "author"       : [],
@@ -100,7 +102,10 @@ class Ris2Bib():
                     pass
                 else:
                     field = data[0].strip(' ')
-                    field = self.ris2Bib[field]
+                    try:
+                        field = self.ris2Bib[field]
+                    except KeyError:
+                        print("There is no ", field)
                     value = data[1].strip(' ').strip('\n').strip('\r')
                     #print case
                     if field == 'author':
@@ -112,7 +117,7 @@ class Ris2Bib():
                         self.bibValues["pages"][0] = value
                     elif field == 'finalpage':
                         self.bibValues["pages"][1] = value
-                    elif field in self.ris2Bib:
+                    elif field in self.bibValues:
                         self.bibValues[field] = value
                     
         return
@@ -128,13 +133,13 @@ class Ris2Bib():
             value = self.bibValues[key]
             if key == "author":
                 firstauthor = value[0].rsplit(',')[0].strip(' ')
-                name = (firstauthor.lower(),self.year)
+                name = (firstauthor.lower(),self.bibValues["year"])
                 lines.append('@article{%s%s,' % name)
                 authors   = ' and '.join(value)
                 authorline = "    author = {%s}," % authors 
                 lines.append(authorline)
             elif key == "pages":
-                if value[0] is not None and Value[1] is not None:
+                if value[0] is not None and value[1] is not None:
                     value = tuple(value)
                     line  = "    pages = {%s--%s}," % value
                     lines.append(line)
