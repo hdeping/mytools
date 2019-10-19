@@ -73,8 +73,7 @@ class Ris2Bib():
         """
         try:
             self.risfile       = sys.argv[1]
-        except In
-        dexError:
+        except IndexError:
             print("Please input a file !")
             print("such as: python3 Ris2Bib.py foo.ris")
             sys.exit()
