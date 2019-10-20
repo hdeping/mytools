@@ -174,5 +174,5 @@ class Ris2Bib():
         
         return
 
-ris = Ris2Bib()
-ris.run()
+# ris = Ris2Bib()
+# ris.run()
