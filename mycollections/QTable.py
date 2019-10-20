@@ -15,10 +15,10 @@ state10 = 1
 import numpy as np
 
 # initialize the value array
-value = np.zeros(16)
-value[6] = -1
-value[9] = -1
-value[10] = 1
+reward = np.zeros(16)
+reward[6] = -1
+reward[9] = -1
+reward[10] = 1
 
 # not all the positive share the same kinds of operations
 # some positions only have two ones, some others have three
@@ -27,7 +27,7 @@ value[10] = 1
 # 48 action-value   Q values
 #
 # 4*2 + 8*3 + 4*4 = 48
-QTable = np.zeros((16,4))
+#QTable = np.zeros((16,4))
 # updating states
 # 0,1 left,right -/+ 1
 # 2,4 up,down    -/+ 4
@@ -38,7 +38,7 @@ QTable = np.zeros((16,4))
 # impossible operation
 
 """
-0  1  2  3 no up
+0  1  2  3  no up
 0  4  8  12 no left
 3  7  11 15 no right
 12 13 14 15 no down
@@ -52,42 +52,106 @@ np.random.seed(int(time.time()))
 # gamma : decay factor (0,1)
 # epsilon:  (0,1) probability, best or random
 # lr: learning rate
-# q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_t{t+1},a') - q(s,a))
-def actionNumber():
-    actions = np.ones(16)*3
-    corner = [0,3,12,15]
-    center = [5,6,9,10]
-    # corner: 2
-    for i in corner:
-        actions[i] = 2
+# q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
 
-    # center: 3
-    for i in center:
-        actions[i] = 4
+actions = ['left','right','down','up']
+def initQValue():
+    # (ii,jj) 4*ii + jj
+    table = []
+    # four actions of all states
+    for i in range(16):
+        dictionary = {}
+        for j in range(4):
+            dictionary[actions[j]] = 0
+        table.append(dictionary)
 
-    return actions
+    for i in range(4):
+        # fist row
+        state = i
+        table[state].pop('up')
+        # fourth row
+        state = 12+i
+        table[state].pop('down')
+        # fist column
+        state = i*4
+        table[state].pop('left')
+        # fourth column
+        state = i*4 + 3
+        table[state].pop('right')
 
-actions = actionNumber()
+    return table
+
+def table_print(table):
+    for i,line in enumerate(table):
+        print(i,len(line),line.keys())
+QTable = initQValue()
+#table_print(QTable)
+#print(QTable)
+
+# update states after actions
+def updateStates(input_state,action):
+    if   action == 'left':
+        state = input_state - 1
+    elif action == 'right':
+        state = input_state + 1
+    elif action == 'down':
+        state = input_state + 4
+    elif action == 'up':
+        state = input_state - 4
+
+    assert state >= 0 and state <= 15
+
+    return  state
+
+# hyper parameters
+epsilon = 0.9
+gamma   = 0.9
+lr     = 0.1
+# update states
+def updateValues(input_state):
+    q_table = QTable[input_state]
+    for action in q_table:
+        new_state = updateStates(input_state,action)
+        line = QTable[new_state]
+        # action list
+        actions = list(line.keys())
+        # value list
+        values  = line.values()
+        # Bellmann equation
+        q_table[action] += lr*(reward[new_state] + gamma*max(values) - q_table[action])
+
 
 def getNewState(input_state):
+    #
+    #  update the values
+    updateValues(input_state)
+    line = QTable[input_state]
+    actions = list(line.keys())
+    values  = line.values()
 
-    ii = 0
-    state  = input_state
-    if ii == 0:
-        state = state - 1
-    elif ii == 1:
-        state = state + 1
-    elif ii == 2:
-        state = state - 4
-    elif ii == 3:
-        state = state + 4
+    if np.random.rand() < epsilon:
+        # get the best action
+        action_index  = np.argmax(values)
+    else:
+        # get the random action
+        action_index = np.random.randint(len(line))
+
+    # get the action
+
+
+    action = line[actions[action_index]]
+
+    state = updateStates(input_state,action)
+
     return state
 
 
-for epoch in range(10):
+
+for epoch in range(1):
+    print("epoch",epoch)
     state = 0
     while not (state == 6 or state== 9 or state == 10):
-        print(state)
+        #print(state)
         state = getNewState(state)
 
 
