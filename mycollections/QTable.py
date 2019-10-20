@@ -1,18 +1,41 @@
-# there are 16 states
-
-"""
-0  1  2  3
-4  5  6  7
-8  9  10 11
-12 13 14 15
-
-reward = 0
-reward6 = reward9 = - 1
-reward10 = 1
-
+#!/usr/local/bin/python3
+# -*- coding: UTF-8 -*-
+ 
 """
 
-import numpy as np
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-10-20 16:24:38
+    @project      : test for Q-table
+    @version      : 1.0
+    @source file  : QTable.py
+
+============================
+"""
+import numpy as np 
+import time
+
+
+class QTable():
+    """
+    there are 16 states
+    0  1  2  3
+    4  5  6  7
+    8  9  10 11
+    12 13 14 15
+
+    reward = 0
+    reward6 = reward9 = - 1
+    reward10 = 1
+
+    """
+    def __init__(self):
+        super(QTable, self).__init__()
+        #  get random seed
+        np.random.seed(int(time.time()))
+
 
 # initialize the value array
 reward = np.zeros(16)
@@ -45,11 +68,7 @@ reward[14] = -1
 12 13 14 15 no down
 """
 
-import numpy as np
-import time
 
-#  get random seed
-np.random.seed(int(time.time()))
 
 # gamma : decay factor (0,1)
 # epsilon:  (0,1) probability, best or random
