@@ -87,7 +87,7 @@ def initQValue():
 
 def table_print(table):
     for i, line in enumerate(table):
-        print(i, len(line), line.keys())
+        print(i, line.values())
 
 
 QTable = initQValue()
@@ -109,7 +109,7 @@ def updateStates(input_state, action):
 
     assert state1 >= 0 and state1 <= 15
 
-    print("updateStates",action,state1,"input state",input_state)
+    #print("updateStates",action,state1,"input state",input_state)
     return state1
 
 
@@ -123,7 +123,7 @@ lr = 0.1
 def updateValues(input_state):
     q_table = QTable[input_state]
     for action in q_table:
-        print("action",action,input_state)
+        #print("action",action,input_state)
         new_state = updateStates(input_state, action)
         line = QTable[new_state]
         # action list
@@ -157,18 +157,24 @@ def getNewState(input_state):
 
     # get the action
 
-    action = line[actions[action_index]]
+    action = actions[action_index]
 
     state = updateStates(input_state, action)
 
     return state
 
 
-for epoch in range(1):
+for epoch in range(1000):
     print("epoch", epoch)
     state = 0
-    while not (state == 6 or state == 9 or state == 10):
-        print("state",state)
+    while not (state == 6 or state == 9 or state == 10 ):
+
         state = getNewState(state)
+
+        #print("state", state)
+    #if epoch > 50:
+    #    epsilon = 1.0
+    print(state)
+    #table_print(QTable)
 
 
