@@ -6,9 +6,9 @@
 8  9  10 11
 12 13 14 15
 
-state = 0
-state6 = state9 = - 1
-state10 = 1
+reward = 0
+reward6 = reward9 = - 1
+reward10 = 1
 
 """
 
@@ -27,14 +27,14 @@ reward[10] = 1
 # 48 action-value   Q values
 #
 # 4*2 + 8*3 + 4*4 = 48
-#QTable = np.zeros((16,4))
+# QTable = np.zeros((16,4))
 # updating states
 # 0,1 left,right -/+ 1
 # 2,4 up,down    -/+ 4
 
-#print(QTable)
-#print("value")
-#print(value)
+# print(QTable)
+# print("value")
+# print(value)
 # impossible operation
 
 """
@@ -45,7 +45,8 @@ reward[10] = 1
 """
 
 import numpy as np
-import  time
+import time
+
 #  get random seed
 np.random.seed(int(time.time()))
 
@@ -54,7 +55,9 @@ np.random.seed(int(time.time()))
 # lr: learning rate
 # q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
 
-actions = ['left','right','down','up']
+actions = ['left', 'right', 'down', 'up']
+
+
 def initQValue():
     # (ii,jj) 4*ii + jj
     table = []
@@ -70,55 +73,68 @@ def initQValue():
         state = i
         table[state].pop('up')
         # fourth row
-        state = 12+i
+        state = 12 + i
         table[state].pop('down')
         # fist column
-        state = i*4
+        state = i * 4
         table[state].pop('left')
         # fourth column
-        state = i*4 + 3
+        state = i * 4 + 3
         table[state].pop('right')
 
     return table
 
+
 def table_print(table):
-    for i,line in enumerate(table):
-        print(i,len(line),line.keys())
+    for i, line in enumerate(table):
+        print(i, len(line), line.keys())
+
+
 QTable = initQValue()
-#table_print(QTable)
-#print(QTable)
+
+
+# table_print(QTable)
+# print(QTable)
 
 # update states after actions
-def updateStates(input_state,action):
-    if   action == 'left':
-        state = input_state - 1
+def updateStates(input_state, action):
+    if action == 'left':
+        state1 = input_state - 1
     elif action == 'right':
-        state = input_state + 1
+        state1 = input_state + 1
     elif action == 'down':
-        state = input_state + 4
+        state1 = input_state + 4
     elif action == 'up':
-        state = input_state - 4
+        state1 = input_state - 4
 
-    assert state >= 0 and state <= 15
+    assert state1 >= 0 and state1 <= 15
 
-    return  state
+    print("updateStates",action,state1,"input state",input_state)
+    return state1
+
 
 # hyper parameters
 epsilon = 0.9
-gamma   = 0.9
-lr     = 0.1
+gamma = 0.9
+lr = 0.1
+
+
 # update states
 def updateValues(input_state):
     q_table = QTable[input_state]
     for action in q_table:
-        new_state = updateStates(input_state,action)
+        print("action",action,input_state)
+        new_state = updateStates(input_state, action)
         line = QTable[new_state]
         # action list
-        actions = list(line.keys())
+        items = line.items()
         # value list
-        values  = line.values()
+        actions = [key for key, value in items]
+        values = [value for key, value in items]
+        #values = np.array(values)
+
         # Bellmann equation
-        q_table[action] += lr*(reward[new_state] + gamma*max(values) - q_table[action])
+        q_table[action] += lr * (reward[new_state] + gamma * max(values) - q_table[action])
 
 
 def getNewState(input_state):
@@ -126,32 +142,33 @@ def getNewState(input_state):
     #  update the values
     updateValues(input_state)
     line = QTable[input_state]
-    actions = list(line.keys())
-    values  = line.values()
+    items = line.items()
+    # value list
+    actions = [key for key, value in items]
+    values =  [value for key, value in items]
+    values = np.array(values)
 
     if np.random.rand() < epsilon:
         # get the best action
-        action_index  = np.argmax(values)
+        action_index = np.argmax(values)
     else:
         # get the random action
         action_index = np.random.randint(len(line))
 
     # get the action
 
-
     action = line[actions[action_index]]
 
-    state = updateStates(input_state,action)
+    state = updateStates(input_state, action)
 
     return state
 
 
-
 for epoch in range(1):
-    print("epoch",epoch)
+    print("epoch", epoch)
     state = 0
-    while not (state == 6 or state== 9 or state == 10):
-        #print(state)
+    while not (state == 6 or state == 9 or state == 10):
+        print("state",state)
         state = getNewState(state)
 
 
