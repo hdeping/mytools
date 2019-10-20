@@ -37,29 +37,14 @@ class QTable():
         np.random.seed(int(time.time()))
 
 
-# initialize the value array
-reward = np.zeros(16)
-reward[6] = -1
-reward[9] = -1
-reward[10] = 1
-reward[14] = -1
+        # initialize the value array
+        self.reward = np.zeros(16)
+        self.reward[6] = -1
+        self.reward[9] = -1
+        self.reward[10] = 1
+        self.reward[14] = -1
 
-# not all the positive share the same kinds of operations
-# some positions only have two ones, some others have three
 
-# total operations: 4*16 - 4*4 = 48
-# 48 action-value   Q values
-#
-# 4*2 + 8*3 + 4*4 = 48
-# QTable = np.zeros((16,4))
-# updating states
-# 0,1 left,right -/+ 1
-# 2,4 up,down    -/+ 4
-
-# print(QTable)
-# print("value")
-# print(value)
-# impossible operation
 
 """
 0  1  2  3  no up
@@ -75,10 +60,28 @@ reward[14] = -1
 # lr: learning rate
 # q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
 
-actions = ['left', 'right', 'down', 'up']
+self.actions = ['left', 'right', 'down', 'up']
 
 
 def initQValue():
+    """
+    not all the positive share the same kinds of operations
+    some positions only have two ones, some others have three
+
+    total operations: 4*16 - 4*4 = 48
+    48 action-value   Q values
+    
+    4*2 + 8*3 + 4*4 = 48
+    QTable = np.zeros((16,4))
+    updating states
+    0,1 left,right -/+ 1
+    2,4 up,down    -/+ 4
+
+    print(QTable)
+    print("value")
+    print(value)
+    impossible operation
+    """
     # (ii,jj) 4*ii + jj
     table = []
     # four actions of all states
@@ -105,123 +108,123 @@ def initQValue():
     return table
 
 
-def table_print(table):
-    string = ""
-    for i, line in enumerate(table):
-        #print(i, line.values())
+    def table_print(table):
+        string = ""
+        for i, line in enumerate(table):
+            #print(i, line.values())
 
-        string = "%d,"%(i)
-        values = [value for value in line.values()]
-        #string = "%s,%.3f,"%(string,sum(values))
-        #print("%6.3f"%(sum(values)))
-        #if i%4 == 3:
-        #    print(string)
-        #    string  = ""
-        for value in line.values():
-            string = "%s,%.3f,"%(string,value)
-        print(string)
-
-
-QTable = initQValue()
+            string = "%d,"%(i)
+            values = [value for value in line.values()]
+            #string = "%s,%.3f,"%(string,sum(values))
+            #print("%6.3f"%(sum(values)))
+            #if i%4 == 3:
+            #    print(string)
+            #    string  = ""
+            for value in line.values():
+                string = "%s,%.3f,"%(string,value)
+            print(string)
 
 
-# table_print(QTable)
-# print(QTable)
-
-# update states after actions
-def updateStates(input_state, action):
-    if action == 'left':
-        state1 = input_state - 1
-    elif action == 'right':
-        state1 = input_state + 1
-    elif action == 'down':
-        state1 = input_state + 4
-    elif action == 'up':
-        state1 = input_state - 4
-
-    assert state1 >= 0 and state1 <= 15
-
-    #print("updateStates",action,state1,"input state",input_state)
-    return state1
+    QTable = initQValue()
 
 
-# hyper parameters
-epsilon = 0.9
-gamma = 0.9
-lr = 0.1
+    # table_print(QTable)
+    # print(QTable)
+
+    # update states after actions
+    def updateStates(input_state, action):
+        if action == 'left':
+            state1 = input_state - 1
+        elif action == 'right':
+            state1 = input_state + 1
+        elif action == 'down':
+            state1 = input_state + 4
+        elif action == 'up':
+            state1 = input_state - 4
+
+        assert state1 >= 0 and state1 <= 15
+
+        #print("updateStates",action,state1,"input state",input_state)
+        return state1
 
 
-# update states
-def updateValues(input_state):
-    q_table = QTable[input_state]
-    for action in q_table:
-        #print("action",action,input_state)
-        new_state = updateStates(input_state, action)
-        line = QTable[new_state]
-        # action list
+    # hyper parameters
+    epsilon = 0.9
+    gamma = 0.9
+    lr = 0.1
+
+
+    # update states
+    def updateValues(input_state):
+        q_table = QTable[input_state]
+        for action in q_table:
+            #print("action",action,input_state)
+            new_state = updateStates(input_state, action)
+            line = QTable[new_state]
+            # action list
+            items = line.items()
+            # value list
+            actions = [key for key, value in items]
+            values = [value for key, value in items]
+            #values = np.array(values)
+
+            # Bellmann equation
+            q_table[action] += lr * (reward[new_state] + gamma * max(values) - q_table[action])
+
+
+    def getNewState(input_state):
+        #
+        #  update the values
+        updateValues(input_state)
+        line = QTable[input_state]
         items = line.items()
         # value list
         actions = [key for key, value in items]
-        values = [value for key, value in items]
-        #values = np.array(values)
+        values =  [value for key, value in items]
+        values = np.array(values)
 
-        # Bellmann equation
-        q_table[action] += lr * (reward[new_state] + gamma * max(values) - q_table[action])
+        if np.random.rand() < epsilon:
+            # get the best action
+            action_index = np.argmax(values)
+        else:
+            # get the random action
+            action_index = np.random.randint(len(line))
 
+        # get the action
 
-def getNewState(input_state):
-    #
-    #  update the values
-    updateValues(input_state)
-    line = QTable[input_state]
-    items = line.items()
-    # value list
-    actions = [key for key, value in items]
-    values =  [value for key, value in items]
-    values = np.array(values)
+        action = actions[action_index]
 
-    if np.random.rand() < epsilon:
-        # get the best action
-        action_index = np.argmax(values)
-    else:
-        # get the random action
-        action_index = np.random.randint(len(line))
+        state = updateStates(input_state, action)
 
-    # get the action
-
-    action = actions[action_index]
-
-    state = updateStates(input_state, action)
-
-    return state
+        return state
 
 
-result = []
-cycles = 10000
-for epoch in range(cycles):
-    #print("epoch", epoch)
-    state = 0
-    while not (state == 6 or state == 9 or state == 10 or state == 14):
+    result = []
+    cycles = 10000
+    for epoch in range(cycles):
+        #print("epoch", epoch)
+        state = 0
+        while not (state == 6 or state == 9 or state == 10 or state == 14):
 
-        state = getNewState(state)
+            state = getNewState(state)
 
-        #print("state", state)
-    if epoch > 10000*0.8:
-        epsilon = 1.0
-    #print(state)
-    result.append(state)
-    #table_print(QTable)
-result = np.array(result)
-result = np.reshape(result,(100,100))
+            #print("state", state)
+        if epoch > 10000*0.8:
+            epsilon = 1.0
+        #print(state)
+        result.append(state)
+        #table_print(QTable)
+    result = np.array(result)
+    result = np.reshape(result,(100,100))
 
-filename = "data.txt"
-output = np.zeros((100,2))
-for i,arr in enumerate(result):
-    ii = sum(arr==10)
-    print(i,ii)
-    output[i,:] = [i,ii]
-    
-np.savetxt(filename,output,fmt="%d,%d")
-table_print(QTable)
+    filename = "data.txt"
+    output = np.zeros((100,2))
+    for i,arr in enumerate(result):
+        ii = sum(arr==10)
+        print(i,ii)
+        output[i,:] = [i,ii]
+        
+    np.savetxt(filename,output,fmt="%d,%d")
+    table_print(QTable)
 
 
