@@ -166,7 +166,8 @@ def getNewState(input_state):
 
 
 result = []
-for epoch in range(10000):
+cycles = 10000
+for epoch in range(cycles):
     #print("epoch", epoch)
     state = 0
     while not (state == 6 or state == 9 or state == 10 or state == 14):
@@ -174,8 +175,8 @@ for epoch in range(10000):
         state = getNewState(state)
 
         #print("state", state)
-    #if epoch > 50:
-    #    epsilon = 1.0
+    if epoch > 10000*0.8:
+        epsilon = 1.0
     #print(state)
     result.append(state)
     #table_print(QTable)
@@ -190,5 +191,6 @@ for i,arr in enumerate(result):
     output[i,:] = [i,ii]
     
 np.savetxt(filename,output,fmt="%d,%d")
+table_print(QTable)
 
 
