@@ -32,10 +32,11 @@ class QTable():
 
     """
     def __init__(self):
+        """
+        """
         super(QTable, self).__init__()
         #  get random seed
         np.random.seed(int(time.time()))
-
 
         # initialize the value array
         self.reward = np.zeros(16)
@@ -43,72 +44,65 @@ class QTable():
         self.reward[9] = -1
         self.reward[10] = 1
         self.reward[14] = -1
+        self.actions = ['left', 'right', 'down', 'up']
+        # hyper parameters
+        self.epsilon = 0.9
+        self.gamma   = 0.9
+        self.lr      = 0.1
+
+        return
 
 
 
-"""
-0  1  2  3  no up
-0  4  8  12 no left
-3  7  11 15 no right
-12 13 14 15 no down
-"""
+    def initQValue():
+        """
+        not all the positive share the same kinds of operations
+        some positions only have two ones, some others have three
 
+        total operations: 4*16 - 4*4 = 48
+        48 action-value   Q values
+        
+        4*2 + 8*3 + 4*4 = 48
+        QTable = np.zeros((16,4))
+        updating states
+        0,1 left,right -/+ 1
+        2,4 up,down    -/+ 4
 
+        print(QTable)
+        print("value")
+        print(value)
+        impossible operation
+        """
+        # (ii,jj) 4*ii + jj
+        table = []
+        # four actions of all states
+        for i in range(16):
+            dictionary = {}
+            for j in range(4):
+                dictionary[actions[j]] = 0
+            table.append(dictionary)
 
-# gamma : decay factor (0,1)
-# epsilon:  (0,1) probability, best or random
-# lr: learning rate
-# q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
+        for i in range(4):
+            # fist row
+            state = i
+            table[state].pop('up')
+            # fourth row
+            state = 12 + i
+            table[state].pop('down')
+            # fist column
+            state = i * 4
+            table[state].pop('left')
+            # fourth column
+            state = i * 4 + 3
+            table[state].pop('right')
 
-self.actions = ['left', 'right', 'down', 'up']
-
-
-def initQValue():
-    """
-    not all the positive share the same kinds of operations
-    some positions only have two ones, some others have three
-
-    total operations: 4*16 - 4*4 = 48
-    48 action-value   Q values
-    
-    4*2 + 8*3 + 4*4 = 48
-    QTable = np.zeros((16,4))
-    updating states
-    0,1 left,right -/+ 1
-    2,4 up,down    -/+ 4
-
-    print(QTable)
-    print("value")
-    print(value)
-    impossible operation
-    """
-    # (ii,jj) 4*ii + jj
-    table = []
-    # four actions of all states
-    for i in range(16):
-        dictionary = {}
-        for j in range(4):
-            dictionary[actions[j]] = 0
-        table.append(dictionary)
-
-    for i in range(4):
-        # fist row
-        state = i
-        table[state].pop('up')
-        # fourth row
-        state = 12 + i
-        table[state].pop('down')
-        # fist column
-        state = i * 4
-        table[state].pop('left')
-        # fourth column
-        state = i * 4 + 3
-        table[state].pop('right')
-
-    return table
+        return table
 
 
     def table_print(table):
+        """
+        print the Q-table
+        """
         string = ""
         for i, line in enumerate(table):
             #print(i, line.values())
@@ -123,16 +117,18 @@ def initQValue():
             for value in line.values():
                 string = "%s,%.3f,"%(string,value)
             print(string)
-
-
-    QTable = initQValue()
-
-
-    # table_print(QTable)
-    # print(QTable)
-
-    # update states after actions
+        return
     def updateStates(input_state, action):
+        """
+        0  1  2  3  no up
+        0  4  8  12 no left
+        3  7  11 15 no right
+        12 13 14 15 no down
+        gamma : decay factor (0,1)
+        epsilon:  (0,1) probability, best or random
+        lr: learning rate
+        q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
+        """
         if action == 'left':
             state1 = input_state - 1
         elif action == 'right':
@@ -148,14 +144,8 @@ def initQValue():
         return state1
 
 
-    # hyper parameters
-    epsilon = 0.9
-    gamma = 0.9
-    lr = 0.1
-
-
     # update states
-    def updateValues(input_state):
+    def updateValues(self,input_state):
         q_table = QTable[input_state]
         for action in q_table:
             #print("action",action,input_state)
@@ -172,7 +162,7 @@ def initQValue():
             q_table[action] += lr * (reward[new_state] + gamma * max(values) - q_table[action])
 
 
-    def getNewState(input_state):
+    def getNewState(self,input_state):
         #
         #  update the values
         updateValues(input_state)
@@ -198,6 +188,13 @@ def initQValue():
 
         return state
 
+    def run(self):
+        """
+        docstring for run
+
+        """
+        qTable = self.initQValue()
+        return
 
     result = []
     cycles = 10000
