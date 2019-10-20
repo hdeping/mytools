@@ -138,9 +138,12 @@ class QTable():
         #print("updateStates",action,state1,"input state",input_state)
         return state1
 
-
-    # update states
     def updateValues(self,input_state):
+        """
+        update the Q value with the Bellman equation
+        value = r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a)
+        q(s,a) = q(s,a) + lr*value
+        """
         q_table = QTable[input_state]
         for action in q_table:
             #print("action",action,input_state)
@@ -161,7 +164,7 @@ class QTable():
     def getNewState(self,input_state):
         #
         #  update the values
-        updateValues(input_state)
+        self.updateValues(input_state)
         line = QTable[input_state]
         items = line.items()
         # value list
