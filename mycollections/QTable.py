@@ -104,13 +104,12 @@ class QTable():
 
         return table
 
-
-    def table_print(table):
+    def tablePrint(self):
         """
-        print the Q-table
+        print the self.qTable
         """
         string = ""
-        for i, line in enumerate(table):
+        for i, line in enumerate(self.qTable):
             #print(i, line.values())
 
             string = "%d,"%(i)
@@ -185,9 +184,7 @@ class QTable():
         # get the action
 
         action = actions[action_index]
-
-        state = updateStates(input_state, action)
-
+        state = self.updateStates(input_state, action)
         return state
 
     def run(self):
@@ -209,7 +206,6 @@ class QTable():
                 self.epsilon = 1.0
             #print(state)
             result.append(state)
-            #table_print(QTable)
         self.writeResult(result)
 
         return
@@ -229,9 +225,9 @@ class QTable():
             output[i,:] = [i,ii]
             
         np.savetxt(filename,output,fmt="%d,%d")
-        self.table_print(qTable)
+        self.tablePrint()
         
         return
 
-table = QTable()
-table.run()
+# table = QTable()
+# table.run()
