@@ -116,8 +116,8 @@ def updateStates(input_state, action):
 
 # hyper parameters
 epsilon = 0.9
-gamma = 0.9
-lr = 0.01
+gamma = 0.1
+lr = 0.1
 
 
 # update states
@@ -182,8 +182,13 @@ for epoch in range(10000):
 result = np.array(result)
 result = np.reshape(result,(100,100))
 
+filename = "data.txt"
+output = np.zeros((100,2))
 for i,arr in enumerate(result):
-    print(sum(arr==10))
+    ii = sum(arr==10)
+    print(i,ii)
+    output[i,:] = [i,ii]
     
+np.savetxt(filename,output,fmt="%d,%d")
 
 
