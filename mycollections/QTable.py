@@ -19,6 +19,7 @@ reward = np.zeros(16)
 reward[6] = -1
 reward[9] = -1
 reward[10] = 1
+reward[14] = -1
 
 # not all the positive share the same kinds of operations
 # some positions only have two ones, some others have three
@@ -116,7 +117,7 @@ def updateStates(input_state, action):
 # hyper parameters
 epsilon = 0.9
 gamma = 0.9
-lr = 0.1
+lr = 0.01
 
 
 # update states
@@ -164,17 +165,25 @@ def getNewState(input_state):
     return state
 
 
-for epoch in range(1000):
-    print("epoch", epoch)
+result = []
+for epoch in range(10000):
+    #print("epoch", epoch)
     state = 0
-    while not (state == 6 or state == 9 or state == 10 ):
+    while not (state == 6 or state == 9 or state == 10 or state == 14):
 
         state = getNewState(state)
 
         #print("state", state)
     #if epoch > 50:
     #    epsilon = 1.0
-    print(state)
+    #print(state)
+    result.append(state)
     #table_print(QTable)
+result = np.array(result)
+result = np.reshape(result,(100,100))
+
+for i,arr in enumerate(result):
+    print(sum(arr==10))
+    
 
 
