@@ -119,7 +119,7 @@ class QTable():
                 string = "%s,%.3f,"%(string,value)
             print(string)
         return
-    def updateStates(input_state, action):
+    def updateStates(self,input_state, action):
         """
         0  1  2  3  no up
         0  4  8  12 no left
@@ -192,34 +192,41 @@ class QTable():
 
         """
         qTable = self.initQValue()
-        return
-
-    result = []
-    cycles = 10000
-    for epoch in range(cycles):
-        #print("epoch", epoch)
-        state = 0
-        while not (state == 6 or state == 9 or state == 10 or state == 14):
-
-            state = getNewState(state)
-
-            #print("state", state)
-        if epoch > 10000*0.8:
-            epsilon = 1.0
-        #print(state)
-        result.append(state)
-        #table_print(QTable)
-    result = np.array(result)
-    result = np.reshape(result,(100,100))
-
-    filename = "data.txt"
-    output = np.zeros((100,2))
-    for i,arr in enumerate(result):
-        ii = sum(arr==10)
-        print(i,ii)
-        output[i,:] = [i,ii]
         
-    np.savetxt(filename,output,fmt="%d,%d")
-    table_print(QTable)
+        result = []
+        cycles = 10000
+        for epoch in range(cycles):
+            #print("epoch", epoch)
+            state = 0
+            while state not in [6,9,10,14]:
+                state = self.getNewState(state)
+                #print("state", state)
+            if epoch > cycles*0.8:
+                epsilon = 1.0
+            #print(state)
+            result.append(state)
+            #table_print(QTable)
+        self.writeResult(result)
+
+        return
+    def writeResult(self,result):
+        """
+        docstring for writeResult
+        write the final into a file
+        """
+        result = np.array(result)
+        result = np.reshape(result,(100,100))
+
+        filename = "data.txt"
+        output = np.zeros((100,2))
+        for i,arr in enumerate(result):
+            ii = sum(arr==10)
+            print(i,ii)
+            output[i,:] = [i,ii]
+            
+        np.savetxt(filename,output,fmt="%d,%d")
+        self.table_print(qTable)
+        
+        return
 
 
