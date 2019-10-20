@@ -61,10 +61,7 @@ class QTable():
         self.lr      = 0.1
 
         return
-
-
-
-    def initQValue():
+    def initQValue(self):
         """
         not all the positive share the same kinds of operations
         some positions only have two ones, some others have three
@@ -85,7 +82,7 @@ class QTable():
         for i in range(16):
             dictionary = {}
             for j in range(4):
-                dictionary[actions[j]] = 0
+                dictionary[self.actions[j]] = 0
             table.append(dictionary)
 
         for i in range(4):
@@ -157,7 +154,8 @@ class QTable():
             #values = np.array(values)
 
             # Bellmann equation
-            q_table[action] += lr * (reward[new_state] + gamma * max(values) - q_table[action])
+            value = self.reward[new_state] + self.gamma * max(values)
+            q_table[action] += lr * (value - q_table[action])
 
 
     def getNewState(self,input_state):
@@ -171,7 +169,7 @@ class QTable():
         values =  [value for key, value in items]
         values = np.array(values)
 
-        if np.random.rand() < epsilon:
+        if np.random.rand() < self.epsilon:
             # get the best action
             action_index = np.argmax(values)
         else:
@@ -202,7 +200,7 @@ class QTable():
                 state = self.getNewState(state)
                 #print("state", state)
             if epoch > cycles*0.8:
-                epsilon = 1.0
+                self.epsilon = 1.0
             #print(state)
             result.append(state)
             #table_print(QTable)
@@ -229,4 +227,5 @@ class QTable():
         
         return
 
-
+table = QTable()
+table.run()
