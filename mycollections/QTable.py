@@ -33,6 +33,16 @@ class QTable():
     """
     def __init__(self):
         """
+        self.reward:
+            reward of each site in the game
+        self.epsilon:
+            (0,1) probability, best or random
+        self.gamma:
+            decay factor (0,1)
+        self.lr:
+            learning rate
+        value = r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a)
+        q(s,a) = q(s,a) + lr*value
         """
         super(QTable, self).__init__()
         #  get random seed
@@ -68,10 +78,6 @@ class QTable():
         0,1 left,right -/+ 1
         2,4 up,down    -/+ 4
 
-        print(QTable)
-        print("value")
-        print(value)
-        impossible operation
         """
         # (ii,jj) 4*ii + jj
         table = []
@@ -109,11 +115,6 @@ class QTable():
 
             string = "%d,"%(i)
             values = [value for value in line.values()]
-            #string = "%s,%.3f,"%(string,sum(values))
-            #print("%6.3f"%(sum(values)))
-            #if i%4 == 3:
-            #    print(string)
-            #    string  = ""
             for value in line.values():
                 string = "%s,%.3f,"%(string,value)
             print(string)
@@ -124,10 +125,7 @@ class QTable():
         0  4  8  12 no left
         3  7  11 15 no right
         12 13 14 15 no down
-        gamma : decay factor (0,1)
-        epsilon:  (0,1) probability, best or random
-        lr: learning rate
-        q(s,a) = q(s,a) + lr*(r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a))
+        
         """
         if action == 'left':
             state1 = input_state - 1
