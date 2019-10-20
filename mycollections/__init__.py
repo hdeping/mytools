@@ -16,5 +16,7 @@
 """
 
 from .CrawlRecipes import CrawlRecipes
-from .Manikon import Manikon
-from .SlurmState import SlurmState
+from .Manikon      import Manikon
+from .SlurmState   import SlurmState
+from .Ris2Bib      import Ris2Bib
+from .QTable       import QTable
