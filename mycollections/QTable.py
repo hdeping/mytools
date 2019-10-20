@@ -87,8 +87,20 @@ def initQValue():
 
 
 def table_print(table):
+    string = ""
     for i, line in enumerate(table):
-        print(i, line.values())
+        #print(i, line.values())
+
+        string = "%d,"%(i)
+        values = [value for value in line.values()]
+        #string = "%s,%.3f,"%(string,sum(values))
+        #print("%6.3f"%(sum(values)))
+        #if i%4 == 3:
+        #    print(string)
+        #    string  = ""
+        for value in line.values():
+            string = "%s,%.3f,"%(string,value)
+        print(string)
 
 
 QTable = initQValue()
@@ -116,7 +128,7 @@ def updateStates(input_state, action):
 
 # hyper parameters
 epsilon = 0.9
-gamma = 0.1
+gamma = 0.9
 lr = 0.1
 
 
