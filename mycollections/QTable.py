@@ -33,6 +33,8 @@ class QTable():
     """
     def __init__(self):
         """
+        self.qTable:
+            table for the q values
         self.reward:
             reward of each site in the game
         self.epsilon:
@@ -59,6 +61,7 @@ class QTable():
         self.epsilon = 0.9
         self.gamma   = 0.9
         self.lr      = 0.1
+        self.qTable  = None
 
         return
     def initQValue(self):
@@ -144,11 +147,11 @@ class QTable():
         value = r_{t+1}+gamma*max q(s_{t+1},a') - q(s,a)
         q(s,a) = q(s,a) + lr*value
         """
-        q_table = QTable[input_state]
+        q_table = self.qTable[input_state]
         for action in q_table:
             #print("action",action,input_state)
-            new_state = updateStates(input_state, action)
-            line = QTable[new_state]
+            new_state = self.updateStates(input_state, action)
+            line = self.qTable[new_state]
             # action list
             items = line.items()
             # value list
@@ -158,14 +161,14 @@ class QTable():
 
             # Bellmann equation
             value = self.reward[new_state] + self.gamma * max(values)
-            q_table[action] += lr * (value - q_table[action])
+            q_table[action] += self.lr * (value - q_table[action])
 
 
     def getNewState(self,input_state):
         #
         #  update the values
         self.updateValues(input_state)
-        line = QTable[input_state]
+        line = self.qTable[input_state]
         items = line.items()
         # value list
         actions = [key for key, value in items]
@@ -192,7 +195,7 @@ class QTable():
         docstring for run
 
         """
-        qTable = self.initQValue()
+        self.qTable = self.initQValue()
         
         result = []
         cycles = 10000
