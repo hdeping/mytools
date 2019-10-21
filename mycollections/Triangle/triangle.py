@@ -208,13 +208,54 @@ class Triangle():
         return radius
     def get_radiuses(self):
         laterals = self.get_laterals()
-        a = laterals["AB"]
+        a = laterals["BC"]
         b = laterals["AC"]
-        c = laterals["BC"]
+        c = laterals["AB"]
         p = (a+b+c)/2
+        p_a = p - a
+        p_b = p - b
+        p_c = p - c
         area = self.get_area()
-        radius1 = a*b*c/(4.0*area)
-        radius2 = area/p
-        return [radius1,radius2]
+        circum_radius    = a*b*c/(4.0*area)
+        inscribe_radius  = area/p
+        escribe_radius_a = area/p_a
+        escribe_radius_b = area/p_b
+        escribe_radius_c = area/p_c
+        radiuses = {}
+        radiuses["circum radius"] = circum_radius
+        radiuses["inscribe radius"] = inscribe_radius
+        radiuses["escribe radius A"] = escribe_radius_a
+        radiuses["escribe radius B"] = escribe_radius_b
+        radiuses["escribe radius C"] = escribe_radius_c
+        return radiuses
 
-
+    def get_escribe_radius_A(self):
+        laterals = self.get_laterals()
+        a = laterals["BC"]
+        b = laterals["AC"]
+        c = laterals["AB"]
+        p = (a+b+c)/2
+        p = p - a
+        area = self.get_area()
+        radius = area/p
+        return radius
+    def get_escribe_radius_B(self):
+        laterals = self.get_laterals()
+        a = laterals["BC"]
+        b = laterals["AC"]
+        c = laterals["AB"]
+        p = (a+b+c)/2
+        p = p - b
+        area = self.get_area()
+        radius = area/p
+        return radius
+    def get_escribe_radius_C(self):
+        laterals = self.get_laterals()
+        a = laterals["BC"]
+        b = laterals["AC"]
+        c = laterals["AB"]
+        p = (a+b+c)/2
+        p = p - c
+        area = self.get_area()
+        radius = area/p
+        return radius
