@@ -949,17 +949,17 @@ class Triangle(TriBase):
         #points = [[4.0,0],[0.0,4.0],[0.0,0.0]]
         points = np.array(points)
 
-        tri = Triangle(points)
+        self.Triangle(points)
         
-        print(tri.get_vertices())
+        print(self.get_vertices())
         
-        info = tri.get_info()
+        info = self.get_info()
         info = json.dumps(info,indent = 4)
         print(info)
         
-        print("circum radius",tri.get_circum_center())
-        print("ortho  radius",tri.get_ortho_center())
+        print("circum radius",self.get_circum_center())
+        print("ortho  radius",self.get_ortho_center())
         #tri.draw_circum_circle()
-        tri.draw_inscribe_circle()
+        self.draw_inscribe_circle()
 
         return
