@@ -136,11 +136,14 @@ class base():
             for i in range(3):
                 line[i] = - line[i]
 
-        values = [abs(line[0]),abs(line[1]),abs(line[2])]
-        string1 = "%.2fx + %.2fy + %.2f = 0"%(values[0],values[1],values[2])
-        string2 = "%.2fx + %.2fy - %.2f = 0"%(values[0],values[1],values[2])
-        string3 = "%.2fx - %.2fy + %.2f = 0"%(values[0],values[1],values[2])
-        string4 = "%.2fx - %.2fy - %.2f = 0"%(values[0],values[1],values[2])
+        a = abs(line[0])
+        b = abs(line[1])
+        c = abs(line[2])
+        string1 = "%.2fx + %.2fy + %.2f = 0"%(a,b,c)
+        string2 = "%.2fx + %.2fy - %.2f = 0"%(a,b,c)
+        string3 = "%.2fx - %.2fy + %.2f = 0"%(a,b,c)
+        string4 = "%.2fx - %.2fy - %.2f = 0"%(a,b,c)
+
         if line[1] > 0:
             if line[2] > 0:
                 return string1
@@ -227,7 +230,6 @@ class base():
         plt.plot(x,y,'#FF00FF','-',linewidth = 4)
 
     def draw(self):
-        points = self.points
         plt.figure(figsize = (9,9))
         plt.axis("equal")
         self.draw_line(self.A,self.B)

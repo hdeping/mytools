@@ -35,7 +35,16 @@ print(radiuses)
 #print(tri.get_escribe_radius_B())
 #print(tri.get_escribe_radius_C())
 
-tri.draw()
+#tri.draw()
 
 c = tri.get_mid_point_AB()
 print(tri.get_mid_points())
+print(tri.get_gravity_center())
+print(tri.get_mid_lines())
+print(tri.get_mid_line_strings())
+
+line1 = [1,1,1]
+line2 = [1,2,2]
+print(tri.get_intersect_point(line1,line2))
+tri.test_get_intersect_point()
+#tri.draw_mid_lines()
