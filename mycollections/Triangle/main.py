@@ -1,13 +1,19 @@
 #!/usr/local/bin/python3
 
 import numpy as np
+from triangle import Triangle
 
-# parameters
-unit = np.pi / 180.0
-A    = 22.5*unit
-B    = 45*unit
-c    = 1
-b    = np.sin(B)*c/np.sin(A+B)
-a    = np.sin(A)*c/np.sin(A+B)
-print(b,a)
-print(b*np.cos(A),a*np.cos(B))
+points = [[3.0,0],[0.0,4.0],[0.0,0.0]]
+points = np.array(points)
+print(points)
+
+
+tri = Triangle(points)
+print(tri.A)
+print(tri.B)
+print(tri.C)
+
+sideLengths = tri.get_laterals()
+print(sideLengths)
+angles = tri.get_angles()
+print(angles)
