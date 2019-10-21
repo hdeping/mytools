@@ -131,6 +131,3 @@ class Wyckoff():
                 fullMatrix[:,ii,jj,kk] = site
     
         return fullMatrix,labels
-
-site = Wyckoff()
-site.testSiteMatrix()
