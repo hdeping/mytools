@@ -218,20 +218,23 @@ class Triangle():
         y.append(point1[1])
         y.append(point2[1])
         plt.plot(x,y,'b','-o',linewidth=4)
-    # draw the triangle
+
+    # draw a circle with the center and radius as inputs
+    def draw_circle(self,center,radius):
+        theta = np.linspace(0,2*np.pi,100)
+        x     = radius*np.cos(theta) + center[0]
+        y     = radius*np.sin(theta) + center[1]
+        plt.plot(x,y,'#FF00FF','-',linewidth = 4)
+
     def draw(self):
         points = self.points
         plt.figure(figsize = (9,9))
         plt.axis("equal")
-        x = points[:2,0]
-        y = points[:2,1]
-        plt.plot(x,y,'b','-o',linewidth=4)
-        x = points[1:,0]
-        y = points[1:,1]
-        plt.plot(x,y,'b','-o',linewidth=4)
-        x = [points[0,0],points[-1,0]]
-        y = [points[0,1],points[-1,1]]
-        plt.plot(x,y,'b','-o',linewidth=4)
+        self.draw_line(self.A,self.B)
+        self.draw_line(self.A,self.C)
+        self.draw_line(self.C,self.B)
+        self.draw_circle(self.A,3)
+        self.draw_circle(self.B,4)
         plt.show()
         return 1
 
@@ -246,6 +249,7 @@ class Triangle():
         area = self.get_area()
         radius = a*b*c/(4.0*area)
         return radius
+
     # get the  radius of the inscribed circle
     # which is tangent to the three sides 
     # of the triangle
@@ -258,6 +262,7 @@ class Triangle():
         area = self.get_area()
         radius = area/p
         return radius
+
     # get the radius information of the triangle
     def get_radiuses(self):
         laterals = self.get_laterals()
@@ -294,6 +299,7 @@ class Triangle():
         area = self.get_area()
         radius = area/p
         return radius
+
     # get the radius of the escribed circle B
     # which is tangent to the line AC
     def get_escribe_radius_B(self):
@@ -306,6 +312,7 @@ class Triangle():
         area = self.get_area()
         radius = area/p
         return radius
+
     # get the radius of the escribed circle C
     # which is tangent to the line AB
     def get_escribe_radius_C(self):
