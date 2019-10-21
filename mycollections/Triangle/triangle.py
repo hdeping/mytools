@@ -179,3 +179,221 @@ class Triangle(base):
         print(self.get_intersect_point(line_C_AB,line_A_BC))
         print("gravity center",self.get_gravity_center())
 
+    # get ortho line of a point and a line
+    # the ortho line is perpendicular to the input line
+    def get_ortho_line(self,line,point):
+        res = []
+        res.append(line[1])
+        res.append(- line[0])
+        c = - (res[0]*point[0] + res[1]*point[1])
+        res.append(c)
+        return res
+
+    # get the ortho line of A-BC
+    def get_ortho_line_A_BC(self):
+        line = self.get_line_BC()
+        return self.get_line(line,self.A)
+
+    # get the ortho line of B-AC
+    def get_ortho_line_B_AC(self):
+        line = self.get_line_AC()
+        return self.get_line(line,self.B)
+
+    # get the ortho line of C-AB
+    def get_ortho_line_C_AB(self):
+        line = self.get_line_AB()
+        return self.get_line(line,self.C)
+
+    # get the ortho line information of the
+    # triangle
+    def get_ortho_lines(self):
+        line_A_BC = self.get_ortho_line_A_BC()
+        line_B_AC = self.get_ortho_line_B_AC()
+        line_C_AB = self.get_ortho_line_C_AB()
+
+        lines = {}
+        lines["line A-BC"] = line_A_BC
+        lines["line B-AC"] = line_B_AC
+        lines["line C-AB"] = line_C_AB
+        return lines
+
+    # get the ortho line equation format of C_AB
+    def get_ortho_line_string_C_AB(self):
+        line = self.get_ortho_line_C_AB()
+        return self.get_line_string(line)
+
+    # get the ortho line equation format of B-AC
+    def get_ortho_line_string_B_AC(self):
+        line = self.get_ortho_line_B_AC()
+        return self.get_line_string(line)
+
+    # get the ortho line equation format of A-BC
+    def get_ortho_line_string_A_BC(self):
+        line = self.get_ortho_line_A_BC()
+        return self.get_line_string(line)
+
+    # get the ortho line equation format information
+    # of the triangle
+    def get_ortho_line_strings(self):
+        line_A_BC = self.get_ortho_line_string_A_BC()
+        line_B_AC = self.get_ortho_line_string_B_AC()
+        line_C_AB = self.get_ortho_line_string_C_AB()
+
+        lines = {}
+        lines["line A-BC"] = line_A_BC
+        lines["line B-AC"] = line_B_AC
+        lines["line C-AB"] = line_C_AB
+        return lines
+
+    # get ortho point of a point and a line
+    def get_ortho_point(self,line,point):
+        ortho_line = self.get_ortho_line(line,point)
+        #print(ortho_line)
+        res = self.get_intersect_point(line,ortho_line)
+        return res
+
+    # get ortho point of AB
+    def get_ortho_point_C_AB(self):
+        line = self.get_line_AB()
+        return self.get_ortho_point(line,self.C)
+
+    # get ortho point of AC
+    def get_ortho_point_B_AC(self):
+        line = self.get_line_AC()
+        return self.get_ortho_point(line,self.B)
+
+    # get ortho point of BC
+    def get_ortho_point_A_BC(self):
+        line = self.get_line_BC()
+        return self.get_ortho_point(line,self.A)
+
+    # ortho point information of the triangle
+    def get_ortho_points(self):
+        point_C_AB = self.get_ortho_point_C_AB()
+        point_B_AC = self.get_ortho_point_B_AC()
+        point_A_BC = self.get_ortho_point_A_BC()
+        points = {}
+        points["point C-AB"] = point_C_AB
+        points["point B-AC"] = point_B_AC
+        points["point A-BC"] = point_A_BC
+        return points
+
+    # draw the orthogonal lines
+    def draw_ortho_lines(self):
+        plt.figure(figsize = (9,9))
+        plt.axis("equal")
+
+        self.draw_line(self.A,self.B)
+        self.draw_line(self.A,self.C)
+        self.draw_line(self.C,self.B)
+
+        points   = self.get_ortho_points()
+        point_C_AB =  points["point C-AB"]
+        point_B_AC =  points["point B-AC"]
+        point_A_BC =  points["point A-BC"]
+
+        self.draw_line(self.A,point_A_BC)
+        self.draw_line(self.B,point_B_AC)
+        self.draw_line(self.C,point_C_AB)
+
+        plt.savefig("orthogonal.png",dpi=300)
+        plt.show()
+
+    # get vertical line of two points 
+    # the vertical line is perpendicular to the 
+    # line constructed by the input points
+    def get_vertical_line(self,point1,point2):
+        mid_point = self.get_mid_point(point1,point2)
+        line      = self.get_line(point1,point2)
+        res       = self.get_ortho_line(line,mid_point)
+        return res
+
+    # get the vertical line of BC
+    def get_vertical_line_BC(self):
+        return self.get_vertical_line(self.B,self.C)
+
+    # get the vertical line of AC
+    def get_vertical_line_AC(self):
+        return self.get_vertical_line(self.C,self.A)
+
+    # get the vertical line of AB
+    def get_vertical_line_AB(self):
+        return self.get_vertical_line(self.B,self.A)
+
+    # get the vertical line information of the
+    # triangle
+    def get_vertical_lines(self):
+        line_BC = self.get_vertical_line_BC()
+        line_AC = self.get_vertical_line_AC()
+        line_AB = self.get_vertical_line_AB()
+
+        lines = {}
+        lines["line BC"] = line_BC
+        lines["line AC"] = line_AC
+        lines["line AB"] = line_AB
+        return lines
+
+    # get the vertical line equation format of AB
+    def get_vertical_line_string_AB(self):
+        line = self.get_vertical_line_AB()
+        return self.get_line_string(line)
+
+    # get the vertical line equation format of AC
+    def get_vertical_line_string_AC(self):
+        line = self.get_vertical_line_AC()
+        return self.get_line_string(line)
+
+    # get the vertical line equation format of BC
+    def get_vertical_line_string_BC(self):
+        line = self.get_vertical_line_BC()
+        return self.get_line_string(line)
+
+    # get the vertical line equation format information
+    # of the triangle
+    def get_vertical_line_strings(self):
+        line_BC = self.get_vertical_line_string_BC()
+        line_AC = self.get_vertical_line_string_AC()
+        line_AB = self.get_vertical_line_string_AB()
+
+        lines = {}
+        lines["line BC"] = line_BC
+        lines["line AC"] = line_AC
+        lines["line AB"] = line_AB
+        return lines
+
+    # get the center of the circum circle of the 
+    # triangle
+    def get_circum_center(self):
+        lines = self.get_vertical_lines()
+        line_BC = lines["line BC"] 
+        line_AB = lines["line AB"] 
+        res = self.get_intersect_point(line_AB,line_BC)
+        return res
+
+    # get the ortho center of the 
+    # triangle
+    def get_ortho_center(self):
+        lines = self.get_ortho_lines()
+        line_BC = lines["line A-BC"] 
+        line_AB = lines["line C-AB"] 
+        res = self.get_intersect_point(line_AB,line_BC)
+        return res
+
+    # draw the circum circle
+    def draw_circum_circle(self):
+        plt.figure(figsize = (9,9))
+        plt.axis("equal")
+
+        self.draw_line(self.A,self.B)
+        self.draw_line(self.A,self.C)
+        self.draw_line(self.C,self.B)
+
+        center = self.get_circum_center()
+        print("center",center)
+        radius = self.get_circum_radius()
+        print(radius)
+        self.draw_circle(center,radius)
+
+        plt.savefig("circum.png",dpi=300)
+        plt.show()
+

@@ -244,7 +244,7 @@ class base():
     # get the  radius of the circum circle
     # which contains the three points
     # of the triangle
-    def get_circum_radius():
+    def get_circum_radius(self):
         laterals = self.get_laterals()
         a = laterals["AB"]
         b = laterals["AC"]

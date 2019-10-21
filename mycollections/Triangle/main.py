@@ -5,7 +5,7 @@ from triangle import Triangle
 import json
 import matplotlib.pyplot as plt
 
-points = [[3.0,0],[0.0,4.0],[5.0,5.0]]
+points = [[3.0,0],[0.0,4.0],[0.0,0.0]]
 #points = [[3.0,0],[2.0,0.0],[1.0,0.0]]
 points = np.array(points)
 print(points)
@@ -47,4 +47,7 @@ line1 = [1,1,1]
 line2 = [1,2,2]
 print(tri.get_intersect_point(line1,line2))
 tri.test_get_intersect_point()
-#tri.draw_mid_lines()
+#tri.draw_ortho_lines()
+#print(tri.get_ortho_points())
+#tri.draw_ortho_lines()
+tri.draw_circum_circle()
