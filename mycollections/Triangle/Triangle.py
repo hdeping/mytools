@@ -73,17 +73,19 @@ class Triangle(TriBase):
         points["BC"] = point_BC
         return points
 
-    # get the gravity center
     def get_gravity_center(self):
         """
+        get the gravity center
+        return:
+            center, array, coordinate of the gravity center
         """
         center = np.mean(self.points,axis = 0)
         center = list(center)
         return center
 
-    # draw the mid lines
     def draw_mid_lines(self):
         """
+        draw the mid lines
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -103,31 +105,31 @@ class Triangle(TriBase):
 
         plt.show()
 
-    # get the mid line of A-BC
     def get_mid_line_A_BC(self):
         """
+        get the mid line of A-BC
         """
         point_BC = self.get_mid_point_BC()
         return self.get_line(self.A,point_BC)
 
-    # get the mid line of B-AC
     def get_mid_line_B_AC(self):
         """
+        get the mid line of B-AC
         """
         point_AC = self.get_mid_point_AC()
         return self.get_line(self.B,point_AC)
 
-    # get the mid line of C-AB
     def get_mid_line_C_AB(self):
         """
+        get the mid line of C-AB
         """
         point_AB = self.get_mid_point_AB()
         return self.get_line(self.C,point_AB)
 
-    # get the mid line information of the
-    # triangle
     def get_mid_lines(self):
         """
+        get the mid line information of the
+        triangle
         """
         line_A_BC = self.get_mid_line_A_BC()
         line_B_AC = self.get_mid_line_B_AC()
@@ -139,31 +141,31 @@ class Triangle(TriBase):
         lines["line C-AB"] = line_C_AB
         return lines
 
-    # get the mid line equation format of C_AB
     def get_mid_line_string_C_AB(self):
         """
+        get the mid line equation format of C_AB
         """
         line = self.get_mid_line_C_AB()
         return self.get_line_string(line)
 
-    # get the mid line equation format of B-AC
     def get_mid_line_string_B_AC(self):
         """
+        get the mid line equation format of B-AC
         """
         line = self.get_mid_line_B_AC()
         return self.get_line_string(line)
 
-    # get the mid line equation format of A-BC
     def get_mid_line_string_A_BC(self):
         """
+        get the mid line equation format of A-BC
         """
         line = self.get_mid_line_A_BC()
         return self.get_line_string(line)
 
-    # get the mid line equation format information
-    # of the triangle
     def get_mid_line_strings(self):
         """
+        get the mid line equation format information
+        of the triangle
         """
         line_A_BC = self.get_mid_line_string_A_BC()
         line_B_AC = self.get_mid_line_string_B_AC()
@@ -175,17 +177,17 @@ class Triangle(TriBase):
         lines["line C-AB"] = line_C_AB
         return lines
 
-    # get the determinant of a 2D matrix
-    # matrix[0] matrix[1]
-    # matrix[2] matrix[3]
     def get_determinant(self,matrix):
         """
+        get the determinant of a 2D matrix
+        matrix[0] matrix[1]
+        matrix[2] matrix[3]
         """
         return matrix[0]*matrix[3] - matrix[1]*matrix[2]
 
-    # get the intersect point of two lines
     def get_intersect_point(self,line1,line2):
         """
+        get the intersect point of two lines
         """
         # get A
         matrix = []
