@@ -38,12 +38,7 @@ class Wyckoff():
         """
 
         super(Wyckoff,self).__init__()
-        self.codeDir = "/home/hdeping/complexNetwork/00_CCodes/"
-        self.dirs = self.codeDir + "24_CrystalFinderML/data/"
-        filename = self.dirs + "lattice.csv"
-        self.lattice = np.loadtxt(filename,
-                                  delimiter=' ',
-                                  dtype=int)
+        self.loadLattice()
 
         self.wyckoff_site = [0,2, 6, 8, 20, 44, 
                              56, 60, 64, 66, 70, 72]
@@ -51,6 +46,21 @@ class Wyckoff():
         self.wyckoff_type = ['a', 'e', 'b', 'i', 
                              'l', 'j', 'f', 'g', 
                              'd', 'h', 'c']
+
+        return
+    def loadLattice(self):
+        """
+        docstring for loadLattice
+        """
+        self.codeDir = "/home/hdeping/complexNetwork/00_CCodes/"
+        self.dirs = self.codeDir + "24_CrystalFinderML/data/"
+        filename = self.dirs + "lattice.csv"
+        try:
+            self.lattice = np.loadtxt(filename,
+                                      delimiter=' ',
+                                      dtype=int)
+        except IOError:
+            raise IOError("there is no %s"%(filename))
 
         return
     def getSiteMatrix(self,wyckoff_seq):
