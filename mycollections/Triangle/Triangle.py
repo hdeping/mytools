@@ -221,9 +221,9 @@ class Triangle(TriBase):
 
         return [x,y]
 
-    # test the get_intersect_point function
     def test_get_intersect_point(self):
         """
+        test the get_intersect_point function
         """
         midLines = self.get_mid_lines()
         line_A_BC = midLines["line A-BC"]
@@ -238,10 +238,10 @@ class Triangle(TriBase):
         print(self.get_intersect_point(line_C_AB,line_A_BC))
         print("gravity center",self.get_gravity_center())
 
-    # get ortho line of a point and a line
-    # the ortho line is perpendicular to the input line
     def get_ortho_line(self,line,point):
         """
+        get ortho line of a point and a line
+        the ortho line is perpendicular to the input line
         """
         res = []
         res.append(line[1])
@@ -250,31 +250,31 @@ class Triangle(TriBase):
         res.append(c)
         return res
 
-    # get the ortho line of A-BC
     def get_ortho_line_A_BC(self):
         """
+        get the ortho line of A-BC
         """
         line = self.get_line_BC()
         return self.get_line(line,self.A)
 
-    # get the ortho line of B-AC
     def get_ortho_line_B_AC(self):
         """
+        get the ortho line of B-AC
         """
         line = self.get_line_AC()
         return self.get_line(line,self.B)
 
-    # get the ortho line of C-AB
     def get_ortho_line_C_AB(self):
         """
+        get the ortho line of C-AB
         """
         line = self.get_line_AB()
         return self.get_line(line,self.C)
 
-    # get the ortho line information of the
-    # triangle
     def get_ortho_lines(self):
         """
+        get the ortho line information of the
+        triangle
         """
         line_A_BC = self.get_ortho_line_A_BC()
         line_B_AC = self.get_ortho_line_B_AC()
@@ -286,31 +286,31 @@ class Triangle(TriBase):
         lines["line C-AB"] = line_C_AB
         return lines
 
-    # get the ortho line equation format of C_AB
     def get_ortho_line_string_C_AB(self):
         """
+        get the ortho line equation format of C_AB
         """
         line = self.get_ortho_line_C_AB()
         return self.get_line_string(line)
 
-    # get the ortho line equation format of B-AC
     def get_ortho_line_string_B_AC(self):
         """
+        get the ortho line equation format of B-AC
         """
         line = self.get_ortho_line_B_AC()
         return self.get_line_string(line)
 
-    # get the ortho line equation format of A-BC
     def get_ortho_line_string_A_BC(self):
         """
+        get the ortho line equation format of A-BC
         """
         line = self.get_ortho_line_A_BC()
         return self.get_line_string(line)
 
-    # get the ortho line equation format information
-    # of the triangle
     def get_ortho_line_strings(self):
         """
+        get the ortho line equation format information
+        of the triangle
         """
         line_A_BC = self.get_ortho_line_string_A_BC()
         line_B_AC = self.get_ortho_line_string_B_AC()
