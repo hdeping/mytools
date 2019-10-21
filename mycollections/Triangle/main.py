@@ -50,4 +50,6 @@ tri.test_get_intersect_point()
 #tri.draw_ortho_lines()
 #print(tri.get_ortho_points())
 #tri.draw_ortho_lines()
-tri.draw_circum_circle()
+#tri.draw_circum_circle()
+tri.draw_inscribe_circle()
+

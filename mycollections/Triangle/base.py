@@ -10,18 +10,23 @@ class base():
         self.B = points[1]
         self.C = points[2]
         self.points = points
+
     # get all the coordinates of points 
     def get_points(self):
         return self.points
+
     # get all the coordinates of A
     def get_point_A(self):
         return self.A
+
     # get all the coordinates of B
     def get_point_B(self):
         return self.B
+
     # get all the coordinates of C
     def get_point_C(self):
         return self.C
+
     # get the distance of two points
     def get_lateral(self,coor1,coor2):
         # get the lateral length
@@ -30,15 +35,19 @@ class base():
         length = length.sum()
         length = np.sqrt(length)
         return length
+
     # get the length of AB
     def get_lateral_AB(self):
         return self.get_lateral(self.A,self.B)
+
     # get the length of AC
     def get_lateral_AC(self):
         return self.get_lateral(self.A,self.C)
+
     # get the length of BC
     def get_lateral_BC(self):
         return self.get_lateral(self.B,self.C)
+
     # side length information of the triangle
     def get_laterals(self):
         laterals   = {}
@@ -50,6 +59,7 @@ class base():
         laterals["AB"] = c
         
         return laterals
+
     # get the angle with three sides
     # the output will range from 0 to 180
     def get_angle(self,a,b,c):
@@ -60,6 +70,7 @@ class base():
         angle = np.arccos(cosValue)
         angle = angle*180.0/np.pi
         return angle
+
     # get the angle of A
     def get_angle_A(self):
         laterals = self.get_laterals()
@@ -68,6 +79,7 @@ class base():
         c = laterals["AB"]
         angle = self.get_angle(c,b,a)
         return angle
+
     # get the angle of B
     def get_angle_B(self):
         laterals = self.get_laterals()
@@ -76,6 +88,7 @@ class base():
         c = laterals["AB"]
         angle = self.get_angle(a,c,b)
         return angle
+
     # get the angle of C
     def get_angle_C(self):
         laterals = self.get_laterals()
@@ -84,6 +97,7 @@ class base():
         c = laterals["AB"]
         angle = self.get_angle(a,b,c)
         return angle
+
     # get the angle information of the triangle
     def get_angles(self):
         laterals = self.get_laterals()
@@ -99,6 +113,7 @@ class base():
         angles["angle C"] = angle_C
 
         return angles
+
     # get line equation of two points
     def get_line(self,coor1,coor2):
         # a*x + b*y + c = 0
@@ -106,15 +121,19 @@ class base():
         b = coor1[0] - coor2[0]
         c = -(a*coor1[0] + b*coor1[1])
         return [a,b,c]
+
     # get line equation of AB
     def get_line_AB(self):
         return self.get_line(self.A,self.B)
+
     # get line equation of AC
     def get_line_AC(self):
         return self.get_line(self.A,self.C)
+
     # get line equation of BC
     def get_line_BC(self):
         return self.get_line(self.B,self.C)
+
     # get the line equation information of the
     # triangle
     def get_lines(self):
@@ -169,6 +188,7 @@ class base():
     def get_line_string_BC(self):
         line_BC = self.get_line_BC()
         return self.get_line_string(line_BC)
+
     # get the line equation format information
     # of the triangle
     def get_line_strings(self):
@@ -180,6 +200,7 @@ class base():
         lines["line AC"] = line_AC
         lines["line BC"] = line_BC
         return lines
+
     # get the area of the triangle
     def get_area(self):
         if not self.isTriangle():
@@ -196,6 +217,7 @@ class base():
         p3 = p - c
         area = np.sqrt(p*p1*p2*p3)
         return area
+
     # judge if the three points would
     # construct a triangle
     def isTriangle(self):
@@ -212,6 +234,7 @@ class base():
         else:
             print("No, It is not a triangle")
             return False
+
     #draw a line with two points as inputs
     def draw_line(self,point1,point2):
         x  = []
@@ -229,6 +252,7 @@ class base():
         y     = radius*np.sin(theta) + center[1]
         plt.plot(x,y,'#FF00FF','-',linewidth = 4)
 
+    # draw the triangle
     def draw(self):
         plt.figure(figsize = (9,9))
         plt.axis("equal")
