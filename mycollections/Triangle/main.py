@@ -3,8 +3,9 @@
 import numpy as np
 from triangle import Triangle
 import json
+import matplotlib.pyplot as plt
 
-points = [[3.0,0],[0.0,4.0],[0.0,0.0]]
+points = [[3.0,0],[0.0,4.0],[5.0,5.0]]
 #points = [[3.0,0],[2.0,0.0],[1.0,0.0]]
 points = np.array(points)
 print(points)
@@ -34,3 +35,7 @@ print(radiuses)
 #print(tri.get_escribe_radius_B())
 #print(tri.get_escribe_radius_C())
 
+tri.draw()
+
+c = tri.get_mid_point_AB()
+print(tri.get_mid_points())
