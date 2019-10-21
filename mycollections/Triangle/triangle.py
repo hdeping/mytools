@@ -189,5 +189,32 @@ class Triangle():
         plt.plot(x,y,'b','-o',linewidth=4)
         plt.show()
         return 1
+    def get_circum_radius():
+        laterals = self.get_laterals()
+        a = laterals["AB"]
+        b = laterals["AC"]
+        c = laterals["BC"]
+        area = self.get_area()
+        radius = a*b*c/(4.0*area)
+        return radius
+    def get_inscribe_radius(self):
+        laterals = self.get_laterals()
+        a = laterals["AB"]
+        b = laterals["AC"]
+        c = laterals["BC"]
+        p = (a+b+c)/2
+        area = self.get_area()
+        radius = area/p
+        return radius
+    def get_radiuses(self):
+        laterals = self.get_laterals()
+        a = laterals["AB"]
+        b = laterals["AC"]
+        c = laterals["BC"]
+        p = (a+b+c)/2
+        area = self.get_area()
+        radius1 = a*b*c/(4.0*area)
+        radius2 = area/p
+        return [radius1,radius2]
 
 

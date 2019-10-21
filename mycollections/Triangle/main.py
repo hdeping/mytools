@@ -25,4 +25,7 @@ print(lines)
 lines = tri.get_line_strings()
 lines = json.dumps(lines,indent = 4)
 print(lines)
-tri.draw()
+#tri.draw()
+print(tri.get_area())
+print(tri.get_radiuses())
+
