@@ -747,15 +747,12 @@ class Triangle(base):
         keys.append("escribe center C-AB") 
 
         # exterior bisector
-        center = centers[keys[-3]]
-        self.draw_color_line(self.B,center,'g')
-        self.draw_color_line(self.C,center,'g')
-        center = centers[keys[-2]]
-        self.draw_color_line(self.A,center,'g')
-        self.draw_color_line(self.C,center,'g')
-        center = centers[keys[-1]]
-        self.draw_color_line(self.B,center,'g')
-        self.draw_color_line(self.A,center,'g')
+        center1 = centers[keys[-3]]
+        center2 = centers[keys[-2]]
+        center3 = centers[keys[-1]]
+        self.draw_color_line(center1,center2,'g')
+        self.draw_color_line(center1,center3,'g')
+        self.draw_color_line(center3,center2,'g')
         for i in range(5):
             center = centers[keys[5+i]]
             radius = radiuses[keys[i]]

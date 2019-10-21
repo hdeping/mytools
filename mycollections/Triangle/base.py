@@ -1,10 +1,11 @@
 #!/usr/local/bin/python3
 
 import numpy as np
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 class base():
-    # init function
     def __init__(self,points):
         self.A = points[0]
         self.B = points[1]
