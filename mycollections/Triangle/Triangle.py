@@ -761,4 +761,26 @@ class Triangle(base):
         plt.savefig("circles_lines.png",dpi = 300)
         plt.savefig("circles_lines.svg",dpi = 300)
         plt.show()
+    def run(self):
+        """TODO: Docstring for run.
+        :returns: TODO
 
+        """
+        points = [[3.0,0],[0.0,4.0],[0.0,0.0]]
+        #points = [[4.0,0],[0.0,4.0],[0.0,0.0]]
+        points = np.array(points)
+
+        tri = Triangle(points)
+        
+        print(tri.get_vertices())
+        
+        info = tri.get_info()
+        info = json.dumps(info,indent = 4)
+        print(info)
+        
+        print("circum radius",tri.get_circum_center())
+        print("ortho  radius",tri.get_ortho_center())
+        #tri.draw_circum_circle()
+        tri.draw_inscribe_circle()
+
+        return
