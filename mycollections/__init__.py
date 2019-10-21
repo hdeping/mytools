@@ -20,3 +20,4 @@ from .Manikon      import Manikon
 from .SlurmState   import SlurmState
 from .Ris2Bib      import Ris2Bib
 from .QTable       import QTable
+from .             import Triangle
