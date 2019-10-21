@@ -523,10 +523,20 @@ class Triangle(base):
         self.draw_line(self.A,self.C)
         self.draw_line(self.C,self.B)
 
+        # interior bisector
+        inscribe_center = self.get_inscribe_center()
+        self.draw_line(self.A,inscribe_center)
+        self.draw_line(self.B,inscribe_center)
+        self.draw_line(self.C,inscribe_center)
+
+        # inscribe circle
         center = self.get_inscribe_center()
         radius = self.get_inscribe_radius()
-        print("center",center)
-        print("radius",radius)
+        self.draw_circle(center,radius)
+
+        # inscribe circle
+        center = self.get_circum_center()
+        radius = self.get_circum_radius()
         self.draw_circle(center,radius)
         plt.show()
 
@@ -644,8 +654,8 @@ class Triangle(base):
 
         centers = {}
         centers["gravity center"]      = gravity_center
-        centers["ortho center"]        = circum_center
-        centers["circum center"]       = ortho_center
+        centers["ortho center"]        = ortho_center
+        centers["circum center"]       = circum_center
         centers["inscribe center"]     = inscribe_center
         centers["escribe center A-BC"] = escribe_center_A_BC
         centers["escribe center B-AC"] = escribe_center_B_AC
@@ -683,4 +693,75 @@ class Triangle(base):
         res['centers']          = centers
 
         return res
+
+    # extend the line to three times of itself
+    # get the two end points
+    def get_extend_points(self,point1,point2):
+        res1 = []
+        res2 = []
+
+        res1.append(2*point1[0] - point2[0])
+        res1.append(2*point1[1] - point2[1])
+
+        res2.append(2*point2[0] - point1[0])
+        res2.append(2*point2[1] - point1[1])
+        
+        return res1,res2
+
+    # draw all the circles and some lines
+    def draw_inscribe_circle(self):
+        plt.figure(figsize = (9,9))
+        plt.axis("equal")
+
+        #plt.xlabel('x',fontsize = 22)
+        #plt.xlabel('y',fontsize = 22)
+
+        # lines
+        point1,point2 = self.get_extend_points(self.A,self.B)
+        self.draw_line(point1,point2)
+        point1,point2 = self.get_extend_points(self.A,self.C)
+        self.draw_line(point1,point2)
+        point1,point2 = self.get_extend_points(self.C,self.B)
+        self.draw_line(point1,point2)
+
+        # interior bisector
+        inscribe_center = self.get_inscribe_center()
+        self.draw_color_line(self.A,inscribe_center,'g')
+        self.draw_color_line(self.B,inscribe_center,'g')
+        self.draw_color_line(self.C,inscribe_center,'g')
+
+
+        # inscribe circle
+        radiuses = self.get_radiuses()
+        centers  = self.get_centers()
+        keys = []
+        keys.append("circum radius")
+        keys.append("inscribe radius")     
+        keys.append("escribe radius A-BC") 
+        keys.append("escribe radius B-AC") 
+        keys.append("escribe radius C-AB") 
+        keys.append("circum center")       
+        keys.append("inscribe center")     
+        keys.append("escribe center A-BC") 
+        keys.append("escribe center B-AC") 
+        keys.append("escribe center C-AB") 
+
+        # exterior bisector
+        center = centers[keys[-3]]
+        self.draw_color_line(self.B,center,'g')
+        self.draw_color_line(self.C,center,'g')
+        center = centers[keys[-2]]
+        self.draw_color_line(self.A,center,'g')
+        self.draw_color_line(self.C,center,'g')
+        center = centers[keys[-1]]
+        self.draw_color_line(self.B,center,'g')
+        self.draw_color_line(self.A,center,'g')
+        for i in range(5):
+            center = centers[keys[5+i]]
+            radius = radiuses[keys[i]]
+            self.draw_circle(center,radius)
+
+        plt.savefig("circles_lines.png",dpi = 300)
+        plt.savefig("circles_lines.svg",dpi = 300)
+        plt.show()
 

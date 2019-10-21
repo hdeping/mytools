@@ -266,7 +266,17 @@ class base():
         y  = []
         y.append(point1[1])
         y.append(point2[1])
-        plt.plot(x,y,'b','-o',linewidth=4)
+        plt.plot(x,y,'b','-',linewidth=4)
+
+    #draw a colored line with two points as inputs
+    def draw_color_line(self,point1,point2,color):
+        x  = []
+        x.append(point1[0])
+        x.append(point2[0])
+        y  = []
+        y.append(point1[1])
+        y.append(point2[1])
+        plt.plot(x,y,color,'-',linewidth=4)
 
     # draw a circle with the center and radius as inputs
     def draw_circle(self,center,radius):
