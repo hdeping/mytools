@@ -949,7 +949,7 @@ class Triangle(TriBase):
         #points = [[4.0,0],[0.0,4.0],[0.0,0.0]]
         points = np.array(points)
 
-        self.Triangle(points)
+        self.setPoints(points)
         
         print(self.get_vertices())
         
