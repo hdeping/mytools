@@ -33,36 +33,36 @@ class Triangle(TriBase):
         self.points = points
         return
     
-    # get mid point of two points
     def get_mid_point(self,coor1,coor2):
         """
+        get mid point of two points
         """
         x = (coor1[0] + coor2[0])/2
         y = (coor1[1] + coor2[1])/2
         res = [x,y]
         return res
 
-    # get mid point of AB
     def get_mid_point_AB(self):
         """
+        get mid point of AB
         """
         return self.get_mid_point(self.A,self.B)
 
-    # get mid point of AC
     def get_mid_point_AC(self):
         """
+        get mid point of AC
         """
         return self.get_mid_point(self.A,self.C)
 
-    # get mid point of BC
     def get_mid_point_BC(self):
         """
+        get mid point of BC
         """
         return self.get_mid_point(self.C,self.B)
 
-    # mid point information of the triangle
     def get_mid_points(self):
         """
+        mid point information of the triangle
         """
         point_AB = self.get_mid_point_AB()
         point_AC = self.get_mid_point_AC()
