@@ -12,40 +12,40 @@ class TriBase():
         self.C = points[2]
         self.points = points
 
-    # get all the coordinates of points 
     def get_points(self):
         """
+        get all the coordinates of points 
         """
         return self.points
 
-    # get all the coordinates of A
     def get_point_A(self):
         """
+        get all the coordinates of A
         """
         return self.A
 
-    # get all the coordinates of B
     def get_point_B(self):
         """
+        get all the coordinates of B
         """
         return self.B
 
-    # get all the coordinates of C
     def get_point_C(self):
         """
+        get all the coordinates of C
         """
         return self.C
 
-    # get coordinate with the (x,y) form
     def get_coordinate(self,x,y):
         """
+        get coordinate with the (x,y) form
         """
         coor = "(%.2f,%.2f)"%(x,y)
         return coor
 
-    # get the vertices
     def get_vertices(self):
         """
+        get the vertices
         """
         vertices = {}
         vertex = []
@@ -63,9 +63,9 @@ class TriBase():
 
         return vertices
 
-    # get the distance of two points
     def get_lateral(self,coor1,coor2):
         """
+        get the distance of two points
         """
         # get the lateral length
         length = coor2 - coor1
@@ -74,27 +74,27 @@ class TriBase():
         length = np.sqrt(length)
         return length
 
-    # get the length of AB
     def get_lateral_AB(self):
         """
+        get the length of AB
         """
         return self.get_lateral(self.A,self.B)
 
-    # get the length of AC
     def get_lateral_AC(self):
         """
+        get the length of AC
         """
         return self.get_lateral(self.A,self.C)
 
-    # get the length of BC
     def get_lateral_BC(self):
         """
+        get the length of BC
         """
         return self.get_lateral(self.B,self.C)
 
-    # side length information of the triangle
     def get_laterals(self):
         """
+        side length information of the triangle
         """
         laterals   = {}
         a = self.get_lateral_BC()
@@ -106,10 +106,10 @@ class TriBase():
         
         return laterals
 
-    # get the angle with three sides
-    # the output will range from 0 to 180
     def get_angle(self,a,b,c):
         """
+        get the angle with three sides
+        the output will range from 0 to 180
         """
         a2 = a**2
         b2 = b**2
@@ -119,9 +119,9 @@ class TriBase():
         angle = angle*180.0/np.pi
         return angle
 
-    # get the angle of A
     def get_angle_A(self):
         """
+        get the angle of A
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -130,9 +130,9 @@ class TriBase():
         angle = self.get_angle(c,b,a)
         return angle
 
-    # get the angle of B
     def get_angle_B(self):
         """
+        get the angle of B
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -141,9 +141,9 @@ class TriBase():
         angle = self.get_angle(a,c,b)
         return angle
 
-    # get the angle of C
     def get_angle_C(self):
         """
+        get the angle of C
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -152,9 +152,9 @@ class TriBase():
         angle = self.get_angle(a,b,c)
         return angle
 
-    # get the angle information of the triangle
     def get_angles(self):
         """
+        get the angle information of the triangle
         """
         laterals = self.get_laterals()
         length_AC = laterals["AC"]
@@ -170,9 +170,9 @@ class TriBase():
 
         return angles
 
-    # get line equation of two points
     def get_line(self,coor1,coor2):
         """
+        get line equation of two points
         """
         # a*x + b*y + c = 0
         a = coor2[1] - coor1[1]
@@ -180,28 +180,28 @@ class TriBase():
         c = -(a*coor1[0] + b*coor1[1])
         return [a,b,c]
 
-    # get line equation of AB
     def get_line_AB(self):
         """
+        get line equation of AB
         """
         return self.get_line(self.A,self.B)
 
-    # get line equation of AC
     def get_line_AC(self):
         """
+        get line equation of AC
         """
         return self.get_line(self.A,self.C)
 
-    # get line equation of BC
     def get_line_BC(self):
         """
+        get line equation of BC
         """
         return self.get_line(self.B,self.C)
 
-    # get the line equation information of the
-    # triangle
     def get_lines(self):
         """
+        get the line equation information of the
+        triangle
         """
         line_AB = self.get_line_AB()
         line_AC = self.get_line_AC()
@@ -213,10 +213,10 @@ class TriBase():
         lines["line BC"] = line_BC
         return lines
 
-    # get the "ax+by+c=0" format of a
-    # line equation
     def get_line_string(self,line):
         """
+        get the "ax+by+c=0" format of a
+        line equation
         """
         # inverse the line
         if line[0] < 0:
@@ -242,31 +242,31 @@ class TriBase():
             else:
                 return string4
 
-    # get the line equation format of AB
     def get_line_string_AB(self):
         """
+        get the line equation format of AB
         """
         line_AB = self.get_line_AB()
         return self.get_line_string(line_AB)
 
-    # get the line equation format of AC
     def get_line_string_AC(self):
         """
+        get the line equation format of AC
         """
         line_AC = self.get_line_AC()
         return self.get_line_string(line_AC)
     
-    # get the line equation format of BC
     def get_line_string_BC(self):
         """
+        get the line equation format of BC
         """
         line_BC = self.get_line_BC()
         return self.get_line_string(line_BC)
 
-    # get the line equation format information
-    # of the triangle
     def get_line_strings(self):
         """
+        get the line equation format information
+        of the triangle
         """
         line_AB = self.get_line_string_AB()
         line_AC = self.get_line_string_AC()
@@ -277,9 +277,9 @@ class TriBase():
         lines["line BC"] = line_BC
         return lines
 
-    # get the area of the triangle
     def get_area(self):
         """
+        get the area of the triangle
         """
         if not self.isTriangle():
             print("There is no area")
@@ -296,10 +296,10 @@ class TriBase():
         area = np.sqrt(p*p1*p2*p3)
         return area
 
-    # judge if the three points would
-    # construct a triangle
     def isTriangle(self):
         """
+        judge if the three points would
+        construct a triangle
         """
         laterals = self.get_laterals()
         a = laterals["AB"]
@@ -315,9 +315,9 @@ class TriBase():
             print("No, It is not a triangle")
             return False
 
-    #draw a line with two points as inputs
     def draw_line(self,point1,point2):
         """
+        draw a line with two points as inputs
         """
         x  = []
         x.append(point1[0])
@@ -327,9 +327,9 @@ class TriBase():
         y.append(point2[1])
         plt.plot(x,y,'b','-',linewidth=4)
 
-    #draw a colored line with two points as inputs
     def draw_color_line(self,point1,point2,color):
         """
+        draw a colored line with two points as inputs
         """
         x  = []
         x.append(point1[0])
@@ -339,18 +339,18 @@ class TriBase():
         y.append(point2[1])
         plt.plot(x,y,color,'-',linewidth=4)
 
-    # draw a circle with the center and radius as inputs
     def draw_circle(self,center,radius):
         """
+        draw a circle with the center and radius as inputs
         """
         theta = np.linspace(0,2*np.pi,100)
         x     = radius*np.cos(theta) + center[0]
         y     = radius*np.sin(theta) + center[1]
         plt.plot(x,y,'#FF00FF','-',linewidth = 4)
 
-    # draw the triangle
     def draw(self):
         """
+        draw the triangle
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -377,11 +377,11 @@ class TriBase():
         radius = a*b*c/(4.0*area)
         return radius
 
-    # get the  radius of the inscribed circle
-    # which is tangent to the three sides 
-    # of the triangle
     def get_inscribe_radius(self):
         """
+        get the  radius of the inscribed circle
+        which is tangent to the three sides 
+        of the triangle
         """
         laterals = self.get_laterals()
         a = laterals["AB"]
@@ -392,9 +392,9 @@ class TriBase():
         radius = area/p
         return radius
 
-    # get the radius information of the triangle
     def get_radiuses(self):
         """
+        get the radius information of the triangle
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -418,10 +418,10 @@ class TriBase():
         radiuses["escribe radius C-AB"] = escribe_radius_c
         return radiuses
 
-    # get the radius of the escribed circle A
-    # which is tangent to the line BC
     def get_escribe_radius_A(self):
         """
+        get the radius of the escribed circle A
+        which is tangent to the line BC
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -433,10 +433,10 @@ class TriBase():
         radius = area/p
         return radius
 
-    # get the radius of the escribed circle B
-    # which is tangent to the line AC
     def get_escribe_radius_B(self):
         """
+        get the radius of the escribed circle B
+        which is tangent to the line AC
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
@@ -448,10 +448,10 @@ class TriBase():
         radius = area/p
         return radius
 
-    # get the radius of the escribed circle C
-    # which is tangent to the line AB
     def get_escribe_radius_C(self):
         """
+        get the radius of the escribed circle C
+        which is tangent to the line AB
         """
         laterals = self.get_laterals()
         a = laterals["BC"]
