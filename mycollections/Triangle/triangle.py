@@ -145,4 +145,29 @@ class Triangle():
         lines["line AC"] = line_AC
         lines["line BC"] = line_BC
         return lines
+    def get_area(self):
+        if not self.isTriangle():
+            print("There is no area")
+            return 0
+            
+        laterals = self.get_laterals()
+        a = laterals["AB"]
+        b = laterals["AC"]
+        c = laterals["BC"]
+        p = (a+b+c)/2
+    def isTriangle(self):
+        laterals = self.get_laterals()
+        a = laterals["AB"]
+        b = laterals["AC"]
+        c = laterals["BC"]
+        p1 = (a + b > c)
+        p2 = (a + c > b)
+        p3 = (c + b > a)
+        if p1 and p2 and p3:
+            print("Yes, It is a triangle")
+            return True
+        else:
+            print("No, It is not a triangle")
+            return False
+
 

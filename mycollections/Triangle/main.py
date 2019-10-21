@@ -2,8 +2,10 @@
 
 import numpy as np
 from triangle import Triangle
+import json
 
 points = [[3.0,0],[0.0,4.0],[0.0,0.0]]
+#points = [[3.0,0],[2.0,0.0],[1.0,0.0]]
 points = np.array(points)
 print(points)
 
@@ -17,5 +19,9 @@ sideLengths = tri.get_laterals()
 print(sideLengths)
 angles = tri.get_angles()
 print(angles)
-print(tri.get_lines())
-print(tri.get_line_strings())
+lines = tri.get_lines()
+lines = json.dumps(lines,indent = 4)
+print(lines)
+lines = tri.get_line_strings()
+lines = json.dumps(lines,indent = 4)
+print(lines)
