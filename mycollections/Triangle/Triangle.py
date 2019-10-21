@@ -322,39 +322,39 @@ class Triangle(TriBase):
         lines["line C-AB"] = line_C_AB
         return lines
 
-    # get ortho point of a point and a line
     def get_ortho_point(self,line,point):
         """
+        get ortho point of a point and a line
         """
         ortho_line = self.get_ortho_line(line,point)
         #print(ortho_line)
         res = self.get_intersect_point(line,ortho_line)
         return res
 
-    # get ortho point of AB
     def get_ortho_point_C_AB(self):
         """
+        get ortho point of AB
         """
         line = self.get_line_AB()
         return self.get_ortho_point(line,self.C)
 
-    # get ortho point of AC
     def get_ortho_point_B_AC(self):
         """
+        get ortho point of AC
         """
         line = self.get_line_AC()
         return self.get_ortho_point(line,self.B)
 
-    # get ortho point of BC
     def get_ortho_point_A_BC(self):
         """
+        get ortho point of BC
         """
         line = self.get_line_BC()
         return self.get_ortho_point(line,self.A)
 
-    # ortho point information of the triangle
     def get_ortho_points(self):
         """
+        ortho point information of the triangle
         """
         point_C_AB = self.get_ortho_point_C_AB()
         point_B_AC = self.get_ortho_point_B_AC()
@@ -365,9 +365,9 @@ class Triangle(TriBase):
         points["point A-BC"] = point_A_BC
         return points
 
-    # draw the orthogonal lines
     def draw_ortho_lines(self):
         """
+        draw the orthogonal lines
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -388,39 +388,39 @@ class Triangle(TriBase):
         plt.savefig("orthogonal.png",dpi=300)
         plt.show()
 
-    # get vertical line of two points 
-    # the vertical line is perpendicular to the 
-    # line constructed by the input points
     def get_vertical_line(self,point1,point2):
         """
+        get vertical line of two points 
+        the vertical line is perpendicular to the 
+        line constructed by the input points
         """
         mid_point = self.get_mid_point(point1,point2)
         line      = self.get_line(point1,point2)
         res       = self.get_ortho_line(line,mid_point)
         return res
 
-    # get the vertical line of BC
     def get_vertical_line_BC(self):
         """
+        get the vertical line of BC
         """
         return self.get_vertical_line(self.B,self.C)
 
-    # get the vertical line of AC
     def get_vertical_line_AC(self):
         """
+        get the vertical line of AC
         """
         return self.get_vertical_line(self.C,self.A)
 
-    # get the vertical line of AB
     def get_vertical_line_AB(self):
         """
+        get the vertical line of AB
         """
         return self.get_vertical_line(self.B,self.A)
 
-    # get the vertical line information of the
-    # triangle
     def get_vertical_lines(self):
         """
+        get the vertical line information of the
+        triangle
         """
         line_BC = self.get_vertical_line_BC()
         line_AC = self.get_vertical_line_AC()
@@ -432,31 +432,31 @@ class Triangle(TriBase):
         lines["line AB"] = line_AB
         return lines
 
-    # get the vertical line equation format of AB
     def get_vertical_line_string_AB(self):
         """
+        get the vertical line equation format of AB
         """
         line = self.get_vertical_line_AB()
         return self.get_line_string(line)
 
-    # get the vertical line equation format of AC
     def get_vertical_line_string_AC(self):
         """
+        get the vertical line equation format of AC
         """
         line = self.get_vertical_line_AC()
         return self.get_line_string(line)
 
-    # get the vertical line equation format of BC
     def get_vertical_line_string_BC(self):
         """
+        get the vertical line equation format of BC
         """
         line = self.get_vertical_line_BC()
         return self.get_line_string(line)
 
-    # get the vertical line equation format information
-    # of the triangle
     def get_vertical_line_strings(self):
         """
+        get the vertical line equation format information
+        of the triangle
         """
         line_BC = self.get_vertical_line_string_BC()
         line_AC = self.get_vertical_line_string_AC()
@@ -468,10 +468,10 @@ class Triangle(TriBase):
         lines["line AB"] = line_AB
         return lines
 
-    # get the center of the circum circle of the 
-    # triangle
     def get_circum_center(self):
         """
+        get the center of the circum circle of the 
+        triangle
         """
         lines = self.get_vertical_lines()
         line_BC = lines["line BC"] 
@@ -479,10 +479,10 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_AB,line_BC)
         return res
 
-    # get the ortho center of the 
-    # triangle
     def get_ortho_center(self):
         """
+        get the ortho center of the 
+        triangle
         """
         lines = self.get_ortho_lines()
         line_BC = lines["line A-BC"] 
@@ -490,9 +490,9 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_AB,line_BC)
         return res
 
-    # draw the circum circle
     def draw_circum_circle(self):
         """
+        draw the circum circle
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -508,20 +508,20 @@ class Triangle(TriBase):
         plt.savefig("circum1.png",dpi=300)
         plt.show()
     
-    # get side value of a line and a point
     def get_point_line_value(self,line,point):
         """
+        get side value of a line and a point
         """
         res = line[2]
         for i in range(2):
             res += line[i]*point[i]
         return res
 
-    # get bisector line of a triangle
-    # the bisector line is perpendicular to the 
-    # line constructed by the input points
     def get_bisector_line(self,point1,point2,point3):
         """
+        get bisector line of a triangle
+        the bisector line is perpendicular to the 
+        line constructed by the input points
         """
         line1 = self.get_line(point1,point2)
         line2 = self.get_line(point1,point3)
@@ -564,31 +564,31 @@ class Triangle(TriBase):
 
         return res
 
-    # get the inscribe line of A
     def get_inscribe_line_A(self):
         """
+        get the inscribe line of A
         """
         line = self.get_bisector_line(self.A,self.B,self.C)
         return line['interior']
 
-    # get the inscribe line of B
     def get_inscribe_line_B(self):
         """
+        get the inscribe line of B
         """
         line = self.get_bisector_line(self.B,self.A,self.C)
         return line['interior']
 
-    # get the inscribe line of C
     def get_inscribe_line_C(self):
         """
+        get the inscribe line of C
         """
         line =  self.get_bisector_line(self.C,self.A,self.B)
         return line['interior']
 
-    # get the inscribe line information of the
-    # triangle
     def get_inscribe_lines(self):
         """
+        get the inscribe line information of the
+        triangle
         """
         line_A = self.get_inscribe_line_A()
         line_B = self.get_inscribe_line_B()
@@ -600,30 +600,31 @@ class Triangle(TriBase):
         lines["C"] = line_C
         return lines
 
-    # get the inscribe line equation format of A
     def get_inscribe_line_string_A(self):
         """
+        get the inscribe line equation format of A
         """
         line = self.get_inscribe_line_A()
         return self.get_line_string(line)
 
-    # get the inscribe line equation format of B
     def get_inscribe_line_string_B(self):
         """
+        get the inscribe line equation format of B
         """
         line = self.get_inscribe_line_B()
         return self.get_line_string(line)
 
-    # get the inscribe line equation format of C
     def get_inscribe_line_string_C(self):
         """
+        get the inscribe line equation format of C
         """
         line = self.get_inscribe_line_C()
         return self.get_line_string(line)
 
-    # get the inscribe line equation format information
-    # of the triangle
-    def get_inscribe_line_strings(self):"""
+    def get_inscribe_line_strings(self):
+        """
+        get the inscribe line equation format information
+        of the triangle
         """
         line_A = self.get_inscribe_line_string_A()
         line_B = self.get_inscribe_line_string_B()
@@ -635,10 +636,10 @@ class Triangle(TriBase):
         lines["C"] = line_C
         return lines
 
-    # get the center of the inscribed circle of the 
-    # triangle
     def get_inscribe_center(self):
         """
+        get the center of the inscribed circle of the 
+        triangle
         """
         lines = self.get_inscribe_lines()
         line_B = lines["B"] 
@@ -647,9 +648,9 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_A,line_B)
         return res
 
-    # draw the inscribe circle
     def draw_inscribe_circle(self):
         """
+        draw the inscribe circle
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -675,32 +676,31 @@ class Triangle(TriBase):
         self.draw_circle(center,radius)
         plt.show()
 
-    # get the escribe line of A
     def get_escribe_line_A(self):
         """
+        get the escribe line of A
         """
         line = self.get_bisector_line(self.A,self.B,self.C)
         return line['exterior']
 
-    # get the escribe line of B
-
     def get_escribe_line_B(self):
         """
+        get the escribe line of B
         """
         line = self.get_bisector_line(self.B,self.A,self.C)
         return line['exterior']
 
-    # get the escribe line of C
     def get_escribe_line_C(self):
         """
+        get the escribe line of C
         """
         line =  self.get_bisector_line(self.C,self.A,self.B)
         return line['exterior']
 
-    # get the escribe line information of the
-    # triangle
     def get_escribe_lines(self):
         """
+        get the escribe line information of the
+        triangle
         """
         line_A = self.get_escribe_line_A()
         line_B = self.get_escribe_line_B()
@@ -712,31 +712,31 @@ class Triangle(TriBase):
         lines["C"] = line_C
         return lines
 
-    # get the escribe line equation format of A
     def get_escribe_line_string_A(self):
         """
+        get the escribe line equation format of A
         """
         line = self.get_escribe_line_A()
         return self.get_line_string(line)
 
-    # get the escribe line equation format of B
     def get_escribe_line_string_B(self):
         """
+        get the escribe line equation format of B
         """
         line = self.get_escribe_line_B()
         return self.get_line_string(line)
 
-    # get the escribe line equation format of C
     def get_escribe_line_string_C(self):
         """
+        get the escribe line equation format of C
         """
         line = self.get_escribe_line_C()
         return self.get_line_string(line)
 
-    # get the escribe line equation format information
-    # of the triangle
     def get_escribe_line_strings(self):
         """
+        get the escribe line equation format information
+        of the triangle
         """
         line_A = self.get_escribe_line_string_A()
         line_B = self.get_escribe_line_string_B()
@@ -748,10 +748,10 @@ class Triangle(TriBase):
         lines["C"] = line_C
         return lines
 
-    # get the center of the escribed circle A-BC of the 
-    # triangle
     def get_escribe_center_A_BC(self):
         """
+        get the center of the escribed circle A-BC of the 
+        triangle
         """
         lines = self.get_escribe_lines()
         line_B = lines["B"] 
@@ -759,10 +759,10 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_C,line_B)
         return res
 
-    # get the center of the escribed circle B-AC of the 
-    # triangle
     def get_escribe_center_B_AC(self):
         """
+        get the center of the escribed circle B-AC of the 
+        triangle
         """
         lines = self.get_escribe_lines()
         line_A = lines["A"] 
@@ -770,10 +770,10 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_C,line_A)
         return res
 
-    # get the center of the escribed circle C-AB of the 
-    # triangle
     def get_escribe_center_C_AB(self):
         """
+        get the center of the escribed circle C-AB of the 
+        triangle
         """
         lines = self.get_escribe_lines()
         line_A = lines["A"] 
@@ -781,9 +781,9 @@ class Triangle(TriBase):
         res = self.get_intersect_point(line_B,line_A)
         return res
 
-    # draw the circum circle
     def draw_escribe_circle(self):
         """
+        draw the circum circle
         """
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -797,14 +797,14 @@ class Triangle(TriBase):
         self.draw_circle(center,radius)
         plt.show()
 
-    # get the centers of the triangle
-    # gravity center
-    # ortho center
-    # circum center
-    # inscribe center
-    # 3 escribe centers
     def get_centers(self):
         """
+        get the centers of the triangle
+        gravity center
+        ortho center
+        circum center
+        inscribe center
+        3 escribe centers
         """
         gravity_center = self.get_gravity_center()
         circum_center = self.get_circum_center()
