@@ -21,18 +21,29 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
+import json
 
 class Triangle(TriBase):
     """
     all kinds of methods for triangle computation
     """
-    def __init__(self,points):
+    def __init__(self,points = None):
+        if points is not None:
+            self.setPoints(points)
+        return
+    def setPoints(self,points):
+        """
+        docstring for setPoints
+        input:
+            points,array type as [[x1,y1],[x2,y2],[x3,y3]]
+        return:
+            None, but self.points is changed
+        """
         self.A = points[0]
         self.B = points[1]
         self.C = points[2]
         self.points = points
         return
-    
     def get_mid_point(self,coor1,coor2):
         """
         get mid point of two points
@@ -938,17 +949,17 @@ class Triangle(TriBase):
         #points = [[4.0,0],[0.0,4.0],[0.0,0.0]]
         points = np.array(points)
 
-        tri = Triangle(points)
+        self.setPoints(points)
         
-        print(tri.get_vertices())
+        print(self.get_vertices())
         
-        info = tri.get_info()
+        info = self.get_info()
         info = json.dumps(info,indent = 4)
         print(info)
         
-        print("circum radius",tri.get_circum_center())
-        print("ortho  radius",tri.get_ortho_center())
+        print("circum radius",self.get_circum_center())
+        print("ortho  radius",self.get_ortho_center())
         #tri.draw_circum_circle()
-        tri.draw_inscribe_circle()
+        self.draw_inscribe_circle()
 
         return
