@@ -27,6 +27,29 @@ class base():
     def get_point_C(self):
         return self.C
 
+    # get coordinate with the (x,y) form
+    def get_coordinate(self,x,y):
+        coor = "(%.2f,%.2f)"%(x,y)
+        return coor
+
+    # get the vertices
+    def get_vertices(self):
+        vertices = {}
+        vertex = []
+        points = self.points
+        print(points)
+        for i in range(3):
+            x = points[i][0]
+            y = points[i][1]
+            A = self.get_coordinate(x,y)
+            vertex.append(A)
+
+        vertices['A'] = vertex[0]
+        vertices['B'] = vertex[1]
+        vertices['C'] = vertex[2]
+
+        return vertices
+
     # get the distance of two points
     def get_lateral(self,coor1,coor2):
         # get the lateral length
@@ -309,9 +332,9 @@ class base():
         radiuses = {}
         radiuses["circum radius"] = circum_radius
         radiuses["inscribe radius"] = inscribe_radius
-        radiuses["escribe radius A"] = escribe_radius_a
-        radiuses["escribe radius B"] = escribe_radius_b
-        radiuses["escribe radius C"] = escribe_radius_c
+        radiuses["escribe radius A-BC"] = escribe_radius_a
+        radiuses["escribe radius B-AC"] = escribe_radius_b
+        radiuses["escribe radius C-AB"] = escribe_radius_c
         return radiuses
 
     # get the radius of the escribed circle A

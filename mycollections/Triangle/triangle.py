@@ -46,6 +46,7 @@ class Triangle(base):
     # get the gravity center
     def get_gravity_center(self):
         center = np.mean(self.points,axis = 0)
+        center = list(center)
         return center
 
     # draw the mid lines
@@ -389,12 +390,10 @@ class Triangle(base):
         self.draw_line(self.C,self.B)
 
         center = self.get_circum_center()
-        print("center",center)
         radius = self.get_circum_radius()
-        print(radius)
         self.draw_circle(center,radius)
 
-        plt.savefig("circum.png",dpi=300)
+        plt.savefig("circum1.png",dpi=300)
         plt.show()
     
     # get side value of a line and a point
@@ -627,4 +626,61 @@ class Triangle(base):
         radius = self.get_escribe_radius_A()
         self.draw_circle(center,radius)
         plt.show()
+
+    # get the centers of the triangle
+    # gravity center
+    # ortho center
+    # circum center
+    # inscribe center
+    # 3 escribe centers
+    def get_centers(self):
+        gravity_center = self.get_gravity_center()
+        circum_center = self.get_circum_center()
+        ortho_center = self.get_ortho_center()
+        inscribe_center = self.get_inscribe_center()
+        escribe_center_A_BC = self.get_escribe_center_A_BC()
+        escribe_center_B_AC = self.get_escribe_center_B_AC()
+        escribe_center_C_AB = self.get_escribe_center_C_AB()
+
+        centers = {}
+        centers["gravity center"]      = gravity_center
+        centers["ortho center"]        = circum_center
+        centers["circum center"]       = ortho_center
+        centers["inscribe center"]     = inscribe_center
+        centers["escribe center A-BC"] = escribe_center_A_BC
+        centers["escribe center B-AC"] = escribe_center_B_AC
+        centers["escribe center C-AB"] = escribe_center_C_AB
+
+        return centers
+    
+    # get all the information of the triangle
+    def get_info(self):
+        vertices       = self.get_vertices()
+        side_lengths   = self.get_laterals()
+        angles         = self.get_angles()
+        lines          = self.get_line_strings()
+        mid_lines      = self.get_mid_line_strings()
+        ortho_lines    = self.get_ortho_line_strings()
+        vertical_lines = self.get_vertical_line_strings()
+        inscribe_lines = self.get_inscribe_line_strings()
+        escribe_lines  = self.get_escribe_line_strings()
+        radiuses       = self.get_radiuses()
+        centers        = self.get_centers()
+        area           = self.get_area()
+
+        res = {}
+        res['area']             = area
+        res['vertices']         = vertices
+        res['side lengths']     = side_lengths
+        res['angles']           = angles
+        res['lines']            = lines         
+        res['mid lines']        = mid_lines     
+        res['ortho lines']      = ortho_lines   
+        res['vertical lines']   = vertical_lines
+        res['inscribe lines']   = inscribe_lines
+        res['escribe lines']    = escribe_lines 
+        res['radiuses']         = radiuses
+        res['centers']          = centers
+
+        return res
 
