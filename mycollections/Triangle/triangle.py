@@ -155,6 +155,11 @@ class Triangle():
         b = laterals["AC"]
         c = laterals["BC"]
         p = (a+b+c)/2
+        p1 = p - a
+        p2 = p - b
+        p3 = p - c
+        area = np.sqrt(p*p1*p2*p3)
+        return area
     def isTriangle(self):
         laterals = self.get_laterals()
         a = laterals["AB"]
@@ -169,5 +174,20 @@ class Triangle():
         else:
             print("No, It is not a triangle")
             return False
+    def draw(self):
+        points = self.points
+        plt.figure(figsize = (9,9))
+        plt.axis("equal")
+        x = points[:2,0]
+        y = points[:2,1]
+        plt.plot(x,y,'b','-o',linewidth=4)
+        x = points[1:,0]
+        y = points[1:,1]
+        plt.plot(x,y,'b','-o',linewidth=4)
+        x = [points[0,0],points[-1,0]]
+        y = [points[0,1],points[-1,1]]
+        plt.plot(x,y,'b','-o',linewidth=4)
+        plt.show()
+        return 1
 
 
