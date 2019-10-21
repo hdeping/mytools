@@ -515,7 +515,7 @@ class Triangle(base):
         res = self.get_intersect_point(line_A,line_B)
         return res
 
-    # draw the circum circle
+    # draw the inscribe circle
     def draw_inscribe_circle(self):
         plt.figure(figsize = (9,9))
         plt.axis("equal")
@@ -528,6 +528,103 @@ class Triangle(base):
         radius = self.get_inscribe_radius()
         print("center",center)
         print("radius",radius)
+        self.draw_circle(center,radius)
+        plt.show()
+
+    # get the escribe line of A
+    def get_escribe_line_A(self):
+        line = self.get_bisector_line(self.A,self.B,self.C)
+        return line['exterior']
+
+    # get the escribe line of B
+    def get_escribe_line_B(self):
+        line = self.get_bisector_line(self.B,self.A,self.C)
+        return line['exterior']
+
+    # get the escribe line of C
+    def get_escribe_line_C(self):
+        line =  self.get_bisector_line(self.C,self.A,self.B)
+        return line['exterior']
+
+    # get the escribe line information of the
+    # triangle
+    def get_escribe_lines(self):
+        line_A = self.get_escribe_line_A()
+        line_B = self.get_escribe_line_B()
+        line_C = self.get_escribe_line_C()
+
+        lines = {}
+        lines["A"] = line_A
+        lines["B"] = line_B
+        lines["C"] = line_C
+        return lines
+
+    # get the escribe line equation format of A
+    def get_escribe_line_string_A(self):
+        line = self.get_escribe_line_A()
+        return self.get_line_string(line)
+
+    # get the escribe line equation format of B
+    def get_escribe_line_string_B(self):
+        line = self.get_escribe_line_B()
+        return self.get_line_string(line)
+
+    # get the escribe line equation format of C
+    def get_escribe_line_string_C(self):
+        line = self.get_escribe_line_C()
+        return self.get_line_string(line)
+
+    # get the escribe line equation format information
+    # of the triangle
+    def get_escribe_line_strings(self):
+        line_A = self.get_escribe_line_string_A()
+        line_B = self.get_escribe_line_string_B()
+        line_C = self.get_escribe_line_string_C()
+
+        lines = {}
+        lines["A"] = line_A
+        lines["B"] = line_B
+        lines["C"] = line_C
+        return lines
+
+    # get the center of the escribed circle A-BC of the 
+    # triangle
+    def get_escribe_center_A_BC(self):
+        lines = self.get_escribe_lines()
+        line_B = lines["B"] 
+        line_C = lines["C"] 
+        res = self.get_intersect_point(line_C,line_B)
+        return res
+
+    # get the center of the escribed circle B-AC of the 
+    # triangle
+    def get_escribe_center_B_AC(self):
+        lines = self.get_escribe_lines()
+        line_A = lines["A"] 
+        line_C = lines["C"] 
+        res = self.get_intersect_point(line_C,line_A)
+        return res
+
+    # get the center of the escribed circle C-AB of the 
+    # triangle
+    def get_escribe_center_C_AB(self):
+        lines = self.get_escribe_lines()
+        line_A = lines["A"] 
+        line_B = lines["B"] 
+        res = self.get_intersect_point(line_B,line_A)
+        return res
+
+    # draw the circum circle
+    def draw_escribe_circle(self):
+        plt.figure(figsize = (9,9))
+        plt.axis("equal")
+
+        self.draw_line(self.A,self.B)
+        self.draw_line(self.A,self.C)
+        self.draw_line(self.C,self.B)
+
+        center = self.get_escribe_center_A_BC()
+        radius = self.get_escribe_radius_A()
         self.draw_circle(center,radius)
         plt.show()
 
