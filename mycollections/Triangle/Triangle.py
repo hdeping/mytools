@@ -21,18 +21,29 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
+import json
 
 class Triangle(TriBase):
     """
     all kinds of methods for triangle computation
     """
-    def __init__(self,points):
+    def __init__(self,points = None):
+        if points is not None:
+            self.setPoints(points)
+        return
+    def setPoints(self,points):
+        """
+        docstring for setPoints
+        input:
+            points,array type as [[x1,y1],[x2,y2],[x3,y3]]
+        return:
+            None, but self.points is changed
+        """
         self.A = points[0]
         self.B = points[1]
         self.C = points[2]
         self.points = points
         return
-    
     def get_mid_point(self,coor1,coor2):
         """
         get mid point of two points
