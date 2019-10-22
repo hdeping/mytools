@@ -133,6 +133,16 @@ class MaterialModel(nn.Module):
         x = F.relu(x)
         return x
     def expandMat2(self,x,size):
+        """
+        input:
+            x, 3D array, with the shape of (batch_size, m,n)
+            size, an integer number
+        return:
+            x, 3D array, with the shape of 
+            (batch_size, size*m,size*n)
+        for instance:
+            (x[2,3,4],10) --> x[20,30,40]
+        """
         # rows and columns (m,n)
         batch_size , m,n = x.size()
         y = torch.zeros(batch_size,m*size,n*size)
@@ -146,6 +156,14 @@ class MaterialModel(nn.Module):
         return y
     def expandMat(self,x,size):
         """
+        input:
+            x, 5D array, with the shape of (batch_size, d,m,n,s)
+            size, an integer number
+        return:
+            x, 5D array, with the shape of 
+            (batch_size, d,size*m,size*n,size*s)
+        for instance:
+            (x[2,3,4,5,6],10) --> x[20,30,40,50,60]
         """
         # rows and columns (m,n)
         batch_size ,d, m,n,s = x.size()
