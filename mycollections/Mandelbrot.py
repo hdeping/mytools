@@ -23,49 +23,31 @@ from tqdm import tqdm
 
 class Mandelbrot():
     """docstring for Mandelbrot"""
-    def __init__(self,C,maxIter,
-                      func_range,threshold,
-                      n,filename):
+    def __init__(self,parameters):
         super(Mandelbrot, self).__init__()
         # usually a complex number
-        self.C = C
+        self.C          = parameters["C"]
         # maximum iteration number
-        self.maxIter = maxIter
+        self.maxIter    = parameters["maxIter"]
         # function range
-        self.func_range = func_range
+        self.func_range = parameters["func_range"]
         # threshold
-        self.threshold = threshold
-        self.Z = 0.0
+        self.threshold  = parameters["threshold"]
+        
         # split number
-        self.n = n
-        self.filename = filename
+        self.n          = parameters["n"]
+        self.filename   = parameters["filename"]
+
+        self.Z = 0.0
         
     def get_iteration(self):
         # print(i)
-        iteration = 0
-        cValue = 0
-        # while abs(self.Z)**2 < self.threshold and \
-        #       iteration < self.maxIter:
-        #     # self.Z = self.Z**2 + self.C
-        #     self.Z = self.Z**2 +  self.Z
-        #     iteration += 1
-
-        while abs(cValue)**2 < self.threshold and \
+        iteration = 0 
+        while abs(self.Z)**2 < self.threshold and \
               iteration < self.maxIter:
-            # cValue = cValue**2 - cValue +  self.Z
-            cValue = cValue**2 +  self.Z
+            self.Z = self.Z**2 + self.C
             iteration += 1
-
-        # if iteration > self.maxIter//2 - 1:
-        #     return 1
-        # else:
-        #     return 0
-        # iteration /= self.maxIter
-        # if iteration > 0.5:
-        #     return 0
-        # else:
-        #     return (iteration - 0.5)*2
-        return iteration/self.maxIter
+        return iteration
     def get_mandelbrot(self):
         xValue = np.linspace(self.func_range[0],
                              self.func_range[1],
@@ -83,11 +65,18 @@ class Mandelbrot():
                 iterations[i,j] = self.get_iteration()
 
         # get plot
-        xValue = np.arange(self.n)
-        yValue = np.arange(self.n)
-        data = (xValue,yValue,iterations.transpose())
-        # data = (xValue,yValue,iterations,self.maxIter)
+        data = (xValue,yValue,iterations,self.maxIter)
         print("get plotting")
         
         plot(self.filename,data)
+
+parameters = {}
+parameters["C"] = 2.0
+parameters["maxIter"] = 80
+parameters["threshold"] = 2.0
+parameters["func_range"] = [-5,5,-5,5]
+parameters["n"] = 256
+parameters["filename"] = "mandelbrot.txt"
+
+mandelbrot = Mandelbrot(parameters)
 
