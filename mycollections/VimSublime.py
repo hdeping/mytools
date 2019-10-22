@@ -124,12 +124,19 @@ class VimToSublime(SublimeToVim):
 
     """
     Docstring for VimToSublime. 
-    transform snippets files for sublime to 
-    ones for vim
+    It is inheritated from SublimeToVim,
+    and it is used to transform snippets files for 
+    sublime to ones for vim
     """
 
     def __init__(self):
-        """TODO: to be defined1. """
+        """
+        TODO: to be defined1. 
+        self.filenames:
+        self.dirs:
+        self.sources:
+        self.texts:
+        """
         SublimeToVim.__init__(self,".")
         self.filenames = []
         self.dirs = []
@@ -138,7 +145,6 @@ class VimToSublime(SublimeToVim):
         self.texts = ["tex"]
     def get_dirs(self):
         """TODO: Docstring for get_dirs.
-
         :returns: TODO
 
         """
@@ -187,6 +193,16 @@ class VimToSublime(SublimeToVim):
         
 
     def write_to_sublime(self,index,content,field,scope):
+        """
+        input:
+            index, index of self.dirs
+            content, 
+            field,
+            scope, language type, such as python, ruby and so on
+        return:
+            None, but the results should be written into a 
+            sublime-snippet file
+        """
         if not os.path.exists(self.dirs[index]):
             os.mkdir(self.dirs[index])
         filename = "%s/%s.sublime-snippet"%(self.dirs[index],field)
