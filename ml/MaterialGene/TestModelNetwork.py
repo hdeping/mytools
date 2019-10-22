@@ -30,10 +30,16 @@ class TestModelNetwork():
         """TODO: to be defined1. """
         super(TestModel,self).__init__()
 
+        return
+
     def conv3d_batch(input_channel,output_channel):
         """
         input:
             input_channel, number of the input channel
+            output_channel, number of the output channel
+        return:
+            conv_net, Conv3d --> BatchNorm3d, 
+            a two layer neural network
         """
         conv_net = nn.Sequential()
         model = nn.Conv3d(input_channel,output_channel,kernel_size=3)
@@ -70,6 +76,8 @@ class TestModelNetwork():
         x = x.view(batch_size,-1)
         #print("layer4 :",x.shape)
         #print("layer  :",x.shape)
+
+        return x
     def test(self):
         """TODO: Docstring for test.
         :returns: TODO
@@ -80,3 +88,4 @@ class TestModelNetwork():
         x = torch.rand(batch_size,1,m*size,n*size,l*size)
         model = MaterialModel()
         y = model(x)
+        return
