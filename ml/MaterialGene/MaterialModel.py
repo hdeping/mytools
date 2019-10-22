@@ -8,6 +8,7 @@
     @author       : Deping Huang
     @mail address : xiaohengdao@gmail.com
     @date         : 2019-09-25 18:18:00
+                    2019-10-22 10:33:28
     @project      : Material Genome Project
     @version      : 1.0
     @source file  : MaterialModel.py
@@ -19,7 +20,18 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class MaterialModel(nn.Module):
+    """
+    model definition for the material genome project
+    """
     def __init__(self):
+        """
+        self.layer[1-4]:
+            conv3d_batch layers,1,16,32,64,128
+        self.layer5:
+            linear and batchnorm
+        self.layer6:
+            linear layer
+        """
         super(Net, self).__init__()
         # layer1: convTran3d + batchnorm
         self.layer1 = self.conv3d_batch(1,16)
@@ -36,18 +48,37 @@ class MaterialModel(nn.Module):
         self.layer6 = self.linear_batch(node_num,1)
 
     def linear_batch(self,input_chanel,output_chanel):
+        """
+        """
         linear_net = nn.Sequential()
         linear_net.add_module('linear', nn.Linear(input_chanel,output_chanel))
         return linear_net
         
     def convTran3d_batch(self,input_chanel,output_chanel):
+        """
+        input:
+            input_channel, number of the input channel
+            output_channel, number of the output channel
+        return:
+            conv_net, ConvTranspose3d --> BatchNorm3d, 
+            a two layer neural network
+        """
         conv_net = nn.Sequential()
         model = nn.ConvTranspose3d(input_chanel,output_chanel,kernel_size=2)
         conv_net.add_module('conv',model) 
-        conv_net.add_module('batchnorm', nn.BatchNorm3d(output_chanel))
+        model = nn.BatchNorm3d(output_chanel)
+        conv_net.add_module('batchnorm', model)
         return conv_net
 
     def conv3d_batch(self,input_chanel,output_chanel):
+        """
+        input:
+            input_channel, number of the input channel
+            output_channel, number of the output channel
+        return:
+            conv_net, Conv3d --> BatchNorm3d, 
+            a two layer neural network
+        """
         conv_net = nn.Sequential()
         model = nn.Conv3d(input_chanel,output_chanel,kernel_size=3)
         conv_net.add_module('conv', model)
@@ -55,6 +86,9 @@ class MaterialModel(nn.Module):
         return conv_net
 
     def forward(self, x):
+        """
+        forward computation of the neural network
+        """
         # expand the input
         # size = 5
         #print(x.shape)
@@ -101,6 +135,8 @@ class MaterialModel(nn.Module):
                 y[:,i_begin:i_end,j_begin:j_end] = x
         return y
     def expandMat(self,x,size):
+        """
+        """
         # rows and columns (m,n)
         batch_size ,d, m,n,s = x.size()
         y = torch.zeros(batch_size,d,m*size,n*size,s*size)
