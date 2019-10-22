@@ -1,4 +1,20 @@
-#!/usr/bin/python
+#!/usr/local/bin/python3
+# -*- coding: UTF-8 -*-
+ 
+"""
+
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-10-22 10:13:39
+    @project      : material genome project
+    @version      : 1.0
+    @source file  : TestModelNetwork.py
+
+============================
+"""
+
 
 import torch
 import torch.nn as nn
@@ -14,23 +30,32 @@ class TestModelNetwork():
         """TODO: to be defined1. """
         super(TestModel,self).__init__()
 
-    def conv3d_batch(input_chanel,output_chanel):
+    def conv3d_batch(input_channel,output_channel):
+        """
+        input:
+            input_channel, number of the input channel
+        """
         conv_net = nn.Sequential()
-        conv_net.add_module('conv', 
-                nn.Conv3d(input_chanel,output_chanel,kernel_size=3))
-        conv_net.add_module('batchnorm', 
-                nn.BatchNorm3d(output_chanel))
+        model = nn.Conv3d(input_channel,output_channel,kernel_size=3)
+        conv_net.add_module('conv', model)
+        model = nn.BatchNorm3d(output_channel)
+        conv_net.add_module('batchnorm', model)
         return conv_net
 
+    def getNewX(x):
+        """
+        input:
+            x, torch array type
+        return: 
+            x, output of the neural networks
+        """
+        m = 3
+        n = 3
+        l = 8
         layer1 = conv3d_batch(1,16)
         layer2 = conv3d_batch(16,32)
         layer3 = conv3d_batch(32,64)
         layer4 = conv3d_batch(64,128)
-
-    def getNewX(x):
-        m = 3
-        n = 3
-        l = 8
         size = 5
         batch_size = 64
         x = torch.rand(batch_size,1,m*size,n*size,l*size)
@@ -48,7 +73,7 @@ class TestModelNetwork():
     def test(self):
         """TODO: Docstring for test.
         :returns: TODO
-
+        test the MaterialModel
         """
 
         size = 1
