@@ -51,6 +51,11 @@ class Wyckoff():
     def loadLattice(self):
         """
         docstring for loadLattice
+        load lattice file from lattice.csv
+        format of the lattice.csv:
+            0 0 0
+            0 0 4
+            ...
         """
         self.codeDir = "/home/hdeping/complexNetwork/00_CCodes/"
         self.dirs = self.codeDir + "24_CrystalFinderML/data/"
@@ -64,6 +69,12 @@ class Wyckoff():
 
         return
     def getSiteMatrix(self,wyckoff_seq):
+        """
+        input:
+            wyckoff_seq, array type with length 11
+        return:
+            fullMatrix, array type with size (3,3,8)
+        """
         assert  len(wyckoff_seq) == 11
         fullMatrix = np.zeros((3,3,8))
         # deal with every site in the wyckoff sequences
@@ -105,7 +116,7 @@ class Wyckoff():
         input: 
             None
         return:
-            fullMatrix, labels, array type
+            fullMatrix (4D array), labels (1D array), array type
             [-1,3,3,8],[-1]
         """
         filename = self.dirs + "01_3-3-8_194_energy.csv"
