@@ -29,6 +29,15 @@ class DealKTau(object):
         """TODO: to be defined1. """
         super(DealKTau,self).__init__()
     def getKtau(self,number):
+        """
+        read data from "test_result%d.txt"%(number)
+        and get k-tau
+        definition of k-tau:
+        input:
+            number, serial number
+        return:
+            k_tau, error
+        """
         filename = "test_result%d.txt"%(number)
         data = np.loadtxt(filename,delimiter=',',dtype=float)
         n = len(data)
@@ -43,9 +52,12 @@ class DealKTau(object):
         error = np.linalg.norm(x-y)/np.sqrt(len(x))
         return k_tau,error
     def test(self):
+        """
+        test for self.getKtau
+        """
         fp = open("k_tau.txt",'w')
         for i in range(5,101,5):
-            k_tau,error = getKtau(i)
+            k_tau,error = self.getKtau(i)
             print(i,k_tau,error)
             fp.write("%d,%f,%f\n"%(i,k_tau,error))
         fp.close()
