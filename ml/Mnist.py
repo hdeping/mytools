@@ -69,14 +69,25 @@ class Mnist():
         self.test_label  = None
 
     def setDirs(self,dirs):
+        """
+        setup for self.dirs
+        input:
+            dirs, path of data
+        """
         self.dirs = dirs 
         return 
 
     def die(msg):
+        """
+        exit the program
+        """
         print(msg)
         sys.exit(1)
 
     def run(self):
+        """
+        get the basic information of the data
+        """
         print(self.filenames)
         filename = self.dirs + self.filenames[0]
         fp = open(filename,'r')
@@ -86,8 +97,13 @@ class Mnist():
         print(len(data))
 
         return 
-    # convert ubyte file into txt format
     def convert(fname, fname_out):
+        """
+        convert ubyte file into txt format
+        input: 
+            fname, ubyte.gz filename
+            fname_out, txt format
+        """
         print('converting %s' % fname)
         with gzip.open(fname, 'r') as fin, open(fname_out, 'w') as fout:
             # important to read metadata in case Mr. Yann decides to change MNIST
@@ -107,9 +123,12 @@ class Mnist():
         print('saving converted file to %s' % fname_out)
         return 
 
-    # get data from the ubyte file
-    # return: image data or label data
     def getMnistData(self,filename):
+        """
+        get data from the ubyte file
+        return: 
+            image data or label data
+        """
         print('load data from %s' % filename)
         results = []
         with gzip.open(filename, 'r') as fp:
@@ -136,8 +155,10 @@ class Mnist():
 
         results = np.array(results)
         return results
-    # load train and test data
     def loadData(self):
+        """
+        load train and test data
+        """
         indeces = [0,1,2,3]
         results = self.getIndexData(indeces)
         self.train_data  = results[0]
@@ -147,6 +168,8 @@ class Mnist():
 
         return 
     def saveMnistData(self,results):
+        """
+        """
         output = ["train_data","train_label",
                   "test_data","test_label"]
 
@@ -162,6 +185,9 @@ class Mnist():
         
         return 
     def train(self):
+        """
+        train with SVC model (svm classifier)
+        """
         self.loadData()
 
         model = SVC()
@@ -173,6 +199,8 @@ class Mnist():
     # input: indeces, such as (2,3)
     # return :
     def getIndexData(self,indeces):
+        """
+        """
         results = []
         for index in indeces:
             filename = self.dirs + self.filenames[index]
@@ -181,6 +209,8 @@ class Mnist():
         return results
     # get train and test labels
     def getLabels(self):
+        """
+        """
         indeces = [1,3]
         results = self.getIndexData(indeces)
         self.train_label = results[0]
@@ -188,25 +218,32 @@ class Mnist():
 
     # get train and test data
     def getData(self):
+        """
+        """
         indeces = [0, 2]
         results = self.getIndexData(indeces)
         self.train_data = results[0]
         self.test_data  = results[1]
 
     def getTrain(self):
+        """
+        """
         indeces = [0, 1]
         results = self.getIndexData(indeces)
         self.train_data  = results[0]
         self.train_label = results[1]
 
     def getTest(self):
+        """
+        """
         indeces = [2, 3]
         results = self.getIndexData(indeces)
         self.test_data  = results[0]
         self.test_label = results[1]
 
     def showDigits(self):
-
+        """
+        """
         self.getTest()
         index = 1000
         image = self.test_data[index]
@@ -216,6 +253,8 @@ class Mnist():
 
         return
     def showAllDigits(self,type="test"):
+        """
+        """
         if type == "test":
             self.getTest()
             indeces = np.argsort(self.test_label)
@@ -237,6 +276,8 @@ class Mnist():
         return
     # combine several images into one
     def combineImage(self,data):
+        """
+        """
         if len(data) == 1000:
             row = 20
             col = 50
@@ -253,7 +294,8 @@ class Mnist():
 
         return image
     def showImage(self,image,type,label):
-
+        """
+        """
         # image = np.ones(784*3,dtype=np.uint8)*255
         # image = image.reshape((28,-1,3))
         # print(image)
@@ -268,6 +310,10 @@ class Mnist():
         return
 
     def getDigitNum(self):
+        """
+        get the numbers of all kinds of digits,
+        from 0 to 9
+        """
         self.getLabels()
 
         count = {}
@@ -293,10 +339,9 @@ class Mnist():
     # how many "0"s in the train and test data
 
 
-mnist = Mnist()
-
+# mnist = Mnist()
 # mnist.loadData()
 # mnist.train()
 # mnist.showAllDigits(type = "test")
 # mnist.showAllDigits(type = "train")
-mnist.getDigitNum()
+# mnist.getDigitNum()
