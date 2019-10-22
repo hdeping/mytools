@@ -21,9 +21,15 @@ import os
 # k-tau
 from scipy.stats import kendalltau
     
-class DealKTau(object):
+class DealKTau():
 
-    """Docstring for DealKTau. """
+    """Docstring for DealKTau. 
+    computation module for k-tau
+    k-tau:
+        KENDALL'S TAU, Kendall's Tau 
+        (Kendall's Rank Correlation Coefficient) 
+
+    """
 
     def __init__(self):
         """TODO: to be defined1. """
