@@ -49,6 +49,11 @@ class MaterialModel(nn.Module):
 
     def linear_batch(self,input_chanel,output_chanel):
         """
+        input:
+            input_channel, number of the input channel
+            output_channel, number of the output channel
+        return:
+            linear_net, linear layer 
         """
         linear_net = nn.Sequential()
         linear_net.add_module('linear', nn.Linear(input_chanel,output_chanel))
@@ -88,6 +93,11 @@ class MaterialModel(nn.Module):
     def forward(self, x):
         """
         forward computation of the neural network
+        input:
+            x, 5D array, with the shape of (batch_size, d,m,n,s)
+        return:
+            x, result of the forward computation,
+            2D array which shape (batch_size, 1)
         """
         # expand the input
         # size = 5
