@@ -8,8 +8,9 @@
     @author       : Deping Huang
     @mail address : xiaohengdao@gmail.com
     @date         : 2019-09-21 10:45:44
+                    2019-10-22 20:23:38
     @project      : MNIST Data
-    @version      : 0.1
+    @version      : 1.0
     @source file  : Mnist.py
 
 ============================
@@ -30,13 +31,30 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 
-# class for loading MNIST data 
 class Mnist():
 
-    """Docstring for Mnist. """
+    """
+    Docstring for Mnist. 
+    class for loading MNIST data 
+    from ubyte files
+    """
 
     def __init__(self):
-        """TODO: to be defined1. """
+        """
+        TODO: to be defined1. 
+        self.dirs:
+            directory of MNIST data
+        self.filenames:
+            filenames of ubyte or ubyte.gz files
+        self.train_data：
+            train data of MNIST
+        self.train_label：
+            label of train data of MNIST
+        self.test_data：
+            test data of MNIST
+        self.test_label：
+            label of test data of MNIST
+        """
         super(Mnist,self).__init__()
         self.filename = "ubyte.sh"
         self.dirs = "./data/"
