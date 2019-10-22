@@ -28,6 +28,9 @@ class DealKTau():
     k-tau:
         KENDALL'S TAU, Kendall's Tau 
         (Kendall's Rank Correlation Coefficient) 
+        p1 = P((x_i - x_j)(y_i - y_j) > 0)
+        p2 = P((x_i - x_j)(y_i - y_j) < 0)
+        k-tau = p1 - p2
 
     """
 
