@@ -133,6 +133,7 @@ class VimToSublime(SublimeToVim):
         """
         TODO: to be defined1. 
         self.filenames:
+            filenames of 
         self.dirs:
         self.sources:
         self.texts:
@@ -146,7 +147,7 @@ class VimToSublime(SublimeToVim):
     def get_dirs(self):
         """TODO: Docstring for get_dirs.
         :returns: TODO
-
+        get self.dirs
         """
         self.get_filenames()
         for line in self.filenames:
@@ -155,6 +156,10 @@ class VimToSublime(SublimeToVim):
             self.dirs.append(line)
 
     def test_cuda(self):
+        """
+        try to get the contents and fields
+        under the directory "cuda"
+        """
         self.get_dirs()
         name = self.filenames[2]
         contents,fields = self.get_content_field(name)
@@ -162,6 +167,9 @@ class VimToSublime(SublimeToVim):
         
 
     def get_all_snippets(self):
+        """
+        get all the snippets in a snippet file for vim
+        """
         self.get_dirs()
         for i,name in enumerate(self.filenames):
 
@@ -178,8 +186,7 @@ class VimToSublime(SublimeToVim):
                 # print("texts",lang)
                 scope = "text." + self.dirs[i]
             else:
-                continue
-                
+                continue                
                 
             contents,fields = self.get_content_field(name)
             for content,field in zip(contents,fields):
@@ -189,15 +196,14 @@ class VimToSublime(SublimeToVim):
                     field = "kernel"
                 self.write_to_sublime(i, content, field, scope)
         # print(fields)
-
-        
+        return
 
     def write_to_sublime(self,index,content,field,scope):
         """
         input:
             index, index of self.dirs
-            content, 
-            field,
+            content, content of the snippet
+            field, field of the snippet
             scope, language type, such as python, ruby and so on
         return:
             None, but the results should be written into a 
@@ -218,7 +224,8 @@ class VimToSublime(SublimeToVim):
         fp.write("    <scope>%s</scope>\n"%(scope))
         fp.write("</snippet>\n")
         fp.close()
+        return
 
             
-vim = VimToSublime()
-vim.get_all_snippets()
+# vim = VimToSublime()
+# vim.get_all_snippets()
