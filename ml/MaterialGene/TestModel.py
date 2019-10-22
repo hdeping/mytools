@@ -30,7 +30,13 @@ class TestModel():
     """Docstring for TestModel. """
 
     def __init__(self):
-        """TODO: to be defined1. """
+        """
+        TODO: to be defined1. 
+        self.test_loader:
+            data loader
+        self.model:
+            model of the neural networks
+        """
         super(TestModel,self).__init__()
 
         torch.manual_seed(args.seed)
@@ -41,10 +47,10 @@ class TestModel():
         kwargs =  cuda_args if args.cuda else {}
         test_data  = MaterialData(train=False)
         
-        test_loader = data.DataLoader(test_data,
-                                      batch_size=args.batch_size, 
-                                      shuffle=False, 
-                                      **kwargs)
+        self.test_loader = data.DataLoader(test_data,
+                                           batch_size=args.batch_size, 
+                                           shuffle=False, 
+                                           **kwargs)
         
         self.model = Network()
         if args.cuda:
@@ -53,12 +59,19 @@ class TestModel():
         minimum = test_data.minimum
         maximum = test_data.maximum
     def test(number):
+        """
+        input:
+            number, serial number for the output file
+        return:
+            None, but the result is written into a file
+            named "test_result%d.txt"%(number)
+        """
         #output = torch.Tensor
         model.eval()
         i = 0
-        # open a file for writing
-        fp = open("test_result%d.txt"%(number),'w')
-        for (test_data,test_target) in test_loader:
+        filename = "test_result%d.txt"%(number)
+        fp = open(filename,'w')
+        for (test_data,test_target) in self.test_loader:
             i = i + 1
             #if i > 1:
             #    break
@@ -74,10 +87,12 @@ class TestModel():
             #print("length is",len(output))
             #break
         fp.close()
+        return
     def run(self):
         """TODO: Docstring for run.
         :returns: TODO
-
+        load parameters from .pt file
+        and run the test method
         """
 
         for i in range(5,101,5):
