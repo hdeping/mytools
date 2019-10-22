@@ -169,6 +169,7 @@ class Mnist():
         return 
     def saveMnistData(self,results):
         """
+        save data into a .gz file
         """
         output = ["train_data","train_label",
                   "test_data","test_label"]
@@ -196,10 +197,13 @@ class Mnist():
         test_label_predict = model.predict(self.test_data)
         num = sum(test_label_predict == self.test_lael)
         print("auc",num/len(self.test_label))
-    # input: indeces, such as (2,3)
-    # return :
     def getIndexData(self,indeces):
         """
+        input: 
+            indeces, such as (2,3),
+            filenames would ge got by self.filenames[index]
+        return:
+            results, data in the files
         """
         results = []
         for index in indeces:
@@ -207,18 +211,18 @@ class Mnist():
             data = self.getMnistData(filename)
             results.append(data)
         return results
-    # get train and test labels
     def getLabels(self):
         """
+        get train_label and test_label
         """
         indeces = [1,3]
         results = self.getIndexData(indeces)
         self.train_label = results[0]
         self.test_label  = results[1]
 
-    # get train and test data
     def getData(self):
         """
+        get train_data and test_data
         """
         indeces = [0, 2]
         results = self.getIndexData(indeces)
@@ -227,6 +231,7 @@ class Mnist():
 
     def getTrain(self):
         """
+        get the train_data and train_label
         """
         indeces = [0, 1]
         results = self.getIndexData(indeces)
@@ -235,6 +240,7 @@ class Mnist():
 
     def getTest(self):
         """
+        get the test_data and test_label
         """
         indeces = [2, 3]
         results = self.getIndexData(indeces)
@@ -243,6 +249,7 @@ class Mnist():
 
     def showDigits(self):
         """
+        display a digit
         """
         self.getTest()
         index = 1000
@@ -254,6 +261,7 @@ class Mnist():
         return
     def showAllDigits(self,type="test"):
         """
+        display all the digits
         """
         if type == "test":
             self.getTest()
@@ -274,9 +282,12 @@ class Mnist():
             self.showImage(image,type,index)
             # break
         return
-    # combine several images into one
     def combineImage(self,data):
         """
+        combine several images into one
+        input:
+            data, 2D array,
+            such as (280,280), there are 10*10 digits
         """
         if len(data) == 1000:
             row = 20
@@ -295,6 +306,12 @@ class Mnist():
         return image
     def showImage(self,image,type,label):
         """
+        input:
+            image, image array
+            type, "train" or "test"
+            label, 0 - 9
+        return:
+            None, but an image file is saved
         """
         # image = np.ones(784*3,dtype=np.uint8)*255
         # image = image.reshape((28,-1,3))
