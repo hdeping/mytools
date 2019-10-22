@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+cout << ${1:var} << endl;
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>co</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c,source.c++,source.cuda,source.cuda-c++</scope>
+</snippet>

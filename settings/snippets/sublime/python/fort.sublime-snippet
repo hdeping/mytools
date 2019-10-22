@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+for ${1:i} in tqdm(${2:iterator}):
+	${3:pass}
+]]></content>
+    <tabTrigger>fort</tabTrigger>
+    <scope>source.python</scope>
+</snippet>

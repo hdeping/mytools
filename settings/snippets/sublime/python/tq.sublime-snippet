@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+from tqdm import tqdm
+
+]]></content>
+    <tabTrigger>tq</tabTrigger>
+    <scope>source.python</scope>
+</snippet>

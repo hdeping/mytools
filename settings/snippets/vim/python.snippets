@@ -1,0 +1,111 @@
+# cycle
+snippet fori "for i"
+for ${1:i} in range(${2:range}):
+	${3:pass}
+endsnippet
+
+# cycle
+snippet fort "for i"
+for ${1:i} in tqdm(${2:iterator}):
+	${3:pass}
+endsnippet
+
+# cycle
+snippet fore "for enumerate"
+for ${1:i},${2:line} in enumerate(${3:iterator}):
+	${4:pass}
+endsnippet
+
+
+snippet ti "title"
+#!/usr/local/bin/python3
+# -*- coding: UTF-8 -*-
+ 
+"""
+
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : ${1:/i}
+    @project      : ${2:project}
+    @version      : ${3:version}
+    @source file  : ${4:ctrl+shift+.}
+
+============================
+"""
+
+
+endsnippet
+
+snippet wi
+filename = "${1:data.txt}"
+with open(filename,'${2:r}') as ${3:fp}:
+    ${4:#code}
+endsnippet
+
+snippet pr
+print(${1:contents})
+
+endsnippet
+
+# append
+snippet ap
+${1:array}.append(${2:contents})
+
+endsnippet
+snippet from
+from ${1:package} import ${2:class}
+
+endsnippet
+
+snippet im
+import ${1:package}
+
+endsnippet
+
+snippet imp
+import ${1:package} as ${2:package}
+
+endsnippet
+
+snippet np
+import numpy as np
+
+endsnippet
+
+snippet tq
+from tqdm import tqdm
+
+endsnippet
+snippet op
+${1:fp} = open(${2:filename},'${3:w}')
+${4:#code}
+$1.close()
+
+endsnippet
+
+snippet plt
+import matplotlib.pyplot as plt
+
+endsnippet
+
+# isdigit
+snippet isg "string.isdigit()" 
+${1:string}.isdigit()
+endsnippet
+
+# isdir
+snippet isd "os.path.isdir" 
+os.path.isdir(${1:dir})
+endsnippet
+
+# isf
+snippet isf "os.path.isfile" 
+os.path.isfile(${1:file})
+endsnippet
+
+# exists
+snippet exi "os.path.exists()" 
+os.path.exists(${1:dir})
+endsnippet

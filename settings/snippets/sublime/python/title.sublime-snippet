@@ -1,0 +1,26 @@
+<snippet>
+	<content><![CDATA[
+#!/usr/local/bin/python3
+# -*- coding: UTF-8 -*-
+ 
+"""
+
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : ${1:ctrl+shift+,}
+    @project      : ${2:project}
+    @version      : ${3:version}
+    @source file  : ${4:ctrl+shift+.}
+
+============================
+"""
+
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>title</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.python</scope>
+</snippet>

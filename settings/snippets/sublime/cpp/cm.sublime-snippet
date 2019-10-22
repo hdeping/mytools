@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[
+cudaMalloc((void **)&${1:device},
+                     ${2:size});
+
+]]></content>
+    <tabTrigger>cm</tabTrigger>
+    <scope>source.cuda</scope>
+</snippet>
