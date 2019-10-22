@@ -15,32 +15,42 @@
 ============================
 """
 
-#dirs = ["cpp", "css", 
-#        "html", "javascript", 
-#        "python"]
-
 import os
 
 class SublimeToVim():
-    """docstring for SublimeToVim"""
+    """
+    docstring for SublimeToVim
+    transform snippets files for vim to 
+    ones for sublime
+    """
     def __init__(self, directory):
+        """
+        self.directory:
+            directory contained snippets files
+        self.filenames:
+            snippets files under self.directory
+        """
         self.directory = directory
         self.filenames = []
         
+        return
     def get_filenames(self):
         """TODO: Docstring for get_filenames.
         :returns: TODO
-    
+        get all the snippets files under self.directory
         """
         filenames = os.popen("ls %s/*snippets"%(self.directory))
         filenames = filenames.read().split("\n")
         filenames.pop()
         self.filenames = filenames
         #print(self.filenames)
+        return
     def get_results(self):
         """TODO: Docstring for get_results.
         :returns: TODO
-
+        print the all the snippets for sublime
+        into ones for vim, the results would be written
+        into "%s.snippets"%(self.directory)
         """
         filename = "%s.snippets"%(self.directory)
         print("writing to %s"%(filename))
@@ -53,8 +63,16 @@ class SublimeToVim():
             fp.write("endsnippet\n\n")
 
         fp.close()
+        return
         
     def get_content_field(self,filename):
+        """
+        input:
+            filename, snippet file
+        return:
+            contents, fields, contents and fields for
+            each snippet in filename
+        """
         # read data
         fp = open(filename,"r")
         data = fp.read().split("\n")
@@ -104,7 +122,11 @@ class SublimeToVim():
 
 class VimToSublime(SublimeToVim):
 
-    """Docstring for VimToSublime. """
+    """
+    Docstring for VimToSublime. 
+    transform snippets files for sublime to 
+    ones for vim
+    """
 
     def __init__(self):
         """TODO: to be defined1. """
