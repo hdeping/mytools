@@ -15,3 +15,4 @@
 """
 
 from . import MaterialGene
+from .Mnist import Mnist
