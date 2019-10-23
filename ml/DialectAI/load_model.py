@@ -3,7 +3,12 @@ from testmodel import  inferModel as inferenceModel
 import torch
 import numpy as np
 
-dimension     = 40
+def old():
+    model = pre_model()
+    model_name = "models0/model39-0.model"
+    model.load_state_dict(torch.load(model_name))
+
+dimension = 40
 language_nums = 10
 
 def key2array(model_keys):
@@ -15,7 +20,7 @@ def key2array(model_keys):
         i = i+1
     return keys
 
-def getModel(dimension,language_nums,num):
+def getModel(dimension,language_nums):
 
     # define the models
     pre = pre_model()
@@ -30,7 +35,7 @@ def getModel(dimension,language_nums,num):
     pre.load_state_dict(torch.load(model_name))
     
     print("load gru")
-    model_name = "models/gru%d.model"%(num)
+    model_name = "models/gru.model"
     lannet.load_state_dict(torch.load(model_name))
     
     # copy key
@@ -68,11 +73,8 @@ def getModel(dimension,language_nums,num):
 
     return infer
 
-def getHybridModel(num):
-    print("model ",num)
-    infer = getModel(dimension,language_nums,num)
-    # save file
-    modelfile = "models/infer%d.model"%(num)
-    torch.save(infer.state_dict(), modelfile)
-for i in range(0,4):
-    getHybridModel(i)
+infer = getModel(dimension,language_nums)
+# save file
+modelfile = "models/infer.model"
+torch.save(infer.state_dict(), modelfile)
+    
