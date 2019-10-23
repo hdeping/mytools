@@ -43,7 +43,7 @@ dev_list   = "label_dev_list_fb.txt"
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 160 # 40 before
+dimension = 40 # 40 before
 language_nums = 10  # 9!
 learning_rate = 0.1
 batch_size = 50

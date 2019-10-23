@@ -3,6 +3,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from augmented_lstm import AugmentedLstm
+#from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence, PackedSequence
+from torch.nn.utils.rnn import pack_padded_sequence
 
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
@@ -15,10 +18,7 @@ class LanNet(nn.Module):
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
-
-        self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
+        self.layer1.add_module('gru', AugmentedLstm(self.input_dim, self.hidden_dim,recurrent_dropout_probability = 0.5))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -32,21 +32,27 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        # conv layer 
-        # transpose
-        src = src.transpose(1,2)
-        src = F.relu(self.conv1(src))
-        src = F.relu(self.conv2(src))
-
-        # transpose
-        src = src.transpose(1,2)
-        # get gru output
+        # frames
+        frames = torch.ones(batch_size)*fea_frames
+        frames = frames.type(torch.LongTensor)
+        frames = frames.cuda()
+        #print("frames",frames.size())
+        # pack the sequence input
+        src = pack_padded_sequence(src,frames,batch_first=True)
+        #print("src",src.data.size())
+        # get augmented lstmoutput
         out_hidden, hidd = self.layer1(src)
+        out_hidden = out_hidden.data
+        # contiguous of out_hidden
+        out_hidden = out_hidden.contiguous().view(batch_size,-1,out_hidden.size(1))
+
+        #print("out hidden",out_hidden.data.size())
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
         # get  masked outputs
         mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
+        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, self.hidden_dim)
         # output with new size (batch_size, hidden_dim)
         out_hidden = out_hidden*mask
         out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
@@ -69,12 +75,13 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        #return acc, ce_loss,prediction
         return acc, ce_loss
+
+#model = LanNet(input_dim=40,hidden_dim=128)
+#print(model)
