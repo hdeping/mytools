@@ -36,7 +36,7 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -98,17 +98,20 @@ def test():
     
     result_target = []
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        print("step is ",step)
+        #print("step is ",step)
         tic = time.time()
     
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-        #batch_frames = batch_y[:,1].contiguous().view(-1, 1)
-        batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
+        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
     
         max_batch_frames = int(max(batch_frames).item())
         batch_dev_data = batch_x[:, :max_batch_frames, :]
     
         step_batch_size = batch_target.size(0)
+        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+        for ii in range(step_batch_size):
+            frames = int(batch_frames[ii].item())
+            batch_mask[ii, :frames] = 1.
     
         # 将数据放入GPU中
         if use_cuda:
@@ -118,12 +121,12 @@ def test():
             #batch_target     = batch_target.to(device)
             # torch 0.3.0
             batch_dev_data   = batch_dev_data.cuda()
+            batch_mask       = batch_mask.cuda()
             batch_target     = batch_target.cuda()
-            batch_frames       = batch_frames.cuda()
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss,prediction = train_module(batch_dev_data, batch_frames, batch_target)
+            acc, loss,prediction = train_module(batch_dev_data, batch_mask, batch_target)
         #print(batch_target,prediction)
         for i in range(batch_size):
             result_target.append([batch_target[i].item(),prediction[i].item()])
@@ -136,7 +139,6 @@ def test():
     
         dev_loss += loss.item()
         dev_acc += acc
-        print("acc",acc)
         dev_batch_num += 1
     
     epoch_toc = time.time()
@@ -147,7 +149,7 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(1):
+for i in range(6):
     print("model ",i)
     print("loading model9-%d.model"%(i))
     train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
