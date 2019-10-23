@@ -1,17 +1,16 @@
-from mymodel import baseConv1d
-import torch
+from resnet import resnet_mymodel
+import torch 
 
-conv = []
-#chanels = [1,2,4,8,16,32,40,64,80]
-chanels = [1,5,10,20,40]
-# get conv layers
-layer_num = 4
-for i in range(layer_num):
-    conv_layer = baseConv1d(chanels[i],chanels[i+1],3,2,1)
-    conv.append(conv_layer)
+model = resnet_mymodel()
+print(model)
+b = torch.rand(100,1,400)
 
-arr = torch.rand(100,1,400)
-for i in range(layer_num):
-    arr = conv[i](arr)
-    print(arr.shape)
+c = model(b)
 
+#from modelCollection.resnet import resnet18
+#
+#model = resnet18()
+#print(model)
+#a = torch.rand(100,3,224,224)
+#b = model(a)
+#print(b.shape)

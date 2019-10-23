@@ -3,7 +3,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from sru.cuda_functional import SRU
+from resnet import resnet_mymodel
 
 class baseConv1d(nn.Module):
     def __init__(self,input_chanel,output_chanel,kernel_size,stride):
@@ -30,26 +30,10 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        # 400-199-99
-        self.conv1 = baseConv1d(1,4,3,2)
-        # 99-49-24
-        self.conv2 = baseConv1d(4,10,3,2)
-        # 24-11-5
-        self.conv3 = baseConv1d(10,20,3,2)
-        # 5-2-1
-        self.conv4 = baseConv1d(20,40,3,2)
+        self.resnet = resnet_mymodel()
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('sru', 
-                SRU(self.input_dim, self.hidden_dim, 
-                    num_layers=1, 
-                    bidirectional=False,
-                    use_tanh=1,
-                    use_relu=0,
-                    use_selu=0,
-                    weight_norm=False,
-                    layer_norm = False,
-                    highway_bias = 0))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -65,10 +49,7 @@ class LanNet(nn.Module):
         # reshape the input
         x = x.contiguous().view(batch_size*fea_frames,1,-1)
         # conv layer
-        x = self.conv1(x)
-        x = self.conv2(x)
-        x = self.conv3(x)
-        x = self.conv4(x)
+        x = self.resnet(x)
 
         # reshape x
         x = x.contiguous().view(batch_size,fea_frames,-1)
