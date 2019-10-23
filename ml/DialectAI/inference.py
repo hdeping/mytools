@@ -29,25 +29,24 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_list_fb_hardFour.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 toneLengthD = 6
-#dimension = 2*toneLengthD + 1# 40 before
-dimension = 40
+dimension = 2*toneLengthD + 1# 40 before
 data_dimension = 320
-language_nums = 10 # 9!
+language_nums = 4 # 9!
 learning_rate = 0.1
 batch_size = 50
 chunk_num = 10

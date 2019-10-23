@@ -6,7 +6,7 @@ import random
 
 import torch
 
-from readhtk import HTKfile
+from readpcm import pcmdata
 
 
 class TorchDataSet(object):
@@ -37,24 +37,26 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            htk_file = HTKfile(htk_feature)
-            feature_data = htk_file.read_data()
-            file_name = htk_file.get_file_name()
-            feature_frames = htk_file.get_frame_num()
+            pcm_file = pcmdata(htk_feature)
+            feature_data = pcm_file.read_data()
+            #file_name = pcm_file.get_file_name()
+            feature_frames = pcm_file.get_frame_num()
+            #print(feature_frames.shape)
 
             if feature_frames > max_frames:
                 max_frames = feature_frames
             
             curr_feature = torch.Tensor(feature_data)
-            # means
-            means = curr_feature.mean(dim=0, keepdim=True)
-            # std
-            std   = curr_feature.std(dim=0, keepdim=True)
+            # normalization
+            #curr_feature = curr_feature.mul(scale)
+            means = curr_feature.mean(dim=1, keepdim=True)
+            std = curr_feature.std(dim=1, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
+            #batch_data.append(curr_feature)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
-            name_list.append(file_name)
+            #name_list.append(file_name)
 
             if (ii+1) % self._chunck_size == 0:
                 chunk_size = len(batch_data)

@@ -12,9 +12,9 @@ import numpy as np
 class pcmdata(object):
 
     # init function
-    def __init__(self, path,dimension):
+    def __init__(self, path):
         # read data
-        path = path.replace('fb40','tone'+str(dimension))
+        path = path.replace('fb40','tone13')
         path = path.replace('fb','pcm')
         self.data = np.loadtxt(path,delimiter=' ',dtype=float)
         self.frame = len(self.data)

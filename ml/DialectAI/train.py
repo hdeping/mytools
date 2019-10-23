@@ -29,27 +29,29 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_list_fb_hardFour.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 40 # 40 before
-language_nums = 10 # 9!
+toneLengthD = 6
+dimension = 2*toneLengthD + 1# 40 before
+data_dimension = 320
+language_nums = 4 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 16
 display_fre = 50
 half = 4
 # data augmentation
@@ -97,6 +99,9 @@ for epoch in range(0,train_iteration):
     if epoch == 8:
         learning_rate = 0.02
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 12:
+        learning_rate = 0.01
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
     train_module.train()
@@ -137,7 +142,7 @@ for epoch in range(0,train_iteration):
             batch_mask       = batch_mask.cuda()
             batch_target     = batch_target.cuda()
 
-        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
+        acc, loss,pre = train_module(batch_train_data, batch_mask, batch_target)
         
         # loss = loss.sum()
         backward_loss = loss
@@ -214,7 +219,7 @@ for epoch in range(0,train_iteration):
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss,pre = train_module(batch_dev_data, batch_mask, batch_target)
         
         loss = loss.sum()/step_batch_size
 
