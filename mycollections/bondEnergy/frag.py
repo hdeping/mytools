@@ -245,14 +245,9 @@ for i,smi_string in enumerate(filenames):
         # which should be equivalent
 
         ####  get residues
-        for line in frag:
-            if line in molecules:
-                id = molecules[line]["ID"]
-                residues = idResidue[id]
-                break
+        residues = idResidue[smi_string]
 
         ### match the exact samples
-        print(residues)
         for line in frag:
             print("line",line)
             if line in molecules:
