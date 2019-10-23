@@ -30,23 +30,24 @@ import torch
 import torch.utils.data as Data
 import sys
 
-#from read_data import get_samples, get_data, TorchDataSet
-from read_data import  TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
+from mydata import  TorchDataSet
 from net_component import LanNet
 
 ## ======================================
 # data list
 #train_list = "./train_list_fb.txt"
 #dev_list   = "./dev_list_fb.txt"
-train_list = "./label_train_list_fb.txt"
-dev_list   = "./label_dev_list_fb.txt"
+train_list = "../labels/label_train-0-%s-%s-%s.txt"%(sys.argv[1],sys.argv[2],sys.argv[3])
+#train_list = "../labels/label_train0.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40
 language_nums = 6
-learning_rate = 0.1
+learning_rate = 0.01
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
@@ -59,7 +60,7 @@ cycle = 1
 augmentation = 0
 
 # save the models
-model_dir = "models_data%d"%(1000*augmentation)
+model_dir = "models0-%s-%s-%s"%(sys.argv[1],sys.argv[2],sys.argv[3])
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -76,7 +77,6 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models_data10/model2.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -87,9 +87,10 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-for epoch in range(train_iteration):
+train_module.load_state_dict(torch.load("models0-1-2-5/model6.model"))
+for epoch in range(7,train_iteration):
     print("epoch",epoch)
-    if epoch >= half:
+    if epoch == half:
         learning_rate /= 2.
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
@@ -104,9 +105,9 @@ for epoch in range(train_iteration):
     sum_batch_size = 0
     curr_batch_size = 0
     curr_batch_acc = 0
+    tic = time.time()
     for step, (batch_x, batch_y) in enumerate(train_dataset): 
         #print("step is ",step)
-        tic = time.time()
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
         batch_frames = batch_y[:,1].contiguous().view(-1, 1)
 
@@ -153,8 +154,6 @@ for epoch in range(train_iteration):
         # update the weights
         optimizer.step()
 
-        toc = time.time()
-        step_time = toc-tic
 
         train_loss += loss.item()
         train_acc += acc
@@ -162,9 +161,12 @@ for epoch in range(train_iteration):
         sum_batch_size += 1
         curr_batch_size += 1
         if step % display_fre == 0:
+            toc = time.time()
+            step_time = toc-tic
             logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
             curr_batch_acc = 0.
             curr_batch_size = 0
+            tic = toc
 
 
     
