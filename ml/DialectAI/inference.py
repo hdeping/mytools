@@ -31,12 +31,12 @@ import torch.utils.data as Data
 
 #from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
-from mymodel import LanNet
+from testmodel import LanNet
 
 ## ======================================
 # data list
 # train
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -44,7 +44,7 @@ use_cuda = torch.cuda.is_available()
 toneLengthD = 6
 dimension = 40
 data_dimension = 320
-language_nums = 10 # 9!
+language_nums = 2 # 9!
 learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
@@ -149,9 +149,10 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(20):
+for i in range(500):
     print("model ",i)
-    train_module.load_state_dict(torch.load("models%d/model9.model"%(i)))
+    print("loading model9-%d.model"%(i))
+    train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
     result_target = test()
     result.append(result_target)
 
@@ -163,5 +164,5 @@ size = len(result[0])
 #new = np.zeros((5000,2*size))
 #new[:,0] = result[:,0,0]
 #new[:,1:] = result[:,:,1]
-result = np.reshape(result,(5000,-1))
+result = np.reshape(result,(size,-1))
 np.savetxt("result.txt",result,fmt='%d')

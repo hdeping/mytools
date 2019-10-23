@@ -36,30 +36,33 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-language_nums = 10 # 9!
+language_nums = 2  # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 10
 display_fre = 50
 half = 4
 # data augmentation
 
-torch.manual_seed(time.time())
 # save the models
 import sys
-model_dir = "models"+sys.argv[1]
+#model_dir = "models" + sys.argv[1]
+model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
+
+# seed 
+torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
@@ -169,12 +172,9 @@ for epoch in range(0,train_iteration):
 
 
     
-    modelfile = '%s/model%d.model'%(model_dir, epoch)
-    torch.save(train_module.state_dict(), modelfile)
     epoch_toc = time.time()
     epoch_time = epoch_toc-epoch_tic
     logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
-
 ##  -----------------------------------------------------------------------------------------------------------------------------
 ##  dev
     train_module.eval()
@@ -226,3 +226,5 @@ for epoch in range(0,train_iteration):
     epoch_time = epoch_toc-epoch_tic
     acc=dev_acc/dev_batch_num
     logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
+modelfile = '%s/model9-%s.model'%(model_dir, sys.argv[1])
+torch.save(train_module.state_dict(), modelfile)

@@ -1,22 +1,24 @@
 import numpy as np
 
 data = np.loadtxt('result.txt')
-print(data)
+#print(data)
 
 data = data.astype(int)
-data = np.reshape(data,(-1,20,2))
-num = 10
+print(data.shape)
+data = np.reshape(data,(1000,-1,2))
+num = 2
 stati = np.zeros((num,num))
 stati = stati.astype(int)
 size = len(data)
 # get the majorityVote
 target = data[:,0,0]
 majority = []
+print(len(data[0]))
 for i in range(size):
     # get the vote 
-    vote = np.zeros(20)
+    vote = np.zeros(num)
     vote = vote.astype(int)
-    for j in range(20):
+    for j in range(len(data[0])):
         ii = data[i,j,1]
         vote[ii] += 1
     # append the vote result
@@ -25,6 +27,11 @@ for i in range(size):
     ii = target[i]
     jj = majority[i]
     stati[ii,jj] += 1
-
-
+arr1 = np.sum(stati,axis=1)
+arr2 = np.sum(stati,axis=0)
+arr = [stati[i,i] for i in range(num)]
 print(stati)
+print("precision , recall")
+print(arr/arr1)
+print(arr/arr2)
+print(sum(arr))
