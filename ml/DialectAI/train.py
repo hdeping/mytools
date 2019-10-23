@@ -29,7 +29,7 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
@@ -78,7 +78,7 @@ logging.info('finish reading all train data')
 #device = torch.device("cuda:2")
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=64, bn_dim=30, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
