@@ -46,11 +46,11 @@ use_cuda = torch.cuda.is_available()
 dimension = 40 # 40 before
 language_nums = 2  # 9!
 learning_rate = 0.1
-batch_size = 16
+batch_size = 64
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 10
-display_fre = 200
+display_fre = 50
 half = 4
 # data augmentation
 
