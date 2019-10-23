@@ -1,6 +1,3 @@
-#2019-03-20 18:17:06
-#by xiaohengdao
-
 #coding=utf-8
 import numpy as np
 import json

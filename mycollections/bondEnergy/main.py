@@ -1,9 +1,5 @@
 #!/usr/bin/python
 
-#2019-03-20 18:17:06
-#by xiaohengdao
-
-
 import openbabel as ob
 import pybel 
 import numpy as np
@@ -14,16 +10,17 @@ from getsmiles import readJson
 
 import json
 
+last_dir = "../../"
 
-filename = "../inchikey_bonds.json"
+filename = last_dir + "inchikey_bonds.json"
 # residue: bond information
 residueBonds = readJson(filename)
 
-filename = "../new_filter3.json"
+filename = last_dir + "new_filter3.json"
 # residue: "ID","molecule","type","energy"
 residueEnergies  = readJson(filename)
 
-filename = "../inchikey_filter_database.json"
+filename = last_dir + "inchikey_filter_database.json"
 # ID : "atoms","bonds","angles","dihedral"
 idParameters  = readJson(filename)
 
@@ -69,8 +66,16 @@ def getAngles(indexC,indexO,parameters):
 
     return result,atoms
 
+# if there is hydrogen, return false
+def isNoHydro(atomsSeq,arr):
+    for i in arr:
+        if atomsSeq[i-1] == 'H':
+            return False
+    return True
+
 def getDihedral(atoms,parameters):
     dihedral = parameters["dihedral"]
+    atomsSeq  = parameters['atoms']
     result = {}
 
     # find the exact dihedral
@@ -85,8 +90,10 @@ def getDihedral(atoms,parameters):
             for i in range(3):
                 p1 = (angle[i] in arr)
                 p.append(p1)
+            # if there is no hydrogen
+            p1 = isNoHydro(atomsSeq,arr)
             #if angle[0] in arr and angle[1] in arr and angle[2] in arr:
-            if p[0] and p[1] and p[2]:
+            if p[0] and p[1] and p[2] and p1:
                 result[key] = dihedral[key]
 
     return result
@@ -122,7 +129,7 @@ def getBonds(indexC,indexO,parameters):
             atoms.append([indexC,arr[1]])
             
 
-    print(atoms)
+    #print(atoms)
     return result,atoms
 
 # get the bonds connected to "C"
@@ -180,26 +187,28 @@ for residue in residueBonds:
     dihedralNum = 0
     for dihed in dihedral:
         dihedralNum += 1
-    if dihedralNum == 12:
+    if dihedralNum == 9:
         print(json.dumps(dihedral,indent = 4))
         print(json.dumps(angles,indent = 4))
+        print(parameters['atoms'])
         #break
 
-    dihedral_counts[dihedralNum] += 1
     filter2 = (bondNum  == 3)
     filter3 = (angleNum == 2)
     
+    #dihedral_counts[dihedralNum] += 1
         
     if filter1 and filter2 and filter3:
         paraDicts[residue] = molInfo
         count_sample += 1
+        dihedral_counts[dihedralNum] += 1
 
     #break
 
 #paraDicts = json.dumps(paraDicts,indent = 4)
 #print(paraDicts)
 # write the data
-fp = open("inchikey_parameters.json",'w')
+fp = open("inchikey_parameters_NoHydro.json",'w')
 json.dump(paraDicts,fp,indent = 4)
 
 
