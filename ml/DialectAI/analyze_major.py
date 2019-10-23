@@ -12,6 +12,7 @@ size = len(data)
 target = data[:,0,0]
 majority = []
 
+data = data[:,:2,:]
 vote_num = len(data[0])
 print("vote_num ",vote_num)
 for i in range(size):

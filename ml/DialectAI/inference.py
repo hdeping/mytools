@@ -42,7 +42,7 @@ dev_list   = "label_dev_list_fb.txt"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 toneLengthD = 6
-dimension = 40
+dimension = 13
 data_dimension = 320
 language_nums = 10 # 9!
 learning_rate = 0.1
@@ -151,8 +151,8 @@ import numpy as np
 result = []
 for i in range(6):
     print("model ",i)
-    print("loading model9-%d.model"%(i))
-    train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
+    print("loading model2-%d.model"%(i))
+    train_module.load_state_dict(torch.load("models/model2-%d.model"%(i)))
     result_target = test()
     result.append(result_target)
 
