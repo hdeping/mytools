@@ -29,21 +29,21 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 12 # 40 before
+dimension = 13 # 40 before
 language_nums = 10  # 9!
 learning_rate = 0.1
 batch_size = 64
@@ -94,10 +94,10 @@ def train(count):
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
         if epoch == 4:
-            learning_rate = 0.03
+            learning_rate = 0.05
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 8:
-            learning_rate = 0.01
+            learning_rate = 0.02
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()

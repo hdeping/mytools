@@ -36,7 +36,7 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            htk_feature = htk_feature.replace("fb40","mfcc12")
+            htk_feature = htk_feature.replace("fb40","plp0")
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
             #print(feature_data.shape)
