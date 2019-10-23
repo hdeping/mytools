@@ -13,11 +13,11 @@ import numpy as np
 class pcmdata(object):
 
     # init function
-    def __init__(self, path):
+    def __init__(self, path,dimension):
         data = np.memmap(path,dtype='h',mode='r')
         
-        row = len(data) // 400
-        self.data = np.reshape(data[:400*row],(row,400))
+        row = len(data) // dimension
+        self.data = np.reshape(data[:dimension*row],(row,dimension))
         self.row = row
 
     def read_data(self):

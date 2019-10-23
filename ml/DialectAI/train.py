@@ -45,9 +45,9 @@ dev_list   = "../labels/label_list_dev_new.txt"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-data_dimension = 400 # 400 point per frame
+data_dimension = 320 # 400 point per frame
 language_nums = 10 # 9!
-learning_rate = 0.03
+learning_rate = 0.001
 batch_size = 32
 chunk_num = 10
 #train_iteration = 10

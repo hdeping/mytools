@@ -10,7 +10,7 @@ for i in range(layer_num):
     conv_layer = baseConv1d(chanels[i],chanels[i+1],3,2,1)
     conv.append(conv_layer)
 
-arr = torch.rand(100,1,400)
+arr = torch.rand(100,1,240)
 for i in range(layer_num):
     arr = conv[i](arr)
     print(arr.shape)
