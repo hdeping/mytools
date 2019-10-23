@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class baseConv1d(nn.Module):
     def __init__(self,input_chanel,output_chanel,kernel_size,stride,padding):
         super(baseConv1d,self).__init__()
@@ -15,8 +16,8 @@ class baseConv1d(nn.Module):
         x = self.conv(x)
         # batchnorm 
         x = self.bn(x)
-        # 1d max pool 
-        x = F.avg_pool1d(x,kernel_size=4)
+        # 1d avg pool 
+        # x = F.avg_pool1d(x,kernel_size=2)
         # relu output
         x = F.relu(x)
         return x
@@ -30,15 +31,17 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer_conv = nn.Sequential()
-        # get conv layers
-        self.layer_num = 4
-        chanels = [1,5,10,20,40,32,40,40,40]
+        self.layer_num = 8
+        chanels = [1,2,4,8,16,32,40,64,80]
         for i in range(self.layer_num):
             self.layer_conv.add_module('conv'+str(i),baseConv1d(chanels[i],chanels[i+1],3,1,1))
 
+        self.layer0 = nn.Sequential()
+        self.layer0.add_module('linear', nn.Linear(2*80, self.input_dim))
+        self.layer0.add_module('batchnorm', nn.BatchNorm1d(self.input_dim))
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim//2, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -55,10 +58,10 @@ class LanNet(nn.Module):
         x = x.contiguous().view(batch_size*fea_frames,1,-1)
         # conv layer
         x = self.layer_conv(x)
-
         # reshape x
         x = x.contiguous().view(batch_size,fea_frames,-1)
-
+        # layer 0: full connected layer
+        x = self.layer0(x)
         # RNN layer
         out_hidden, hidd = self.layer1(x)
         #print(out_hidden.data.shape)
