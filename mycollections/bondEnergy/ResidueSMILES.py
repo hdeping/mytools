@@ -61,13 +61,15 @@ class ResidueSMILES(BondAngle):
         else: 
             return False
 
-    # FillAtom() is a function to find all the atom in fragment
     def FillAtom(self,mol, atom, frag, fatom_idx):
         """
+        find all the atom in fragment recursively
+        input:
+            mol, Class OBMol
+            atom, Class OBAtom
+            frag, Class OBMol
+            fatom_idx, Record the atom has existed
         """
-        # mol, frag -- Class OBMol
-        # atom -- Class OBAtom
-        # fatom_idx -- Record the atom has existed
         frag.AddAtom(atom)
         fatom_idx.append(atom.GetIdx())
         if atom.GetValence == 0:
@@ -89,6 +91,7 @@ class ResidueSMILES(BondAngle):
                 else:
                     self.FillAtom(mol, _atom, frag, fatom_idx)
 
+        return
     # BondLink() is a function to bonding the atoms in the fragment 
     def FragBondLink(self,frag, fatom_idx,mol_bond,NumAtomsNoH):
         """
