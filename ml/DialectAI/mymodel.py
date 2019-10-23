@@ -19,8 +19,8 @@ class LanNet(nn.Module):
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer_a = nn.Sequential()
         self.layer_a.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer_b = nn.Sequential()
-        #self.layer_b.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer_b = nn.Sequential()
+        self.layer_b.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -62,9 +62,12 @@ class LanNet(nn.Module):
         out_hidden = self.getBiHidden(self.layer1,src,frames)
         # layer_a
         out_hidden_new = self.getBiHidden(self.layer_a,out_hidden,frames)
-        ## layer_b
-        #out_hidden_new = self.getBiHidden(self.layer_b,out_hidden_new,frames)
         
+        # residual part
+        out_hidden = out_hidden + out_hidden_new
+
+        # layer_b
+        out_hidden_new = self.getBiHidden(self.layer_b,out_hidden,frames)
         # residual part
         out_hidden = out_hidden + out_hidden_new
 
