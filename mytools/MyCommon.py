@@ -178,5 +178,19 @@ class MyCommon():
                 fp.write(str(line[-1]+'\n'))
 
         return
+    def loadStrings(self,filename):
+        """
+        input: 
+            filename, text
+        return:
+            data, array type, strings line by line
+        """
+        fp = open(filename,'r')
+        data = fp.read()
+        fp.close()
+        data = data.split("\n")
+        data.pop()
+        return data        
+        
     
 
