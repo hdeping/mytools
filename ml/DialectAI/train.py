@@ -28,114 +28,70 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
-# activation functions
-import torch.nn.functional as F
 
-#from read_data import get_samples, get_data, TorchDataSet
-
-# data module
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
-# load model
 from mymodel import LanNet
-#from load_oldmodel import getModel
-import torch.nn as nn
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_fb_frame.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
-dev_list   = "../labels/label_dev_fb_frame.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-#data_dimension = 400 # 400 point per frame
 language_nums = 10 # 9!
-learning_rate = 0.03
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 15
 display_fre = 50
 half = 4
-# p vad 
-import sys
-p_vad = float(sys.argv[1])
 # data augmentation
 
 # save the models
-model_dir = "models"+str(p_vad)
+model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
 ## ======================================
 # with data augmentation
-# CRNN
-#train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
-# RNN
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,p_vad)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,p_vad)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-#train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models/model9.model"))
-# 2 gpus are used
-device = torch.device("cuda:0")
-#if torch.cuda.device_count() > 1:
-#    print("2 GPUs are available")
-#    train_module = nn.DataParallel(train_module,device_ids=[0,1])
+train_module.load_state_dict(torch.load("models/model9.model"))
+#device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
     # torch 0.4.0
-    train_module = train_module.to(device)
+    #train_module = train_module.to(device)
     # torch 0.3.0
-    #train_module = train_module.cuda()
+    train_module = train_module.cuda()
 
 # regularization factor
 factor = 0.0005
-# to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
-# torch.backends.cudnn.benchmark=True
-#torch.backends.cudnn.enabled = False
-def getACCLoss(batch_train_data,out_target,batch_mask,batch_target):
-        batch_size, fea_frames, fea_dim = batch_train_data.size()
-        out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
-        mask = batch_mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        out_target_mask = out_target * mask
-        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
-        predict_target = F.softmax(out_target_mask, dim=1)
 
-        # 计算loss
-        tar_select_new = torch.gather(predict_target, 1, batch_target)
-        ce_loss = -torch.log(tar_select_new) 
-        ce_loss = ce_loss.sum() / batch_size
-
-        # 计算acc
-        (data, predict) = predict_target.max(dim=1)
-        predict = predict.contiguous().view(-1,1)
-        correct = predict.eq(batch_target).float()       
-        num_samples = predict.size(0)
-        sum_acc = correct.sum().item()
-        acc = sum_acc/num_samples
-        return acc,ce_loss
-def getLr(epoch):
+for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 6:
-        learning_rate = 0.01
+    if epoch == 4:
+        learning_rate = 0.05
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    #if epoch == 8:
-    #    learning_rate = 0.01
-    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-
-def train(epoch):
+    if epoch == 8:
+        learning_rate = 0.02
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
     train_module.train()
@@ -168,20 +124,18 @@ def train(epoch):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            batch_train_data = batch_train_data.to(device)
-            batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_train_data = batch_train_data.to(device)
+            #batch_mask       = batch_mask.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
-            #batch_train_data = batch_train_data.cuda()
-            #batch_mask       = batch_mask.cuda()
-            #batch_target     = batch_target.cuda()
+            batch_train_data = batch_train_data.cuda()
+            batch_mask       = batch_mask.cuda()
+            batch_target     = batch_target.cuda()
 
-        out_target = train_module(batch_train_data)
-        # output of the model
-        acc,ce_loss = getACCLoss(batch_train_data,out_target,batch_mask,batch_target)
+        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
         # loss = loss.sum()
-        backward_loss = ce_loss 
+        backward_loss = loss
         optimizer.zero_grad()
         # L1 regularization 
         #l1_crit = torch.nn.L1Loss(size_average=False)
@@ -198,7 +152,7 @@ def train(epoch):
         optimizer.step()
 
 
-        train_loss += ce_loss.item()
+        train_loss += loss.item()
         train_acc += acc
         curr_batch_acc += acc
         sum_batch_size += 1
@@ -206,7 +160,7 @@ def train(epoch):
         if step % display_fre == 0:
             toc = time.time()
             step_time = toc-tic
-            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, ce_loss.item(), step_time)
+            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
             curr_batch_acc = 0.
             curr_batch_size = 0
             tic = toc
@@ -219,7 +173,7 @@ def train(epoch):
     epoch_time = epoch_toc-epoch_tic
     logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
 
-def test(epoch):
+##  -----------------------------------------------------------------------------------------------------------------------------
 ##  dev
     train_module.eval()
     epoch_tic = time.time()
@@ -245,18 +199,17 @@ def test(epoch):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            batch_dev_data   = batch_dev_data.to(device)
-            batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_dev_data   = batch_dev_data.to(device)
+            #batch_mask       = batch_mask.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
-            #batch_dev_data   = batch_dev_data.cuda()
-            #batch_mask       = batch_mask.cuda()
-            #batch_target     = batch_target.cuda()
+            batch_dev_data   = batch_dev_data.cuda()
+            batch_mask       = batch_mask.cuda()
+            batch_target     = batch_target.cuda()
             
         with torch.no_grad():
-            out_target = train_module(batch_dev_data)
-            # output of the model
-            acc, loss = getACCLoss(batch_dev_data,out_target,batch_mask,batch_target)
+            #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
         
         loss = loss.sum()/step_batch_size
 
@@ -271,13 +224,3 @@ def test(epoch):
     epoch_time = epoch_toc-epoch_tic
     acc=dev_acc/dev_batch_num
     logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
-
-# random seed
-torch.manual_seed(time.time())
-for epoch in range(0,train_iteration):
-    # get lr
-    getLr(epoch)
-    # train
-    train(epoch)
-    #test(epoch)
-    test(epoch)
