@@ -7,6 +7,10 @@ import pybel
 string = "C1=CC=CC=C1"
 mol = pybel.readstring("smi",string)
 print(mol)
+print(dir(mol))
+print(mol.atoms)
+for i in mol.atoms:
+    print(i)
 
 #filename = "input.smi"
 #obConversion = ob.OBConversion()
@@ -17,6 +21,7 @@ print(mol)
 MolBond = []
 ChainBond = []
 
+"""
 for atom in ob.OBMolAtomIter(mol):
     print(atom.GetType())
 #print(dir(atom))
@@ -39,3 +44,4 @@ for bond in ob.OBMolBondIter(mol):
 
 
 
+"""
