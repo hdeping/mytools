@@ -29,6 +29,7 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 import torch.nn as nn
+import torch.nn.functional as F
 
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
@@ -147,10 +148,30 @@ for epoch in range(0,train_iteration):
             #batch_mask       = batch_mask.cuda()
             #batch_target     = batch_target.cuda()
 
-        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
+        out_target = train_module(batch_train_data)
+        # output of the model
+        batch_size, fea_frames, fea_dim = batch_train_data.size()
+        out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
+        mask = batch_mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
+        out_target_mask = out_target * mask
+        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        predict_target = F.softmax(out_target_mask, dim=1)
+
+        # 计算loss
+        tar_select_new = torch.gather(predict_target, 1, batch_target)
+        ce_loss = -torch.log(tar_select_new) 
+        ce_loss = ce_loss.sum() / batch_size
+
+        # 计算acc
+        (data, predict) = predict_target.max(dim=1)
+        predict = predict.contiguous().view(-1,1)
+        correct = predict.eq(batch_target).float()       
+        num_samples = predict.size(0)
+        sum_acc = correct.sum().item()
+        acc = sum_acc/num_samples
         
         # loss = loss.sum()
-        backward_loss = loss
+        backward_loss = ce_loss 
         optimizer.zero_grad()
         # L1 regularization 
         #l1_crit = torch.nn.L1Loss(size_average=False)
@@ -167,7 +188,7 @@ for epoch in range(0,train_iteration):
         optimizer.step()
 
 
-        train_loss += loss.item()
+        train_loss += ce_loss.item()
         train_acc += acc
         curr_batch_acc += acc
         sum_batch_size += 1
@@ -175,7 +196,7 @@ for epoch in range(0,train_iteration):
         if step % display_fre == 0:
             toc = time.time()
             step_time = toc-tic
-            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
+            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, ce_loss.item(), step_time)
             curr_batch_acc = 0.
             curr_batch_size = 0
             tic = toc
