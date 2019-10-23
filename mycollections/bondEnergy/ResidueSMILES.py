@@ -20,7 +20,7 @@ import pybel as pb
 import os
 import numpy as np
 import json
-from DealBondEnergy import BondAngle
+from .BondAngle import BondAngle
 
 class ResidueSMILES(BondAngle):
     """docstring for ResidueSMILES"""
@@ -29,6 +29,8 @@ class ResidueSMILES(BondAngle):
         
     # Break the bond in ring and generate the radical fragment
     def BreakRing(self,mol):
+        """
+        """
         ring_frag = ob.OBMol()
         for atom in ob.OBMolAtomIter(mol):
             ring_frag.AddAtom(atom)
@@ -38,6 +40,8 @@ class ResidueSMILES(BondAngle):
 
     # Determinate the second-end atom
     def IsNearTerminal(self,atom):
+        """
+        """
         n = 0
         if atom.GetSpinMultiplicity() == 0:
             for _atom in ob.OBAtomAtomIter(atom):
@@ -51,6 +55,8 @@ class ResidueSMILES(BondAngle):
 
     # FillAtom() is a function to find all the atom in fragment
     def FillAtom(self,mol, atom, frag, fatom_idx):
+        """
+        """
         # mol, frag -- Class OBMol
         # atom -- Class OBAtom
         # fatom_idx -- Record the atom has existed
@@ -77,6 +83,8 @@ class ResidueSMILES(BondAngle):
 
     # BondLink() is a function to bonding the atoms in the fragment 
     def FragBondLink(self,frag, fatom_idx,mol_bond,NumAtomsNoH):
+        """
+        """
         IdxDict = {}
         for i in range(len(fatom_idx)):
             IdxDict[fatom_idx[i]] = i+1
@@ -97,6 +105,8 @@ class ResidueSMILES(BondAngle):
 
     # Simplify is a function to remove the same fragment pair
     def SimplifyLs(self,ls1, ls2):
+        """
+        """
         ls = zip(ls1,ls2)
         for i in range(len(ls)):
             a,b = ls[i]
@@ -117,6 +127,8 @@ class ResidueSMILES(BondAngle):
     # input: string of SMILES format
     # output: the SMILES format of the residue
     def getResidues(self,smi_string):
+        """
+        """
         
         #file's type conversion and generate a 3D builder
         obConversion = ob.OBConversion()
@@ -207,19 +219,10 @@ class ResidueSMILES(BondAngle):
                 ListOfFrag2.append(frag2_smi)
                 # get bonds
                 atomId.append(MolBond[BondIdx])
-        #ListOfFrag = SimplifyLs(ListOfFrag1,ListOfFrag2)
-        #DelDuplFrag(ListOfFrag)
-        #print("list 1")
-        #print(ListOfFrag1)
-        #print(ListOfFrag1,ListOfFrag2)
-        #print("list 2")
-        #print(ListOfFrag2)
-        #print("bonds")
-        #print(atomId)
-        #get_frag_tbl(MolSmi,label, ListOfFrag)
-        # Output Gaussian input file
         return atomId,ListOfFrag1
     def getSMILES(self,filename):
+        """
+        """
         fp = open(filename,'r')
         data = fp.read()
         fp.close()
@@ -233,6 +236,8 @@ class ResidueSMILES(BondAngle):
         return res
 
     def getMolecules(self):
+        """
+        """
         filename = "idResidue.json"
         data = self.loadJson(filename)
         molecules = []
@@ -250,6 +255,8 @@ class ResidueSMILES(BondAngle):
 
 
     def test(self):
+        """
+        """
         residues,molecules = self.getMolecules()
         print(self.resToID)
         #print(self.resToID)
@@ -257,6 +264,8 @@ class ResidueSMILES(BondAngle):
 
     # run the main program
     def run(self):
+        """
+        """
         # get molecules
         self.resToID = None
         self.totalData = None
@@ -307,6 +316,6 @@ class ResidueSMILES(BondAngle):
         #print("match:",match)
         self.writeJson("residueAtoms.json",residueAtoms)
 
-residue = ResidueSMILES()
-residue.run()
+# residue = ResidueSMILES()
+# residue.run()
 #residue.test()
