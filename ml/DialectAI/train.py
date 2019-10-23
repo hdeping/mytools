@@ -36,9 +36,8 @@ from mymodel import LanNet
 from mymodel import pre_model
 
 # pre model
-import sys
 model = pre_model()
-model_name = "models/model59-0.model"
+model_name = "models/model40-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
@@ -46,7 +45,7 @@ model.eval()
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -60,12 +59,13 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 20
 display_fre = 50
 half = 4
 # data augmentation
 
 # save the models
+import sys
 model_dir = "models" + sys.argv[1]
 #model_dir = "models"
 if not os.path.exists(model_dir):
@@ -89,7 +89,7 @@ logging.info('finish reading all train data')
 
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=64, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -104,10 +104,10 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 4:
+        if epoch == 5:
             learning_rate = 0.03
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 8:
+        if epoch == 10:
             learning_rate = 0.01
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 15:

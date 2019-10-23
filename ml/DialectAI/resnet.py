@@ -106,10 +106,6 @@ class ResNet(nn.Module):
         x = self.layer4(x)
         #print("output",x.shape)
 
-        #x = self.avgpool(x)
-        #x = x.view(x.size(0), -1)
-        #x = self.fc(x)
-
         return x
 
 
@@ -119,7 +115,7 @@ def resnet18(**kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = ResNet(BasicBlock, [1, 1, 1, 1], **kwargs)
+    model = ResNet(BasicBlock, [2, 2, 1, 1], **kwargs)
     #if pretrained:
     #    model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
     return model

@@ -47,36 +47,41 @@ class inferModel(nn.Module):
         batch_size, fea_frames, fea_dim = x.size()
         # squeeze frames:  [batch_size,1] --> [batch_size]
         frames = frames.squeeze()
+        frames = frames.unsqueeze(0)
+        target = target.squeeze()
+        target = target.unsqueeze(0)
         # get packed sequence
-        sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
-        # new input 
-        x = x[sorted_indeces]
-        # conv output
-        # new target
-        target = target[sorted_indeces]
+        # deal with the frames: scalar --> array with size 1
+        #frames = torch.cuda.IntTensor([frames])
 
-        x = x.unsqueeze(1)
+        # unsqueeze the array twice
+        # (1,F,T) --> (1,1,F,T)
+        #print(x.shape)
+        x = x.unsqueeze(0)
+        #print("target:",target.shape,target,"frames",frames.shape,frames[0].item(),frames)
+        #print(x.shape)
         x = self.conv(x)
+        #print(x.shape)
 
         # squeeze
         # B,F,T -> B,T,F
         x = x.squeeze()
+        x = x.unsqueeze(0)
         x = x.transpose(1,2)
 
-        sorted_frames = sorted_frames / 4
+        frames = frames / 4
 
-        new_indeces,older_indeces = torch.sort(sorted_indeces)
 
         batch_size, time_frame ,hidden_dim = x.size()
         # gru output
         # layer gru
-        out_hidden = self.getBiHidden(self.layer_gru,x,sorted_frames)
+        out_hidden = self.getBiHidden(self.layer_gru,x,frames)
         # get a vector with fixed size (hidden_dim)
-        sorted_frames = sorted_frames.view(-1,1)
-        sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))
-        sorted_frames = sorted_frames.type(torch.cuda.FloatTensor)
+        frames = frames.view(-1,1)
+        frames = frames.expand(batch_size,out_hidden.size(2))
+        frames = frames.type(torch.cuda.FloatTensor)
 
-        out_hidden = out_hidden.sum(dim=1)/sorted_frames
+        out_hidden = out_hidden.sum(dim=1)/frames
 
         x = out_hidden
         # target should be ordered
@@ -86,13 +91,14 @@ class inferModel(nn.Module):
         predict_target = F.softmax(out_target, dim=1)
 
         # 计算loss
+        target = target.unsqueeze(0)
         tar_select_new = torch.gather(predict_target, 1, target)
         ce_loss = -torch.log(tar_select_new) 
         ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict[older_indeces]
+        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
