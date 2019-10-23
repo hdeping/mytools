@@ -9,6 +9,7 @@ import torch
 from readpcm import pcmdata
 
 
+scale = 1.0/32768
 class TorchDataSet(object):
     def __init__(self, file_list, batch_size, chunk_num, dimension):
         self._batch_size = batch_size
@@ -46,6 +47,8 @@ class TorchDataSet(object):
                 max_frames = feature_frames
             
             curr_feature = torch.Tensor(feature_data)
+            # normalization
+            curr_feature = curr_feature.mul(scale)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
