@@ -32,7 +32,6 @@ import torch.utils.data as Data
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
 from mymodel import LanNet
-import numpy as np
 
 ## ======================================
 # data list
@@ -85,15 +84,17 @@ if use_cuda:
 # regularization factor
 factor = 0.0005
 
-lr_min = 0.01
-lr_max = 0.1 
-period = 5
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    i = epoch % period + 1
-    #learning_rate = 10**(-i*3/10)
-    learning_rate = lr_min + 0.5*(lr_max - lr_min)*(1.0 + np.cos(np.pi*i/period)) 
-    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 4:
+        learning_rate = 0.05
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 8:
+        learning_rate = 0.01
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 12:
+        learning_rate = 0.003
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
