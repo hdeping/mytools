@@ -37,6 +37,7 @@ def getNames(train):
     short_frames = []
     for htk_file in data:
         htk_feature = HTKfile(htk_file[0])
+        print(htk_feature.read_data().shape)
         feature_frames = htk_feature.get_frame_num()
         if feature_frames < 300:
             short_frames.append(htk_file)

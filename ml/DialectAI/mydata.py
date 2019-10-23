@@ -38,6 +38,7 @@ class TorchDataSet(object):
 
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
+            #print(feature_data.shape)
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()
 
