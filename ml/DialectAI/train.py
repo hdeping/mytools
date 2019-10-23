@@ -49,11 +49,11 @@ if not os.path.exists(model_dir):
 # 网络参数
 dimension = 40
 language_nums = 6
-learning_rate = 0.1
+learning_rate = 0.001
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 20
 display_fre = 50
 half = 4
 
@@ -66,7 +66,8 @@ logging.info('finish reading all train data')
 # 优化器，SGD更新梯度
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
-optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+#optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
 
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
@@ -82,7 +83,8 @@ for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
         learning_rate /= 2.
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        #optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
 
 ##  train
     train_dataset.reset()
