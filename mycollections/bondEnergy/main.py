@@ -23,6 +23,8 @@ count = np.zeros(10)
 
 for key in dicts:
     value = dicts[key]
+    if value == 6:
+        print(key)
     count[value] += 1
 
 count = count.astype(int)
