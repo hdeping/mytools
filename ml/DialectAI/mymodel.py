@@ -20,6 +20,10 @@ class LanNet(nn.Module):
         self.layer_a .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer_b  = nn.Sequential()
         self.layer_b .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer_c  = nn.Sequential()
+        self.layer_c .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer_d  = nn.Sequential()
+        self.layer_d .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -37,11 +41,16 @@ class LanNet(nn.Module):
         out_hidden, hidd = self.layer1(src)
         # get gru output
         # recursive part
-        for i in range(3):
-            out_hidden_new, hidd = self.layer_a(out_hidden)
-            out_hidden_new, hidd = self.layer_b(out_hidden_new)
-            # res
-            out_hidden = out_hidden + out_hidden_new
+        # a and b
+        out_hidden_new, hidd = self.layer_a(out_hidden)
+        out_hidden_new, hidd = self.layer_b(out_hidden_new)
+        # res
+        out_hidden = out_hidden + out_hidden_new
+        # c and d
+        out_hidden_new, hidd = self.layer_c(out_hidden)
+        out_hidden_new, hidd = self.layer_d(out_hidden_new)
+        # res
+        out_hidden = out_hidden + out_hidden_new
 
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
@@ -70,8 +79,6 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        # sorted 
-        new_indeces,indeces = torch.sort(  )
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
