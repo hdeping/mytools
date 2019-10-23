@@ -57,11 +57,12 @@ class LanNet(nn.Module):
         # reshape to (B,T)
         attention_alpha = attention_alpha.contiguous().view(batch_size,-1)
         # masked attention 
-        # mask:  1,1,1 .... 0,0,0
+        # mask:  1,1,1 .... -inf,-inf,-inf
         attention_alpha = attention_alpha*mask
-        #print(attention_alpha)
+        print(attention_alpha)
         # softmax
-        #attention_alpha = F.softmax(attention_alpha,dim=1)
+        attention_alpha = F.softmax(attention_alpha,dim=1)
+        print(attention_alpha)
         #print(attention_alpha.shape)
         #print(fea_frames)
         attention_alpha = attention_alpha.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
