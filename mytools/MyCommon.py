@@ -274,6 +274,8 @@ class MyCommon():
         for i,key in enumerate(dicts):
             value = dicts[key]
             print(i,key,value)
+            if i > num - 1:
+                break
         pass
 
 
