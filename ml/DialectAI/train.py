@@ -31,20 +31,20 @@ import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
-from net_component import LanNet
+from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train0.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 80 # 40 before
-language_nums = 6
+dimension = 40 # 40 before
+language_nums = 9 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
