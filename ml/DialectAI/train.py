@@ -47,10 +47,10 @@ dimension = 40 # 40 before
 data_dimension = 400 # 400 point per frame
 language_nums = 9 # 9!
 learning_rate = 0.1
-batch_size = 64
+batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 15
+train_iteration = 20
 display_fre = 50
 half = 4
 # data augmentation
@@ -73,7 +73,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models_data10/model2.model"))
+train_module.load_state_dict(torch.load("models/model11.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -86,9 +86,9 @@ if use_cuda:
 factor = 0.0005
 # to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
 # torch.backends.cudnn.benchmark=True
-torch.backends.cudnn.enabled = False
+#torch.backends.cudnn.enabled = False
 
-for epoch in range(0,train_iteration):
+for epoch in range(12,train_iteration):
     print("epoch",epoch)
     if epoch == 4:
         learning_rate = 0.05
