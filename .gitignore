@@ -7,3 +7,4 @@ test.yml
 *.ris
 *.bib
 run.sh
+.DS_store
