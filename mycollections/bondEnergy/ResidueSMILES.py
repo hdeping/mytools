@@ -225,6 +225,11 @@ class ResidueSMILES(BondAngle):
         return atomId,ListOfFrag1
     def getSMILES(self,filename):
         """
+        get a smiles string from a file
+        input:
+            filename, name of a file
+        return:
+            res, array of the first column
         """
         fp = open(filename,'r')
         data = fp.read()
