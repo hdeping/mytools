@@ -100,6 +100,20 @@ def getSample(ii):
         pair: int,list (n,4)
         value: float,list
 """
-result = getSample(0)
-result = json.dumps(result,indent=4)
-print(result)
+size = len(filenames)
+#size = 100
+database = {}
+for i in range(size):
+    print("sample",i+1)
+    result = getSample(0)
+    name = filenames[i].replace('_frag00.out','')
+    database[name] = result
+
+# dict to json
+database = json.dumps(database,indent=4)
+
+#### write the data
+filename = "inchikey_filter_database.json"
+fp = open(filename,'w')
+fp.write(database)
+fp.close()
