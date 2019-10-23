@@ -49,7 +49,7 @@ learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
