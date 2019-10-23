@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
 
+import codecs
 import copy
 import random
-import numpy as np
-import codecs
 
 import torch
 
@@ -11,12 +10,11 @@ from readhtk import HTKfile
 
 
 class TorchDataSet(object):
-    def __init__(self, file_list, batch_size, chunk_num, dimension,p_vad):
+    def __init__(self, file_list, batch_size, chunk_num, dimension):
         self._batch_size = batch_size
         self._chunck_num = chunk_num
         self._chunck_size = self._chunck_num*self._batch_size
         self._dimension = dimension
-        self._p_vad = p_vad
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
@@ -26,19 +24,20 @@ class TorchDataSet(object):
         random.shuffle(self._dataset)
     
     def __iter__(self):
+        data_size = len(self._dataset)
         batch_data = []
         target_frames = []
         name_list = []
         max_frames = 0
-        data_size = len(self._dataset)
         for ii in range(data_size):
             line = self._dataset[ii].strip() # what is this ? strip?
-            names = line.split() # what is splitted?
-            htk_feature = names[:4]
+            splited_line = line.split() # what is splitted?
+            #print(splited_line)
+            htk_feature = splited_line[0]
             #print("ii = ",ii)
-            target_label = int(str(names[-1])) 
+            target_label = int(str(splited_line[1])) 
 
-            htk_file = HTKfile(htk_feature,self._p_vad)
+            htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()

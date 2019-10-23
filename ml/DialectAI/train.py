@@ -63,11 +63,9 @@ display_fre = 50
 half = 4
 # p vad 
 import sys
-p_vad = float(sys.argv[1])
-# data augmentation
 
 # save the models
-model_dir = "models"+str(p_vad)
+model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -76,9 +74,9 @@ if not os.path.exists(model_dir):
 # CRNN
 #train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 # RNN
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,p_vad)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,p_vad)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -107,32 +105,36 @@ factor = 0.0005
 # torch.backends.cudnn.benchmark=True
 #torch.backends.cudnn.enabled = False
 def getACCLoss(batch_train_data,out_target,batch_mask,batch_target):
-        batch_size, fea_frames, fea_dim = batch_train_data.size()
-        out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
-        mask = batch_mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        out_target_mask = out_target * mask
-        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
-        predict_target = F.softmax(out_target_mask, dim=1)
 
-        # 计算loss
-        tar_select_new = torch.gather(predict_target, 1, batch_target)
-        ce_loss = -torch.log(tar_select_new+1.0e-8) 
-        ce_loss = ce_loss.sum() / batch_size
 
-        # 计算acc
-        (data, predict) = predict_target.max(dim=1)
-        # output
-        #target = batch_target.cpu().numpy()
-        #target = np.reshape(target,(-1))
-        #pred = predict.cpu().numpy()
-        #pred = np.reshape(pred,(-1))
-        #print(target,pred)
-        predict = predict.contiguous().view(-1,1)
-        correct = predict.eq(batch_target).float()       
-        num_samples = predict.size(0)
-        sum_acc = correct.sum().item()
-        acc = sum_acc/num_samples
-        return acc,ce_loss
+    batch_size, fea_frames, fea_dim = batch_train_data.size()
+    out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
+    mask = batch_mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
+    out_target_mask = out_target * mask
+    out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+    predict_target = F.softmax(out_target_mask, dim=1)
+    
+    
+    
+    # 计算loss
+    tar_select_new = torch.gather(predict_target, 1, batch_target)
+    ce_loss = -torch.log(tar_select_new) 
+    ce_loss = ce_loss.sum() / batch_size
+    
+    (data, predict) = predict_target.max(dim=1)
+    
+    # output
+    #target = batch_target.cpu().numpy()
+    #target = np.reshape(target,(-1))
+    #pred = predict.cpu().numpy()
+    #pred = np.reshape(pred,(-1))
+    #print(target,pred)
+    predict = predict.contiguous().view(-1,1)
+    correct = predict.eq(batch_target).float()       
+    num_samples = predict.size(0)
+    sum_acc = correct.sum().item()
+    acc = sum_acc/num_samples
+    return acc,ce_loss
 def getLr(epoch):
     print("epoch",epoch)
     if epoch == 6:
