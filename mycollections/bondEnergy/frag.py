@@ -201,10 +201,15 @@ count = np.zeros(7)
 
 filename = "smiles.txt"
 filenames = getSMILES(filename)
-for smi_string in filenames:
+total = 0
+for i,smi_string in enumerate(filenames):
+    print(i)
     num = main(smi_string)
-    count[num] += 1
+    total += num
+    #count[num] += 1
+    #break
 print(num)
 
 count = count.astype(int)
 print(count)
+print(total)
