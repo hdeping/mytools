@@ -36,8 +36,7 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-dev_list   = "../labels/label_dev_list_fb.txt"
-#dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -45,7 +44,7 @@ use_cuda = torch.cuda.is_available()
 toneLengthD = 6
 dimension = 40
 data_dimension = 320
-language_nums = 10 # 9!
+language_nums = 7 # 9!
 learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
@@ -99,7 +98,7 @@ def test():
     
     result_target = []
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        print("step is ",step)
+        #print("step is ",step)
         tic = time.time()
     
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
@@ -149,9 +148,20 @@ def test():
     return result_target
 # output the result
 import numpy as np
-train_module.load_state_dict(torch.load("models/model5.model"))
-print("dev")
-result_target = test()
-print(result_target)
-result_target = np.array(result_target)
-np.savetxt("output",result_target,fmt='%g')
+result = []
+for i in range(0,21):
+    print("model ",i)
+    train_module.load_state_dict(torch.load("majority/model9-%d.model"%(i)))
+    #result_target = test()
+    #result.append(result_target)
+
+## deal with the output
+#result = np.array(result)
+#print(result.shape)
+#result = np.transpose(result,(1,0,2))
+#size = len(result)
+##new = np.zeros((5000,2*size))
+##new[:,0] = result[:,0,0]
+##new[:,1:] = result[:,:,1]
+#result = np.reshape(result,(size,-1))
+#np.savetxt("result.txt",result,fmt='%d')
