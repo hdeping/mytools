@@ -42,9 +42,13 @@ class ResidueSMILES(BondAngle):
             ring_frag.AddBond(bond)
         return ring_frag
 
-    # Determinate the second-end atom
     def IsNearTerminal(self,atom):
         """
+        Determinate the second-end atom
+        input: 
+            atom, OBAtom type
+        return:
+            bool type
         """
         n = 0
         if atom.GetSpinMultiplicity() == 0:
