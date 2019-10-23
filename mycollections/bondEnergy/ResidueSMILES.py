@@ -267,15 +267,16 @@ class ResidueSMILES(BondAngle):
 
     def test(self):
         """
+        test for self.getMolecules
         """
         residues,molecules = self.getMolecules()
         print(self.resToID)
         #print(self.resToID)
         
 
-    # run the main program
     def run(self):
         """
+        run the main program
         """
         # get molecules
         self.resToID = None
