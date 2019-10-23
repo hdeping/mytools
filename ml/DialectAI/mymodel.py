@@ -11,10 +11,10 @@ class baseConv1d(nn.Module):
         self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
         self.bn1   = nn.BatchNorm1d(self.input_dim)
     def forward(self,x):
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = F.relu(x)
-        return x
+        y = self.conv1(x)
+        y = self.bn1(y)
+        y = F.relu(x + y)
+        return y
 
 
 class LanNet(nn.Module):
