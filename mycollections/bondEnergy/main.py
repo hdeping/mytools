@@ -125,6 +125,7 @@ def getBonds(indexC,indexO,parameters):
 count = 0
 count_no_bond = 0
 count_sample = 0
+dihedral_counts = np.zeros(20,dtype=int)
 for residue in residueBonds:
     count += 1
     print("residue ",count)
@@ -172,8 +173,16 @@ for residue in residueBonds:
     angleNum = 0
     for angle in angles:
         angleNum += 1
+    dihedralNum = 0
+    for dihed in dihedral:
+        dihedralNum += 1
+    if dihedralNum == 10:
+        print(dihedral)
+
+    dihedral_counts[dihedralNum] += 1
     filter2 = (bondNum  == 3)
     filter3 = (angleNum == 2)
+    
         
     if filter1 and filter2 and filter3:
         paraDicts[residue] = molInfo
@@ -190,3 +199,6 @@ json.dump(paraDicts,fp,indent = 4)
 
 print("number of the samples ", count_sample)
 
+print("dihedral statistics")
+print(dihedral_counts)
+print(sum(dihedral_counts))
