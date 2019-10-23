@@ -94,15 +94,15 @@ def train(count):
     
     # regularization factor
     factor = 0.0005
-    learning_rate = 5e-4
+    learning_rate = 1e-4
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
         if epoch == 30:
-            learning_rate = 3e-4
+            learning_rate = 3e-5
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 60:
-            learning_rate = 1e-4
+            learning_rate = 1e-5
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02

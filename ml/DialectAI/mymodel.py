@@ -23,7 +23,7 @@ class LanNet(nn.Module):
         # phonemeSeq  dictionary
         self.phonemes_dict = dealMlf("../labels/all.mlf")
 
-        self.conv  = vgg16()
+        self.conv  = vgg19()
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
