@@ -29,27 +29,19 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        # get gru output
         out_hidden, hidd = self.layer1(src)
-        # summation of the two hidden states in the same node
-        # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        #print(out_hidden.shape)
-        # get  masked outputs
-        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
-        # output with new size (batch_size, hidden_dim)
-        out_hidden = out_hidden*mask
-        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
-        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
+        #print(out_hidden.data.shape)
+        out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
+        #print(out_hidden.data.shape)
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 
 
-        #out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
-        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        #out_target_mask = out_target * mask
-        #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
-        predict_target = F.softmax(out_target, dim=1)
-        #print(predict_target.shape,target.shape)
+        out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
+        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
+        out_target_mask = out_target * mask
+        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        predict_target = F.softmax(out_target_mask, dim=1)
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
@@ -58,10 +50,11 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
+        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss
+        return acc, ce_loss,prediction

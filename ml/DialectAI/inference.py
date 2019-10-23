@@ -36,9 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
-# dev
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb_seven.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -46,7 +44,7 @@ use_cuda = torch.cuda.is_available()
 toneLengthD = 6
 dimension = 40
 data_dimension = 320
-language_nums = 6 # 9!
+language_nums = 7 # 9!
 learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
@@ -68,7 +66,6 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
 dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
