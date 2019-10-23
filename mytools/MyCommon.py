@@ -236,10 +236,12 @@ class MyCommon():
     def keyValue2Dicts(self,keys,values):
         """
         input:
-            keys and values with numpy array type
+            keys and values with numpy array type,
+            which should be the same shape
         return:
             dicts
         """
+        assert len(keys) == len(values)
         result = {}
         for key,value in zip(keys,values):
             result[key] = value
@@ -261,5 +263,17 @@ class MyCommon():
         keys    = np.array(keys)
         values  = np.array(values)
         return keys,values
+    def printDicts(self,dicts,num):
+        """
+        input:
+            dicts: dicts type
+            num: interger type, print first num elements
+        return:
+            None
+        """
+        for i,key in enumerate(dicts):
+            value = dicts[key]
+            print(i,key,value)
+        pass
 
 
