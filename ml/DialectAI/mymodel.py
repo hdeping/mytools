@@ -17,7 +17,7 @@ class baseConv1d(nn.Module):
         # batchnorm 
         x = self.bn(x)
         # 1d avg pool 
-        x = F.avg_pool1d(x,kernel_size=2)
+        x = F.max_pool1d(x,kernel_size=2)
         # relu output
         x = F.relu(x)
         return x
