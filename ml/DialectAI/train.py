@@ -44,12 +44,12 @@ dev_list   = "label_dev_list_fb.txt"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-language_nums = 6 # 9!
-learning_rate = 0.1
+language_nums = 2 # 9!
+learning_rate = 0.01
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 10
 display_fre = 50
 half = 4
 # data augmentation
