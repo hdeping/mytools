@@ -9,7 +9,7 @@ class baseConv1d(nn.Module):
         super(baseConv1d, self).__init__()
         self.input_dim=input_dim
         self.output_dim=output_dim
-        self.conv1 = nn.Conv1d(self.input_dim,self.output_dim,kernel_size=99,padding=49)
+        self.conv1 = nn.Conv1d(self.input_dim,self.output_dim,kernel_size=3,padding=1)
     def forward(self,x):
 
         y = self.conv1(x)
