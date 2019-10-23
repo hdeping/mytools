@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import numpy as np
+import json
 
 filename1 = "exist.txt"
 filenames = np.loadtxt(filename1,dtype=str)
@@ -9,7 +10,27 @@ filenames = np.loadtxt(filename1,dtype=str)
 def getPara(ii):
     filename = "../data/%s.para"%(filenames[ii])
     data = np.loadtxt(filename,delimiter=' ',dtype=str)
-    return data
+
+    numberR = 0
+    numberA = 0
+    # order: R,A,D
+    for line in data[:,0]:
+        first_letter = line[0]
+        if first_letter == "R":
+            numberR += 1
+        elif first_letter == "A":
+            numberA += 1
+
+    # bonds,angles,dihedral
+    bonds    = data[:numberR]
+    angles   = data[numberR:numberR+numberA]
+    dihedral = data[numberR+numberA:]
+    bonds    = list(bonds)
+    angles   = list(angles)
+    dihedral = list(dihedral)
+
+    return bonds,angles,dihedral
+
 def checkPara():
     size = len(filenames)
     count = 0
@@ -35,12 +56,43 @@ def getSerial(ii):
     data = np.loadtxt(filename,delimiter=' ',dtype=str)
     return data
 
-ii = 0
-data = getPara(ii)
-print(data.shape)
-data = getSerial(ii)
-print(data.shape)
+def getSample(ii):
+    result = {}
+    # get atoms
+    serial = getSerial(ii)
+    result["atoms"] = serial
+    # get bonds
+    bonds, angles, dihedral = getPara(ii)
+    #print(bonds)
+    #print(angles)
+    #print(dihedral)
+    result["bonds"] = bonds
+    result["angles"] = angles
+    result["dihedral"] = dihedral
+
+    return result
+
 
 ##### check the files
-checkPara()
+#checkPara()
 
+###############
+"""
+ name:
+   atoms: str,list
+   bonds:
+        id: str,list
+        pair: array (n)
+        value: list,float
+   angles:
+        id: str,list
+        pair: int,list ( 3 or 5)
+        value: float,list
+   dihedral:
+        id: str,list
+        pair: int,list (n,4)
+        value: float,list
+"""
+result = getSample(0)
+#result = json.dumps(result,indent=4)
+print(result)
