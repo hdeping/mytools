@@ -38,7 +38,7 @@ class TorchDataSet(object):
             target_label = int(str(splited_line[1])) 
 
             htk_file = HTKfile(htk_feature)
-            feature_lpc = htk_file.read_data()
+            feature_data = htk_file.read_data()
             #print(feature_data.shape)
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()
@@ -48,15 +48,7 @@ class TorchDataSet(object):
             
             #print(feature_data)
             # nan to num
-            feature_lpc = np.nan_to_num(feature_lpc)
-            # plp feature
-            htk_feature = htk_feature.replace('lpc12','plp0')
-            htk_file = HTKfile(htk_feature)
-            feature_plp0 = htk_file.read_data()
-            # concate the feature
-            #print(feature_lpc.shape,feature_plp0.shape)
-            feature_data = np.concatenate((feature_lpc,feature_plp0),axis=1)
-
+            feature_data = np.nan_to_num(feature_data)
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
