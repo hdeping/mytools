@@ -47,11 +47,11 @@ class TorchDataSet(object):
             
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
-            std   = curr_feature.std(dim=0, keepdim=True)
+            #std   = curr_feature.std(dim=0, keepdim=True)
             # means
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             # std
-            curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
+            #curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             name_list.append(file_name)
