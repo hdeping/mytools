@@ -29,17 +29,17 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-#train_list = "label_train_list_fb.txt"
-#train_mlf  = "train.mlf"
-train_list = "all.txt"
-train_mlf  = "all.mlf"
+train_list = "label_train_list_fb.txt"
+train_mlf  = "train.mlf"
+#train_list = "all.txt"
+#train_mlf  = "all.mlf"
 # dev
 dev_list   = "label_dev_list_fb.txt"
 dev_mlf    = "dev.mlf"
@@ -48,13 +48,14 @@ dev_mlf    = "dev.mlf"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 8 # 40 before
+dimension2 = 40 # 40 before
 language_nums = 10 # 9!
 learning_rate = 0.2
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 60
-display_fre = 200
+display_fre = 50
 half = 4
 # data augmentation
 
@@ -70,13 +71,18 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,train_mlf)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension, dimension2, train_mlf)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,dev_mlf)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension, dimension2, dev_mlf)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=64, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim_fb=dimension2,
+                      input_dim_phoneme = dimension, 
+                      hidden_dim=128,  
+                      bn_dim=30,  
+                      output_dim=language_nums)
+
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
@@ -92,9 +98,7 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-
-for epoch in range(0,train_iteration):
-    print("epoch",epoch)
+def getLR(epoch):
     if epoch == 15:
         learning_rate = 0.1
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
@@ -113,6 +117,56 @@ for epoch in range(0,train_iteration):
     #if epoch == 120:
     #    learning_rate = 0.0001
     #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+
+def getBatchData(batch_fb,batch_phoneme, batch_y):
+
+    batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
+    batch_frames_fb = batch_y[:,1].contiguous().view(-1, 1)
+    batch_frames_phoneme= batch_y[:,2].contiguous().view(-1, 1)
+    #print(batch_target.shape,batch_frames_fb.shape,batch_frames_phoneme.shape)
+    
+    # fb
+    max_batch_frames_fb = int(max(batch_frames_fb).item())
+    batch_train_data_fb = batch_fb[:, :max_batch_frames_fb, :]
+    # phoneme
+    max_batch_frames_phoneme = int(max(batch_frames_phoneme).item())
+    batch_train_data_phoneme = batch_phoneme[:, :max_batch_frames_phoneme, :]
+    #print(max_batch_frames_fb,max_batch_frames_phoneme)
+    #print(batch_frames_fb)
+    #print(batch_frames_phoneme)
+    
+    step_batch_size = batch_target.size(0)
+    # fb mask
+    batch_mask_fb = torch.zeros(step_batch_size, max_batch_frames_fb)
+    # phoneme mask
+    batch_mask_phoneme = torch.zeros(step_batch_size, max_batch_frames_phoneme)
+    for ii in range(step_batch_size):
+        frames = int(batch_frames_fb[ii].item())
+        batch_mask_fb[ii, :frames] = 1.
+        frames = int(batch_frames_phoneme[ii].item())
+        batch_mask_phoneme[ii, :frames] = 1.
+    
+    # 将数据放入GPU中
+    if use_cuda:
+        # torch 0.4.0
+        #batch_train_data = batch_train_data.to(device)
+        #batch_mask       = batch_mask.to(device)
+        #batch_target     = batch_target.to(device)
+        # torch 0.3.0
+        # fb
+        batch_train_data_fb = batch_train_data_fb.cuda()
+        batch_mask_fb       = batch_mask_fb.cuda()
+        # phoneme
+        batch_train_data_phoneme = batch_train_data_phoneme.cuda()
+        batch_mask_phoneme       = batch_mask_phoneme.cuda()
+    
+        batch_target     = batch_target.cuda()
+    # return data
+    return batch_train_data_fb,batch_mask_fb,batch_train_data_phoneme,batch_mask_phoneme,batch_target
+
+for epoch in range(0,train_iteration):
+    print("epoch",epoch)
+    getLR(epoch)
 ##  train
     train_dataset.reset()
     train_module.train()
@@ -124,36 +178,15 @@ for epoch in range(0,train_iteration):
     curr_batch_size = 0
     curr_batch_acc = 0
     tic = time.time()
-    for step, (batch_x, batch_y) in enumerate(train_dataset): 
+    for step, (batch_fb,batch_phoneme, batch_y) in enumerate(train_dataset): 
         #print("step is ",step)
-        batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
 
-        #max_batch_frames = int(max(batch_frames).item())
-        #print(dir(batch_frames))
-        max_batch_frames = int(max(batch_frames).item())
-        #print(batch_x.data.shape)
-        batch_train_data = batch_x[:, :max_batch_frames, :]
-        #print(batch_train_data.data.shape)
+        batch_train_data_fb,batch_mask_fb,  \
+        batch_train_data_phoneme,batch_mask_phoneme, \
+        batch_target = getBatchData(batch_fb,batch_phoneme, batch_y)
 
-        step_batch_size = batch_target.size(0)
-        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-        for ii in range(step_batch_size):
-            frames = int(batch_frames[ii].item())
-            batch_mask[ii, :frames] = 1.
-
-        # 将数据放入GPU中
-        if use_cuda:
-            # torch 0.4.0
-            #batch_train_data = batch_train_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
-            # torch 0.3.0
-            batch_train_data = batch_train_data.cuda()
-            batch_mask       = batch_mask.cuda()
-            batch_target     = batch_target.cuda()
-
-        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
+        acc, loss = train_module(batch_train_data_fb,batch_train_data_phoneme, \
+                                 batch_mask_fb,batch_mask_phoneme, batch_target)
         
         # loss = loss.sum()
         backward_loss = loss
@@ -202,36 +235,21 @@ for epoch in range(0,train_iteration):
     dev_acc = 0.
     dev_batch_num = 0 
 
-    for step, (batch_x, batch_y) in enumerate(dev_dataset): 
+    for step, (batch_fb,batch_phoneme, batch_y) in enumerate(dev_dataset): 
         tic = time.time()
 
-        batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
+        # get batch data
+        batch_train_data_fb,batch_mask_fb,  \
+        batch_train_data_phoneme,batch_mask_phoneme, \
+        batch_target = getBatchData(batch_fb,batch_phoneme, batch_y)
 
-        max_batch_frames = int(max(batch_frames).item())
-        batch_dev_data = batch_x[:, :max_batch_frames, :]
 
-        step_batch_size = batch_target.size(0)
-        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-        for ii in range(step_batch_size):
-            frames = int(batch_frames[ii].item())
-            batch_mask[ii, :frames] = 1.
-
-        # 将数据放入GPU中
-        if use_cuda:
-            # torch 0.4.0
-            #batch_dev_data   = batch_dev_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
-            # torch 0.3.0
-            batch_dev_data   = batch_dev_data.cuda()
-            batch_mask       = batch_mask.cuda()
-            batch_target     = batch_target.cuda()
             
         with torch.no_grad():
-            #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss = train_module(batch_train_data_fb,batch_train_data_phoneme, \
+                                     batch_mask_fb,batch_mask_phoneme, batch_target)
         
+        step_batch_size = batch_target.size(0)
         loss = loss.sum()/step_batch_size
 
         toc = time.time()
