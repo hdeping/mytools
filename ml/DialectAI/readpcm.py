@@ -54,7 +54,12 @@ def getPowerDensity(data):
         # windowed powerDensity
         line = line*W_k
         # normalized powerDensity
+        #print(line.shape)
+        summation = sum(line)
+        if summation == 0:
+            continue
         line = line/sum(line)
+        print(summation)
         powerDensity.append(line)
     # return powerDensity
     return powerDensity
@@ -100,6 +105,8 @@ def getTone(R_t,toneLengthD):
             scale = 1/(size - d)
             tone[i,j] = const*scale*(sum(arr1*arr2) - scale**2*sum(arr1)*sum(arr2))
         # d > 0
+    # return tone
+    return tone
             
     
 

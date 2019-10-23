@@ -43,7 +43,9 @@ dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension  = 13
+toneLengthD = 6
+dimension = 2*toneLengthD + 1# 40 before
+data_dimension = 320
 language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64
@@ -66,13 +68,13 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,data_dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=64, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
