@@ -35,8 +35,7 @@ from net_component import LanNet
 
 ## ======================================
 # data list
-train_list = "../labels/label_train_list_fb.txt"
-#train_list = "../labels/label_train0.txt"
+train_list = "../labels/label_all_list_fb.txt"
 dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
@@ -71,6 +70,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
+#train_module.load_state_dict(torch.load("models_data10/model2.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -81,7 +81,9 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-train_module.load_state_dict(torch.load("models/model0.model"))
+# load a model
+
+train_module.load_state_dict(torch.load('models/model0.model'))
 for epoch in range(1,train_iteration):
     print("epoch",epoch)
     if epoch == half:
