@@ -2,9 +2,10 @@ from mymodel import baseConv1d
 import torch
 
 conv = []
-chanels = [1,2,4,8,16,32,40,64,80]
+#chanels = [1,2,4,8,16,32,40,64,80]
+chanels = [1,5,10,20,40]
 # get conv layers
-layer_num = 8
+layer_num = 4
 for i in range(layer_num):
     conv_layer = baseConv1d(chanels[i],chanels[i+1],3,2,1)
     conv.append(conv_layer)
