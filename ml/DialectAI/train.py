@@ -36,7 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
