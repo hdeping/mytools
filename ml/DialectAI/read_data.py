@@ -26,8 +26,8 @@ from HTKfile import HTKfile
 #            samples += 1
 #    file_list.close()
 #    return samples, max_frames
-
-
+#
+#
 #def get_data(list, samples, max_frames, dimension):
 #    data = torch.zeros(samples, max_frames, dimension)
 #    target_frames = torch.zeros(samples, 2)
@@ -104,9 +104,12 @@ class TorchDataSet(object):
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            batch_data.append(curr_feature_norm)
-            target_frames.append(torch.Tensor([target_label, feature_frames]))
-            name_list.append(file_name)
+            for jj in range(3):
+                noise = torch.randn(curr_feature_norm.shape)*jj
+                curr_feature_norm = curr_feature_norm + noise
+                batch_data.append(curr_feature_norm)
+                target_frames.append(torch.Tensor([target_label, feature_frames]))
+                name_list.append(file_name)
 
             if (ii+1) % self._chunck_size == 0:
                 chunk_size = len(batch_data)

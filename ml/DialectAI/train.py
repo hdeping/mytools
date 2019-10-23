@@ -30,7 +30,7 @@ import torch
 import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
-from read_data import TorchDataSet
+from read_data import  TorchDataSet
 from net_component import LanNet
 
 ## ======================================
@@ -54,7 +54,7 @@ learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 12
 display_fre = 50
 half = 4
 
@@ -69,6 +69,8 @@ train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+# initial the network
+train_module.load_state_dict(torch.load("models1/model2.model"))
 
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
@@ -79,7 +81,7 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
-factor = 0.0005
+factor = 0.005
 for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
