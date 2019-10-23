@@ -63,7 +63,6 @@ chunk_num = 10
 train_iteration = 20
 display_fre = 50
 half = 4
-fractional = float(sys.argv[2])
 # data augmentation
 
 # save the models
@@ -162,7 +161,7 @@ def train(count):
             #print("out hidden shape",out_hidden.shape)
             #acc, loss = train_module(out_hidden, batch_target)
 
-            acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target,fractional)
+            acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target)
             
             
             # loss = loss.sum()
@@ -244,7 +243,7 @@ def train(count):
                 
             with torch.no_grad():
                 out_hidden_origin,out_hidden,batch_target,older_indeces,sorted_frames_origin,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
-                acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target,fractional)
+                acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target)
                 #out_hidden,batch_target,older_indeces,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
                 #acc, loss = train_module(out_hidden, sorted_frames,batch_target)
                 #out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
