@@ -37,7 +37,7 @@ class LanNet(nn.Module):
         out_hidden, hidd = self.layer1(src)
         # get gru output
         # recursive part
-        for i in range(2):
+        for i in range(3):
             out_hidden_new, hidd = self.layer_a(out_hidden)
             out_hidden_new, hidd = self.layer_b(out_hidden_new)
             # res
@@ -70,6 +70,8 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
+        # sorted 
+        new_indeces,indeces = torch.sort(  )
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
