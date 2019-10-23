@@ -17,8 +17,6 @@ class LanNet(nn.Module):
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer_res = nn.Sequential()
-        self.layer_res.add_module('gru', nn.GRU(self.input_dim+self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -41,20 +39,13 @@ class LanNet(nn.Module):
         #print(sorted_indeces.shape)
         # new input 
         src = src[sorted_indeces]
-        src_tmp = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
+        src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
         target = target[sorted_indeces]
 
 
         # get gru output
-        out_hidden, hidd = self.layer1(src_tmp)
-        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        # concatnate the hidden and input
-        out_hidden = torch.cat((out_hidden,src),dim=2)
-        # pack padded
-        out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
-        out_hidden, hidd = self.layer_res(out_hidden)
+        out_hidden, hidd = self.layer1(src)
         out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
 
         # summation of the two hidden states in the same node
