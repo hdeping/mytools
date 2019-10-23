@@ -36,7 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_list_fb_double_kejia_minnan.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -56,7 +56,8 @@ half = 4
 
 # save the models
 import sys
-model_dir = "models" + sys.argv[1]
+#model_dir = "models" + sys.argv[1]
+model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
