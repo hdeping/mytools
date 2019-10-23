@@ -5,8 +5,9 @@ import copy
 import random
 
 import torch
+import numpy as np
 
-from readpcm import pcmdata
+from readpcm import pcmdata,HTKfile
 
 
 class TorchDataSet(object):
@@ -38,9 +39,17 @@ class TorchDataSet(object):
             target_label = int(str(splited_line[1])) 
 
             pcm_file = pcmdata(htk_feature)
-            feature_data = pcm_file.read_data()
+            htk_file = HTKfile(htk_feature)
+            feature_tone = pcm_file.read_data()
+            feature_fb   = htk_file.read_data()
+            # len1 < len2
+            len1 = len(feature_tone)
+            len2 = len(feature_fb)
+            begin = len2 - len1
+            feature_fb = feature_fb[begin:]
+            feature_data = np.concatenate((feature_fb,feature_tone),axis=1)
             #file_name = pcm_file.get_file_name()
-            feature_frames = pcm_file.get_frame_num()
+            feature_frames = len1
             #print(feature_frames.shape)
 
             if feature_frames > max_frames:
