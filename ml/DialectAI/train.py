@@ -82,7 +82,7 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
-factor = 0.0005
+factor = 1e-4
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
@@ -144,7 +144,8 @@ for epoch in range(0,train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            reg_loss += param.norm(1)
+            #reg_loss += param.norm(2)
+            reg_loss += param.norm(4)**4
         backward_loss += factor * reg_loss
                 
         # get the gradients
