@@ -6,13 +6,14 @@ from getsmiles import readJson
 from getsmiles import getSMILES
 
 # get molecules
-filename = "inchikey_bonds.json"
+filename = "inchikey_parameters.json"
 bonds = readJson(filename)
 
-for mol in bonds:
-    bond = bonds[mol]
-    if bond[-1] != 'O':
-        print(mol)
+for key in bonds:
+    para = bonds[key]
+    para = json.dumps(para,indent = 4)
+    print(para)
+    break
         
 
 filename = "inchikey_bonds2.json"

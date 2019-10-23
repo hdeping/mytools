@@ -125,6 +125,7 @@ for residue in residueBonds:
     molInfo['ID'] = id
     molInfo['molecule'] = mol
     molInfo['type'] = resDicts['type']
+    molInfo['energy'] = resDicts['energy']
     bonds = getBonds(indexC,indexO,parameters)
 
     # judge
