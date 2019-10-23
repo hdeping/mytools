@@ -28,6 +28,7 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
+import sys
 
 #from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
@@ -36,7 +37,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -52,10 +53,10 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-# data augmentation
+wdropout = float(sys.argv[1])
 
 # save the models
-model_dir = "models"
+model_dir = "models"+str(wdropout)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -67,7 +68,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums,wdropout=wdropout)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 

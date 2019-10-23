@@ -8,7 +8,7 @@ from locked_dropout import LockedDropout
 from weight_drop import WeightDrop
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
+    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10,wdropout=0.5):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -21,7 +21,7 @@ class LanNet(nn.Module):
         self.gru =  nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False)
         #self.gru = WeightDrop(self.gru, ['weight_hh_l0'], dropout=0.5) 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', WeightDrop(self.gru, ['weight_hh_l0'], dropout=0.5) )
+        self.layer1.add_module('gru', WeightDrop(self.gru, ['weight_hh_l0'], dropout=wdropout) )
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
