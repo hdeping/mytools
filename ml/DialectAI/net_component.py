@@ -28,8 +28,11 @@ class LanNet(nn.Module):
         batch_size, fea_frames, fea_dim = src.size()
 
         out_hidden, hidd = self.layer1(src)
+        #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        out_bn = self.layer2(out_hidden)
+        #print(out_hidden.data.shape)
+        #out_bn = self.layer2(out_hidden)
+        out_bn = F.relu(self.layer2(F.relu(out_hidden)))
         out_target = self.layer3(out_bn)
 
 
