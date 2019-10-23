@@ -209,8 +209,7 @@ def getSMILES(filename):
         res.append(line[0])
     return res
 
-def getMolecules():
-    filename = "../new_filter3.json"
+def readJson(filename):
     fp = open(filename,'r')
     molecules = json.load(fp)
     fp.close()
@@ -218,7 +217,11 @@ def getMolecules():
     return molecules
 
 # get molecules
-molecules = getMolecules()
+filename = "../new_filter3.json"
+molecules = readJson(filename)
+
+filename = "../molEnergyNumber.json"
+energyNum = readJson(filename)
 
 
 
@@ -231,16 +234,22 @@ freq = 0
 
 filename = "output.result"
 fp = open(filename,'w')
+filename = "mismatch.result"
+fp1 = open(filename,'w')
 for i,smi_string in enumerate(filenames):
-    print("################# %d compounds #########"%(i))
+    #print("################# %d compounds #########"%(i))
     fp.write("################# %d compounds #########"%(i)+'\n')
     fp.write(smi_string + '\n')
     num,frag = main(molecules,smi_string)
+    #print(i,energyNum[smi_string],num)
+    real_num = energyNum[smi_string] 
+    if num < real_num:
+        print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
+        fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
     for line in frag:
         if line in molecules:
             fp.write(molecules[line]["ID"]+'\n')
         else:
-            print()
             fp.write(line + " is not in data"+'\n')
         
     total += num
@@ -250,6 +259,7 @@ for i,smi_string in enumerate(filenames):
         break
 
 fp.close()
+fp1.close()
 count = count.astype(int)
 print("freq",freq)
 print("count",count)
