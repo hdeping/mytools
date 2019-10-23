@@ -95,6 +95,8 @@ factor = 0.0005
 # to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
 # torch.backends.cudnn.benchmark=True
 #torch.backends.cudnn.enabled = False
+# flatten the parameters of RNN layer
+#train_module.layer1.flatten_parameters()
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)

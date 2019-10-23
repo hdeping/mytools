@@ -38,8 +38,11 @@ class LanNet(nn.Module):
         # 5-2-1
         self.conv4 = baseConv1d(20,40,3,2)
 
-        self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        # gru layer
+        #self.layer1 = nn.Sequential()
+        self.layer1 = nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False)
+        # flatten the parameters
+        self.layer1.flatten_parameters()
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -51,6 +54,7 @@ class LanNet(nn.Module):
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
     def forward(self, x):
+        #self.layer1.flatten_parameters()
         batch_size, fea_frames, fea_dim = x.size()
         # reshape the input
         x = x.contiguous().view(batch_size*fea_frames,1,-1)
@@ -61,6 +65,7 @@ class LanNet(nn.Module):
         x = self.conv4(x)
 
         # reshape x
+        self.layer1.flatten_parameters()
         x = x.contiguous().view(batch_size,fea_frames,-1)
 
         # RNN layer
