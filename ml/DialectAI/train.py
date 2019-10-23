@@ -36,14 +36,14 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb_hardFour.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 13 # 40 before
+dimension = 40 # 40 before
 language_nums = 10  # 9!
 learning_rate = 0.1
 batch_size = 50
@@ -231,5 +231,5 @@ def train(count):
         acc=dev_acc/dev_batch_num
         logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
-for count in range(2):
+for count in range(5):
     train(count)
