@@ -16,6 +16,7 @@
 """
 import json
 import yaml
+import numpy as np
 
 
 class MyCommon():
@@ -208,5 +209,37 @@ class MyCommon():
             else:
                 result[line] = 1
         return result
-    
+
+    def sortDicts(self,dicts):
+        """
+        sort the input dicts
+        input:
+            dicts, with number as values,
+            such as {"aaa":100,...}
+        output:
+            dicts, sorted dicts, the first value should
+            be a maximum
+        """
+        keys   = []
+        values = []
+        for key in dicts:
+            value = dicts[key]
+            keys.append(key)
+            values.append(value)
+
+        result  = {}
+        keys    = np.array(keys)
+        values  = np.array(values)
+        indeces = np.argsort(values)
+        # small --> big transformed to
+        # big   --> small
+        indeces = np.flip(indeces)
+        keys    = keys[indeces]
+        values  = values[indeces]
+
+        result = {}
+        for key,value in zip(keys,values):
+            result[key] = value
+        return result
+
 
