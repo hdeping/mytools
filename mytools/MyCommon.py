@@ -192,5 +192,21 @@ class MyCommon():
         data.pop()
         return data        
         
+    def getStringStati(self, array):
+        """
+        get the statistic information of a string array
+        input:
+            array, string array
+        return:
+            result, dicts type, such as {"aaa":100,"bbb":10,...}
+
+        """
+        result = {}
+        for line in array:
+            if line in result:
+                result[line] += 1
+            else:
+                result[line] = 1
+        return result
     
 
