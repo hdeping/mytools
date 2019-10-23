@@ -18,7 +18,7 @@ class LanNet(nn.Module):
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', AugmentedLstm(self.input_dim, self.hidden_dim,recurrent_dropout_probability = 0.5))
+        self.layer1.add_module('gru', AugmentedLstm(self.input_dim, self.hidden_dim,recurrent_dropout_probability = 0.0))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
