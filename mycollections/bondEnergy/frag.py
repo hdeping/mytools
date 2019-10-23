@@ -236,6 +236,7 @@ filename = "output.result"
 fp = open(filename,'w')
 filename = "mismatch.result"
 fp1 = open(filename,'w')
+count_mismatch = np.zeros(9)
 for i,smi_string in enumerate(filenames):
     #print("################# %d compounds #########"%(i))
     fp.write("################# %d compounds #########"%(i)+'\n')
@@ -243,10 +244,14 @@ for i,smi_string in enumerate(filenames):
     num,frag = main(molecules,smi_string)
     #print(i,energyNum[smi_string],num)
     real_num = energyNum[smi_string] 
+
+
+    # mismatch_num
+    mismatch_num = 0
     if num > real_num:
         # some items are repeated
         # mismatched ones can be ignored
-        print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
+        #10297   496   159    29     4     1print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
         fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
         for line in frag:
             if line in molecules:
@@ -258,8 +263,17 @@ for i,smi_string in enumerate(filenames):
         for line in frag:
             if line in molecules:
                 fp.write(molecules[line]["ID"]+'\n')
+                mismatch_num += 1
             else:
                 fp.write(line + " is not in data"+'\n')
+
+        # count the mismatch number
+        #print(num,mismatch_num)
+        count_mismatch[num - mismatch_num] += 1
+        if num - mismatch_num == 4:
+            print(smi_string)
+            print(frag)
+            #break
         
     total += num
     count[num] += 1
@@ -270,6 +284,8 @@ for i,smi_string in enumerate(filenames):
 fp.close()
 fp1.close()
 count = count.astype(int)
+count_mismatch = count_mismatch.astype(int)
 print("freq",freq)
 print("count",count)
 print("total",total)
+print("mismatch number is ",count_mismatch)
