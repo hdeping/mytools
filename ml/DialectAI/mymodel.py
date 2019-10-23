@@ -4,52 +4,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence,pad_packed_sequence
-#from warpctc_pytorch import CTCLoss
-#from getPhonemes2 import dealMlf
+from warpctc_pytorch import CTCLoss
+from getPhonemes2 import dealMlf
 import numpy as np
 
 
-from resnet import resnet18
-
-class pre_model(nn.Module):
-    def __init__(self,hidden_dim=512):
-        super(pre_model, self).__init__()
-        self.hidden_dim = hidden_dim
-        self.conv = resnet18()
-        self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer2 = nn.Sequential()
-        self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-    def forward(self,x,frames,target):
-        batch_size, fea_frames, fea_dim = x.size()
-        # squeeze frames:  [batch_size,1] --> [batch_size]
-        frames = frames.squeeze()
-        # get packed sequence
-        sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
-        # new input 
-        x = x[sorted_indeces]
-        # save the original x
-        x_origin = x
-
-        # conv output
-        # new target
-        target = target[sorted_indeces]
-
-        x = x.unsqueeze(1)
-        x = self.conv(x)
-
-        # squeeze
-        # B,F,T -> B,T,F
-        x = x.squeeze()
-        x = x.transpose(1,2)
-
-        sorted_frames_origin  = sorted_frames
-        sorted_frames         = sorted_frames / 4
-
-        new_indeces,older_indeces = torch.sort(sorted_indeces)
-
-        #print("out hidden shape",out_hidden.shape)
-        return x_origin,x,target,older_indeces,sorted_frames_origin,sorted_frames
+#from resnet import resnet18
+from vgg import vgg13,vgg16,vgg19
 
 
 class LanNet(nn.Module):
@@ -60,20 +21,18 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
         # phonemeSeq  dictionary
+        self.phonemes_dict = dealMlf("../labels/all.mlf")
 
-        self.layer_gru = nn.Sequential()
-        self.layer_gru.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer_gru_origin = nn.Sequential()
-        self.layer_gru_origin.add_module('gru_origin', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.conv  = vgg13()
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
-        self.layer1.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
-
+        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
-        self.layer2.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
-
+        self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        #self.layer3 = nn.Sequential()
+        #self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        #self.layer4 = nn.Sequential()
+        #self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
     def getBiHidden(self,layer,src,frames):
         # pack the sequence
         src = pack_padded_sequence(src,frames,batch_first=True)
@@ -85,59 +44,91 @@ class LanNet(nn.Module):
         out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         return out_hidden
 
-    # two sorted frames
 
-    # origin V.S. dealed after resnet
-    # layer_gru_origin      V.S. layer_gru
-    # x_origin              V.S. x
-    # sorted_frames_origin  V.S. sorted_frames
-    # fractional: mixing proportion of hidden_origin and hidden vector
-    # fractional \in (0,1)
-    def forward(self, x_origin,x, sorted_frames_origin,sorted_frames,target,fractional):
+    # get phoneme sequence
+    def phonemeSeq(self,name_list):
+        labels_sizes = []
+        extension = '.fb'
+        # the first sample
+        name = name_list[0] + extension
+        labels = self.phonemes_dict[name]
+        labels_sizes.append(len(labels))
+    
+        # the other ones
+        for name in name_list[1:]:
+            name = name + extension
+            arr  = self.phonemes_dict[name]
+            labels = np.concatenate((labels,arr))
+            labels_sizes.append(len(arr))
+    
+        #labels_sizes = np.array(labels_sizes)
+        return labels,labels_sizes
 
-        batch_size, time_frame ,hidden_dim = x.size()
-        # gru output
-        # layer gru
-        out_hidden = self.getBiHidden(self.layer_gru,x,sorted_frames)
-        # layer gru fb
-        out_hidden_origin = self.getBiHidden(self.layer_gru_origin,x_origin,sorted_frames_origin)
+    def forward(self, src, frames,name_list):
+        #print(src.shape)
+        batch_size, fea_frames, fea_dim = src.size()
+        # squeeze frames:  [batch_size,1] --> [batch_size]
+        frames = frames.squeeze()
+        # get packed sequence
+        sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
 
-        # get a vector with fixed size (hidden_dim)
-        sorted_frames = sorted_frames.view(-1,1)
-        sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))
-        sorted_frames = sorted_frames.type(torch.cuda.FloatTensor)
+        # new input 
+        src = src[sorted_indeces]
+        # new name_list
+        #print(sorted_indeces)
+        #print("name list length",len(name_list))
+        name_list = name_list[sorted_indeces]
 
-        out_hidden = out_hidden.sum(dim=1)/sorted_frames
+        #src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
+        # new target
+        #target = target[sorted_indeces]
+        #print(sorted_frames)
+        #print(name_list)
 
-        # get a vector with fixed size (hidden_dim) : fb
-        sorted_frames_origin = sorted_frames_origin.view(-1,1)
-        sorted_frames_origin = sorted_frames_origin.expand(batch_size,out_hidden_origin.size(2))
-        sorted_frames_origin = sorted_frames_origin.type(torch.cuda.FloatTensor)
+        # conv output
 
-        out_hidden_origin = out_hidden_origin.sum(dim=1)/sorted_frames_origin
+        src = src.unsqueeze(1)
+        src = self.conv(src)
+
+        # squeeze
+        # B,F,T -> B,T,F
+        src = src.squeeze()
+        src = src.transpose(1,2)
+        #src = src.transpose(0,1)
+
+        print(src.shape)
+
+        # get gru output
+        # layer 1
+        #sorted_frames = sorted_frames / 4
+        sorted_frames = sorted_frames - 5
+        out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
+        # layer2
+        out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
+        ## layer3
+        #out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
+
+        # residual part
+        out_hidden = out_hidden + out_hidden_new
 
 
+        # transpose
+        out_hidden = out_hidden.transpose(0,1)
+        #print(out_hidden.shape)
+        # get labels and labels_sizes
+        labels, labels_sizes = self.phonemeSeq(name_list)
+        # tensor to torch (cuda))
+        #labels       = torch.cuda.IntTensor(labels)
+        #labels_sizes = torch.cuda.IntTensor(labels_sizes)
+        labels       = torch.IntTensor(labels)
+        labels_sizes = torch.IntTensor(labels_sizes)
 
-        # mixing out_hidden_origin and out_hidden with a proportion fractional
-        x = out_hidden_origin*(1.0 - fractional) + out_hidden*fractional
+        # CTC 
+        ctc_loss = CTCLoss()
+        frames = sorted_frames.cpu().type(torch.IntTensor)
+        probs = out_hidden.cpu().type(torch.FloatTensor)
+        loss = ctc_loss(probs, labels, frames, labels_sizes)
 
-        # target should be ordered
-        out_bn = self.layer1(x)
-        out_target = self.layer2(out_bn)
-        # softmax
-        predict_target = F.softmax(out_target, dim=1)
-
-        # 计算loss
-        tar_select_new = torch.gather(predict_target, 1, target)
-        ce_loss = -torch.log(tar_select_new) 
-        ce_loss = ce_loss.sum() / batch_size
-
-        # 计算acc
-        (data, predict) = predict_target.max(dim=1)
-        predict = predict.contiguous().view(-1,1)
-        correct = predict.eq(target).float()       
-        num_samples = predict.size(0)
-        sum_acc = correct.sum().item()
-        acc = sum_acc/num_samples
-
-        return acc, ce_loss
+        loss = loss.cuda()
+        print(loss)
+        return loss/batch_size
