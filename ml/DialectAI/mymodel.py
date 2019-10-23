@@ -28,23 +28,22 @@ class baseLinear(nn.Module):
         self.fc = nn.Linear(input_chanel,output_chanel)
     def forward(self,x):
         x = self.fc(x)
-        x = F.relu(x)
+        x = F.tanh(x)
         return x
 
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48,hidden_dim=1024):
+    def __init__(self, input_dim=48):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
-        self.hidden_dim = hidden_dim
         
         self.layer = nn.Sequential()
-        self.layer.add_module('fc1', baseLinear(self.input_dim,self.hidden_dim))
-        self.layer.add_module('fc2', baseLinear(self.hidden_dim,self.hidden_dim))
-        self.layer.add_module('fc3', baseLinear(self.hidden_dim,40))
-        self.layer.add_module('fc4', baseLinear(40,self.hidden_dim))
-        self.layer.add_module('fc5', baseLinear(self.hidden_dim,self.hidden_dim))
-        self.layer.add_module('fc6', baseLinear(self.hidden_dim,self.input_dim))
+        self.layer.add_module('fc1', baseLinear(self.input_dim,1024))
+        self.layer.add_module('fc2', baseLinear(1024,1024))
+        self.layer.add_module('fc3', baseLinear(1024,40))
+        self.layer.add_module('fc4', baseLinear(40,1024))
+        self.layer.add_module('fc5', baseLinear(1024,1024))
+        self.layer.add_module('fc6', baseLinear(1024,self.input_dim))
 
     def forward(self, x):
         batch_size, fea_frames, fea_dim = x.size()

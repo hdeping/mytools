@@ -52,9 +52,8 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 data_dimension = 320 # 400 point per frame
 dimension = data_dimension
-hidden_dim = 1280
 language_nums = 10 # 9!
-learning_rate = 0.1
+learning_rate = 0.01
 batch_size = 32
 chunk_num = 10
 #train_iteration = 10
@@ -79,13 +78,13 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension,hidden_dim=hidden_dim)
+train_module = LanNet(input_dim=dimension)
 #train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models/model0.model"))
+train_module.load_state_dict(torch.load("models/model0.model"))
 # 2 gpus are used
 device = torch.device("cuda:0")
 #if torch.cuda.device_count() > 1:
@@ -214,7 +213,7 @@ def train(epoch):
     torch.save(train_module.state_dict(), modelfile)
     epoch_toc = time.time()
     epoch_time = epoch_toc-epoch_tic
-    logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
+    logging.info('Epoch:%d, train-acc:%.6f, cost time :%.6fs', epoch, train_loss/sum_batch_size, epoch_time)
 
 def test(epoch):
 ##  dev
@@ -269,10 +268,10 @@ def test(epoch):
 
 # random seed
 torch.manual_seed(time.time())
-for epoch in range(1,train_iteration):
+for epoch in range(0,train_iteration):
     # get lr
     #getLr(epoch)
     # train
     train(epoch)
-    #test(epoch)
     test(epoch)
+    #test(epoch)
