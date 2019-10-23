@@ -73,7 +73,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models/model11.model"))
+train_module.load_state_dict(torch.load("models/model3.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -84,21 +84,18 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-# to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
-# torch.backends.cudnn.benchmark=True
-#torch.backends.cudnn.enabled = False
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.01
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 12:
-        learning_rate = 0.003
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 4:
+    #    learning_rate = 0.05
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 8:
+    #    learning_rate = 0.01
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 12:
+    #    learning_rate = 0.003
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
