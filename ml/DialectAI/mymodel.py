@@ -38,12 +38,22 @@ class LanNet(nn.Module):
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer2 = nn.Sequential()
-        #self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer3 = nn.Sequential()
-        #self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer2 = nn.Sequential()
+        self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer3 = nn.Sequential()
+        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         #self.layer4 = nn.Sequential()
         #self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+    def getBiHidden(self,layer,src,frames):
+        # pack the sequence
+        src = pack_padded_sequence(src,frames,batch_first=True)
+        # get the gru output
+        out_hidden, hidd = layer(src)
+        # unpack the sequence
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add the forward-backward value
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        return out_hidden
 
 
     # get phoneme sequence
@@ -72,6 +82,7 @@ class LanNet(nn.Module):
         frames = frames.squeeze()
         # get packed sequence
         sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
+
         # new input 
         src = src[sorted_indeces]
         # new name_list
@@ -79,7 +90,7 @@ class LanNet(nn.Module):
         #print("name list length",len(name_list))
         name_list = name_list[sorted_indeces]
 
-        src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
+        #src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
         #target = target[sorted_indeces]
         #print(sorted_frames)
@@ -87,30 +98,15 @@ class LanNet(nn.Module):
 
         ctc_loss = CTCLoss()
         # get gru output
-        # layer1
-        out_hidden, hidd = self.layer1(src)
-        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        # add
-        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        ## layer2
-        #out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
-        #out_hidden, hidd = self.layer2(out_hidden)
-        #out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        ## add
-        #out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        ## layer3
-        #out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
-        #out_hidden, hidd = self.layer3(out_hidden)
-        #out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        ## add
-        #out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        ## layer4
-        #out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
-        #out_hidden, hidd = self.layer4(out_hidden)
-        #out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        ## add
-        #out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        # layer 1
+        out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
+        # layer2
+        out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
+        # layer3
+        out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
 
+        # residual part
+        out_hidden = out_hidden + out_hidden_new
 
 
         # transpose
@@ -123,12 +119,7 @@ class LanNet(nn.Module):
         #labels_sizes = torch.cuda.IntTensor(labels_sizes)
         labels       = torch.IntTensor(labels)
         labels_sizes = torch.IntTensor(labels_sizes)
-        #print(out_hidden.shape,labels.shape,sorted_frames.shape,labels_sizes.shape)
-        #print(out_hidden.shape,labels.shape)
-        #print(sorted_frames,labels_sizes)
-        #print(labels.shape,labels_sizes.sum())
-        #print(labels[:30])
-        #print(labels_sizes.sum())
+
         frames = sorted_frames.cpu().type(torch.IntTensor)
         probs = out_hidden.cpu().type(torch.FloatTensor)
         loss = ctc_loss(probs, labels, frames, labels_sizes)
