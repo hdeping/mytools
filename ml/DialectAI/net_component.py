@@ -13,10 +13,10 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False,dropout=0.5))
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('linear', nn.Linear(2*self.hidden_dim, self.bn_dim))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
