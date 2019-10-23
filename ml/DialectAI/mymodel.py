@@ -17,9 +17,6 @@ class LanNet(nn.Module):
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
-        self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
         self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
@@ -32,14 +29,6 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        # conv layer 
-        # transpose
-        src = src.transpose(1,2)
-        src = F.relu(self.conv1(src))
-        src = F.relu(self.conv2(src))
-
-        # transpose
-        src = src.transpose(1,2)
         # get gru output
         out_hidden, hidd = self.layer1(src)
         # summation of the two hidden states in the same node
@@ -51,7 +40,7 @@ class LanNet(nn.Module):
         out_hidden = out_hidden*mask
         out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        out_bn = self.layer2(out_hidden)
+        out_bn = F.relu(self.layer2(out_hidden))
         out_target = self.layer3(out_bn)
 
 
@@ -69,12 +58,10 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        #return acc, ce_loss,prediction
         return acc, ce_loss
