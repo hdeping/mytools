@@ -35,10 +35,11 @@ class LanNet(nn.Module):
 
         # get gru output
         out_hidden, hidd = self.layer1(src)
-        out_hidden_new, hidd = self.layer_a(out_hidden)
-        out_hidden_new, hidd = self.layer_b(out_hidden_new)
-        # res
-        out_hidden = out_hidden + out_hidden_new
+        for i in range(2):
+            out_hidden_new, hidd = self.layer_a(out_hidden)
+            out_hidden_new, hidd = self.layer_b(out_hidden_new)
+            # res
+            out_hidden = out_hidden + out_hidden_new
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
