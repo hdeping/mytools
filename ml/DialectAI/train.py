@@ -44,17 +44,19 @@ dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 toneLengthD = 6
-dimension = 2*toneLengthD + 1# 40 before
-data_dimension = 320
-language_nums = 4 # 9!
+pitch_dim  = 2*toneLengthD + 1# 40 before
+fb_dim     = 40 # 40 + 13
+dimension  = pitch_dim + fb_dim
+language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 16
+train_iteration = 12
 display_fre = 50
 half = 4
-# data augmentation
+# mixing factor
+alpha = 0.5
 
 # save the models
 import sys
@@ -74,7 +76,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=fb_dim,pitch_dim=pitch_dim, hidden_dim=128, bn_dim=30, output_dim=language_nums,alpha=alpha)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
@@ -98,9 +100,6 @@ for epoch in range(0,train_iteration):
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     if epoch == 8:
         learning_rate = 0.02
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 12:
-        learning_rate = 0.01
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
@@ -142,7 +141,7 @@ for epoch in range(0,train_iteration):
             batch_mask       = batch_mask.cuda()
             batch_target     = batch_target.cuda()
 
-        acc, loss,pre = train_module(batch_train_data, batch_mask, batch_target)
+        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
         # loss = loss.sum()
         backward_loss = loss
@@ -219,7 +218,7 @@ for epoch in range(0,train_iteration):
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss,pre = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
         
         loss = loss.sum()/step_batch_size
 
