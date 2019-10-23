@@ -1,62 +1,4 @@
-# -*- coding:utf-8 -*-
-
-import torch
 import torch.nn as nn
-import torch.nn.functional as F
-
-class baseConv1d(nn.Module):
-    def __init__(self,input_chanel,output_chanel,kernel_size,stride,padding):
-        super(baseConv1d,self).__init__()
-        # architeture of the base conv1d
-        self.conv = nn.Conv1d(input_chanel,output_chanel,kernel_size=kernel_size,stride=stride,padding=padding)
-        self.bn   = nn.BatchNorm1d(output_chanel)
-    def forward(self,x):
-        # conv 
-        #print(x.size())
-        x = self.conv(x)
-        # batchnorm 
-        x = self.bn(x)
-        # 1d avg pool 
-        x = F.max_pool1d(x,kernel_size=2)
-        # relu output
-        x = F.relu(x)
-        return x
-class baseLinear(nn.Module):
-    def __init__(self,input_chanel,output_chanel,relu=True):
-        super(baseLinear,self).__init__()
-
-        self.fc = nn.Linear(input_chanel,output_chanel)
-        self.relu = relu
-    def forward(self,x):
-        x = self.fc(x)
-        if self.relu :
-            x = F.relu(x)
-        else:
-            x = F.tanh(x)
-        return x
-
-class LanNet(nn.Module):
-    def __init__(self, input_dim=48):
-        super(LanNet, self).__init__()
-        self.input_dim = input_dim
-        
-        self.layer = nn.Sequential()
-        self.layer.add_module('fc1', baseLinear(self.input_dim,1024))
-        self.layer.add_module('fc2', baseLinear(1024,1024))
-        self.layer.add_module('fc3', baseLinear(1024,40))
-        self.layer.add_module('fc4', baseLinear(40,1024))
-        self.layer.add_module('fc5', baseLinear(1024,1024))
-        self.layer.add_module('fc6', baseLinear(1024,self.input_dim,relu=False))
-
-    def forward(self, x):
-        batch_size, fea_frames, fea_dim = x.size()
-        #print(x.size)
-        # reshape the input
-        x = x.contiguous().view(batch_size*fea_frames,-1)
-        out_target = self.layer(x)
-
-        return out_target
-
 class conv_VAE(nn.Module):
     def __init__(self,intermediate_size,hidden_size):
         super(conv_VAE, self).__init__()
@@ -81,7 +23,7 @@ class conv_VAE(nn.Module):
         self.deconv1 = nn.ConvTranspose1d(40, 40, kernel_size=3, stride=1, padding=1)
         self.deconv2 = nn.ConvTranspose1d(40, 20, kernel_size=3, stride=1, padding=1)
         self.deconv3 = nn.ConvTranspose1d(20, 10, kernel_size=2, stride=2, padding=0)
-        self.conv5 = nn.Conv2d(10, 1, kernel_size=3, stride=1, padding=1)
+        self.conv5 = nn.Conv1d(10, 1, kernel_size=3, stride=1, padding=1)
 
         self.relu = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
@@ -151,3 +93,4 @@ def train(epoch):
         optimizer.zero_grad()
         recon_batch, mu, logvar = model(data)
         loss = loss_function(recon_batch, data, mu, logvar)
+
