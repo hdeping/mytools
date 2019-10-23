@@ -3,12 +3,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from embed_regularize import embedded_dropout
-from locked_dropout import LockedDropout
-from weight_drop import WeightDrop
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10,wdropout=0.5):
+    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -17,11 +14,11 @@ class LanNet(nn.Module):
 
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
-        #self.rnns = nn.GRU(ninp if l == 0 else nhid, nhid if l != nlayers - 1 else ninp, 1, dropout=0) 
-        self.gru =  nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False)
-        #self.gru = WeightDrop(self.gru, ['weight_hh_l0'], dropout=0.5) 
+        self.hidden_node = self.hidden_dim // 2
+        self.layer0 = nn.Sequential()
+        self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', WeightDrop(self.gru, ['weight_hh_l0'], dropout=wdropout) )
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -36,7 +33,13 @@ class LanNet(nn.Module):
         batch_size, fea_frames, fea_dim = src.size()
 
         # get gru output
-        out_hidden, hidd = self.layer1(src)
+        # first part
+        out_hidden0, hidd = self.layer0(src)
+        # second part
+        out_hidden1, hidd = self.layer1(src)
+        # combine the two parts
+        out_hidden = torch.cat((out_hidden0,out_hidden1),dim=2)
+        #print(out_hidden.shape)
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
