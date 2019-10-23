@@ -1,4 +1,8 @@
 #coding=utf-8
+
+#2019-03-20 18:18:18
+#by xiaohengdao
+
 import numpy as np
 import json
 
@@ -6,42 +10,21 @@ from getsmiles import readJson
 from getsmiles import getSMILES
 
 # get molecules
-filename = "inchikey_parameters.json"
-bonds = readJson(filename)
+filename = "inchikey_bonds.json"
+#"inchikey_parameters_CarbonOxygen.json"
+#"inchikey_parameters_NoHydro.json"
+#"inchikey_parameters_total.json"
 
-# C=O
-carbonyl = []
-# C-OH
-hydroxyl = []
-def getHash(para):
-    number_bonds     = para['bonds']['number']
-    number_angles    = para['angles']['number']
-    number_dihedrals = para['dihedral']['number']
-    list = [number_bonds,number_angles,number_dihedrals]
+names = ["inchikey_parameters_CarbonOxygen.json",
+         "inchikey_parameters_NoHydro.json",
+         "inchikey_parameters_total.json"]
 
-    res = 0
-    for ii in list:
-        res = 10*res + ii
+bonds = readJson(names[1])
 
-    return res
+count = 0
+for mol in bonds:
+    count += 1
 
+print(count)
 
-envDicts = {}
-keys = ["200","210","220","222","233",
-        "310","320","321","322","333",
-        "420","430","433","533"]
-for key in keys:
-    envDicts[key[:2]] = 0
-
-for key in bonds:
-    para = bonds[key]
-    #para = json.dumps(para,indent = 4)
-    res =  getHash(para)
-    envDicts[str(res // 10)] += 1
-    #print(res)
-    #break
-        
-
-envDicts = json.dumps(envDicts,indent = 4)
-print(envDicts)
 
