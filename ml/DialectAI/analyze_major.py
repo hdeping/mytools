@@ -1,10 +1,9 @@
 import numpy as np
 
 data = np.loadtxt('result.txt')
-print(data)
-
+#print(data) 
 data = data.astype(int)
-data = np.reshape(data,(-1,12,2))
+data = np.reshape(data,(-1,6,2))
 num = 10 
 stati = np.zeros((num,num))
 stati = stati.astype(int)
@@ -23,7 +22,7 @@ for i in range(size):
         ii = data[i,j,1]
         vote[ii] += 1
     # append the vote result
-    print(vote)
+    #print(vote)
     majority.append(np.argmax(vote))
 
 for i in range(size):
@@ -37,9 +36,11 @@ for i in range(num):
     arr.append(stati[i,i])
 
 arr = np.array(arr)
-print(arr/500)
-
+print("stati")
 
 print(stati)
 
-print(sum(arr)/5000)
+print("precision")
+print(arr/500)
+print("acc")
+print(sum(arr)/2000)
