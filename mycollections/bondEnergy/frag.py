@@ -141,20 +141,22 @@ for i,smi_string in enumerate(filenames):
     #print(i,energyNum[smi_string],num)
     real_num = energyNum[smi_string] 
 
+    residue = idResidue[smi_string][0]
+    id  = molecules[residue]["ID"]
 
-    # mismatch_num
-    mismatch_num = 0
+
+    # match_num
+    match_num = 0
     if num > real_num:
         # some items are repeated
         # mismatched ones can be ignored
         #print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
         for line in frag:
             if line in molecules:
-                id  = molecules[line]["ID"]
                 fp.write(line +'\n')
                 #mol = molecules[line]["molecule"]
         num = real_num
-        mismatch_num = num
+        match_num = num
     else:
         # some smiles are displayed into diffrent formulas
         # which should be equivalent
@@ -163,6 +165,7 @@ for i,smi_string in enumerate(filenames):
         residues = idResidue[smi_string]
 
         ### match the exact samples
+        mismatch_frag = {}
         for line in frag:
             #print("line",line)
             if line in molecules:
@@ -170,40 +173,44 @@ for i,smi_string in enumerate(filenames):
                 #id = molecules[line]["ID"]
                 exactLine = line
                 if not a:
-                    print("nooooooo",line,molecules[line]['ID'],residues)
+                    #print("nooooooo",line,molecules[line]['ID'],residues)
                     break
                 #id = molecules[line]["ID"]
                 fp.write(line +'\n')
                 #print(line,residues)
                 residues.remove(line)
-                mismatch_num += 1
+                match_num += 1
 
-        #print(num,real_num,mismatch_num,len(residues))
+        #print(num,real_num,match_num,len(residues))
 
 
 
         #if there is only one residue in the residues
         if len(residues) == 1:
             fp.write(residues[0] + '\n')
-            mismatch_num = num 
+            match_num = num 
 
     # count the mismatch number
-    #print(num,mismatch_num)
-    if num - mismatch_num > 0:
+    #print(num,match_num)
+    if num - match_num > 0:
         mol = molecules[exactLine]["molecule"]
         count_mismatch_bond[num] += 1
         fp1.write(mol + '\n')
         # print the fingerprints of the mismatched residues
-        getFingers(residues)
+        result,values = getFingers(residues)
+        if result:
+            print(id)
+            print(values)
+            
 
-    count_mismatch[num - mismatch_num] += 1
-    if num - mismatch_num == 1:
+    count_mismatch[num - match_num] += 1
+    if num - match_num == 1:
         id = molecules[exactLine]["ID"]
         residues = idResidue[id]
-        print(num,mismatch_num,frag,residues)
+        print(num,match_num,frag,residues)
         #break
         
-    #if num - mismatch_num == 4:
+    #if num - match_num == 4:
     #    print(smi_string)
     #    print(frag)
     #    #break

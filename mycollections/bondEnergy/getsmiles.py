@@ -54,8 +54,9 @@ def getFingers(strings):
         values.append(tanimoto_value)
 
     # print the tanimoto values
-    if IsRepeat(values):
-        print("repeating",values)
+    result =  IsRepeat(values)
+
+    return result,values
 
 def getSMILES(filename):
     fp = open(filename,'r')
@@ -150,5 +151,6 @@ def getBondInfo(mol):
         #    continue
         ChainBond.append(bond.GetIdx())
     return MolBond,ChainBond
+
 #strings=  ['CCNNN',"CCC1CCCCC1","N=CCC1(=O)CCCC1"]
 #getFingers(strings)
