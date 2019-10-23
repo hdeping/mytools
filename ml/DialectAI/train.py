@@ -45,7 +45,7 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10 # 9!
-learning_rate = 0.1
+learning_rate = 1e-3
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
@@ -69,7 +69,7 @@ logging.info('finish reading all train data')
 # 优化器，SGD更新梯度
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
-optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+optimizer = torch.optim.RMSprop(train_module.parameters(), lr=learning_rate, momentum=0.5)
 
 # initialize the model
 #train_module.load_state_dict(torch.load("models/model9.model"))
@@ -86,12 +86,12 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.02
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 4:
+    #    learning_rate = 0.05
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.5)
+    #if epoch == 8:
+    #    learning_rate = 0.02
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.5)
 ##  train
     train_dataset.reset()
     train_module.train()
