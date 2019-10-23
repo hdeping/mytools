@@ -29,7 +29,7 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from testmodel import LanNet
 
@@ -37,7 +37,6 @@ from testmodel import LanNet
 # data list
 # train
 dev_list   = "label_dev_list_fb.txt"
-#dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -99,7 +98,7 @@ def test():
     
     result_target = []
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        print("step is ",step)
+        #print("step is ",step)
         tic = time.time()
     
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
@@ -149,6 +148,22 @@ def test():
     return result_target
 # output the result
 import numpy as np
-train_module.load_state_dict(torch.load("models/model1.model"))
-print("dev")
-result_target = test()
+result = []
+for i in range(5):
+    print("model ",i)
+    print("loading model9-%d.model"%(i))
+    train_module.load_state_dict(torch.load("models0/model9-%d.model"%(i)))
+    result_target = test()
+    result.append(result_target)
+
+# deal with the output
+result = np.array(result)
+result = np.transpose(result,(1,0,2))
+print(result.shape)
+size = len(result)
+#new = np.zeros((5000,2*size))
+#new[:,0] = result[:,0,0]
+#new[:,1:] = result[:,:,1]
+result = np.reshape(result,(size,-1))
+print(result.shape)
+np.savetxt("result.txt",result,fmt='%d')
