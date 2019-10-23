@@ -28,6 +28,7 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
+import torch.nn as nn
 
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
@@ -67,20 +68,26 @@ train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
-# 优化器，SGD更新梯度
+# 
+# models
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
+# optimization 
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
 #train_module.load_state_dict(torch.load("models/model11.model"))
-#device = torch.device("cuda:2")
+device = torch.device("cuda:0")
+if torch.cuda.device_count() > 1:
+    print("2 GPUs are available")
+    train_module = nn.DataParallel(train_module,device_ids=[0,1])
+    
 # 将模型放入GPU中
 if use_cuda:
     # torch 0.4.0
-    #train_module = train_module.to(device)
+    train_module = train_module.to(device)
     # torch 0.3.0
-    train_module = train_module.cuda()
+    #train_module = train_module.cuda()
 
 # regularization factor
 factor = 0.0005
@@ -132,13 +139,13 @@ for epoch in range(0,train_iteration):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            #batch_train_data = batch_train_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
+            batch_train_data = batch_train_data.to(device)
+            batch_mask       = batch_mask.to(device)
+            batch_target     = batch_target.to(device)
             # torch 0.3.0
-            batch_train_data = batch_train_data.cuda()
-            batch_mask       = batch_mask.cuda()
-            batch_target     = batch_target.cuda()
+            #batch_train_data = batch_train_data.cuda()
+            #batch_mask       = batch_mask.cuda()
+            #batch_target     = batch_target.cuda()
 
         acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
@@ -207,13 +214,13 @@ for epoch in range(0,train_iteration):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            #batch_dev_data   = batch_dev_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
+            batch_dev_data   = batch_dev_data.to(device)
+            batch_mask       = batch_mask.to(device)
+            batch_target     = batch_target.to(device)
             # torch 0.3.0
-            batch_dev_data   = batch_dev_data.cuda()
-            batch_mask       = batch_mask.cuda()
-            batch_target     = batch_target.cuda()
+            #batch_dev_data   = batch_dev_data.cuda()
+            #batch_mask       = batch_mask.cuda()
+            #batch_target     = batch_target.cuda()
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
