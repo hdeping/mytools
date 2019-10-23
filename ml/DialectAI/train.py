@@ -82,8 +82,7 @@ for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
         learning_rate /= 2.
-        #optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
@@ -96,7 +95,7 @@ for epoch in range(train_iteration):
     curr_batch_size = 0
     curr_batch_acc = 0
     for step, (batch_x, batch_y) in enumerate(train_dataset): 
-        #print("step is ",step)
+        print("step is ",step)
         tic = time.time()
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
         batch_frames = batch_y[:,1].contiguous().view(-1, 1)
