@@ -36,9 +36,9 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb_hardFour.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -47,7 +47,7 @@ toneLengthD = 6
 pitch_dim  = 2*toneLengthD + 1# 40 before
 fb_dim     = 40 # 40 + 13
 dimension  = pitch_dim + fb_dim
-language_nums = 10 # 9!
+language_nums = 2 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
@@ -63,6 +63,7 @@ import sys
 alpha = float(sys.argv[1])
 #model_dir = "models" + sys.argv[1]
 model_dir = "models"+str(alpha)
+print(model_dir)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
