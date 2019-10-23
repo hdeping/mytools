@@ -9,11 +9,11 @@ class baseConv1d(nn.Module):
         super(baseConv1d, self).__init__()
         self.input_dim=input_dim
         self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-        self.bn1   = nn.BatchNorm1d(self.input_dim)
+        #self.bn1   = nn.BatchNorm1d(self.input_dim)
     def forward(self,x):
         y = self.conv1(x)
-        y = self.bn1(y)
-        y = F.relu(x + y)
+        #x = self.bn1(x)
+        y = F.relu(x+y)
         return y
 
 
@@ -32,8 +32,6 @@ class LanNet(nn.Module):
 
         self.conv1 = baseConv1d(self.input_dim)
         self.conv2 = baseConv1d(self.input_dim)
-        self.conv3 = baseConv1d(self.input_dim)
-        self.conv4 = baseConv1d(self.input_dim)
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -52,8 +50,6 @@ class LanNet(nn.Module):
         src = src.transpose(1,2)
         src = self.conv1(src)
         src = self.conv2(src)
-        src = self.conv3(src)
-        src = self.conv4(src)
 
         # transpose
         src = src.transpose(1,2)
