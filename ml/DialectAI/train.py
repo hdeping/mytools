@@ -53,11 +53,11 @@ use_cuda = torch.cuda.is_available()
 data_dimension = 320 # 400 point per frame
 dimension = data_dimension
 language_nums = 10 # 9!
-learning_rate = 0.01
+learning_rate = 0.1
 batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 50
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
@@ -84,7 +84,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models/model0.model"))
+#train_module.load_state_dict(torch.load("models/model0.model"))
 # 2 gpus are used
 device = torch.device("cuda:0")
 #if torch.cuda.device_count() > 1:

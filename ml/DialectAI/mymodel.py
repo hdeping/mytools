@@ -28,7 +28,7 @@ class baseLinear(nn.Module):
         self.fc = nn.Linear(input_chanel,output_chanel)
     def forward(self,x):
         x = self.fc(x)
-        x = F.tanh(x)
+        x = F.sigmoid(x)
         return x
 
 
