@@ -36,9 +36,9 @@ from mymodel import LanNet,getModel
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_list_train.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_list_dev.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()

@@ -82,7 +82,8 @@ class baseLinear(nn.Module):
         self.fc = nn.Linear(input_chanel,output_chanel)
     def forward(self,x):
         x = self.fc(x)
-        x = F.relu(x)
+        #x = F.relu(x)
+        x = F.tanh(x)
         return x
 
 
