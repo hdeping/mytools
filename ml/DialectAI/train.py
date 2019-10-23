@@ -49,11 +49,11 @@ if not os.path.exists(model_dir):
 # 网络参数
 dimension = 40
 language_nums = 6
-learning_rate = 0.001
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 20
 display_fre = 50
 half = 4
 
@@ -64,11 +64,9 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=60, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
-#optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-#optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999))
-optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
@@ -78,12 +76,13 @@ if use_cuda:
     # torch 0.3.0
     train_module = train_module.cuda()
 
+# regularization factor
+factor = 0.0005
 for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
         learning_rate /= 2.
-        #optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
@@ -96,7 +95,7 @@ for epoch in range(train_iteration):
     curr_batch_size = 0
     curr_batch_acc = 0
     for step, (batch_x, batch_y) in enumerate(train_dataset): 
-        print("step is ",step)
+        #print("step is ",step)
         tic = time.time()
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
         batch_frames = batch_y[:,1].contiguous().view(-1, 1)
@@ -128,6 +127,15 @@ for epoch in range(train_iteration):
         # loss = loss.sum()
         backward_loss = loss
         optimizer.zero_grad()
+        # L1 regularization 
+        #l1_crit = torch.nn.L1Loss(size_average=False)
+        #l1_crit.cuda()
+        reg_loss = 0
+        for param in train_module.parameters():
+            #reg_loss += l1_crit(param)
+            reg_loss += param.norm(2)
+        backward_loss += factor * reg_loss
+                
         backward_loss.backward()
         optimizer.step()
 
