@@ -5,8 +5,39 @@ import copy
 import random
 
 import torch
+import numpy as np
 
 from readhtk import HTKfile
+
+def getSDC(feature_data):
+    # N-d-P-k  29-1-3-7
+    k = 7
+    d = 1
+    P = 3
+    #delta(t,i) = mfcc(t+3i+1) - mfcc(t+3i-1)
+    #delta(t,0) = mfcc(t+1) - mfcc(t-1)  t >= 1
+    #delta(t,6) = mfcc(t+19) - mfcc(t+17)  t <= t_max - 20
+    t_max = len(feature_data)
+    dim   = len(feature_data[0])
+    # initialize sdc
+    size = t_max - (k-1)*P - d - 1
+    sdc_data = np.zeros((size,k,dim))
+    # get sdc
+    for i in range(k):
+        start = 2+i*P
+        end   = t_max - 20 + start
+        sdc_data[:,i,:] = feature_data[start:end,:] - feature_data[start-2:end-2,:]
+
+    # reshape sdc
+    #print(sdc_data.shape)
+    sdc_data = np.reshape(sdc_data,(-1,k*dim))
+
+    return sdc_data
+#arr = np.random.randn(100,100)
+#out = getSDC(arr)
+#
+#print(arr.shape)
+#print(out.shape)
 
 
 class TorchDataSet(object):
@@ -39,8 +70,10 @@ class TorchDataSet(object):
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
             #print(feature_data.shape)
+            # from mfcc to sdc
+            feature_data = getSDC(feature_data)
             file_name = htk_file.get_file_name()
-            feature_frames = htk_file.get_frame_num()
+            feature_frames = htk_file.get_frame_num() - 20
 
             if feature_frames > max_frames:
                 max_frames = feature_frames
