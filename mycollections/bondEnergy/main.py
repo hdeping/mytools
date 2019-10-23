@@ -26,11 +26,21 @@ for key in dicts:
     count[value] += 1
 
 count = count.astype(int)
-# six repeats
+# repeats splitting
+# get six files
+filename = []
+for i in range(6):
+    name = 'name2_%d.txt'%(i+1)
+    filename.append(name)
+fp = []
+for i in range(6):
+    fp0 = open(filename[i],'w')
+    fp.append(fp0)
+
 for key in dicts:
     value = dicts[key]
-    if value == 6:
-        print(key)
+    # value: 1-6
+    fp[value-1].write(key+'\n')
 
 res = 0
 for i in range(10):
@@ -39,3 +49,6 @@ for i in range(10):
 print(sum(count))
 print(res)
 
+# close the file
+for i in range(6):
+    fp[i].close()
