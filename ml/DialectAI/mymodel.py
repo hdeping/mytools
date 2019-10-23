@@ -5,6 +5,19 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence,pad_packed_sequence
 
+class baseConv1d(nn.Module):
+    def __init__(self,input_dim=40,output_dim=40):
+        super(baseConv1d, self).__init__()
+        self.input_dim=input_dim
+        self.output_dim=output_dim
+        self.conv1 = nn.Conv2d(self.input_dim,self.output_dim,kernel_size=3,padding=1)
+    def forward(self,x):
+
+        y = self.conv1(x)
+        y = F.relu(y)
+
+        return y
+
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
@@ -15,6 +28,7 @@ class LanNet(nn.Module):
 
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.conv = baseConv1d(1,10)
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
@@ -39,6 +53,12 @@ class LanNet(nn.Module):
         #print(sorted_indeces.shape)
         # new input 
         src = src[sorted_indeces]
+        # conv out
+        # B,T,F --> B,1,T,F
+        src = src.unsqueeze(1)
+        src = self.conv(src)
+        src = src.sum(dim=1) / 10.0
+
         src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
         target = target[sorted_indeces]
@@ -81,8 +101,6 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        # new_indeces, indeces = torch.sort(sorted_indeces)
-        # prediction = predict[indeces]
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
