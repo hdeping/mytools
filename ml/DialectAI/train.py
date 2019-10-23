@@ -28,38 +28,28 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
-import numpy as np
 
 #from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
-from mymodel import pre_model
-
-# pre model
-model = pre_model()
-model_name = "models/model40-0.model"
-model.load_state_dict(torch.load(model_name))
-model = model.cuda()
-model.eval()
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
-
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
-#use_cuda = False
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
-batch_size = 64
+learning_rate = 0.1
+batch_size = 50
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
@@ -86,10 +76,9 @@ logging.info('finish reading all train data')
 # initialize the model
 #train_module.load_state_dict(torch.load("models/model9.model"))
 #device = torch.device("cuda:2")
-
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=64, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=60, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -104,34 +93,30 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 5:
-            learning_rate = 0.03
+        if epoch == 4:
+            learning_rate = 0.05
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 10:
-            learning_rate = 0.01
+        if epoch == 8:
+            learning_rate = 0.02
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 15:
-            learning_rate = 0.003
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #if epoch == 8:
-        #    learning_rate = 0.02
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()
         train_module.train()
         epoch_tic = time.time()
         train_loss = 0.
         train_acc = 0.
-        curr_batch_acc = 0
     
         sum_batch_size = 0
         curr_batch_size = 0
+        curr_batch_acc = 0
         tic = time.time()
         for step, (batch_x, batch_y) in enumerate(train_dataset): 
             #print("step is ",step)
             batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
             batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
     
+            #max_batch_frames = int(max(batch_frames).item())
+            #print(dir(batch_frames))
             max_batch_frames = int(max(batch_frames).item())
             #print(batch_x.data.shape)
             batch_train_data = batch_x[:, :max_batch_frames, :]
@@ -155,14 +140,7 @@ def train(count):
                 batch_frames       = batch_frames.cuda()
                 batch_target     = batch_target.cuda()
     
-            with torch.no_grad():
-                #out_hidden,batch_target,older_indeces = model(batch_train_data,batch_frames,batch_target)
-                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_train_data,batch_frames,batch_target)
-            #print("out hidden shape",out_hidden.shape)
-            #acc, loss = train_module(out_hidden, batch_target)
-
-            acc, loss = train_module(out_hidden, sorted_frames,batch_target)
-            
+            acc, loss = train_module(batch_train_data, batch_frames, batch_target)
             
             # loss = loss.sum()
             backward_loss = loss
@@ -183,17 +161,14 @@ def train(count):
     
     
             train_loss += loss.item()
-            sum_batch_size += 1
-            curr_batch_size += 1
-            # acc
             train_acc += acc
             curr_batch_acc += acc
-
+            sum_batch_size += 1
+            curr_batch_size += 1
             if step % display_fre == 0:
                 toc = time.time()
                 step_time = toc-tic
                 logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
-                #logging.info('Epoch:%d, Batch:%d,  loss:%.6f, cost time :%.6fs', epoch, step, loss.item(), step_time)
                 curr_batch_acc = 0.
                 curr_batch_size = 0
                 tic = toc
@@ -202,7 +177,6 @@ def train(count):
         
         epoch_toc = time.time()
         epoch_time = epoch_toc-epoch_tic
-        #logging.info('Epoch:%d, train-loss:%.6f, cost time :%.6fs', epoch, train_loss/sum_batch_size, epoch_time)
         logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
         modelfile = '%s/model%d-%d.model'%(model_dir,epoch,count)
         torch.save(train_module.state_dict(), modelfile)
@@ -242,10 +216,8 @@ def train(count):
                 batch_target     = batch_target.cuda()
                 
             with torch.no_grad():
-                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
-                acc, loss = train_module(out_hidden, sorted_frames,batch_target)
-                #out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
-                #acc, loss = train_module(out_hidden, batch_target)
+                #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+                acc, loss = train_module(batch_dev_data, batch_frames, batch_target)
             
             loss = loss.sum()/step_batch_size
     

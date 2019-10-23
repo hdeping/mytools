@@ -8,8 +8,6 @@ import torch
 
 from readhtk import HTKfile
 
-import numpy as np
-
 
 class TorchDataSet(object):
     def __init__(self, file_list, batch_size, chunk_num, dimension):
@@ -20,6 +18,7 @@ class TorchDataSet(object):
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
+        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
@@ -62,10 +61,6 @@ class TorchDataSet(object):
                 idx = 0
                 data = torch.zeros(self._batch_size, max_frames, self._dimension)
                 target = torch.zeros(self._batch_size, 2)
-                # name list
-                #names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
-                #names = np.repeat(names,self._batch_size)
-
                 for jj in range(chunk_size):
                     curr_data = batch_data[jj]
                     curr_tgt = target_frames[jj]
@@ -73,13 +68,10 @@ class TorchDataSet(object):
 
                     data[idx,:curr_frame,:] = curr_data[:,:]
                     target[idx,:] = curr_tgt[:]
-                    #names[idx] = name_list[jj]
-
                     idx += 1
 
                     if idx % self._batch_size == 0:
                         idx = 0
-                        #yield data, target, names
                         yield data, target
                 
                 max_frames = 0
@@ -96,25 +88,16 @@ class TorchDataSet(object):
             idx = 0
             data = torch.zeros(self._batch_size, max_frames, self._dimension)
             target = torch.zeros(self._batch_size, 2)
-            # name list
-            #names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
-            #names = np.repeat(names,self._batch_size)
-
             for jj in range(chunk_size):
                 curr_data = batch_data[jj]
                 curr_tgt = target_frames[jj]
                 curr_frame = curr_data.size(0)
 
                 data[idx,:curr_frame,:] = curr_data[:,:]
-                target[idx,:]           = curr_tgt[:]
-                #names[idx]              = name_list[jj]
-
+                target[idx,:] = curr_tgt[:]
                 idx += 1
 
                 if idx % self._batch_size == 0:
                     idx = 0
-                    #yield data, target, names
                     yield data, target
-
-                    #yield data, target, name_list[begin:end]
 
