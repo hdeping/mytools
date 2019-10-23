@@ -31,11 +31,13 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer_conv = nn.Sequential()
-        chanels = [1,5,10,20,40]
+        chanels = [1,4,16,64,256]
         #chanels = [1,2,4,8,16,32,40,64,80]
         self.layer_num = 4
         for i in range(self.layer_num):
             self.layer_conv.add_module('conv'+str(i),baseConv1d(chanels[i],chanels[i+1],3,2,1))
+        self.layer_fc = nn.Sequential()
+        self.layer_fc.add_module('linear',nn.Linear(256,self.input_dim))
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
@@ -55,10 +57,13 @@ class LanNet(nn.Module):
         x = x.contiguous().view(batch_size*fea_frames,1,-1)
         # conv layer
         x = self.layer_conv(x)
-        # reshape x
-        x = x.contiguous().view(batch_size,fea_frames,-1)
+        # linear layer
+        x = x.contiguous().view(batch_size*fea_frames,-1)
+        x = self.layer_fc(x)
 
         # RNN layer
+        # reshape x
+        x = x.contiguous().view(batch_size,fea_frames,-1)
         out_hidden, hidd = self.layer1(x)
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   

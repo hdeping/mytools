@@ -31,8 +31,8 @@ import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
-#from mymodel import LanNet
-from load_oldmodel import getModel
+from mymodel import LanNet
+#from load_oldmodel import getModel
 
 ## ======================================
 # data list
@@ -69,13 +69,13 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-#train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-train_module = getModel(dimension,language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+#train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models/model7.model"))
+#train_module.load_state_dict(torch.load("models/model7.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -92,9 +92,9 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     #print("epoch",epoch)
-    #if epoch == 4:
-    #    learning_rate = 0.05
-    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 4:
+        learning_rate = 0.01
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     #if epoch == 8:
     #    learning_rate = 0.01
     #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
