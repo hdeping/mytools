@@ -53,11 +53,6 @@ class LanNet(nn.Module):
         #print(sorted_indeces.shape)
         # new input 
         src = src[sorted_indeces]
-        # conv out
-        # B,T,F --> B,1,T,F
-        src = src.unsqueeze(1)
-        src = self.conv(src)
-        src = src.sum(dim=1) / 10.0
 
         src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
@@ -73,14 +68,19 @@ class LanNet(nn.Module):
         #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
         # output with new size (batch_size, hidden_dim)
         #out_hidden = out_hidden*mask
+        # conv out
+        # B,T,F --> B,1,T,F
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        out_hidden = out_hidden.unsqueeze(1)
+        out_hidden = self.conv(out_hidden)
+        out_hidden = out_hidden.sum(dim=1) / 10.0
+        #print(sorted_frames)
         # get a vector with fixed size length 
         sorted_frames = sorted_frames.view(-1,1)
         sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))
         sorted_frames = sorted_frames.type(torch.cuda.FloatTensor)
-        #print(sorted_frames)
         out_hidden = out_hidden.sum(dim=1)/sorted_frames
 
-        out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
         # linear parts
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
