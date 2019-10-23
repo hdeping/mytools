@@ -36,7 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -120,6 +120,8 @@ for epoch in range(0,train_iteration):
         for ii in range(step_batch_size):
             frames = int(batch_frames[ii].item())
             batch_mask[ii, :frames] = 1.
+            #batch_mask[ii, frames:] = - float('inf')
+            #batch_mask[ii, frames:] = - 15
 
         # 将数据放入GPU中
         if use_cuda:

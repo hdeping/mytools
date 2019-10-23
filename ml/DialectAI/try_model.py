@@ -1,12 +1,12 @@
-from mymodel import LanNet
+# -*- coding:utf-8 -*-
+
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-dimension = 40
-language_nums = 10
-
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-train_module.load_state_dict(torch.load("models/model9.model"))
-print(train_module)
-for key in train_module.state_dict():
-    print(key)
-
+inf=-float('inf')
+a = [[1,1,1,inf],[-1,2,1,inf],[3,3,3,inf]]
+a = torch.Tensor(a)
+print(a)
+b = F.softmax(a,dim=1)
+print(b)
