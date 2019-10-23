@@ -34,8 +34,8 @@ class TorchDataSet(object):
             splited_line = line.split() # what is splitted?
             #print(splited_line)
             htk_feature = splited_line[0]
-            #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
+            #print("ii = ",ii,target_label)
 
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
