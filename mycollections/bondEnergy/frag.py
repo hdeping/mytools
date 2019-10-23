@@ -104,7 +104,7 @@ def main(molecules,smi_string):
     obConversion.ReadString(mol, smi_string)
     NumAtomsNoH = mol.NumAtoms()
     NumOfBonds = mol.NumBonds()
-    print("atom numbers",NumAtomsNoH)
+    #print("atom numbers",NumAtomsNoH)
     MolSmi = pb.Molecule(mol).write("smi").replace('\t\n','')
     #mol.AddHydrogens()
 
@@ -189,18 +189,13 @@ def main(molecules,smi_string):
     #print("list 1")
     #print(ListOfFrag1)
     #print(ListOfFrag1,ListOfFrag2)
-    for line in ListOfFrag1:
-        if line in molecules:
-            print(molecules[line]["ID"])
-        else:
-            print(line,"is not in data")
     #print("list 2")
     #print(ListOfFrag2)
     #print("bonds")
     #print(atomId)
     #get_frag_tbl(MolSmi,label, ListOfFrag)
     # Output Gaussian input file
-    return len(atomId)
+    return len(atomId),ListOfFrag1
 def getSMILES(filename):
     fp = open(filename,'r')
     data = fp.read()
@@ -234,10 +229,19 @@ filenames = getSMILES(filename)
 total = 0
 freq = 0
 
+filename = "output.result"
+fp = open(filename,'w')
 for i,smi_string in enumerate(filenames):
     print("################# %d compounds #########"%(i))
-    print(smi_string)
-    num = main(molecules,smi_string)
+    fp.write("################# %d compounds #########"%(i)+'\n')
+    fp.write(smi_string + '\n')
+    num,frag = main(molecules,smi_string)
+    for line in frag:
+        if line in molecules:
+            fp.write(molecules[line]["ID"]+'\n')
+        else:
+            print()
+            fp.write(line + " is not in data"+'\n')
         
     total += num
     count[num] += 1
@@ -245,6 +249,7 @@ for i,smi_string in enumerate(filenames):
     if freq == 20000:
         break
 
+fp.close()
 count = count.astype(int)
 print("freq",freq)
 print("count",count)
