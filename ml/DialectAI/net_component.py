@@ -13,7 +13,7 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('rnn1', nn.RNN(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('rnn1', nn.RNN(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False,nonlinearity='relu'))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
