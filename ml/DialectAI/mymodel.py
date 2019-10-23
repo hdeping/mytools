@@ -54,17 +54,16 @@ class LanNet(nn.Module):
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
         ce_loss = -torch.log(tar_select_new) 
-        print(batch_size)
-        print(ce_loss)
-        #ce_loss = ce_loss.sum() / batch_size
+        #print(batch_size)
+        #print(ce_loss)
+        ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss,prediction
+        return acc, ce_loss
