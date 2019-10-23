@@ -3,8 +3,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-# import SRU module
-from sru.cuda_functional import SRU
 
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
@@ -14,17 +12,10 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
+        #self.layer0 = nn.Sequential()
+        #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('sru', 
-                SRU(self.input_dim, self.hidden_dim, 
-                    num_layers=2, 
-                    bidirectional=False,
-                    use_tanh=1,
-                    use_relu=0,
-                    use_selu=0,
-                    weight_norm=False,
-                    layer_norm = False,
-                    highway_bias = 0))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -38,19 +29,27 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
+        # get gru output
         out_hidden, hidd = self.layer1(src)
-        #print(out_hidden.data.shape)
-        out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        #print(out_hidden.data.shape)
+        # summation of the two hidden states in the same node
+        # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        #print(out_hidden.shape)
+        # get  masked outputs
+        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
+        # output with new size (batch_size, hidden_dim)
+        out_hidden = out_hidden*mask
+        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
+        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 
 
-        out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
-        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        out_target_mask = out_target * mask
-        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
-        predict_target = F.softmax(out_target_mask, dim=1)
+        #out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
+        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
+        #out_target_mask = out_target * mask
+        #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        predict_target = F.softmax(out_target, dim=1)
+        #print(predict_target.shape,target.shape)
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
