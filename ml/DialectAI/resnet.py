@@ -119,7 +119,7 @@ def resnet18(**kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = ResNet(BasicBlock, [1, 1, 1, 1], **kwargs)
+    model = ResNet(BasicBlock, [2, 1, 1, 1], **kwargs)
     #if pretrained:
     #    model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
     return model
