@@ -2,6 +2,7 @@
 
 
 import openbabel as ob
+import pybel 
 import numpy as np
 
 obConversion = ob.OBConversion()
@@ -11,14 +12,20 @@ mol = ob.OBMol()
 def readSMILES(smi_string):
     # read smiles
     obConversion.ReadString(mol, smi_string)
+
+
+    new = pybel.Molecule(mol)
+    print(new.calcfp())
+
+
     # get bonds
     MolBond = []
     ChainBond = []
     
     #for angle in ob.OBMolAngleIter(mol):    
     #    print(angle)
-    for angle in ob.OBMolTorsionIter(mol):    
-        print(angle)
+    #for angle in ob.OBMolTorsionIter(mol):    
+    #    print(angle)
     
     for bond in ob.OBMolBondIter(mol):    
         a = bond.GetBeginAtomIdx()
@@ -52,11 +59,11 @@ def getSMILES(filename):
 
     return res
 
-filename = "smiles.txt"
+#filename = "smiles.txt"
+filename = "03_sixRepeats.smi"
 filenames = getSMILES(filename)
 
 #print(filenames)
 for smi_string in filenames:
     readSMILES(smi_string)
-    break
-    
+    #break
