@@ -83,7 +83,7 @@ class TorchDataSet(object):
         for ii in range(data_size):
             line = self._dataset[ii].strip() # what is this ? strip?
             splited_line = line.split() # what is splitted?
-            print(splited_line)
+            #print(splited_line)
             htk_feature = splited_line[0]
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
