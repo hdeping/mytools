@@ -49,7 +49,7 @@ learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 30
 display_fre = 50
 half = 4
 # data augmentation
@@ -98,6 +98,12 @@ def train(count):
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 8:
             learning_rate = 0.02
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 14:
+            learning_rate = 0.01
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 20:
+            learning_rate = 0.001
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()
