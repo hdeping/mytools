@@ -21,7 +21,6 @@ import os
 import time
 import codecs
 import logging
-import sys
 logger = logging.getLogger(__name__)
 logging.basicConfig(level = logging.DEBUG,
                     format = '%(asctime)s[%(levelname)s] ---- %(message)s',
@@ -51,9 +50,7 @@ if not os.path.exists(model_dir):
 dimension = 40
 language_nums = 6
 learning_rate = 0.1
-print("batch_size",sys.argv[1])
-batch_size = int(sys.argv[1])
-#batch_size = 300
+batch_size = 1024
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 20
