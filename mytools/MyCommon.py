@@ -228,7 +228,18 @@ class MyCommon():
         indeces = np.flip(indeces)
         keys    = keys[indeces]
         values  = values[indeces]
+        result  = self.keyValue2Dicts(keys,values)
+        
+        return result
 
+        
+    def keyValue2Dicts(self,keys,values):
+        """
+        input:
+            keys and values with numpy array type
+        return:
+            dicts
+        """
         result = {}
         for key,value in zip(keys,values):
             result[key] = value
