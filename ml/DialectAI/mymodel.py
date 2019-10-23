@@ -44,10 +44,10 @@ class LanNet(nn.Module):
         self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer2 = nn.Sequential()
         self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer3 = nn.Sequential()
-        #self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer4 = nn.Sequential()
-        #self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer3 = nn.Sequential()
+        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer4 = nn.Sequential()
+        self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
     def getBiHidden(self,layer,src,frames):
         # pack the sequence
         src = pack_padded_sequence(src,frames,batch_first=True)
@@ -114,17 +114,23 @@ class LanNet(nn.Module):
         print("src shape",src.shape)
 
         # get gru output
-        # layer 1
         sorted_frames = sorted_frames / 4
+
+        # layer 1
         out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
-        # layer2
+        # layer 2
         out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
-        ## layer3
-        #out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
 
         # residual part
         out_hidden = out_hidden + out_hidden_new
 
+        # layer 3
+        out_hidden = self.getBiHidden(self.layer3,out_hidden,sorted_frames)
+        # layer 4
+        out_hidden_new = self.getBiHidden(self.layer4,out_hidden,sorted_frames)
+
+        # residual part
+        out_hidden = out_hidden + out_hidden_new
 
         # transpose
         out_hidden = out_hidden.transpose(0,1)
