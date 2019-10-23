@@ -58,7 +58,7 @@ class LanNet(nn.Module):
         # phonemeSeq  dictionary
 
         self.layer_gru = nn.Sequential()
-        self.layer_gru.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer_gru.add_module('gru', nn.GRU(4*self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
