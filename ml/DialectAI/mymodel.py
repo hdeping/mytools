@@ -10,26 +10,8 @@ import numpy as np
 
 
 from resnet import resnet18
+from tcn import TemporalConvNet
 
-class baseConv2d(nn.Module):
-    def __init__(self,input_dim=128,output_dim=40):
-        super(baseConv1d, self).__init__()
-        self.input_dim=input_dim
-        self.output_dim=output_dim
-        self.conv1 = nn.Conv2d(1,16,kernel_size=3,stride=2,padding=1)
-        self.bn1   = nn.BatchNorm2d(16)
-        self.conv2 = nn.Conv2d(16,32,kernel_size=3,stride=(1,2),padding=1)
-        self.bn2   = nn.BatchNorm2d(32)
-        self.conv3 = nn.Conv2d(32,32,kernel_size=3,stride=(1,2),padding=1)
-    def forward(self,x):
-
-        y = self.conv1(x)
-        y = F.relu(y)
-        y = self.conv2(x)
-        y = y + x
-        y = F.relu(y)
-
-        return y
 
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
@@ -41,7 +23,8 @@ class LanNet(nn.Module):
         # phonemeSeq  dictionary
         self.phonemes_dict = dealMlf("../labels/train.mlf")
 
-        self.conv  = resnet18()
+        #self.conv  = resnet18()
+        self.conv = TemporalConvNet(self.hidden_dim,[self.hidden_dim,160,256,320,512])
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
@@ -121,27 +104,22 @@ class LanNet(nn.Module):
 
         # conv output
 
-        print(out_hidden.shape)
+        #print(out_hidden.shape)
 
 
-        out_hidden = out_hidden.unsqueeze(1)
-        print(out_hidden.shape)
+        #out_hidden = out_hidden.unsqueeze(1)
 
-        out_hidden = self.conv(out_hidden)
-        print(out_hidden.shape)
-
-        # squeeze
-        # B,F,T -> B,T,F
-        # avg pooling 
-        out_hidden = out_hidden.sum(dim=3) / 2
+        # out_hidden : B,T,F
         out_hidden = out_hidden.transpose(1,2)
-        #src = src.transpose(0,1)
-
+        out_hidden = self.conv(out_hidden)
+        #print(out_hidden.shape)
 
         # transpose
+        # out_hidden : B,F,T -> B,T,F
+        out_hidden = out_hidden.transpose(1,2)
+        # out_hidden : B,T,F -> T,B,F
         out_hidden = out_hidden.transpose(0,1)
 
-        print(out_hidden.shape)
         #print(out_hidden.shape)
         # get labels and labels_sizes
         labels, labels_sizes = self.phonemeSeq(name_list)
