@@ -44,7 +44,7 @@ dev_list   = "../labels/label_dev_list_fb_seven.txt"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-language_nums = 7 # 9!
+language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
@@ -148,7 +148,7 @@ for epoch in range(0,train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            reg_loss += param.norm(2)
+            reg_loss += param.norm(2)**2
         backward_loss += factor * reg_loss
                 
         # get the gradients
