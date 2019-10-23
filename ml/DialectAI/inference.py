@@ -29,24 +29,22 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb_hardFour.txt"
-# dev
-dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 toneLengthD = 6
-dimension = 2*toneLengthD + 1# 40 before
+dimension = 40
 data_dimension = 320
-language_nums = 4 # 9!
+language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
@@ -68,7 +66,6 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
 dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
@@ -79,7 +76,6 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models/model10.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -93,61 +89,79 @@ factor = 0.0005
 
 ##  -----------------------------------------------------------------------------------------------------------------------------
 ##  dev
-train_module.eval()
-epoch_tic = time.time()
-dev_loss = 0.
-dev_acc = 0.
-dev_batch_num = 0 
-
-result_target = []
-for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-    print("step is ",step)
-    tic = time.time()
-
-    batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-    batch_frames = batch_y[:,1].contiguous().view(-1, 1)
-
-    max_batch_frames = int(max(batch_frames).item())
-    batch_dev_data = batch_x[:, :max_batch_frames, :]
-
-    step_batch_size = batch_target.size(0)
-    batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-    for ii in range(step_batch_size):
-        frames = int(batch_frames[ii].item())
-        batch_mask[ii, :frames] = 1.
-
-    # 将数据放入GPU中
-    if use_cuda:
-        # torch 0.4.0
-        #batch_dev_data   = batch_dev_data.to(device)
-        #batch_mask       = batch_mask.to(device)
-        #batch_target     = batch_target.to(device)
-        # torch 0.3.0
-        batch_dev_data   = batch_dev_data.cuda()
-        batch_mask       = batch_mask.cuda()
-        batch_target     = batch_target.cuda()
-        
-    with torch.no_grad():
-        #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-        acc, loss,prediction = train_module(batch_dev_data, batch_mask, batch_target)
-    #print(batch_target,prediction)
-    for i in range(batch_size):
-        result_target.append([batch_target[i].item(),prediction[i].item()])
+def test():
+    train_module.eval()
+    epoch_tic = time.time()
+    dev_loss = 0.
+    dev_acc = 0.
+    dev_batch_num = 0 
     
-    loss = loss.sum()/step_batch_size
-
-    toc = time.time()
-    step_time = toc-tic
-
-    dev_loss += loss.item()
-    dev_acc += acc
-    dev_batch_num += 1
-
-epoch_toc = time.time()
-epoch_time = epoch_toc-epoch_tic
-acc=dev_acc/dev_batch_num
-logging.info('dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', acc, dev_loss/dev_batch_num, epoch_time)
+    result_target = []
+    for step, (batch_x, batch_y) in enumerate(dev_dataset): 
+        #print("step is ",step)
+        tic = time.time()
+    
+        batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
+        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
+    
+        max_batch_frames = int(max(batch_frames).item())
+        batch_dev_data = batch_x[:, :max_batch_frames, :]
+    
+        step_batch_size = batch_target.size(0)
+        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+        for ii in range(step_batch_size):
+            frames = int(batch_frames[ii].item())
+            batch_mask[ii, :frames] = 1.
+    
+        # 将数据放入GPU中
+        if use_cuda:
+            # torch 0.4.0
+            #batch_dev_data   = batch_dev_data.to(device)
+            #batch_mask       = batch_mask.to(device)
+            #batch_target     = batch_target.to(device)
+            # torch 0.3.0
+            batch_dev_data   = batch_dev_data.cuda()
+            batch_mask       = batch_mask.cuda()
+            batch_target     = batch_target.cuda()
+            
+        with torch.no_grad():
+            #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss,prediction = train_module(batch_dev_data, batch_mask, batch_target)
+        #print(batch_target,prediction)
+        for i in range(batch_size):
+            result_target.append([batch_target[i].item(),prediction[i].item()])
+            #result_target.append(prediction[i].item())
+        
+        loss = loss.sum()/step_batch_size
+    
+        toc = time.time()
+        step_time = toc-tic
+    
+        dev_loss += loss.item()
+        dev_acc += acc
+        dev_batch_num += 1
+    
+    epoch_toc = time.time()
+    epoch_time = epoch_toc-epoch_tic
+    acc=dev_acc/dev_batch_num
+    logging.info('dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', acc, dev_loss/dev_batch_num, epoch_time)
+    return result_target
 # output the result
 import numpy as np
-result_target = np.array(result_target)
-np.savetxt("result.txt",result_target,fmt='%d')
+result = []
+for i in range(20):
+    print("model ",i)
+    train_module.load_state_dict(torch.load("models%d/model9.model"%(i)))
+    result_target = test()
+    result.append(result_target)
+
+# deal with the output
+result = np.array(result)
+print(result.shape)
+result = np.transpose(result,(1,0,2))
+size = len(result[0])
+#new = np.zeros((5000,2*size))
+#new[:,0] = result[:,0,0]
+#new[:,1:] = result[:,:,1]
+result = np.reshape(result,(5000,-1))
+np.savetxt("result.txt",result,fmt='%d')

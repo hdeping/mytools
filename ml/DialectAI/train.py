@@ -29,24 +29,21 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb_hardFour.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-toneLengthD = 6
-pitch_dim  = 2*toneLengthD + 1# 40 before
-fb_dim     = 40 # 40 + 13
-dimension  = pitch_dim + fb_dim
+dimension = 40 # 40 before
 language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64
@@ -55,18 +52,14 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-# mixing factor
-alpha = 0.5
+# data augmentation
 
+torch.manual_seed(time.time())
 # save the models
 import sys
-#model_dir = "models" + sys.argv[1]
-model_dir = "models"
+model_dir = "models"+sys.argv[1]
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
-
-# seed 
-torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
@@ -76,7 +69,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=fb_dim,pitch_dim=pitch_dim, hidden_dim=128, bn_dim=30, output_dim=language_nums,alpha=alpha)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
