@@ -36,15 +36,15 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
+train_list = "../labels/label_train_list_fb_hardFour.txt"
 # dev
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 13 # 40 before
-language_nums = 2  # 9!
+language_nums = 4  # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
