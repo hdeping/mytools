@@ -23,6 +23,9 @@ filename = "../inchikey_filter_database.json"
 # ID : "atoms","bonds","angles","dihedral"
 idParameters  = readJson(filename)
 
+filename = "./valence_electron.json"
+# elements : electron number
+valence  = readJson(filename)
 # store the parameters
 paraDicts = {}
 
@@ -118,20 +121,7 @@ def getBonds(indexC,indexO,parameters,OxyType):
             atomsSeq.append(atom)
             number += 1
             
-
-    if OxyType == "[O]":
-        result_atoms = "CO"
-    else:
-        result_atoms = "COH"
-    atomsSeq.sort()
-
-    # concanate the atoms
-    for atom in atomsSeq:
-        result_atoms = result_atoms + atom
-
-    result['number'] = number
-    result['atoms']  = result_atoms
-    return result
+    return result,atomsSeq
 
 # get the bonds connected to "C"
 count = 0
@@ -159,14 +149,23 @@ for residue in residueBonds:
     molInfo['molecule'] = mol
     OxyType = resDicts['type']
     molInfo['type'] = OxyType
+    if OxyType == '[OH]':
+        continue
     molInfo['energy'] = resDicts['energy']
-    bonds = getBonds(indexC,indexO,parameters,OxyType)
-
+    bonds,atomsSeq = getBonds(indexC,indexO,parameters,OxyType)
     # judge
     if bonds == False:
         print(id)
         print(mol)
         continue
+
+    # get the adjacent elements and its valence elctrons
+    elements = {}
+    print(atomsSeq)
+    for atom in atomsSeq:
+        elements[atom] = valence[atom]
+    bonds["elements"] = elements
+
         
 
     molInfo['bonds'] = bonds
