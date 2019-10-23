@@ -36,9 +36,11 @@ class LanNet(nn.Module):
         for i in range(self.layer_num):
             self.layer_conv.add_module('conv'+str(i),baseConv1d(chanels[i],chanels[i+1],3,1,1))
 
+        self.layer0 = nn.Sequential()
+        self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -60,7 +62,8 @@ class LanNet(nn.Module):
         x = x.contiguous().view(batch_size,fea_frames,-1)
 
         # RNN layer
-        out_hidden, hidd = self.layer1(x)
+        out_hidden, hidd = self.layer0(x)
+        out_hidden, hidd = self.layer1(out_hidden)
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         #print(out_hidden.data.shape)
