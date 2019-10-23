@@ -1,7 +1,8 @@
 import numpy as np
 
 data = np.loadtxt('result.txt')
-#print(data) 
+#print(data)
+
 data = data.astype(int)
 data = np.reshape(data,(-1,6,2))
 num = 10 
@@ -11,6 +12,11 @@ size = len(data)
 # get the majorityVote
 target = data[:,0,0]
 majority = []
+
+
+dev_names = np.loadtxt("label_dev_list_fb.txt",dtype=str)
+print(dev_names.shape)
+#print(dev_names)
 
 vote_num = len(data[0])
 print("vote_num ",vote_num)
@@ -28,6 +34,8 @@ for i in range(size):
 for i in range(size):
     ii = target[i]
     jj = majority[i]
+    if ii != jj:
+        print(dev_names[i,0])
     stati[ii,jj] += 1
 
 print("size ",size)
@@ -36,11 +44,9 @@ for i in range(num):
     arr.append(stati[i,i])
 
 arr = np.array(arr)
-print("stati")
+print(arr/500)
+
 
 print(stati)
 
-print("precision")
-print(arr/500)
-print("acc")
-print(sum(arr)/2000)
+print(sum(arr)/5000)
