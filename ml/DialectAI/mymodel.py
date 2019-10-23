@@ -30,15 +30,19 @@ class LanNet(nn.Module):
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
+
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        # get gru output
         out_hidden, hidd = self.layer1(src)
-        out_hidden_new, hidd = self.layer_a(out_hidden)
-        out_hidden_new, hidd = self.layer_b(out_hidden_new)
-        # res
-        out_hidden = out_hidden + out_hidden_new
+        # get gru output
+        # recursive part
+        for i in range(2):
+            out_hidden_new, hidd = self.layer_a(out_hidden)
+            out_hidden_new, hidd = self.layer_b(out_hidden_new)
+            # res
+            out_hidden = out_hidden + out_hidden_new
+
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
