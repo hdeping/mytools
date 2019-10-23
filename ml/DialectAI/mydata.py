@@ -7,7 +7,6 @@ import random
 import torch
 
 from readhtk import HTKfile
-import numpy as np
 
 
 class TorchDataSet(object):
@@ -37,30 +36,19 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            # fb 40
+            htk_feature = htk_feature.replace("fb40","plp0")
             htk_file = HTKfile(htk_feature)
-            feature_fb = htk_file.read_data()
+            feature_data = htk_file.read_data()
             #print(feature_data.shape)
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()
-            # plp0 13
-            htk_file = HTKfile(htk_feature.replace('fb40','plp0'))
-            feature_plp = htk_file.read_data()
 
             if feature_frames > max_frames:
                 max_frames = feature_frames
             
-            # concatenate fb40 and plp0
-            feature_data = np.concatenate((feature_fb,feature_plp),axis=1)
-
-            
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
-            #std = curr_feature.std(dim=0, keepdim=True)
-            # mean
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            # std
-            #curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             name_list.append(file_name)
