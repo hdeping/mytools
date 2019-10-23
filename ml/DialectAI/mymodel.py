@@ -37,7 +37,7 @@ class LanNet(nn.Module):
         out_hidden, hidd = self.layer1(src)
         # get gru output
         # recursive part
-        for i in range(10):
+        for i in range(3):
             out_hidden_new, hidd = self.layer_a(out_hidden)
             out_hidden_new, hidd = self.layer_b(out_hidden_new)
             # res
