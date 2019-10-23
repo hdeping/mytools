@@ -84,6 +84,9 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
+# to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
+# torch.backends.cudnn.benchmark=True
+torch.backends.cudnn.enabled = False
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
