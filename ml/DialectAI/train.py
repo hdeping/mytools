@@ -60,7 +60,7 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
@@ -89,7 +89,7 @@ logging.info('finish reading all train data')
 
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=64, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -109,9 +109,6 @@ def train(count):
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 10:
             learning_rate = 0.01
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 15:
-            learning_rate = 0.003
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02
