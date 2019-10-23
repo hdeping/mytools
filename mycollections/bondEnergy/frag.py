@@ -243,14 +243,23 @@ for i,smi_string in enumerate(filenames):
     num,frag = main(molecules,smi_string)
     #print(i,energyNum[smi_string],num)
     real_num = energyNum[smi_string] 
-    if num < real_num:
+    if num > real_num:
+        # some items are repeated
+        # mismatched ones can be ignored
         print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
         fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
-    for line in frag:
-        if line in molecules:
-            fp.write(molecules[line]["ID"]+'\n')
-        else:
-            fp.write(line + " is not in data"+'\n')
+        for line in frag:
+            if line in molecules:
+                fp.write(molecules[line]["ID"]+'\n')
+        num = real_num
+    else:
+        # some smiles are displayed into diffrent formulas
+        # which should be equivalent
+        for line in frag:
+            if line in molecules:
+                fp.write(molecules[line]["ID"]+'\n')
+            else:
+                fp.write(line + " is not in data"+'\n')
         
     total += num
     count[num] += 1
