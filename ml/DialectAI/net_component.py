@@ -5,8 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LanNet(nn.Module):
-    #def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
-    def __init__(self, input_dim=48, hidden_dim=[256,100], bn_dim=30, output_dim=10):
+    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -14,29 +13,22 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim[0], num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('rnn1', nn.RNN(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim[0], self.hidden_dim[1]))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
-        self.layer3.add_module('linear', nn.Linear(self.hidden_dim[1], self.bn_dim))
-        # self.layer2.add_module('Sigmoid', nn.Sigmoid())
-
-        self.layer4 = nn.Sequential()
-        self.layer4.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
+        self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
         out_hidden, hidd = self.layer1(src)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-		#print(out_hidden.shape)
-        out_bn0 = self.layer2(out_hidden)
-        #out_bn = self.layer3(F.relu(out_hidden))
-        out_bn = self.layer3(F.relu(out_bn0))
-        out_target = self.layer4(out_bn)
+        out_bn = self.layer2(out_hidden)
+        out_target = self.layer3(out_bn)
 
 
         out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
