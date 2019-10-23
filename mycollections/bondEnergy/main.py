@@ -126,6 +126,7 @@ for residue in residueBonds:
     resDicts = residueEnergies[residue]
     id  = resDicts['ID']
     mol = resDicts['molecule']
+    energy = resDicts['energy']
     parameters = idParameters[id]
     
 
@@ -136,6 +137,8 @@ for residue in residueBonds:
     molInfo['ID'] = id
     molInfo['molecule'] = mol
     molInfo['type'] = resDicts['type']
+    molInfo['energy'] = resDicts['energy']
+
     bonds,atoms = getBonds(indexC,indexO,parameters)
 
     # judge
@@ -151,7 +154,18 @@ for residue in residueBonds:
     dihedral = getDihedral(atoms,parameters)
     molInfo['dihedral'] = dihedral
 
-    paraDicts[residue] = molInfo
+    filter1 = (molInfo['type'] == '[O]')
+    bondNum = 0
+    for bond in bonds:
+        bondNum += 1
+    angleNum = 0
+    for angle in angles:
+        angleNum += 1
+    filter2 = (bondNum  == 3)
+    filter3 = (angleNum == 2)
+        
+    if filter1 and filter2 and filter3:
+        paraDicts[residue] = molInfo
 
     #break
 
