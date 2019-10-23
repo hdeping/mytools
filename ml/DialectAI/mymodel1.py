@@ -12,10 +12,10 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        self.layer0 = nn.Sequential()
-        self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        #self.layer0 = nn.Sequential()
+        #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -29,8 +29,7 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        out_hidden, hidd = self.layer0(src)
-        out_hidden, hidd = self.layer1(out_hidden)
+        out_hidden, hidd = self.layer1(src)
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         #print(out_hidden.data.shape)

@@ -32,6 +32,8 @@ import torch.utils.data as Data
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
 from mymodel import LanNet
+#from mymodel1 import LanNet as lannet_old
+#from load_oldmodel import getModel
 
 ## ======================================
 # data list
@@ -68,6 +70,7 @@ logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+#train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
