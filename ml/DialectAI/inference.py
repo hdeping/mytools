@@ -149,7 +149,7 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(200):
+for i in range(500):
     print("model ",i)
     print("loading model9-%d.model"%(i))
     train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
@@ -160,7 +160,7 @@ for i in range(200):
 result = np.array(result)
 print(result.shape)
 result = np.transpose(result,(1,0,2))
-size = len(result)
+size = len(result[0])
 #new = np.zeros((5000,2*size))
 #new[:,0] = result[:,0,0]
 #new[:,1:] = result[:,:,1]
