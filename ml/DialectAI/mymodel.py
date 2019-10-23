@@ -10,7 +10,7 @@ import numpy as np
 
 
 #from resnet import resnet18
-from vgg import vgg13,vgg16,vgg19
+from vgg2 import vgg13,vgg16,vgg19
 
 
 class LanNet(nn.Module):
@@ -23,7 +23,7 @@ class LanNet(nn.Module):
         # phonemeSeq  dictionary
         self.phonemes_dict = dealMlf("../labels/all.mlf")
 
-        self.conv  = vgg19()
+        self.conv  = vgg16()
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
