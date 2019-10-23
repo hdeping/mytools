@@ -55,11 +55,11 @@ display_fre = 50
 half = 4
 # data augmentation
 cycle = 1
-active = float(sys.argv[1])
+random = float(sys.argv[1])
 augmentation = 0
 
 # save the models
-model_dir = "models_data%d"%(1000*active)
+model_dir = "models_data%d"%(1000*random)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -143,7 +143,8 @@ for epoch in range(train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            reg_loss += param.norm(2) + active*param.sum()
+            rand = random*torch.randn(param.data.shape).cuda()
+            reg_loss += param.norm(2) + (rand*param).sum()
         backward_loss += factor * reg_loss
                 
         # get the gradients
