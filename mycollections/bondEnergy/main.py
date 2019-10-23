@@ -53,92 +53,101 @@ def getAngles(indexC,indexO,parameters):
     angles = parameters["angles"]
     result = {}
 
-    atoms = []
     # find the exact angles
+    number = 0
     for key in angles:
         arr = stringToArr(key)
         if arr[1] == indexC:
             if arr[0] == indexO or arr[2] == indexO:
                 result[key] = angles[key]
-                atoms.append(arr)
+                number += 1
 
 
-    return result,atoms
+    result['number'] = number
+    return result
 
-def getDihedral(atoms,parameters):
+def getDihedral(indexC,indexO,parameters):
     dihedral = parameters["dihedral"]
     result = {}
 
     # find the exact dihedral
+    number = 0
     for key in dihedral:
         arr = stringToArr(key)
-        #if arr[1] == indexC and arr[2] == indexO:
-        for angle in atoms:
-            print(angle)
-            # if the three atoms of the angles 
-            # are all in the dihedrals
-            p = []
-            for i in range(3):
-                p1 = (angle[i] in arr)
-                p.append(p1)
-            #if angle[0] in arr and angle[1] in arr and angle[2] in arr:
-            if p[0] and p[1] and p[2]:
-                result[key] = dihedral[key]
+        if arr[1] == indexC and arr[2] == indexO:
+            result[key] = dihedral[key]
+            number += 1
 
+    result['number'] = number
     return result
 
-def getBonds(indexC,indexO,parameters):
-    #print("iteration")
+def getBonds(indexC,indexO,parameters,OxyType):
     bonds = parameters["bonds"]
-    print(bonds)
+    atoms = parameters["atoms"]
     result = {}
-    # store the bonds
-    atoms = []
+    
     # first one should be C-O 
     key = "R(%d,%d)"%(indexC,indexO)
-    atoms.append([indexC,indexO])
     if key not in bonds:
         para = json.dumps(parameters,indent = 4)
         #print(para)
-        return False,atoms
+        return False
+    # atoms sequence
+    atomsSeq = []
 
+    number = 1
     result[key] = bonds[key]
 
-    #print("iteration")
     for key in bonds:
         arr = stringToArr(key)
         # add to the result
         # R(x,indexC)
         if arr[1] == indexC:
             result[key] = bonds[key]
-            atoms.append([arr[0],indexC])
+            # get the atom
+            atomId = arr[0] - 1
+            atom   = atoms[atomId]
+            atomsSeq.append(atom)
+            number += 1
         # R(indexC,x) x != indexO
         if arr[0] == indexC and arr[1] != indexO:
             result[key] = bonds[key]
-            atoms.append([indexC,arr[1]])
+            # get the atom
+            atomId = arr[0] - 1
+            atom   = atoms[atomId]
+            atomsSeq.append(atom)
+            number += 1
             
 
-    print(atoms)
-    return result,atoms
+    if OxyType == "[O]":
+        result_atoms = "CO"
+    else:
+        result_atoms = "COH"
+    atomsSeq.sort()
+
+    # concanate the atoms
+    for atom in atomsSeq:
+        result_atoms = result_atoms + atom
+
+    result['number'] = number
+    result['atoms']  = result_atoms
+    return result
 
 # get the bonds connected to "C"
 count = 0
 count_no_bond = 0
-count_sample = 0
-dihedral_counts = np.zeros(20,dtype=int)
 for residue in residueBonds:
     count += 1
     print("residue ",count)
     # index of the carbon and oxygen
     indexC = residueBonds[residue][0]
     indexO = residueBonds[residue][1]
-    #print(indexC,indexO)
+    print(indexC,indexO)
 
     # get the id and molecule
     resDicts = residueEnergies[residue]
     id  = resDicts['ID']
     mol = resDicts['molecule']
-    energy = resDicts['energy']
     parameters = idParameters[id]
     
 
@@ -148,10 +157,10 @@ for residue in residueBonds:
     molInfo = {}
     molInfo['ID'] = id
     molInfo['molecule'] = mol
-    molInfo['type'] = resDicts['type']
+    OxyType = resDicts['type']
+    molInfo['type'] = OxyType
     molInfo['energy'] = resDicts['energy']
-
-    bonds,atoms = getBonds(indexC,indexO,parameters)
+    bonds = getBonds(indexC,indexO,parameters,OxyType)
 
     # judge
     if bonds == False:
@@ -161,32 +170,12 @@ for residue in residueBonds:
         
 
     molInfo['bonds'] = bonds
-    angles,atoms = getAngles(indexC,indexO,parameters)
+    angles = getAngles(indexC,indexO,parameters)
     molInfo['angles'] = angles
-    dihedral = getDihedral(atoms,parameters)
+    dihedral = getDihedral(indexC,indexO,parameters)
     molInfo['dihedral'] = dihedral
 
-    filter1 = (molInfo['type'] == '[O]')
-    bondNum = 0
-    for bond in bonds:
-        bondNum += 1
-    angleNum = 0
-    for angle in angles:
-        angleNum += 1
-    dihedralNum = 0
-    for dihed in dihedral:
-        dihedralNum += 1
-    if dihedralNum == 10:
-        print(dihedral)
-
-    filter2 = (bondNum  == 3)
-    filter3 = (angleNum == 2)
-    
-        
-    if filter1 and filter2 and filter3:
-        paraDicts[residue] = molInfo
-        count_sample += 1
-        dihedral_counts[dihedralNum] += 1
+    paraDicts[residue] = molInfo
 
     #break
 
@@ -197,8 +186,3 @@ fp = open("inchikey_parameters.json",'w')
 json.dump(paraDicts,fp,indent = 4)
 
 
-print("number of the samples ", count_sample)
-
-print("dihedral statistics")
-print(dihedral_counts)
-print(sum(dihedral_counts))
