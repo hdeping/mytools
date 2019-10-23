@@ -59,8 +59,6 @@ class LanNet(nn.Module):
 
         self.layer_gru = nn.Sequential()
         self.layer_gru.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer_gru1 = nn.Sequential()
-        self.layer_gru1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -86,10 +84,7 @@ class LanNet(nn.Module):
         batch_size, time_frame ,hidden_dim = x.size()
         # gru output
         # layer gru
-        out_hidden     = self.getBiHidden(self.layer_gru,x,sorted_frames)
-        out_hidden     = self.getBiHidden(self.layer_gru1,out_hidden,sorted_frames)
-
-
+        out_hidden = self.getBiHidden(self.layer_gru,x,sorted_frames)
         # get a vector with fixed size (hidden_dim)
         sorted_frames = sorted_frames.view(-1,1)
         sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))

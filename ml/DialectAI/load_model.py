@@ -1,4 +1,5 @@
-from mymodel import pre_model,LanNet,inferenceModel
+from mymodel import pre_model,LanNet
+from testmodel import  inferModel as inferenceModel
 import torch
 import numpy as np
 
