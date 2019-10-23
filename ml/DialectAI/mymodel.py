@@ -5,25 +5,21 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=40, pitch_dim=13,hidden_dim=2048, bn_dim=100, output_dim=10,alpha=0.5):
+    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
-        self.pitch_dim  = pitch_dim
-        self.input_dim  = input_dim
+        self.input_dim = input_dim
         self.hidden_dim = hidden_dim
-        self.bn_dim     = bn_dim
+        self.bn_dim = bn_dim
         self.output_dim = output_dim
-        self.alpha = alpha
 
-        # for pitch flux
-        self.layer0 = nn.Sequential()
-        self.layer0.add_module('gru', nn.GRU(self.pitch_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
-        # for fbank
+        #self.layer0 = nn.Sequential()
+        #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim*2))
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim*2, self.bn_dim))
+        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
@@ -34,26 +30,24 @@ class LanNet(nn.Module):
         batch_size, fea_frames, fea_dim = src.size()
 
         # get gru output
-        out_hidden_pitch,hidd = self.layer0(src[:,:,self.input_dim:])
-        out_hidden_fb   ,hidd = self.layer1(src[:,:,:self.input_dim])
+        out_hidden, hidd = self.layer1(src)
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
-        # get the loss
-        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        # shared weights
         # get  masked outputs
-        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden_pitch.size(2))
+        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
         # output with new size (batch_size, hidden_dim)
-        out_hidden_fb = out_hidden_fb*mask
-        out_hidden_fb = out_hidden_fb.sum(dim=1)/mask.sum(dim=1)
-        out_hidden_pitch = out_hidden_pitch*mask
-        out_hidden_pitch = out_hidden_pitch.sum(dim=1)/mask.sum(dim=1)
-
-        out_hidden = torch.cat((out_hidden_fb,out_hidden_pitch),dim=1)
-
+        out_hidden = out_hidden*mask
+        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
+        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
+
+
+        #out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
+        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
+        #out_target_mask = out_target * mask
+        #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
         predict_target = F.softmax(out_target, dim=1)
         #print(predict_target.shape,target.shape)
 
@@ -61,8 +55,6 @@ class LanNet(nn.Module):
         tar_select_new = torch.gather(predict_target, 1, target)
         ce_loss = -torch.log(tar_select_new) 
         ce_loss = ce_loss.sum() / batch_size
-        
-
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
