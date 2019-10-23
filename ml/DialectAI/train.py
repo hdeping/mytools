@@ -28,7 +28,6 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
-import torch.nn as nn
 
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
@@ -37,9 +36,9 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "label_list_train.txt"
+train_list = "../labels/label_list_train.txt"
 # dev
-dev_list   = "label_list_dev.txt"
+dev_list   = "../labels/label_list_dev.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -47,11 +46,11 @@ use_cuda = torch.cuda.is_available()
 dimension = 40 # 40 before
 data_dimension = 400 # 400 point per frame
 language_nums = 9 # 9!
-learning_rate = 0.1
+learning_rate = 0.01
 batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 15
+train_iteration = 20
 display_fre = 50
 half = 4
 # data augmentation
@@ -74,17 +73,16 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models_data10/model2.model"))
-device = torch.device("cuda:0")
+#train_module.load_state_dict(torch.load("models/model11.model"))
+#device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
     # torch 0.4.0
     #train_module = train_module.to(device)
     # torch 0.3.0
-    train_module = train_module.to(device)
+    train_module = train_module.cuda()
 
 # regularization factor
-train_module = nn.DataParallel(train_module)
 factor = 0.0005
 # to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
 # torch.backends.cudnn.benchmark=True
@@ -92,14 +90,14 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
+    if epoch == 5:
+        learning_rate = 0.007
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.01
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 12:
+    if epoch == 10:
         learning_rate = 0.003
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 15:
+        learning_rate = 0.001
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
@@ -134,13 +132,13 @@ for epoch in range(0,train_iteration):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            batch_train_data = batch_train_data.to(device)
-            batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_train_data = batch_train_data.to(device)
+            #batch_mask       = batch_mask.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
-            #batch_train_data = batch_train_data.cuda()
-            #batch_mask       = batch_mask.cuda()
-            #batch_target     = batch_target.cuda()
+            batch_train_data = batch_train_data.cuda()
+            batch_mask       = batch_mask.cuda()
+            batch_target     = batch_target.cuda()
 
         acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
@@ -209,13 +207,13 @@ for epoch in range(0,train_iteration):
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            batch_dev_data   = batch_dev_data.to(device)
-            batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_dev_data   = batch_dev_data.to(device)
+            #batch_mask       = batch_mask.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
-            #batch_dev_data   = batch_dev_data.cuda()
-            #batch_mask       = batch_mask.cuda()
-            #batch_target     = batch_target.cuda()
+            batch_dev_data   = batch_dev_data.cuda()
+            batch_mask       = batch_mask.cuda()
+            batch_target     = batch_target.cuda()
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
