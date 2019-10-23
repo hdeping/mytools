@@ -46,7 +46,7 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40
 language_nums = 6
-learning_rate = 0.001
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
