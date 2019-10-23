@@ -15,6 +15,8 @@ def readSMILES(smi_string):
     MolBond = []
     ChainBond = []
     
+    for angle in ob.OBMolAngleIter(mol):    
+        print(angle)
     
     for bond in ob.OBMolBondIter(mol):    
         a = bond.GetBeginAtomIdx()
@@ -31,9 +33,26 @@ def readSMILES(smi_string):
     #MolBond.sort()
     #print(MolBond)
     #NumOfRingBond = len(MolBond) - len(ChainBond)
+def getSMILES(filename):
+    fp = open(filename,'r')
+    data = fp.read()
+    fp.close()
+    data = data.split('\n')
+    data = data[:-1]
+    res = []
+    # get the first column
+    for line in data:
+        line = line.split(' ')
+        res.append(line[0])
+
+    return res
+
+    return
 
 filename = "smiles.txt"
-filenames = np.loadtxt(filename,delimiter=' ',dtype=str)
-for smi_string in filenames[:,0]:
+filenames = getSMILES(filename)
+#print(filenames)
+for smi_string in filenames:
     readSMILES(smi_string)
+    break
     
