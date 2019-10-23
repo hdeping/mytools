@@ -4,7 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class baseConv1d(nn.Module):
     def __init__(self,input_chanel,output_chanel,kernel_size,stride,padding):
         super(baseConv1d,self).__init__()
@@ -16,8 +15,8 @@ class baseConv1d(nn.Module):
         x = self.conv(x)
         # batchnorm 
         x = self.bn(x)
-        # 1d avg pool 
-        x = F.avg_pool1d(x,kernel_size=2)
+        # 1d max pool 
+        x = F.avg_pool1d(x,kernel_size=4)
         # relu output
         x = F.relu(x)
         return x
@@ -31,8 +30,9 @@ class LanNet(nn.Module):
         self.output_dim = output_dim
 
         self.layer_conv = nn.Sequential()
-        self.layer_num = 8
-        chanels = [1,2,4,8,16,32,40,40,40]
+        # get conv layers
+        self.layer_num = 4
+        chanels = [1,5,10,20,40,32,40,40,40]
         for i in range(self.layer_num):
             self.layer_conv.add_module('conv'+str(i),baseConv1d(chanels[i],chanels[i+1],3,1,1))
 
