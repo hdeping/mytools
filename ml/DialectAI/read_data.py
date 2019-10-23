@@ -8,57 +8,62 @@ import torch
 
 from HTKfile import HTKfile
 
-def get_samples(list):
-    samples = 0
-    max_frames = 0
-    with codecs.open(list, 'r', 'utf-8') as file_list:
-        for line in file_list:
-            line = line.strip()  # 去除结尾换行符
-            if not line:  # remove the blank line
-                continue
-            splited_line = line.split()
-            htk_feature = splited_line[0]
+#def get_samples(list):
+#    samples = 0
+#    max_frames = 0
+#    with codecs.open(list, 'r', 'utf-8') as file_list:
+#        for line in file_list:
+#            line = line.strip()  # 去除结尾换行符
+#            if not line:  # remove the blank line
+#                continue
+#            splited_line = line.split()
+#            htk_feature = splited_line[0]
+#
+#            htk_file = HTKfile(htk_feature)
+#            feature_frames = htk_file.get_frame_num()
+#
+#            max_frames = max(max_frames, feature_frames)
+#            samples += 1
+#    file_list.close()
+#    return samples, max_frames
 
-            htk_file = HTKfile(htk_feature)
-            feature_frames = htk_file.get_frame_num()
 
-            max_frames = max(max_frames, feature_frames)
-            samples += 1
-    file_list.close()
-    return samples, max_frames
-
-
-def get_data(list, samples, max_frames, dimension):
-    data = torch.zeros(samples, max_frames, dimension)
-    target_frames = torch.zeros(samples, 2)
-    name_list = []
-    # 存储数据
-    line_num = 0
-    with codecs.open(list, 'r', 'utf-8') as file_list:
-        for line in file_list:
-            line = line.strip()  # 去除结尾换行符
-            if not line:  # remove the blank line
-                continue
-            splited_line = line.split()
-            htk_feature = splited_line[0]
-            target_label = int(str(splited_line[1]))
-
-            htk_file = HTKfile(htk_feature)
-            feature_data = htk_file.read_data()
-            file_name = htk_file.get_file_name()
-            feature_frames = htk_file.get_frame_num()
-            
-            curr_feature = torch.Tensor(feature_data)
-            means = curr_feature.mean(dim=0, keepdim=True)
-            curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            data[line_num,:feature_frames,:] = curr_feature_norm
-            target_frames[line_num] = torch.Tensor([target_label, feature_frames])
-            name_list.append(file_name)
-
-            line_num += 1
-    file_list.close()
-
-    return data, target_frames, name_list
+#def get_data(list, samples, max_frames, dimension):
+#    data = torch.zeros(samples, max_frames, dimension)
+#    target_frames = torch.zeros(samples, 2)
+#    name_list = []
+#    # 存储数据
+#    line_num = 0
+#    with codecs.open(list, 'r', 'utf-8') as file_list:
+#        for line in file_list:
+#            line = line.strip()  # 去除结尾换行符
+#            if not line:  # remove the blank line
+#                continue
+#            splited_line = line.split()
+#            # get the file name
+#            htk_feature = splited_line[0]
+#            # get the corresponding label
+#            target_label = int(str(splited_line[1]))
+#
+#            # read the file
+#            htk_file = HTKfile(htk_feature)
+#            feature_data = htk_file.read_data()
+#            file_name = htk_file.get_file_name()
+#            feature_frames = htk_file.get_frame_num()
+#            
+#            curr_feature = torch.Tensor(feature_data)
+#            means = curr_feature.mean(dim=0, keepdim=True)
+#            curr_feature_norm = curr_feature - means.expand_as(curr_feature)
+#            # data augmentation is here !
+#            for ii in range(3):
+#                noise = torch.randn(curr_feature_norm.shape)*ii
+#                data[line_num,:feature_frames,:] = curr_feature_norm + noise
+#                target_frames[line_num] = torch.Tensor([target_label, feature_frames])
+#                name_list.append(file_name)
+#                line_num += 1
+#    file_list.close()
+#
+#    return data, target_frames, name_list
 
 class TorchDataSet(object):
     def __init__(self, file_list, batch_size, chunk_num, dimension):

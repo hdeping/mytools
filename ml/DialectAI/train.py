@@ -29,7 +29,8 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-from read_data import get_samples, get_data, TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
+from read_data import TorchDataSet
 from net_component import LanNet
 
 ## ======================================
@@ -53,7 +54,7 @@ learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 20
 display_fre = 50
 half = 4
 
@@ -78,7 +79,7 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
-factor = 0.005
+factor = 0.0005
 for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
