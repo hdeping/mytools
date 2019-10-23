@@ -27,9 +27,13 @@ class ResidueSMILES(BondAngle):
     def __init__(self):
         super(ResidueSMILES, self).__init__()
         
-    # Break the bond in ring and generate the radical fragment
     def BreakRing(self,mol):
         """
+        Break the bond in ring and generate the radical fragment
+        input: 
+            mol, OBMol type
+        return:
+            ring_frag, fragment molecular of the mod
         """
         ring_frag = ob.OBMol()
         for atom in ob.OBMolAtomIter(mol):
