@@ -2,37 +2,23 @@
 
 import numpy as np
 
-filename1 = "exist.txt"
-filename2 = "total.txt"
+filename = "../new_filter2.csv"
 
-# get dicts
-dicts = {}
-data1 = np.loadtxt(filename1,dtype=str)
-data2 = np.loadtxt(filename2,dtype=str)
+fp = open(filename,'r')
+data = fp.read()
 
-for i in data1:
-    dicts[i] = 0
+data = data.split('\n')
+data = data[:-1]
+#print(data)
+#print(len(data))
 
-# statistics
+count = 0
+for line in data:
+    arr = line.split(',')
+    if arr[3] != '[O-]':
+        #print(arr[4])
+        print(line)
 
-for i in data2:
-    dicts[i] += 1
+#print(count)
 
-# count
-count = np.zeros(10)
-
-for key in dicts:
-    value = dicts[key]
-    if value == 6:
-        print(key)
-    count[value] += 1
-
-count = count.astype(int)
-
-res = 0
-for i in range(10):
-    print("number ",i,count[i])
-    res += i*count[i]
-print(sum(count))
-print(res)
 
