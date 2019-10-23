@@ -3,6 +3,9 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from embed_regularize import embedded_dropout
+from locked_dropout import LockedDropout
+from weight_drop import WeightDrop
 
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
@@ -14,8 +17,11 @@ class LanNet(nn.Module):
 
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        #self.rnns = nn.GRU(ninp if l == 0 else nhid, nhid if l != nlayers - 1 else ninp, 1, dropout=0) 
+        self.gru =  nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False)
+        #self.gru = WeightDrop(self.gru, ['weight_hh_l0'], dropout=0.5) 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False,dropout=0.5))
+        self.layer1.add_module('gru', WeightDrop(self.gru, ['weight_hh_l0'], dropout=0.5) )
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
