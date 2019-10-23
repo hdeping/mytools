@@ -54,8 +54,9 @@ train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
-cycle = 6
-augmentation = float(sys.argv[1])
+cycle = 1
+#augmentation = float(sys.argv[1])
+augmentation = 0
 
 # save the models
 model_dir = "models_data%d"%(1000*augmentation)
@@ -75,7 +76,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models_data10/model2.model"))
+#train_module.load_state_dict(torch.load("models_data10/model2.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -142,10 +143,12 @@ for epoch in range(train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            reg_loss += param.norm(2)
+            reg_loss += param.norm(2)  + param.sum()
         backward_loss += factor * reg_loss
                 
+        # get the gradients
         backward_loss.backward()
+        # update the weights
         optimizer.step()
 
         toc = time.time()
