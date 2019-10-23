@@ -58,11 +58,10 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss,prediction
+        return acc, ce_loss
