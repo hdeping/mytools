@@ -50,14 +50,14 @@ dev_list   = "../labels/label_list_dev.txt"
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 40 # 40 before
 data_dimension = 320 # 400 point per frame
+dimension = data_dimension
 language_nums = 10 # 9!
-learning_rate = 0.05
-batch_size = 8
+learning_rate = 0.1
+batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 50
 display_fre = 50
 half = 4
 # data augmentation
@@ -78,7 +78,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension)
 #train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
@@ -102,27 +102,28 @@ factor = 0.0005
 # to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
 # torch.backends.cudnn.benchmark=True
 #torch.backends.cudnn.enabled = False
-def getACCLoss(batch_train_data,out_target,batch_mask,batch_target):
+def getACCLoss(batch_train_data,out_target,batch_mask):
         batch_size, fea_frames, fea_dim = batch_train_data.size()
         out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
         mask = batch_mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        out_target_mask = out_target * mask
-        out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
-        predict_target = F.softmax(out_target_mask, dim=1)
+        #out_target_mask = out_target * mask
+        #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        #predict_target = F.softmax(out_target_mask, dim=1)
+        
+        # loss between batch_train_data and  out_target_mask
+        #tar_select_new = torch.gather(predict_target, 1, batch_target)
+        #ce_loss = -torch.log(tar_select_new) 
+        ce_loss = out_target - batch_train_data
+        # get masked difference
+        ce_loss = ce_loss*mask
+        ce_loss = ce_loss.pow(2)
+        # get normalized mask
+        # mask has been expanded so that the summation should be 
+        # divided by the out_target.size(2)
+        # Moreover , loss = 1/2\sum(a_i-y_i)^2
+        ce_loss = ce_loss.sum() *out_target.size(2)*0.5/ mask.sum()
 
-        # 计算loss
-        tar_select_new = torch.gather(predict_target, 1, batch_target)
-        ce_loss = -torch.log(tar_select_new) 
-        ce_loss = ce_loss.sum() / batch_size
-
-        # 计算acc
-        (data, predict) = predict_target.max(dim=1)
-        predict = predict.contiguous().view(-1,1)
-        correct = predict.eq(batch_target).float()       
-        num_samples = predict.size(0)
-        sum_acc = correct.sum().item()
-        acc = sum_acc/num_samples
-        return acc,ce_loss
+        return ce_loss
 def getLr(epoch):
     print("epoch",epoch)
     if epoch == 4:
@@ -167,7 +168,7 @@ def train(epoch):
             # torch 0.4.0
             batch_train_data = batch_train_data.to(device)
             batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
             #batch_train_data = batch_train_data.cuda()
             #batch_mask       = batch_mask.cuda()
@@ -175,7 +176,7 @@ def train(epoch):
 
         out_target = train_module(batch_train_data)
         # output of the model
-        acc,ce_loss = getACCLoss(batch_train_data,out_target,batch_mask,batch_target)
+        ce_loss = getACCLoss(batch_train_data,out_target,batch_mask)
         
         # loss = loss.sum()
         backward_loss = ce_loss 
@@ -196,14 +197,12 @@ def train(epoch):
 
 
         train_loss += ce_loss.item()
-        train_acc += acc
-        curr_batch_acc += acc
         sum_batch_size += 1
         curr_batch_size += 1
         if step % display_fre == 0:
             toc = time.time()
             step_time = toc-tic
-            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, ce_loss.item(), step_time)
+            logging.info('Epoch:%d, Batch:%d, loss:%.6f, cost time :%.6fs', epoch, step, ce_loss.item(), step_time)
             curr_batch_acc = 0.
             curr_batch_size = 0
             tic = toc
@@ -214,7 +213,7 @@ def train(epoch):
     torch.save(train_module.state_dict(), modelfile)
     epoch_toc = time.time()
     epoch_time = epoch_toc-epoch_tic
-    logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
+    logging.info('Epoch:%d, train-acc:%.6f, cost time :%.6fs', epoch, train_loss/sum_batch_size, epoch_time)
 
 def test(epoch):
 ##  dev
@@ -244,7 +243,7 @@ def test(epoch):
             # torch 0.4.0
             batch_dev_data   = batch_dev_data.to(device)
             batch_mask       = batch_mask.to(device)
-            batch_target     = batch_target.to(device)
+            #batch_target     = batch_target.to(device)
             # torch 0.3.0
             #batch_dev_data   = batch_dev_data.cuda()
             #batch_mask       = batch_mask.cuda()
@@ -253,7 +252,7 @@ def test(epoch):
         with torch.no_grad():
             out_target = train_module(batch_dev_data)
             # output of the model
-            acc, loss = getACCLoss(batch_dev_data,out_target,batch_mask,batch_target)
+            loss = getACCLoss(batch_dev_data,out_target,batch_mask)
         
         loss = loss.sum()/step_batch_size
 
@@ -261,20 +260,18 @@ def test(epoch):
         step_time = toc-tic
 
         dev_loss += loss.item()
-        dev_acc += acc
-        dev_batch_num += 1
+        dev_batch_num = dev_batch_num + 1
     
     epoch_toc = time.time()
     epoch_time = epoch_toc-epoch_tic
-    acc=dev_acc/dev_batch_num
-    logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
+    logging.info('Epoch:%d, dev-loss:%.6f, cost time :%.6fs', epoch, dev_loss/dev_batch_num, epoch_time)
 
 # random seed
 torch.manual_seed(time.time())
 for epoch in range(0,train_iteration):
     # get lr
-    getLr(epoch)
+    #getLr(epoch)
     # train
     train(epoch)
-    #test(epoch)
     test(epoch)
+    #test(epoch)
