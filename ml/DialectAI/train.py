@@ -52,7 +52,7 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-noise_density = 0.1
+noise_density = 0.01
 noise_num     = 5
 # data augmentation
 
