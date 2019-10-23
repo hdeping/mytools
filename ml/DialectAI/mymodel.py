@@ -4,12 +4,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-
 class baseConv1d(nn.Module):
-    def __init__(self,input_chanel,output_chanel,kernel_size,stride,padding):
+    def __init__(self,input_chanel,output_chanel,kernel_size,stride):
         super(baseConv1d,self).__init__()
         # architeture of the base conv1d
-        self.conv = nn.Conv1d(input_chanel,output_chanel,kernel_size=kernel_size,stride=stride,padding=padding)
+        self.conv = nn.Conv1d(input_chanel,output_chanel,kernel_size=kernel_size,stride=stride)
         self.bn   = nn.BatchNorm1d(output_chanel)
     def forward(self,x):
         # conv 
@@ -17,7 +16,7 @@ class baseConv1d(nn.Module):
         # batchnorm 
         x = self.bn(x)
         # 1d max pool 
-        x = F.max_pool1d(x,kernel_size=2)
+        x = F.avg_pool1d(x,kernel_size=2)
         # relu output
         x = F.relu(x)
         return x
@@ -30,12 +29,14 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        self.layer_conv = nn.Sequential()
-        self.layer_num = 8
-        chanels = [1,2,4,8,16,32,40,40,40]
-        for i in range(self.layer_num):
-            self.layer_conv.add_module('conv'+str(i),baseConv1d(chanels[i],chanels[i+1],3,1,1))
-
+        # 400-199-99
+        self.conv1 = baseConv1d(1,4,3,2)
+        # 99-49-24
+        self.conv2 = baseConv1d(4,10,3,2)
+        # 24-11-5
+        self.conv3 = baseConv1d(10,20,3,2)
+        # 5-2-1
+        self.conv4 = baseConv1d(20,40,3,2)
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
@@ -54,7 +55,10 @@ class LanNet(nn.Module):
         # reshape the input
         x = x.contiguous().view(batch_size*fea_frames,1,-1)
         # conv layer
-        x = self.layer_conv(x)
+        x = self.conv1(x)
+        x = self.conv2(x)
+        x = self.conv3(x)
+        x = self.conv4(x)
 
         # reshape x
         x = x.contiguous().view(batch_size,fea_frames,-1)
