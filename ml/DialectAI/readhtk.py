@@ -34,6 +34,7 @@ class HTKfile(object):
         else:
             self.__new_path = path
 
+
         self.__input = open(self.__new_path, 'rb')
         #  HTK的数据存储方式是大端存储，需要进行大端到小端的转换
         self.__frame_num = struct.unpack('>I', self.__input.read(4))[0]           # 帧数
