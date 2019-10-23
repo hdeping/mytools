@@ -45,23 +45,23 @@ mlf_file  = "../label/train.dev"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
-use_cuda = False
+#use_cuda = False
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
-learning_rate = 0.1
-batch_size = 50
+learning_rate = 1e-4
+batch_size = 8
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
-display_fre = 10
+display_fre = 20
 half = 4
 # data augmentation
 
 # save the models
 import sys
-model_dir = "models" + sys.argv[1]
-#model_dir = "models"
+#model_dir = "models" + sys.argv[1]
+model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -94,16 +94,15 @@ def train(count):
     
     # regularization factor
     factor = 0.0005
-    learning_rate = 0.1
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 4:
-            learning_rate = 0.05
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 8:
-            learning_rate = 0.02
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        #if epoch == 4:
+        #    learning_rate = 0.05
+        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        #if epoch == 8:
+        #    learning_rate = 0.02
+        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()
         train_module.train()
@@ -117,9 +116,11 @@ def train(count):
             #print("step is ",step)
             batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
             batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
+            #print(batch_frames)
             #print(len(name_list),batch_x.shape,batch_target.shape)
             #print(np.array(name_list))
             name_list = np.array(name_list)
+            #print(len(name_list))
     
             #max_batch_frames = int(max(batch_frames).item())
             #print(dir(batch_frames))

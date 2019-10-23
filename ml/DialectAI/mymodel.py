@@ -60,6 +60,7 @@ class LanNet(nn.Module):
         return labels,labels_sizes
 
     def forward(self, src, frames,name_list):
+        #print(src.shape)
         batch_size, fea_frames, fea_dim = src.size()
         # squeeze frames:  [batch_size,1] --> [batch_size]
         frames = frames.squeeze()
@@ -73,6 +74,8 @@ class LanNet(nn.Module):
         src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
         #target = target[sorted_indeces]
+        #print(sorted_frames)
+        #print(name_list)
 
         ctc_loss = CTCLoss()
         # get gru output
@@ -82,6 +85,7 @@ class LanNet(nn.Module):
         out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         # transpose
         out_hidden = out_hidden.transpose(0,1)
+        #print(out_hidden.shape)
         # get labels and labels_sizes
         labels, labels_sizes = self.phonemeSeq(name_list)
         # tensor to torch (cuda))
@@ -90,5 +94,15 @@ class LanNet(nn.Module):
         labels       = torch.IntTensor(labels)
         labels_sizes = torch.IntTensor(labels_sizes)
         #print(out_hidden.shape,labels.shape,sorted_frames.shape,labels_sizes.shape)
-        loss = ctc_loss(out_hidden, labels, sorted_frames, labels_sizes)
+        #print(out_hidden.shape,labels.shape)
+        #print(sorted_frames,labels_sizes)
+        #print(labels.shape,labels_sizes.sum())
+        #print(labels[:30])
+        #print(labels_sizes.sum())
+        frames = sorted_frames.cpu().type(torch.IntTensor)
+        probs = out_hidden.cpu().type(torch.FloatTensor)
+        loss = ctc_loss(probs, labels, frames, labels_sizes)
+
+        loss = loss.cuda()
+        #print(loss)
         return loss
