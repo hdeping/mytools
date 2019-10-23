@@ -25,9 +25,6 @@ def getPara(ii):
     bonds    = data[:numberR]
     angles   = data[numberR:numberR+numberA]
     dihedral = data[numberR+numberA:]
-    bonds    = list(bonds)
-    angles   = list(angles)
-    dihedral = list(dihedral)
 
     return bonds,angles,dihedral
 
@@ -56,19 +53,29 @@ def getSerial(ii):
     data = np.loadtxt(filename,delimiter=' ',dtype=str)
     return data
 
+# arr (n,3)
+def arrToDicts(arr):
+    res = {}
+    res["ID"]    = list(arr[:,0])
+    res["pair"]  = list(arr[:,1])
+    res["value"] = list(arr[:,2])
+
+    return res
 def getSample(ii):
     result = {}
     # get atoms
     serial = getSerial(ii)
-    result["atoms"] = serial
-    # get bonds
+    result["atoms"] = list(serial[:,0])
+
     bonds, angles, dihedral = getPara(ii)
     #print(bonds)
     #print(angles)
     #print(dihedral)
-    result["bonds"] = bonds
-    result["angles"] = angles
-    result["dihedral"] = dihedral
+
+    # get bonds
+    result["bonds"] = arrToDicts(bonds)
+    result["angles"] = arrToDicts(angles)
+    result["dihedral"] = arrToDicts(dihedral)
 
     return result
 
@@ -94,5 +101,5 @@ def getSample(ii):
         value: float,list
 """
 result = getSample(0)
-#result = json.dumps(result,indent=4)
+result = json.dumps(result,indent=4)
 print(result)
