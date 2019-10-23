@@ -38,7 +38,8 @@ from net_component import LanNet
 # data list
 #train_list = "./train_list_fb.txt"
 #dev_list   = "./dev_list_fb.txt"
-train_list = "../labels/label_train-0-%s-%s-%s.txt"%(sys.argv[1],sys.argv[2],sys.argv[3])
+#train_list = "../labels/label_train-0-%s-%s-%s.txt"%(sys.argv[1],sys.argv[2],sys.argv[3])
+train_list = "../labels/label_train0.txt"
 #train_list = "../labels/label_train0.txt"
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -65,10 +66,10 @@ if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
 ## ======================================
-# with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,cycle,augmentation)
-# without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,1,augmentation)
+kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
+# dev data 
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,False,0)
+dev_dataset = Data.DataLoader(dev_dataset,batch_size=batch_size, shuffle=False, **kwargs)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -88,85 +89,96 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-for epoch in range(train_iteration):
-    print("epoch",epoch)
-    if epoch >= half:
-        learning_rate /= 2.
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
-
-##  train
-    train_dataset.reset()
-    train_module.train()
-    epoch_tic = time.time()
-    train_loss = 0.
-    train_acc = 0.
-
-    sum_batch_size = 0
-    curr_batch_size = 0
-    curr_batch_acc = 0
-    tic = time.time()
-    for step, (batch_x, batch_y) in enumerate(train_dataset): 
-        #print("step is ",step)
-        batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
-
-        #max_batch_frames = int(max(batch_frames).item())
-        #print(dir(batch_frames))
-        max_batch_frames = int(max(batch_frames).item())
-        #print(batch_x.data.shape)
-        batch_train_data = batch_x[:, :max_batch_frames, :]
-        #print(batch_train_data.data.shape)
-
-        step_batch_size = batch_target.size(0)
-        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-        for ii in range(step_batch_size):
-            frames = int(batch_frames[ii].item())
-            batch_mask[ii, :frames] = 1.
-
-        # 将数据放入GPU中
-        if use_cuda:
-            # torch 0.4.0
-            #batch_train_data = batch_train_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
-            # torch 0.3.0
-            batch_train_data = batch_train_data.cuda()
-            batch_mask       = batch_mask.cuda()
-            batch_target     = batch_target.cuda()
-
-        acc, loss = train_module(batch_train_data, batch_mask, batch_target)
-        
-        # loss = loss.sum()
-        backward_loss = loss
-        optimizer.zero_grad()
-        # L1 regularization 
-        #l1_crit = torch.nn.L1Loss(size_average=False)
-        #l1_crit.cuda()
-        reg_loss = 0
-        for param in train_module.parameters():
-            #reg_loss += l1_crit(param)
-            reg_loss += param.norm(2)
-        backward_loss += factor * reg_loss
-                
-        # get the gradients
-        backward_loss.backward()
-        # update the weights
-        optimizer.step()
-
-
-        train_loss += loss.item()
-        train_acc += acc
-        curr_batch_acc += acc
-        sum_batch_size += 1
-        curr_batch_size += 1
-        if step % display_fre == 0:
-            toc = time.time()
-            step_time = toc-tic
-            logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
-            curr_batch_acc = 0.
-            curr_batch_size = 0
-            tic = toc
+# train data
+# data piece from 0 to 15 for each 9000
+print("training begins")
+for piece in range(0,3):
+    t1 = time.time()
+    #train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,True,piece)
+    #train_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,True,piece)
+    #train_dataset = data.DataLoader(train_dataset,batch_size=batch_size, shuffle=True, **kwargs)
+    train_dataset = dev_dataset
+    t2 = time.time()
+    print("data reading time is ",t2 - t1)
+    for epoch in range(train_iteration):
+        print("epoch",epoch)
+        if epoch >= half:
+            learning_rate /= 2.
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+            #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+    
+    ##  train
+        #train_dataset.reset()
+        train_module.train()
+        epoch_tic = time.time()
+        train_loss = 0.
+        train_acc = 0.
+    
+        sum_batch_size = 0
+        curr_batch_size = 0
+        curr_batch_acc = 0
+        tic = time.time()
+        for step, (batch_x, batch_y) in enumerate(train_dataset): 
+            #print("step is ",step)
+            batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
+            batch_frames = batch_y[:,1].contiguous().view(-1, 1)
+    
+            #max_batch_frames = int(max(batch_frames).item())
+            #print(dir(batch_frames))
+            max_batch_frames = int(max(batch_frames).item())
+            #print(batch_x.data.shape)
+            batch_train_data = batch_x[:, :max_batch_frames, :]
+            #print(batch_train_data.data.shape)
+    
+            step_batch_size = batch_target.size(0)
+            batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+            for ii in range(step_batch_size):
+                frames = int(batch_frames[ii].item())
+                batch_mask[ii, :frames] = 1.
+    
+            # 将数据放入GPU中
+            if use_cuda:
+                # torch 0.4.0
+                #batch_train_data = batch_train_data.to(device)
+                #batch_mask       = batch_mask.to(device)
+                #batch_target     = batch_target.to(device)
+                # torch 0.3.0
+                batch_train_data = batch_train_data.cuda()
+                batch_mask       = batch_mask.cuda()
+                batch_target     = batch_target.cuda()
+    
+            acc, loss = train_module(batch_train_data, batch_mask, batch_target)
+            
+            # loss = loss.sum()
+            backward_loss = loss
+            optimizer.zero_grad()
+            # L1 regularization 
+            #l1_crit = torch.nn.L1Loss(size_average=False)
+            #l1_crit.cuda()
+            reg_loss = 0
+            for param in train_module.parameters():
+                #reg_loss += l1_crit(param)
+                reg_loss += param.norm(2)
+            backward_loss += factor * reg_loss
+                    
+            # get the gradients
+            backward_loss.backward()
+            # update the weights
+            optimizer.step()
+    
+    
+            train_loss += loss.item()
+            train_acc += acc
+            curr_batch_acc += acc
+            sum_batch_size += 1
+            curr_batch_size += 1
+            if step % display_fre == 0:
+                toc = time.time()
+                step_time = toc-tic
+                logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
+                curr_batch_acc = 0.
+                curr_batch_size = 0
+                tic = toc
 
 
     
