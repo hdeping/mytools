@@ -9,6 +9,7 @@ __version__ = '2018.01.02 with python 2.7.14'
 import numpy as np
 import struct
 import re
+from getStartEnd import getStartEnd
 
 # HTK文件结构：
 # 帧数：4字节（第0-第3字节）
@@ -21,18 +22,14 @@ import re
 class HTKfile(object):
 
     #
-    def __init__(self, path):
-        self.__start_frame = 0
-        self.__end_frame = 0
-        self.__new_path = ''
-
-        if path[-1] == ']':  # 判断输入路径末尾有没有指定帧序号的部分 eg: [2, 56]
-            temp_value = re.split(r'[\[,\s\]]', path)
-            self.__new_path = temp_value[0]
-            self.__start_frame = int(temp_value[-3])
-            self.__end_frame = int(temp_value[-2])
-        else:
-            self.__new_path = path
+    def __init__(self, path,p):
+        # get path name
+        self.__new_path = path[0]
+        # get the size array
+        arr = [int(path[1]),int(path[2]),int(path[3])]
+        # get start and end
+        self.__start_frame, self.__end_frame = getStartEnd(arr,p)
+        #print(path,self.__start_frame, self.__end_frame)
 
         self.__input = open(self.__new_path, 'rb')
         #  HTK的数据存储方式是大端存储，需要进行大端到小端的转换
@@ -41,8 +38,8 @@ class HTKfile(object):
         self.__bytes_of_one_frame = struct.unpack('>H', self.__input.read(2))[0]  # 每一帧的字节数
         self.__feature_dim = self.__bytes_of_one_frame //  4                        # dimension of feature
         self.__sample_kind = struct.unpack('>h', self.__input.read(2))[0]         # 参数类型
-        temp_value_2 = re.split(r'[/.]', path)
-        self.__file_name = temp_value_2[-2]
+        name = self.__new_path.split('/')
+        self.__file_name = name[-1]
 
         if self.__end_frame == 0 or self.__end_frame > self.__frame_num:
             self.__end_frame = self.__frame_num  # 如果尾帧数据在之前未被更改，则其值为帧总数

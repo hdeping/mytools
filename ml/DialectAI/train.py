@@ -43,9 +43,9 @@ import torch.nn as nn
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_fb_frame.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_fb_frame.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -53,17 +53,20 @@ use_cuda = torch.cuda.is_available()
 dimension = 40 # 40 before
 #data_dimension = 400 # 400 point per frame
 language_nums = 10 # 9!
-learning_rate = 0.1
+learning_rate = 0.03
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
 display_fre = 50
 half = 4
+# p vad 
+import sys
+p_vad = float(sys.argv[1])
 # data augmentation
 
 # save the models
-model_dir = "models"
+model_dir = "models"+str(p_vad)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -72,9 +75,9 @@ if not os.path.exists(model_dir):
 # CRNN
 #train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 # RNN
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,p_vad)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,p_vad)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -126,7 +129,7 @@ def getACCLoss(batch_train_data,out_target,batch_mask,batch_target):
 def getLr(epoch):
     print("epoch",epoch)
     if epoch == 6:
-        learning_rate = 0.05
+        learning_rate = 0.01
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     #if epoch == 8:
     #    learning_rate = 0.01
