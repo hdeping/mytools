@@ -231,5 +231,5 @@ def train(count):
         acc=dev_acc/dev_batch_num
         logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
-for count in range(5):
+for count in range(1):
     train(count)
