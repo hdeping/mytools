@@ -157,7 +157,7 @@ def getBonds(indexC,indexO,parameters):
             
 
     #print(atoms)
-    atomsSeq.sort()
+    #atomsSeq.sort()
     return result,atoms,atomsSeq
 
 # get the bonds connected to "C"
