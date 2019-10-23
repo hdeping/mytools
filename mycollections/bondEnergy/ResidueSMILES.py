@@ -33,7 +33,7 @@ class ResidueSMILES(BondAngle):
         input: 
             mol, OBMol type
         return:
-            ring_frag, fragment molecular of the mod
+            ring_frag, fragment molecule of the mod
         """
         ring_frag = ob.OBMol()
         for atom in ob.OBMolAtomIter(mol):
@@ -96,6 +96,12 @@ class ResidueSMILES(BondAngle):
         """
         bonding the atoms in the fragment
         input:
+            frag, fragment molecule, OBMol type
+            fatom_idx, index of atom
+            mol_bond, bond of a molecule
+            NumAtomsNoH, atoms number without hydrogen
+        return:
+            None, but frag is changed
 
         """
         IdxDict = {}
@@ -117,10 +123,14 @@ class ResidueSMILES(BondAngle):
 
         return
 
-    # input: string of SMILES format
-    # output: the SMILES format of the residue
+   
     def getResidues(self,smi_string):
         """
+        input: 
+            smi_string, string of SMILES format
+        return: 
+            atomId and ListOfFrag1, ids for atoms 
+            and the array fo fragments
         """
         
         #file's type conversion and generate a 3D builder
