@@ -55,7 +55,9 @@ display_fre = 50
 half = 4
 # data augmentation
 cycle = 1
-random = float(sys.argv[1])
+#random = float(sys.argv[1])
+active = 0.001
+random = 0.05
 augmentation = 0
 
 # save the models
@@ -144,7 +146,7 @@ for epoch in range(train_iteration):
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
             rand = random*torch.randn(param.data.shape).cuda()
-            reg_loss += param.norm(2) + (rand*param).sum()
+            reg_loss += param.norm(2) + (rand*param).sum() + active*param.sum()
         backward_loss += factor * reg_loss
                 
         # get the gradients
