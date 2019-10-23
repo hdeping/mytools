@@ -31,17 +31,30 @@ keys = ["200","210","220","222","233",
         "310","320","321","322","333",
         "420","430","433","533"]
 for key in keys:
-    envDicts[key[:2]] = 0
+    #envDicts[key[:2]] = 0
+    envDicts[key] = 0
 
+COCC_data = {}
 for key in bonds:
     para = bonds[key]
-    #para = json.dumps(para,indent = 4)
-    res =  getHash(para)
-    envDicts[str(res // 10)] += 1
-    #print(res)
-    #break
+    atomSeq = para['bonds']['atoms']
+    if atomSeq == "COCC":
+        res = getHash(para)
+        envDicts[str(res)] += 1
+        if res // 10 == 32 :
+            COCC_data[key] = para
+            print(key)
+            
+        
         
 
 envDicts = json.dumps(envDicts,indent = 4)
 print(envDicts)
+
+#envAtoms = json.dumps(envAtoms,indent = 4)
+#print(envAtoms)
+
+filename = "COCC_data.json"
+fp = open(filename,'w')
+json.dump(COCC_data,fp,indent = 4)
 

@@ -81,15 +81,19 @@ def getDihedral(indexC,indexO,parameters):
     result['number'] = number
     return result
 
-def getBonds(indexC,indexO,parameters):
+def getBonds(indexC,indexO,parameters,OxyType):
     bonds = parameters["bonds"]
+    atoms = parameters["atoms"]
     result = {}
+    
     # first one should be C-O 
     key = "R(%d,%d)"%(indexC,indexO)
     if key not in bonds:
         para = json.dumps(parameters,indent = 4)
         #print(para)
         return False
+    # atoms sequence
+    atomsSeq = []
 
     number = 1
     result[key] = bonds[key]
@@ -100,14 +104,33 @@ def getBonds(indexC,indexO,parameters):
         # R(x,indexC)
         if arr[1] == indexC:
             result[key] = bonds[key]
+            # get the atom
+            atomId = arr[0] - 1
+            atom   = atoms[atomId]
+            atomsSeq.append(atom)
             number += 1
         # R(indexC,x) x != indexO
         if arr[0] == indexC and arr[1] != indexO:
             result[key] = bonds[key]
+            # get the atom
+            atomId = arr[0] - 1
+            atom   = atoms[atomId]
+            atomsSeq.append(atom)
             number += 1
             
 
+    if OxyType == "[O]":
+        result_atoms = "CO"
+    else:
+        result_atoms = "COH"
+    atomsSeq.sort()
+
+    # concanate the atoms
+    for atom in atomsSeq:
+        result_atoms = result_atoms + atom
+
     result['number'] = number
+    result['atoms']  = result_atoms
     return result
 
 # get the bonds connected to "C"
@@ -134,9 +157,10 @@ for residue in residueBonds:
     molInfo = {}
     molInfo['ID'] = id
     molInfo['molecule'] = mol
-    molInfo['type'] = resDicts['type']
+    OxyType = resDicts['type']
+    molInfo['type'] = OxyType
     molInfo['energy'] = resDicts['energy']
-    bonds = getBonds(indexC,indexO,parameters)
+    bonds = getBonds(indexC,indexO,parameters,OxyType)
 
     # judge
     if bonds == False:
