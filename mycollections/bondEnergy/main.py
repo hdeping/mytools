@@ -36,54 +36,88 @@ paraDicts = {}
 ../residuesMatchDicts.json
 """
 
+def stringToArr(string):
+    res = []
+    
+    # deal with the string
+    ch = string[2:-1]
+    ch = ch.split(',')
 
-def getAngles(indexC,indexO,mol):
-    angles = []
-    for angle in ob.OBMolAngleIter(mol):
-        print(angle)
-        if angle[1] == indexC - 1:
-            if angle[0] == indexO - 1 or angle[2] == indexO - 1:
-                string = "A(%d,%d,%d)"%(angle[0]+1,angle[1]+1,angle[2]+1)
-                angles.append(string)
+    for item in ch:
+        num = int(item)
+        res.append(num)
 
-    return angles
+    return res
 
-def getBonds(indexC,indexO,mol):
+def getAngles(indexC,indexO,parameters):
+    angles = parameters["angles"]
+    result = {}
 
-    # get the neighbor of the carbon
-    carbon = mol.GetAtom(indexC)
-    for carbonNeighbor in ob.OBAtomAtomIter(carbon):
-        print(carbonNeighbor.GetIdx())
+    # find the exact angles
+    for key in angles:
+        arr = stringToArr(key)
+        if arr[1] == indexC:
+            if arr[0] == indexO or arr[2] == indexO:
+                result[key] = angles[key]
+
+
+    return result
+
+def getBonds(indexC,indexO,parameters):
+    bonds = parameters["bonds"]
+    result = {}
+    # first one should be C-O 
+    key = "R(%d,%d)"%(indexC,indexO)
+    result[key] = bonds[key]
+
+    for key in bonds:
+        arr = stringToArr(key)
+        # add to the result
+        # R(x,indexC)
+        if arr[1] == indexC:
+            result[key] = bonds[key]
+        # R(indexC,x) x != indexO
+        if arr[0] == indexC and arr[1] != indexO:
+            result[key] = bonds[key]
+            
+
+    return result
 
 # get the bonds connected to "C"
+count = 0
 for residue in residueBonds:
+    count += 1
+    print("residue ",count)
     # index of the carbon and oxygen
     indexC = residueBonds[residue][0]
     indexO = residueBonds[residue][1]
     print(indexC,indexO)
+
     # get the id and molecule
-    id = residueEnergies[residue]['ID']
-    mol = residueEnergies[residue]['molecule']
-    print(mol)
-    # get the parameters
-    para = idParameters[id]
-    para = json.dumps(para,indent = 4)
-    print(para)
-    mol = readSMILES(mol)
-    # add hydrogens
-    mol.AddHydrogens()
+    resDicts = residueEnergies[residue]
+    id  = resDicts['ID']
+    mol = resDicts['molecule']
+    parameters = idParameters[id]
     
 
-    print(id)
+    #print(id)
 
     # get bonds
-    bonds = getBonds(indexC,indexO,mol)
+    molInfo = {}
+    molInfo['ID'] = id
+    molInfo['molecule'] = mol
+    molInfo['type'] = resDicts['type']
+    bonds = getBonds(indexC,indexO,parameters)
+    molInfo['bonds'] = bonds
+    angles = getAngles(indexC,indexO,parameters)
+    molInfo['angles'] = angles
 
-    angles = getAngles(indexC,indexO,mol)
-    print(angles)
+    paraDicts[residue] = molInfo
 
-    break
+    #break
 
+paraDicts = json.dumps(paraDicts,indent = 4)
+print(paraDicts)
 # write the data
 # fp = open("inchikey_parameters.json",'w')
 # json.dump(paraDicts,fp,indent = 4)
