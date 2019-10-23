@@ -30,21 +30,20 @@ import torch
 import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
-from mydata import  TorchDataSet
+from read_data import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "label_list_train.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "label_list_dev.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-data_dimension = 400 # 400 point per frame
 language_nums = 9 # 9!
 learning_rate = 0.1
 batch_size = 64
@@ -62,9 +61,9 @@ if not os.path.exists(model_dir):
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度

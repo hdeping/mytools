@@ -4,23 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class baseConv1d(nn.Module):
-    def __init__(self,input_chanel,output_chanel,kernel_size,stride):
-        super(baseConv1d,self).__init__()
-        # architeture of the base conv1d
-        self.conv = nn.Conv1d(input_chanel,output_chanel,kernel_size=kernel_size,stride=stride)
-        self.bn   = nn.BatchNorm1d(output_chanel)
-    def forward(self,x):
-        # conv 
-        x = self.conv(x)
-        # batchnorm 
-        x = self.bn(x)
-        # 1d max pool 
-        x = F.max_pool1d(x,kernel_size=2)
-        # relu output
-        x = F.relu(x)
-        return x
-
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
@@ -29,17 +12,10 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        # 400-199-99
-        self.conv1 = baseConv1d(1,4,3,2)
-        # 99-49-24
-        self.conv2 = baseConv1d(4,10,3,2)
-        # 24-11-5
-        self.conv3 = baseConv1d(10,20,3,2)
-        # 5-2-1
-        self.conv4 = baseConv1d(20,40,3,2)
-
+        self.layer0 = nn.Sequential()
+        self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -50,25 +26,15 @@ class LanNet(nn.Module):
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
-    def forward(self, x, mask, target):
-        batch_size, fea_frames, fea_dim = x.size()
-        # reshape the input
-        x = x.contiguous().view(batch_size*fea_frames,1,-1)
-        # conv layer
-        x = self.conv1(x)
-        x = self.conv2(x)
-        x = self.conv3(x)
-        x = self.conv4(x)
+    def forward(self, src, mask, target):
+        batch_size, fea_frames, fea_dim = src.size()
 
-        # reshape x
-        x = x.contiguous().view(batch_size,fea_frames,-1)
-
-        # RNN layer
-        out_hidden, hidd = self.layer1(x)
+        out_hidden, hidd = self.layer0(src)
+        out_hidden, hidd = self.layer1(out_hidden)
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         #print(out_hidden.data.shape)
-        out_bn = self.layer2(out_hidden)
+        out_bn = F.relu(self.layer2(F.relu(out_hidden)))
         out_target = self.layer3(out_bn)
 
 
