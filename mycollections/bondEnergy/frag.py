@@ -74,24 +74,6 @@ def FragBondLink(frag, fatom_idx,mol_bond,NumAtomsNoH):
 
 
 # Simplify is a function to remove the same fragment pair
-def SimplifyLs(ls1, ls2):
-    ls = zip(ls1,ls2)
-    for i in range(len(ls)):
-        a,b = ls[i]
-        if len(a)<=len(b):
-            continue
-        else:
-            ls[i] = (b,a)
-    ls.sort()
-    i = 0
-    while i < len(ls)-1 :
-        if ls[i] == ls[i+1]:
-            ls.remove(ls[i])
-        else:
-            i += 1
-    return ls
-
-
 
 def main(molecules,smi_string):
     
@@ -184,8 +166,6 @@ def main(molecules,smi_string):
             ListOfFrag2.append(frag2_smi)
             # get bonds
             atomId.append(MolBond[BondIdx])
-    #ListOfFrag = SimplifyLs(ListOfFrag1,ListOfFrag2)
-    #DelDuplFrag(ListOfFrag)
     #print("list 1")
     #print(ListOfFrag1)
     #print(ListOfFrag1,ListOfFrag2)
@@ -193,8 +173,6 @@ def main(molecules,smi_string):
     #print(ListOfFrag2)
     #print("bonds")
     #print(atomId)
-    #get_frag_tbl(MolSmi,label, ListOfFrag)
-    # Output Gaussian input file
     return len(atomId),ListOfFrag1
 def getSMILES(filename):
     fp = open(filename,'r')
@@ -224,6 +202,8 @@ filename = "../molEnergyNumber.json"
 energyNum = readJson(filename)
 
 
+filename = "../IDResidue.json"
+idResidue = readJson(filename)
 
 count = np.zeros(10)
 
@@ -238,9 +218,9 @@ filename = "mismatch.result"
 fp1 = open(filename,'w')
 count_mismatch = np.zeros(9)
 for i,smi_string in enumerate(filenames):
-    #print("################# %d compounds #########"%(i))
-    fp.write("################# %d compounds #########"%(i)+'\n')
-    fp.write(smi_string + '\n')
+    print("################# %d compounds #########"%(i))
+    #fp.write("################# %d compounds #########"%(i)+'\n')
+    #fp.write(smi_string + '\n')
     num,frag = main(molecules,smi_string)
     #print(i,energyNum[smi_string],num)
     real_num = energyNum[smi_string] 
@@ -251,29 +231,55 @@ for i,smi_string in enumerate(filenames):
     if num > real_num:
         # some items are repeated
         # mismatched ones can be ignored
-        #10297   496   159    29     4     1print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
-        fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
+        #print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
+        #fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
         for line in frag:
             if line in molecules:
-                fp.write(molecules[line]["ID"]+'\n')
+                id = molecules[line]["ID"]
+                fp.write(line +'\n')
         num = real_num
     else:
         # some smiles are displayed into diffrent formulas
         # which should be equivalent
+
+        ####  get residues
         for line in frag:
             if line in molecules:
-                fp.write(molecules[line]["ID"]+'\n')
+                id = molecules[line]["ID"]
+                residues = idResidue[id]
+                break
+
+        ### match the exact samples
+        for line in frag:
+            if line in molecules:
+                a = (line in residues)
+                #id = molecules[line]["ID"]
+                exactLine = line
+                if not a:
+                    print(line,molecules[line]['ID'],residues)
+                    break
+                #id = molecules[line]["ID"]
+                fp.write(line +'\n')
+                #print(line,residues)
+                #residues.remove(line)
                 mismatch_num += 1
-            else:
-                fp.write(line + " is not in data"+'\n')
+
+        # if there is only one residue in the residues
+        #if len(residues) == 1:
+        #    fp.write(residues[0] + '\n')
+        #else:
+        #    for residue in residues:
+        #        fp1.write(residue + " is not in data"+'\n')
 
         # count the mismatch number
         #print(num,mismatch_num)
-        count_mismatch[num - mismatch_num] += 1
-        if num - mismatch_num == 4:
-            print(smi_string)
-            print(frag)
-            #break
+        #if num - mismatch_num > 0:
+        #    fp1.write()
+        #count_mismatch[num - mismatch_num] += 1
+        #if num - mismatch_num == 4:
+        #    print(smi_string)
+        #    print(frag)
+        #    #break
         
     total += num
     count[num] += 1
