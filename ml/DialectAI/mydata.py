@@ -9,9 +9,6 @@ import torch
 #from readhtk import HTKfile
 from getPhonemes2 import dealMlf
 
-#a = dealMlf('dev.mlf')
-#print(a)
-
 
 class TorchDataSet(object):
     def __init__(self, file_list, batch_size, chunk_num, dimension,mlf_file):
@@ -53,10 +50,9 @@ class TorchDataSet(object):
                 max_frames = feature_frames
             
             curr_feature = torch.Tensor(feature_data)
-            #means = curr_feature.mean(dim=1, keepdim=True)
+            #means = curr_feature.mean(dim=0, keepdim=True)
             #curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             batch_data.append(curr_feature)
-            #batch_data.append(curr_feature_norm)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             name_list.append(file_name)
 

@@ -36,8 +36,10 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
-train_mlf  = "train.mlf"
+#train_list = "label_train_list_fb.txt"
+#train_mlf  = "train.mlf"
+train_list = "all.txt"
+train_mlf  = "all.mlf"
 # dev
 dev_list   = "label_dev_list_fb.txt"
 dev_mlf    = "dev.mlf"
@@ -47,12 +49,12 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 8 # 40 before
 language_nums = 10 # 9!
-learning_rate = 0.1
+learning_rate = 0.2
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 150
-display_fre = 50
+train_iteration = 60
+display_fre = 200
 half = 4
 # data augmentation
 
@@ -93,24 +95,24 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
+    if epoch == 15:
+        learning_rate = 0.1
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
+    if epoch == 30:
         learning_rate = 0.02
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 20:
-        learning_rate = 0.01
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 40:
-        learning_rate = 0.003
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 80:
+    if epoch == 45:
         learning_rate = 0.001
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 120:
-        learning_rate = 0.0001
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 40:
+    #    learning_rate = 0.003
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 80:
+    #    learning_rate = 0.001
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 120:
+    #    learning_rate = 0.0001
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
     train_module.train()
