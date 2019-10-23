@@ -29,25 +29,24 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
-from mymodel import LanNet,getModel
+from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_list_train.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_list_dev.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10 # 9!
-data_dimension = 320
 learning_rate = 0.1
-batch_size = 32
+batch_size = 64
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 15
@@ -62,18 +61,14 @@ if not os.path.exists(model_dir):
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-# training net
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-# feature net
-feature = getModel(data_dimension,language_nums)
 logging.info(train_module)
-logging.info(feature)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
@@ -85,7 +80,6 @@ if use_cuda:
     #train_module = train_module.to(device)
     # torch 0.3.0
     train_module = train_module.cuda()
-    feature = feature.cuda()
 
 # regularization factor
 factor = 0.0005
@@ -138,9 +132,6 @@ for epoch in range(0,train_iteration):
             batch_mask       = batch_mask.cuda()
             batch_target     = batch_target.cuda()
 
-        # get feature
-        batch_train_data = feature(batch_train_data)
-        # get loss
         acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
         # loss = loss.sum()
@@ -218,7 +209,6 @@ for epoch in range(0,train_iteration):
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            batch_dev_data = feature(batch_dev_data)
             acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
         
         loss = loss.sum()/step_batch_size
