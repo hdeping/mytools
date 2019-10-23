@@ -133,12 +133,16 @@ def main(molecules,smi_string):
         # if A or B is oxygen
         AisO = mol.GetAtom(a).IsOxygen()
         BisO = mol.GetAtom(b).IsOxygen()
+        AisC = mol.GetAtom(a).IsCarbon()
+        BisC = mol.GetAtom(b).IsCarbon()
         #if (AisO or BisO) == False:
         #    print(a,b,False)
         #    continue
         #else:
         #    print(a,b,True)
         if (AisO or BisO) == False:
+            continue
+        if (AisC or BisC) == False:
             continue
         
 
@@ -240,7 +244,6 @@ for i,smi_string in enumerate(filenames):
     freq += 1
     if freq == 20000:
         break
-print(num)
 
 count = count.astype(int)
 print("freq",freq)

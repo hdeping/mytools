@@ -1,8 +1,13 @@
 #!/usr/bin/python
 
+
+filename  = "output"
+
 import numpy as np
 
-#filename = "../new_filter2.csv"
-filename = "filter.csv"
-data = np.loadtxt(filename,delimiter=' ',dtype=str)
-print(data)
+data = np.loadtxt(filename,dtype=str)
+
+print(len(data))
+for i in range(len(data)):
+    if len(data[i]) == 27:
+        print(data[i])
