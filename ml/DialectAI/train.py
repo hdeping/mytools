@@ -49,7 +49,7 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
-batch_size = 64
+batch_size = 16
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 90
@@ -82,7 +82,7 @@ logging.info('finish reading all train data')
 
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=30, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -93,15 +93,15 @@ def train(count):
     
     # regularization factor
     factor = 0.0005
-    learning_rate = 1e-4 / batch_size
+    learning_rate = 5e-4
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
         if epoch == 30:
-            learning_rate = 3e-5 / batch_size
+            learning_rate = 3e-4
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         if epoch == 60:
-            learning_rate = 1e-5 / batch_size
+            learning_rate = 1e-4
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02

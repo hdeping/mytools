@@ -8,6 +8,9 @@ from warpctc_pytorch import CTCLoss
 from getPhonemes2 import dealMlf
 import numpy as np
 
+
+from resnet import resnet18
+
 class baseConv1d(nn.Module):
     def __init__(self,input_dim=40,output_dim=40):
         super(baseConv1d, self).__init__()
@@ -35,13 +38,14 @@ class LanNet(nn.Module):
         # phonemeSeq  dictionary
         self.phonemes_dict = dealMlf("../labels/train.mlf")
 
+        self.conv  = resnet18()
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer2 = nn.Sequential()
         self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer3 = nn.Sequential()
-        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        #self.layer3 = nn.Sequential()
+        #self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         #self.layer4 = nn.Sequential()
         #self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
     def getBiHidden(self,layer,src,frames):
@@ -96,14 +100,27 @@ class LanNet(nn.Module):
         #print(sorted_frames)
         #print(name_list)
 
-        ctc_loss = CTCLoss()
+        # conv output
+
+        src = src.unsqueeze(1)
+        src = self.conv(src)
+
+        # squeeze
+        # B,F,T -> B,T,F
+        src = src.squeeze()
+        src = src.transpose(1,2)
+        #src = src.transpose(0,1)
+
+        print(src.shape)
+
         # get gru output
         # layer 1
+        sorted_frames = sorted_frames / 4
         out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
         # layer2
         out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
-        # layer3
-        out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
+        ## layer3
+        #out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
 
         # residual part
         out_hidden = out_hidden + out_hidden_new
@@ -120,6 +137,8 @@ class LanNet(nn.Module):
         labels       = torch.IntTensor(labels)
         labels_sizes = torch.IntTensor(labels_sizes)
 
+        # CTC 
+        ctc_loss = CTCLoss()
         frames = sorted_frames.cpu().type(torch.IntTensor)
         probs = out_hidden.cpu().type(torch.FloatTensor)
         loss = ctc_loss(probs, labels, frames, labels_sizes)

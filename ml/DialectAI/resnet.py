@@ -90,21 +90,21 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
-        print("input ",x.shape)
+        #print("input ",x.shape)
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
         x = self.maxpool(x)
-        print("after maxpool",x.shape)
+        #print("after maxpool",x.shape)
 
         x = self.layer1(x)
-        print("after layer1",x.shape)
+        #print("after layer1",x.shape)
         x = self.layer2(x)
-        print("after layer2",x.shape)
+        #print("after layer2",x.shape)
         x = self.layer3(x)
-        print("after layer3",x.shape)
+        #print("after layer3",x.shape)
         x = self.layer4(x)
-        print("output",x.shape)
+        #print("output",x.shape)
 
         #x = self.avgpool(x)
         #x = x.view(x.size(0), -1)
