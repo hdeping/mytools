@@ -4,19 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-'''
-hebei 0
-kejia 0
-minnan 0
-shan3xi 0
-nanchang 1
-sichuan 2
-changsha 3
-shanghai 4
-ningxia 5
-hefei 6
-'''
-
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
