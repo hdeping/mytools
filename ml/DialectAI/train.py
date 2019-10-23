@@ -156,9 +156,12 @@ def train(count):
                 batch_target     = batch_target.cuda()
     
             with torch.no_grad():
-                out_hidden,batch_target,older_indeces = model(batch_train_data,batch_frames,batch_target)
+                #out_hidden,batch_target,older_indeces = model(batch_train_data,batch_frames,batch_target)
+                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_train_data,batch_frames,batch_target)
             #print("out hidden shape",out_hidden.shape)
-            acc, loss = train_module(out_hidden, batch_target)
+            #acc, loss = train_module(out_hidden, batch_target)
+
+            acc, loss = train_module(out_hidden, sorted_frames,batch_target)
             
             
             # loss = loss.sum()
@@ -239,8 +242,10 @@ def train(count):
                 batch_target     = batch_target.cuda()
                 
             with torch.no_grad():
-                out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
-                acc, loss = train_module(out_hidden, batch_target)
+                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
+                acc, loss = train_module(out_hidden, sorted_frames,batch_target)
+                #out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
+                #acc, loss = train_module(out_hidden, batch_target)
             
             loss = loss.sum()/step_batch_size
     
