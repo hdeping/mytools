@@ -5,8 +5,7 @@ import copy
 import random
 
 from HTKfile import HTKfile
-htk_feature = "/home/ncl/hdp/18_aichallenge/aichallenge/train/1.getFB40/fb40/minnan_train_speaker12_047.fb"
-
+htk_feature = "/home/hdeping/c/41_xunFeiFangYanDasai/01_XFAIChallenge/aichallenge/train/1.getFB40/fb40/nanchang_train_speaker07_142.fb"
 htk_file = HTKfile(htk_feature)
 #print("start frame num is ",htk_file.get_start_frame())
 #print("end frame num is ",htk_file.get_end_frame())

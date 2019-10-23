@@ -50,7 +50,7 @@ if not os.path.exists(model_dir):
 dimension = 40
 language_nums = 6
 learning_rate = 0.1
-batch_size = 64
+batch_size = 256
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 20
