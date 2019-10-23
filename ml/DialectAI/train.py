@@ -35,21 +35,23 @@ from net_component import LanNet
 
 ## ======================================
 # data list
-train_list = "../labels/label_all_list_fb.txt"
+# train
+train_list = "../labels/label_train0.txt"
+# dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 40
+dimension = 80 # 40 before
 language_nums = 6
-learning_rate = 0.001
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 9
+train_iteration = 30
 display_fre = 50
-half = 5
+half = 4
 # data augmentation
 
 # save the models
@@ -81,15 +83,18 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-# load a model
 
-train_module.load_state_dict(torch.load('models/model0.model'))
-for epoch in range(1,train_iteration):
+for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == half:
-        learning_rate /= 2.
+    if epoch == 8:
+        learning_rate = 0.05
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+    if epoch == 16:
+        learning_rate = 0.01
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 24:
+        learning_rate = 0.003
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
