@@ -2,6 +2,7 @@
 import openbabel as ob
 import pybel
 import json
+import numpy as np
 
 
 obConversion = ob.OBConversion()
@@ -41,6 +42,29 @@ def IsRepeat(input_list):
     return False
 
 
+def getSingleFinger(string1,string2):
+    # get molecules
+    mol1 = readSMILES(string1)
+    mol2 = readSMILES(string2)
+    vec1 = ob.vectorUnsignedInt()
+    vec2 = ob.vectorUnsignedInt()
+    fingerprinter.GetFingerprint(mol1, vec1)
+    fingerprinter.GetFingerprint(mol2, vec2)
+    tanimoto_value = fingerprinter.Tanimoto(vec1,vec2)
+
+    return tanimoto_value
+def getPairFingers(fragArr1,fragArr2):
+
+    matrix = []
+    for frag1 in fragArr1:
+        rows = []
+        for frag2 in fragArr2:
+            tanimoto_value = getSingleFinger(frag1,frag2)
+            rows.append(tanimoto_value)
+
+        matrix.append(rows)
+
+    return matrix
 
 def getFingers(strings):
     # get molecules
@@ -154,6 +178,36 @@ def getBondInfo(mol):
         ChainBond.append(bond.GetIdx())
     return MolBond,ChainBond
 
+# Simplify is a function to remove the same fragment pair
+def Simplify(frag1,atomId,frag2):
+    frag = []
+    length = len(frag1)
+    #print(frag1)
+    #print(frag2)
+    for i in range(length):
+        if len(frag1[i]) > len(frag2[i]):
+            frag.append([frag1[i],atomId[i],frag2[i]])
+        else:                              
+            frag.append([frag1[i],atomId[i],frag2[i]])
+
+    frag.sort()
+    i = 0
+    while i < len(frag)-1 :
+    	if frag[i] == frag[i+1]:
+            frag.remove(frag[i])
+    	else:
+            i += 1
+    # get a dictionary
+    fragDicts = {}
+    for line in frag:
+        key   = line[0]
+        value = line[1]
+        fragDicts[key] = value
+
+    frag = np.array(frag)
+
+    return frag[:,0],fragDicts
+
 def getFrag(molecules,smi_string):
 
     # create a molecule container
@@ -173,10 +227,14 @@ def getFrag(molecules,smi_string):
         #mol.AddHydrogens()
         a,b,bo = MolBond[BondIdx]
         # if A or B is oxygen
-        AisO = mol.GetAtom(a).IsOxygen()
-        BisO = mol.GetAtom(b).IsOxygen()
-        AisC = mol.GetAtom(a).IsCarbon()
-        BisC = mol.GetAtom(b).IsCarbon()
+        A = mol.GetAtom(a)
+        B = mol.GetAtom(b)
+        AisO = A.IsOxygen()
+        BisO = B.IsOxygen()
+        AisC = A.IsCarbon()
+        BisC = B.IsCarbon()
+        # get type
+        bondInfo = [a,b,bo,A.GetType()[0],B.GetType()[0]]
         #if (AisO or BisO) == False:
         #    print(a,b,False)
         #    continue
@@ -225,7 +283,14 @@ def getFrag(molecules,smi_string):
             ListOfFrag1.append(frag1_smi)
             ListOfFrag2.append(frag2_smi)
             # get bonds
-            atomId.append(MolBond[BondIdx])
+            atomId.append(bondInfo)
+        if frag1_smi == "[OH]" or frag1_smi == "[O]":
+            ListOfFrag1.append(frag1_smi)
+            ListOfFrag2.append(frag2_smi)
+            # get bonds
+            atomId.append(bondInfo)
+
+    frag,fragDicts = Simplify(ListOfFrag1,atomId,ListOfFrag2)
     #print("list 1")
     #print(ListOfFrag1)
     #print(ListOfFrag1,ListOfFrag2)
@@ -234,7 +299,7 @@ def getFrag(molecules,smi_string):
     #print("bonds")
     #print(atomId)
     # return the number and the bigger residues
-    return len(atomId),ListOfFrag1
+    return len(atomId),frag,fragDicts
 
 def readJson(filename):
     fp = open(filename,'r')
@@ -245,7 +310,7 @@ def readJson(filename):
 
 def printMismatchRes(fp,id,mismatch_frag,residues):
     #print("% ",id)
-    fp.write("%s %s\n"%('%',id))
+    fp.write("%s %s\n"%('#',id))
     #print(mismatch_frag)
     for line in mismatch_frag:
         fp.write("%s\n"%(line))
