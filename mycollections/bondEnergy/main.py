@@ -26,6 +26,7 @@ idParameters  = readJson(filename)
 filename = "./valence_electron.json"
 # elements : electron number
 valence  = readJson(filename)
+
 # store the parameters
 paraDicts = {}
 
@@ -65,8 +66,6 @@ def getAngles(indexC,indexO,parameters):
                 result[key] = angles[key]
                 number += 1
 
-
-    result['number'] = number
     return result
 
 def getDihedral(indexC,indexO,parameters):
@@ -81,7 +80,6 @@ def getDihedral(indexC,indexO,parameters):
             result[key] = dihedral[key]
             number += 1
 
-    result['number'] = number
     return result
 
 def getBonds(indexC,indexO,parameters,OxyType):
@@ -89,14 +87,14 @@ def getBonds(indexC,indexO,parameters,OxyType):
     atoms = parameters["atoms"]
     result = {}
     
+    atomsSeq = []
     # first one should be C-O 
     key = "R(%d,%d)"%(indexC,indexO)
     if key not in bonds:
         para = json.dumps(parameters,indent = 4)
         #print(para)
-        return False
+        return False,atomsSeq
     # atoms sequence
-    atomsSeq = []
 
     number = 1
     result[key] = bonds[key]
@@ -149,8 +147,6 @@ for residue in residueBonds:
     molInfo['molecule'] = mol
     OxyType = resDicts['type']
     molInfo['type'] = OxyType
-    if OxyType == '[OH]':
-        continue
     molInfo['energy'] = resDicts['energy']
     bonds,atomsSeq = getBonds(indexC,indexO,parameters,OxyType)
     # judge
@@ -164,11 +160,11 @@ for residue in residueBonds:
     print(atomsSeq)
     for atom in atomsSeq:
         elements[atom] = valence[atom]
-    bonds["elements"] = elements
 
         
 
     molInfo['bonds'] = bonds
+    molInfo["elements"] = elements
     angles = getAngles(indexC,indexO,parameters)
     molInfo['angles'] = angles
     dihedral = getDihedral(indexC,indexO,parameters)
