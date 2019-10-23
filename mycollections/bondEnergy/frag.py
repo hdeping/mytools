@@ -9,6 +9,7 @@ from getsmiles import getSMILES
 from getsmiles import getFingers
 from getsmiles import getFrag
 from getsmiles import readJson
+from getsmiles import printMismatchRes
 
 
 obConversion = ob.OBConversion()
@@ -44,8 +45,10 @@ count_mismatch = np.zeros(9)
 count_mismatch_bond = np.zeros(9)
 
 # get mismatched  and finger-repeated residues
-filename = "mismatch_residues.smi"
+filename = "mismatch_residues2.smi"
 fp2 = open(filename,'w')
+filename = "mismatch_residues3.smi"
+fp3 = open(filename,'w')
 for i,smi_string in enumerate(filenames):
     #print("################# %d compounds #########"%(i))
     #fp.write("################# %d compounds #########"%(i)+'\n')
@@ -114,18 +117,12 @@ for i,smi_string in enumerate(filenames):
         # print the fingerprints of the mismatched residues
         result,values = getFingers(residues)
         if result:
-            print("% ",id)
-            fp2.write("%s %s\n"%('%',id))
-            print(mismatch_frag)
-            for line in mismatch_frag:
-                fp2.write("%s\n"%(line))
-            for line in residues:
-                fp2.write("%s\n"%(line))
-            print(residues)
-            if len(mismatch_frag) != len(values):
-                print("match is wrong here!!!!!")
-                break
-            
+            if num - match_num == 2:
+                print(2)
+                printMismatchRes(fp2,id,mismatch_frag,residues)
+            elif num - match_num == 3:
+                print(3)
+                printMismatchRes(fp3,id,mismatch_frag,residues)
 
     count_mismatch[num - match_num] += 1
     if num - match_num == 1:
@@ -148,6 +145,7 @@ for i,smi_string in enumerate(filenames):
 fp.close()
 fp1.close()
 fp2.close()
+fp3.close()
 count = count.astype(int)
 count_mismatch = count_mismatch.astype(int)
 count_mismatch_bond = count_mismatch_bond.astype(int)

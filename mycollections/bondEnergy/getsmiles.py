@@ -242,5 +242,16 @@ def readJson(filename):
     fp.close()
 
     return molecules
+
+def printMismatchRes(fp,id,mismatch_frag,residues):
+    #print("% ",id)
+    fp.write("%s %s\n"%('%',id))
+    #print(mismatch_frag)
+    for line in mismatch_frag:
+        fp.write("%s\n"%(line))
+    for line in residues:
+        fp.write("%s\n"%(line))
+    #print(residues)
+            
 #strings=  ['CCNNN',"CCC1CCCCC1","N=CCC1(=O)CCCC1"]
 #getFingers(strings)
