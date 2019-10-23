@@ -111,11 +111,11 @@ class LanNet(nn.Module):
         src = src.transpose(1,2)
         #src = src.transpose(0,1)
 
-        print(src.shape)
+        print("src shape",src.shape)
 
         # get gru output
-        sorted_frames = sorted_frames / 4
         # layer 1
+        sorted_frames = sorted_frames / 4
         out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
         # layer2
         out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
@@ -138,7 +138,7 @@ class LanNet(nn.Module):
         labels_sizes = torch.IntTensor(labels_sizes)
 
         # CTC 
-        ctc_loss = CTCLoss()
+        ctc_loss = CTCLoss(size_average=True)
         frames = sorted_frames.cpu().type(torch.IntTensor)
         probs = out_hidden.cpu().type(torch.FloatTensor)
         loss = ctc_loss(probs, labels, frames, labels_sizes)
