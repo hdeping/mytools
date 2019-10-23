@@ -31,20 +31,20 @@ import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
-from mymodel import LanNet
+from net_component import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train0_fb40.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb40.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-language_nums = 6
+language_nums = 9 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
@@ -68,7 +68,6 @@ logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
 train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-#train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
@@ -112,7 +111,6 @@ for epoch in range(0,train_iteration):
         #print("step is ",step)
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
         batch_frames = batch_y[:,1].contiguous().view(-1, 1)
-        #print(step,batch_x.shape,batch_frames.min().item(),batch_frames.max().item())
 
         #max_batch_frames = int(max(batch_frames).item())
         #print(dir(batch_frames))
