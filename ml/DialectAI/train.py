@@ -85,7 +85,7 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
-factor = 0.005
+factor = 0.0005
 for epoch in range(train_iteration):
     print("epoch",epoch)
     if epoch >= half:
