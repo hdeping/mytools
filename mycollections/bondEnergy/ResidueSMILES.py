@@ -92,9 +92,11 @@ class ResidueSMILES(BondAngle):
                     self.FillAtom(mol, _atom, frag, fatom_idx)
 
         return
-    # BondLink() is a function to bonding the atoms in the fragment 
     def FragBondLink(self,frag, fatom_idx,mol_bond,NumAtomsNoH):
         """
+        bonding the atoms in the fragment
+        input:
+
         """
         IdxDict = {}
         for i in range(len(fatom_idx)):
@@ -113,27 +115,7 @@ class ResidueSMILES(BondAngle):
             except:
                 continue
 
-
-    # Simplify is a function to remove the same fragment pair
-    def SimplifyLs(self,ls1, ls2):
-        """
-        """
-        ls = zip(ls1,ls2)
-        for i in range(len(ls)):
-            a,b = ls[i]
-            if len(a)<=len(b):
-                continue
-            else:
-                ls[i] = (b,a)
-        ls.sort()
-        i = 0
-        while i < len(ls)-1 :
-            if ls[i] == ls[i+1]:
-                ls.remove(ls[i])
-            else:
-                i += 1
-        return ls
-
+        return
 
     # input: string of SMILES format
     # output: the SMILES format of the residue
