@@ -12,7 +12,7 @@ import numpy as np
 from resnet import resnet18
 
 class pre_model(nn.Module):
-    def __init__(self,hidden_dim=512):
+    def __init__(self,hidden_dim=256):
         super(pre_model, self).__init__()
         self.hidden_dim = hidden_dim
         self.conv = resnet18()
