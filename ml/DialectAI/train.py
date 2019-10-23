@@ -94,12 +94,12 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.02
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 4:
+    #    learning_rate = 0.05
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 8:
+    #    learning_rate = 0.02
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
     train_module.train()

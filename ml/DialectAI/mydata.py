@@ -45,6 +45,7 @@ class TorchDataSet(object):
             if feature_frames > max_frames:
                 max_frames = feature_frames
             
+            print(feature_data)
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
