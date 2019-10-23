@@ -56,12 +56,10 @@ half = 4
 # data augmentation
 cycle = 1
 #random = float(sys.argv[1])
-active = 0.001
-random = 0.05
 augmentation = 0
 
 # save the models
-model_dir = "models_data%d"%(1000*random)
+model_dir = "models_data%d"%(1000*augmentation)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -115,7 +113,9 @@ for epoch in range(train_iteration):
         #max_batch_frames = int(max(batch_frames).item())
         #print(dir(batch_frames))
         max_batch_frames = int(max(batch_frames).item())
+        #print(batch_x.data.shape)
         batch_train_data = batch_x[:, :max_batch_frames, :]
+        #print(batch_train_data.data.shape)
 
         step_batch_size = batch_target.size(0)
         batch_mask = torch.zeros(step_batch_size, max_batch_frames)
@@ -145,8 +145,7 @@ for epoch in range(train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            rand = random*torch.randn(param.data.shape).cuda()
-            reg_loss += param.norm(2) + (rand*param).sum() + active*param.sum()
+            reg_loss += param.norm(2)
         backward_loss += factor * reg_loss
                 
         # get the gradients
