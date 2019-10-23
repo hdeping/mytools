@@ -15,7 +15,7 @@ class LanNet(nn.Module):
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('lstm', nn.LSTM(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -54,6 +54,7 @@ class LanNet(nn.Module):
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
         ce_loss = -torch.log(tar_select_new) 
+        #ce_loss = -torch.log(tar_select_new + 1e-4) 
         ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc

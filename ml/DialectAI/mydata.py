@@ -7,6 +7,7 @@ import random
 import torch
 
 from readhtk import HTKfile
+import numpy as np
 
 
 class TorchDataSet(object):
@@ -18,7 +19,6 @@ class TorchDataSet(object):
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
-        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
@@ -39,12 +39,16 @@ class TorchDataSet(object):
 
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
+            #print(feature_data.shape)
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()
 
             if feature_frames > max_frames:
                 max_frames = feature_frames
             
+            #print(feature_data)
+            # nan to num
+            feature_data = np.nan_to_num(feature_data)
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
