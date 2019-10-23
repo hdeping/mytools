@@ -157,6 +157,7 @@ def getBonds(indexC,indexO,parameters):
             
 
     #print(atoms)
+    atomsSeq.sort()
     return result,atoms,atomsSeq
 
 # get the bonds connected to "C"
@@ -164,6 +165,7 @@ count = 0
 count_no_bond = 0
 count_sample = 0
 dihedral_counts = np.zeros(20,dtype=int)
+count_CC = 0
 for residue in residueBonds:
     count += 1
     #print("residue ",count)
@@ -202,9 +204,11 @@ for residue in residueBonds:
     #print(atomsSeq)
     # get the number of the elements
     elem_count = 0
+    elem_atoms = ""
     for atom in atomsSeq:
-        elements[atom] = valence[atom]
         elem_count += 1
+        elements[atom+str(elem_count)] = valence[atom]
+        elem_atoms = elem_atoms + atom
 
     molInfo['bonds'] = bonds
     molInfo["elements"] = elements
@@ -229,12 +233,6 @@ for residue in residueBonds:
         #print(parameters['atoms'])
         break
 
-    #dihedral_counts[dihedralNum] += 1
-    if bondNum - elem_count == 1:
-        print(elem_count,bondNum,bonds,elements)
-        #print(bonds)
-        #print(elements)
-        #break
         
     filter2 = (bondNum  == 3)
     filter3 = (angleNum == 2)
@@ -244,6 +242,16 @@ for residue in residueBonds:
         paraDicts[residue] = molInfo
         count_sample += 1
         dihedral_counts[dihedralNum] += 1
+        #dihedral_counts[dihedralNum] += 1
+        if bondNum - elem_count == 1:
+            #print(elem_count,bondNum,bonds,elements)
+            print(elem_atoms)
+            if elem_atoms == "CC":
+                count_CC += 1
+            print
+            #print(bonds)
+            #print(elements)
+            #break
 
     #break
 
@@ -258,3 +266,4 @@ print("number of the samples ", count_sample)
 
 print("dihedral statistics")
 print(dihedral_counts)
+print("CC",count_CC)
