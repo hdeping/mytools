@@ -36,7 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -49,7 +49,7 @@ learning_rate = 0.1
 batch_size = 50
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 10
 display_fre = 50
 half = 4
 # data augmentation
