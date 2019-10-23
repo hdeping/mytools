@@ -36,6 +36,25 @@ paraDicts = {}
 ../residuesMatchDicts.json
 """
 
+
+def getAngles(indexC,indexO,mol):
+    angles = []
+    for angle in ob.OBMolAngleIter(mol):
+        print(angle)
+        if angle[1] == indexC - 1:
+            if angle[0] == indexO - 1 or angle[2] == indexO - 1:
+                string = "A(%d,%d,%d)"%(angle[0]+1,angle[1]+1,angle[2]+1)
+                angles.append(string)
+
+    return angles
+
+def getBonds(indexC,indexO,mol):
+
+    # get the neighbor of the carbon
+    carbon = mol.GetAtom(indexC)
+    for carbonNeighbor in ob.OBAtomAtomIter(carbon):
+        print(carbonNeighbor.GetIdx())
+
 # get the bonds connected to "C"
 for residue in residueBonds:
     # index of the carbon and oxygen
@@ -57,10 +76,11 @@ for residue in residueBonds:
 
     print(id)
 
-    # get the neighbor of the carbon
-    carbon = mol.GetAtom(indexC)
-    for carbonNeighbor in ob.OBAtomAtomIter(carbon):
-        print(carbonNeighbor.GetIdx())
+    # get bonds
+    bonds = getBonds(indexC,indexO,mol)
+
+    angles = getAngles(indexC,indexO,mol)
+    print(angles)
 
     break
 
