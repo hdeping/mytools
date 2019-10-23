@@ -5,6 +5,8 @@ import os
 import numpy as np
 import json
 
+from getsmiles import getSMILES
+
 # Break the bond in ring and generate the radical fragment
 def BreakRing(mol):
     ring_frag = ob.OBMol()
@@ -175,18 +177,6 @@ def main(molecules,smi_string):
     #print(atomId)
     return len(atomId),ListOfFrag1
 
-def getSMILES(filename):
-    fp = open(filename,'r')
-    data = fp.read()
-    fp.close()
-    data = data.split('\n')
-    data = data[:-1]
-    res = []
-    # get the first column
-    for line in data:
-        line = line.split(' ')
-        res.append(line[0])
-    return res
 
 def readJson(filename):
     fp = open(filename,'r')
@@ -289,7 +279,7 @@ for i,smi_string in enumerate(filenames):
         id = molecules[exactLine]["ID"]
         residues = idResidue[id]
         print(num,mismatch_num,frag,residues)
-        break
+        #break
         
     #if num - mismatch_num == 4:
     #    print(smi_string)
