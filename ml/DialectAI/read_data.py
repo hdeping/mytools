@@ -22,13 +22,12 @@ def getBeginEnd(train,data_piece):
         begin = 0
         end   = 3000
     return begin,end
-def get_samples(list,train,data_piece):
+def get_samples(file_list,train,data_piece):
     print("get samples")
     samples = 0
     max_frames = 0
     # get begin and end
     begin,end = getBeginEnd(train,data_piece)
-    file_list = np.loadtxt(list, delimiter=' ', dtype=str)
     for i in range(begin,end):
         if i%1000 == 0:
             print(i)
@@ -48,7 +47,7 @@ def get_samples(list,train,data_piece):
     return samples, max_frames
 
 
-def get_data(list, samples, max_frames, dimension,train,data_piece):
+def get_data(file_list, samples, max_frames, dimension,train,data_piece):
     print("get data")
     data = torch.zeros(samples, max_frames, dimension)
     target_frames = torch.zeros(samples, 2)
@@ -59,7 +58,6 @@ def get_data(list, samples, max_frames, dimension,train,data_piece):
     # get begin and end
     begin,end = getBeginEnd(train,data_piece)
     # open the file
-    file_list = np.loadtxt(list, delimiter=' ', dtype=str)
     for i in range(begin,end):
         if i%1000 == 0:
             print(i)

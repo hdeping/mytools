@@ -34,6 +34,7 @@ import gc
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
 from net_component import LanNet
+import numpy as np
 
 ## ======================================
 # data list
@@ -64,6 +65,7 @@ if not os.path.exists(model_dir):
 ## ======================================
 kwargs = {'num_workers': 1, 'pin_memory': True} if use_cuda else {}
 # dev data 
+dev_list = np.loadtxt(dev_list, delimiter=' ', dtype=str)
 dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,False,0)
 dev_dataset = Data.DataLoader(dev_dataset,batch_size=batch_size, shuffle=False, **kwargs)
 logging.info('finish reading all train data')
@@ -88,10 +90,13 @@ factor = 0.0005
 # train data
 # data piece from 0 to 15 for each 9000
 print("training begins")
+train_list = np.loadtxt(train_list+'1', delimiter=' ', dtype=str)
+# shuffle the train_list
+#np.random.shuffle(train_list)
 for piece in range(0,16):
     t1 = time.time()
     train_dataset_loader = TorchDataSet(train_list, batch_size, chunk_num, dimension,True,piece)
-    train_dataset = Data.DataLoader(train_dataset_loader,batch_size=batch_size, shuffle=True, **kwargs)
+    train_dataset = Data.DataLoader(train_dataset_loader,batch_size=batch_size, shuffle=False, **kwargs)
     #train_dataset = dev_dataset
     t2 = time.time()
     print("data reading time is ",t2 - t1)
