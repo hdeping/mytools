@@ -207,7 +207,7 @@ idResidue = readJson(filename)
 
 count = np.zeros(10)
 
-filename = "smiles.txt"
+filename = "mismatch.txt"
 filenames = getSMILES(filename)
 total = 0
 freq = 0
