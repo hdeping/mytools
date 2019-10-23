@@ -3,6 +3,7 @@ import openbabel as ob
 import pybel as pb
 import os
 import numpy as np
+import json
 
 # Break the bond in ring and generate the radical fragment
 def BreakRing(mol):
@@ -92,7 +93,7 @@ def SimplifyLs(ls1, ls2):
 
 
 
-def main(smi_string):
+def main(molecules,smi_string):
     
     #file's type conversion and generate a 3D builder
     obConversion = ob.OBConversion()
@@ -183,7 +184,12 @@ def main(smi_string):
     #DelDuplFrag(ListOfFrag)
     #print("list 1")
     #print(ListOfFrag1)
-    print(ListOfFrag1,ListOfFrag2)
+    #print(ListOfFrag1,ListOfFrag2)
+    for line in ListOfFrag1:
+        if line in molecules:
+            print(molecules[line]["ID"])
+        else:
+            print(line,"is not in data")
     #print("list 2")
     #print(ListOfFrag2)
     #print("bonds")
@@ -204,6 +210,16 @@ def getSMILES(filename):
         res.append(line[0])
     return res
 
+def getMolecules():
+    filename = "../new_filter3.json"
+    fp = open(filename,'r')
+    molecules = json.load(fp)
+    fp.close()
+
+    return molecules
+
+# get molecules
+molecules = getMolecules()
 
 
 
@@ -217,13 +233,12 @@ freq = 0
 for i,smi_string in enumerate(filenames):
     print("################# %d compounds #########"%(i))
     print(smi_string)
-    num = main(smi_string)
-    if num == 8:
+    num = main(molecules,smi_string)
         
     total += num
     count[num] += 1
     freq += 1
-    if freq == 1000:
+    if freq == 20000:
         break
 print(num)
 
