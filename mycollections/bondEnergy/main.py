@@ -54,13 +54,16 @@ def getAngles(indexC,indexO,parameters):
     result = {}
 
     # find the exact angles
+    number = 0
     for key in angles:
         arr = stringToArr(key)
         if arr[1] == indexC:
             if arr[0] == indexO or arr[2] == indexO:
                 result[key] = angles[key]
+                number += 1
 
 
+    result['number'] = number
     return result
 
 def getDihedral(indexC,indexO,parameters):
@@ -68,11 +71,14 @@ def getDihedral(indexC,indexO,parameters):
     result = {}
 
     # find the exact dihedral
+    number = 0
     for key in dihedral:
         arr = stringToArr(key)
         if arr[1] == indexC and arr[2] == indexO:
             result[key] = dihedral[key]
+            number += 1
 
+    result['number'] = number
     return result
 
 def getBonds(indexC,indexO,parameters):
@@ -85,6 +91,7 @@ def getBonds(indexC,indexO,parameters):
         #print(para)
         return False
 
+    number = 1
     result[key] = bonds[key]
 
     for key in bonds:
@@ -93,11 +100,14 @@ def getBonds(indexC,indexO,parameters):
         # R(x,indexC)
         if arr[1] == indexC:
             result[key] = bonds[key]
+            number += 1
         # R(indexC,x) x != indexO
         if arr[0] == indexC and arr[1] != indexO:
             result[key] = bonds[key]
+            number += 1
             
 
+    result['number'] = number
     return result
 
 # get the bonds connected to "C"
