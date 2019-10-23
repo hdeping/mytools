@@ -36,7 +36,7 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 #dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
@@ -149,6 +149,9 @@ def test():
     return result_target
 # output the result
 import numpy as np
-train_module.load_state_dict(torch.load("models/model9.model"))
+train_module.load_state_dict(torch.load("models/model5.model"))
 print("dev")
 result_target = test()
+print(result_target)
+result_target = np.array(result_target)
+np.savetxt("output",result_target,fmt='%g')
