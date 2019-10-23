@@ -1,41 +1,44 @@
 #!/usr/bin/python
 
+
+import openbabel as ob
 import numpy as np
-import json
-import sys
 
-def getSample(data,ii):
-    result = {}
-    # get atoms
-    line = data[ii]
-    keys = ["molecule", "type", "residue", "energy"]
+obConversion = ob.OBConversion()
+obConversion.SetInAndOutFormats("smi", "smi")
+mol = ob.OBMol()
 
-    for i in range(3):
-        key = keys[i]
-        value = line[i+2]
-        result[key] = value
-
-    i = 3
-    key = keys[i]
-    value = line[i+2]
-    result[key] = float(value)
-
-
-    return result
-
-
-##### check the files
-#checkPara()
-
-###############
-"""
- name:(ID)
-    molecule,
-    type,
-    residue,
-    energy
-"""
-def getData(filename):
+def readSMILES(smi_string):
+    # read smiles
+    obConversion.ReadString(mol, smi_string)
+    # get bonds
+    MolBond = []
+    ChainBond = []
+    
+    #for angle in ob.OBMolAngleIter(mol):    
+    #    print(angle)
+    for angle in ob.OBMolTorsionIter(mol):    
+        print(angle)
+    
+    for bond in ob.OBMolBondIter(mol):    
+        a = bond.GetBeginAtomIdx()
+        b = bond.GetEndAtomIdx()
+        bo = bond.GetBondOrder()
+        MolBond.append((a,b,bo))
+    
+        if bond.IsInRing() or bond.IsAromatic():
+            continue
+    
+        ChainBond.append(bond.GetIdx())
+    
+    #print(MolBond)
+    #print("atom number",mol.NumAtoms())
+    #print("bond number",mol.NumBonds())
+    #print("residue number",mol.NumResidues())
+    #MolBond.sort()
+    #print(MolBond)
+    #NumOfRingBond = len(MolBond) - len(ChainBond)
+def getSMILES(filename):
     fp = open(filename,'r')
     data = fp.read()
     fp.close()
@@ -44,30 +47,17 @@ def getData(filename):
     res = []
     # get the first column
     for line in data:
-        line = line.split(',')
-        res.append(line)
+        line = line.split(' ')
+        res.append(line[0])
 
     return res
 
+    return
 
-
-filename = "../new_filter2.csv"
-data = getData(filename)
-
-size = len(data)
-#print(data)
-database = {}
-for i in range(size):
-    print("sample",i+1)
-    result = getSample(data,i)
-    name = data[i][1]
-    database[name] = result
-
-# dict to json
-database = json.dumps(database,indent=4)
-
-#### write the data
-filename = "new_filter2.json"
-fp = open(filename,'w')
-fp.write(database)
-fp.close()
+filename = "smiles.txt"
+filenames = getSMILES(filename)
+#print(filenames)
+for smi_string in filenames:
+    readSMILES(smi_string)
+    break
+    
