@@ -53,15 +53,17 @@ def getAngles(indexC,indexO,parameters):
     angles = parameters["angles"]
     result = {}
 
+    atoms = []
     # find the exact angles
     for key in angles:
         arr = stringToArr(key)
         if arr[1] == indexC:
             if arr[0] == indexO or arr[2] == indexO:
                 result[key] = angles[key]
+                atoms.append(arr)
 
 
-    return result
+    return result,atoms
 
 def getDihedral(atoms,parameters):
     dihedral = parameters["dihedral"]
@@ -71,8 +73,16 @@ def getDihedral(atoms,parameters):
     for key in dihedral:
         arr = stringToArr(key)
         #if arr[1] == indexC and arr[2] == indexO:
-        for bond in atoms:
-            if bond[0] in arr and bond[1] in arr:
+        for angle in atoms:
+            print(angle)
+            # if the three atoms of the angles 
+            # are all in the dihedrals
+            p = []
+            for i in range(3):
+                p1 = (angle[i] in arr)
+                p.append(p1)
+            #if angle[0] in arr and angle[1] in arr and angle[2] in arr:
+            if p[0] and p[1] and p[2]:
                 result[key] = dihedral[key]
 
     return result
@@ -114,13 +124,14 @@ def getBonds(indexC,indexO,parameters):
 # get the bonds connected to "C"
 count = 0
 count_no_bond = 0
+count_sample = 0
 for residue in residueBonds:
     count += 1
     print("residue ",count)
     # index of the carbon and oxygen
     indexC = residueBonds[residue][0]
     indexO = residueBonds[residue][1]
-    print(indexC,indexO)
+    #print(indexC,indexO)
 
     # get the id and molecule
     resDicts = residueEnergies[residue]
@@ -149,7 +160,7 @@ for residue in residueBonds:
         
 
     molInfo['bonds'] = bonds
-    angles = getAngles(indexC,indexO,parameters)
+    angles,atoms = getAngles(indexC,indexO,parameters)
     molInfo['angles'] = angles
     dihedral = getDihedral(atoms,parameters)
     molInfo['dihedral'] = dihedral
@@ -166,6 +177,7 @@ for residue in residueBonds:
         
     if filter1 and filter2 and filter3:
         paraDicts[residue] = molInfo
+        count_sample += 1
 
     #break
 
@@ -175,4 +187,6 @@ for residue in residueBonds:
 fp = open("inchikey_parameters.json",'w')
 json.dump(paraDicts,fp,indent = 4)
 
+
+print("number of the samples ", count_sample)
 
