@@ -20,7 +20,7 @@ filename = "../new_filter3.json"
 residueEnergies  = readJson(filename)
 
 filename = "../inchikey_filter_database.json"
-# ID : "atoms","bonds","angles","dihedrals"
+# ID : "atoms","bonds","angles","dihedral"
 idParameters  = readJson(filename)
 
 # store the parameters
@@ -60,6 +60,18 @@ def getAngles(indexC,indexO,parameters):
             if arr[0] == indexO or arr[2] == indexO:
                 result[key] = angles[key]
 
+
+    return result
+
+def getDihedral(indexC,indexO,parameters):
+    dihedral = parameters["dihedral"]
+    result = {}
+
+    # find the exact dihedral
+    for key in dihedral:
+        arr = stringToArr(key)
+        if arr[1] == indexC and arr[2] == indexO:
+            result[key] = dihedral[key]
 
     return result
 
@@ -119,15 +131,14 @@ for residue in residueBonds:
     if bonds == False:
         print(id)
         print(mol)
-        break
         continue
-
-        
         
 
     molInfo['bonds'] = bonds
     angles = getAngles(indexC,indexO,parameters)
     molInfo['angles'] = angles
+    dihedral = getDihedral(indexC,indexO,parameters)
+    molInfo['dihedral'] = dihedral
 
     paraDicts[residue] = molInfo
 
