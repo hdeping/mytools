@@ -83,8 +83,8 @@ for i,smi_string in enumerate(filenames):
                 residueAtomsDicts[line] = fragDicts[line]
 
         if count_exist != real_num:
-            print(count_exist,real_num)
-            print("oh!!!! number mismatch here!")
+            #print(count_exist,real_num)
+            #print("oh!!!! number mismatch here!")
             fp1.write("%s exist number %d  real number %d\r"%(id,count_exist,real_num))
             #break
 
@@ -126,7 +126,13 @@ for i,smi_string in enumerate(filenames):
 
         #if there is only one residue in the residues
         if len(residues) == 1:
-            print(len(mismatch_frag))
+            #print("compounds %d, mismatch frag %d, frag %d, number %d,real number %d"%(i,len(mismatch_frag),len(frag),num,real_num))
+            print("compounds ",i)
+            print("mismatch frag ", len(mismatch_frag))
+            print("frag ",len(frag))
+            print("number ",num)
+            print("real number ", real_num)
+            print("residues",residues)
             fp.write(residues[0] + '\n')
             key1 = residues[0]
             key2 = mismatch_frag[0]

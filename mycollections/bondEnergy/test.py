@@ -1,24 +1,27 @@
 #coding=utf-8
 import numpy as np
 import json
+import openbabel
 
 from getsmiles import readJson
 from getsmiles import getSMILES
+from getsmiles import readSMILES
 
+last_dir = "../"
 # get molecules
-filename = "../../new_filter3.json"
+filename = last_dir + "new_filter3.json"
 molecules = readJson(filename)
 
-filename = "../../molEnergyNumber.json"
+filename = last_dir + "molEnergyNumber.json"
 energyNum = readJson(filename)
 
-filename = "../../IDResidue.json"
+filename = last_dir + "IDResidue.json"
 idResidue = readJson(filename)
 
-filename = "../../inchikey_filter_database.json"
+filename = last_dir + "inchikey_filter_database.json"
 idResidue = readJson(filename)
 
-filename = "../02_files/smiles.txt"
+filename = "../00_files/smiles.txt"
 filenames = getSMILES(filename)
 
 count_mismatch = np.zeros(9)
@@ -34,6 +37,7 @@ def getOutputSmiles():
     for i,filename in enumerate(filenames):
         output[filename].append(i)
     repeatOut = {}
+
     for key in output:
         num = len(output[key]) 
         count[num] += 1
@@ -72,8 +76,19 @@ count = 0
 ouput = getOutputSmiles()
 for filename in filenames:
 
+    print(filename)
     num = energyNum[filename]
     count += num
+
+    mol = readSMILES(filename)
+    a = mol.GetAtom(9)
+
+    for atom in openbabel.OBAtomAtomIter(a):
+        print(atom.GetType())
+        bond = a.GetBond(atom)
+        print("order",bond.GetBondOrder())
+
+    break
 
 print(count)
 
