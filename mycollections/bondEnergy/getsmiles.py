@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import openbabel as ob
+import pybel
+import json
 
 
 obConversion = ob.OBConversion()
@@ -152,5 +154,93 @@ def getBondInfo(mol):
         ChainBond.append(bond.GetIdx())
     return MolBond,ChainBond
 
+def getFrag(molecules,smi_string):
+
+    # create a molecule container
+    mol = readSMILES(smi_string)
+
+    NumAtomsNoH = mol.NumAtoms()
+
+    # get the bond information
+    MolBond,ChainBond = getBondInfo(mol)
+
+    # prepare to store fragment's SMILES
+    ListOfFrag1 = []
+    ListOfFrag2 = []
+    atomId = []
+    for BondIdx in range(len(MolBond)):
+        obConversion.ReadString(mol, smi_string)
+        #mol.AddHydrogens()
+        a,b,bo = MolBond[BondIdx]
+        # if A or B is oxygen
+        AisO = mol.GetAtom(a).IsOxygen()
+        BisO = mol.GetAtom(b).IsOxygen()
+        AisC = mol.GetAtom(a).IsCarbon()
+        BisC = mol.GetAtom(b).IsCarbon()
+        #if (AisO or BisO) == False:
+        #    print(a,b,False)
+        #    continue
+        #else:
+        #    print(a,b,True)
+        if (AisO or BisO) == False:
+            continue
+        if (AisC or BisC) == False:
+            continue
+        
+
+        Frag1 = ob.OBMol()
+        Frag1_idx = []
+        Frag2 = ob.OBMol()
+        Frag2_idx = []
+
+        # find the begin atom and the end atom of the 
+        # breaking bond. 
+        a1 = mol.GetBond(BondIdx).GetBeginAtom()
+        a2 = mol.GetBond(BondIdx).GetEndAtom()
+        breakBO = mol.GetBond(BondIdx).GetBondOrder()
+        # bonds information
+        bond = mol.GetBond(BondIdx)
+
+
+        # homolysis, create radical 
+        a1.SetSpinMultiplicity(breakBO+1)
+        a2.SetSpinMultiplicity(breakBO+1)
+        mol.DeleteBond(mol.GetBond(BondIdx))
+
+        if BondIdx in ChainBond:
+            FillAtom(mol, a1, Frag1, Frag1_idx)
+            FillAtom(mol, a2, Frag2, Frag2_idx)
+
+            FragBondLink(Frag1, Frag1_idx, MolBond, NumAtomsNoH)
+            FragBondLink(Frag2, Frag2_idx, MolBond, NumAtomsNoH)
+
+            frag1_smi = pybel.Molecule(Frag1).write("smi").replace('\t\n','')
+            frag2_smi = pybel.Molecule(Frag2).write("smi").replace('\t\n','')
+        else:
+            Frag1 = BreakRing(mol)
+            frag2_smi = pybel.Molecule(Frag1).write("smi").replace('\t\n','')
+            frag1_smi = ''
+
+        if frag2_smi == "[OH]" or frag2_smi == "[O]":
+            ListOfFrag1.append(frag1_smi)
+            ListOfFrag2.append(frag2_smi)
+            # get bonds
+            atomId.append(MolBond[BondIdx])
+    #print("list 1")
+    #print(ListOfFrag1)
+    #print(ListOfFrag1,ListOfFrag2)
+    #print("list 2")
+    #print(ListOfFrag2)
+    #print("bonds")
+    #print(atomId)
+    # return the number and the bigger residues
+    return len(atomId),ListOfFrag1
+
+def readJson(filename):
+    fp = open(filename,'r')
+    molecules = json.load(fp)
+    fp.close()
+
+    return molecules
 #strings=  ['CCNNN',"CCC1CCCCC1","N=CCC1(=O)CCCC1"]
 #getFingers(strings)

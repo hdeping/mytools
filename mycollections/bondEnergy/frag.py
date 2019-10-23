@@ -1,6 +1,5 @@
 #coding=utf-8
 import openbabel as ob
-import pybel as pb
 import os
 import numpy as np
 import json
@@ -8,10 +7,8 @@ import json
 # import functions from the file getsmiles.py
 from getsmiles import getSMILES
 from getsmiles import getFingers
-from getsmiles import FillAtom
-from getsmiles import FragBondLink
-from getsmiles import getBondInfo
-from getsmiles import readSMILES
+from getsmiles import getFrag
+from getsmiles import readJson
 
 
 obConversion = ob.OBConversion()
@@ -19,94 +16,6 @@ obConversion.SetInAndOutFormats("smi", "smi")
 # rematch the residues
 filename = "rematch_residues.json"
 
-def main(molecules,smi_string):
-
-    # create a molecule container
-    mol = readSMILES(smi_string)
-
-    NumAtomsNoH = mol.NumAtoms()
-
-    # get the bond information
-    MolBond,ChainBond = getBondInfo(mol)
-
-    # prepare to store fragment's SMILES
-    ListOfFrag1 = []
-    ListOfFrag2 = []
-    atomId = []
-    for BondIdx in range(len(MolBond)):
-        obConversion.ReadString(mol, smi_string)
-        #mol.AddHydrogens()
-        a,b,bo = MolBond[BondIdx]
-        # if A or B is oxygen
-        AisO = mol.GetAtom(a).IsOxygen()
-        BisO = mol.GetAtom(b).IsOxygen()
-        AisC = mol.GetAtom(a).IsCarbon()
-        BisC = mol.GetAtom(b).IsCarbon()
-        #if (AisO or BisO) == False:
-        #    print(a,b,False)
-        #    continue
-        #else:
-        #    print(a,b,True)
-        if (AisO or BisO) == False:
-            continue
-        if (AisC or BisC) == False:
-            continue
-        
-
-        Frag1 = ob.OBMol()
-        Frag1_idx = []
-        Frag2 = ob.OBMol()
-        Frag2_idx = []
-
-        # find the begin atom and the end atom of the 
-        # breaking bond. 
-        a1 = mol.GetBond(BondIdx).GetBeginAtom()
-        a2 = mol.GetBond(BondIdx).GetEndAtom()
-        breakBO = mol.GetBond(BondIdx).GetBondOrder()
-        # bonds information
-        bond = mol.GetBond(BondIdx)
-
-
-        # homolysis, create radical 
-        a1.SetSpinMultiplicity(breakBO+1)
-        a2.SetSpinMultiplicity(breakBO+1)
-        mol.DeleteBond(mol.GetBond(BondIdx))
-
-        if BondIdx in ChainBond:
-            FillAtom(mol, a1, Frag1, Frag1_idx)
-            FillAtom(mol, a2, Frag2, Frag2_idx)
-
-            FragBondLink(Frag1, Frag1_idx, MolBond, NumAtomsNoH)
-            FragBondLink(Frag2, Frag2_idx, MolBond, NumAtomsNoH)
-
-            frag1_smi = pb.Molecule(Frag1).write("smi").replace('\t\n','')
-            frag2_smi = pb.Molecule(Frag2).write("smi").replace('\t\n','')
-        else:
-            Frag1 = BreakRing(mol)
-            frag2_smi = pb.Molecule(Frag1).write("smi").replace('\t\n','')
-            frag1_smi = ''
-
-        if frag2_smi == "[OH]" or frag2_smi == "[O]":
-            ListOfFrag1.append(frag1_smi)
-            ListOfFrag2.append(frag2_smi)
-            # get bonds
-            atomId.append(MolBond[BondIdx])
-    #print("list 1")
-    #print(ListOfFrag1)
-    #print(ListOfFrag1,ListOfFrag2)
-    #print("list 2")
-    #print(ListOfFrag2)
-    #print("bonds")
-    #print(atomId)
-    return len(atomId),ListOfFrag1
-
-
-def readJson(filename):
-    fp = open(filename,'r')
-    molecules = json.load(fp)
-    fp.close()
-
-    return molecules
 
 # get molecules
 filename = "../new_filter3.json"
@@ -133,11 +42,15 @@ filename = "mismatch.result"
 fp1 = open(filename,'w')
 count_mismatch = np.zeros(9)
 count_mismatch_bond = np.zeros(9)
+
+# get mismatched  and finger-repeated residues
+filename = "mismatch_residues.smi"
+fp2 = open(filename,'w')
 for i,smi_string in enumerate(filenames):
     #print("################# %d compounds #########"%(i))
     #fp.write("################# %d compounds #########"%(i)+'\n')
     #fp.write(smi_string + '\n')
-    num,frag = main(molecules,smi_string)
+    num,frag = getFrag(molecules,smi_string)
     #print(i,energyNum[smi_string],num)
     real_num = energyNum[smi_string] 
 
@@ -202,7 +115,12 @@ for i,smi_string in enumerate(filenames):
         result,values = getFingers(residues)
         if result:
             print("% ",id)
+            fp2.write("%s %s\n"%('%',id))
             print(mismatch_frag)
+            for line in mismatch_frag:
+                fp2.write("%s\n"%(line))
+            for line in residues:
+                fp2.write("%s\n"%(line))
             print(residues)
             if len(mismatch_frag) != len(values):
                 print("match is wrong here!!!!!")
@@ -229,6 +147,7 @@ for i,smi_string in enumerate(filenames):
 
 fp.close()
 fp1.close()
+fp2.close()
 count = count.astype(int)
 count_mismatch = count_mismatch.astype(int)
 count_mismatch_bond = count_mismatch_bond.astype(int)
