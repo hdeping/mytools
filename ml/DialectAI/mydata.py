@@ -5,9 +5,8 @@ import copy
 import random
 
 import torch
-import numpy as np
 
-from readpcm import pcmdata,HTKfile
+from readpcm import pcmdata
 
 
 class TorchDataSet(object):
@@ -39,17 +38,9 @@ class TorchDataSet(object):
             target_label = int(str(splited_line[1])) 
 
             pcm_file = pcmdata(htk_feature)
-            htk_file = HTKfile(htk_feature)
-            feature_tone = pcm_file.read_data()
-            feature_fb   = htk_file.read_data()
-            # len1 < len2
-            len1 = len(feature_tone)
-            len2 = len(feature_fb)
-            begin = len2 - len1
-            feature_fb = feature_fb[begin:]
-            feature_data = np.concatenate((feature_fb,feature_tone),axis=1)
+            feature_data = pcm_file.read_data()
             #file_name = pcm_file.get_file_name()
-            feature_frames = len1
+            feature_frames = pcm_file.get_frame_num()
             #print(feature_frames.shape)
 
             if feature_frames > max_frames:
@@ -58,9 +49,10 @@ class TorchDataSet(object):
             curr_feature = torch.Tensor(feature_data)
             # normalization
             #curr_feature = curr_feature.mul(scale)
-            means = curr_feature.mean(dim=0, keepdim=True)
-            curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            batch_data.append(curr_feature_norm)
+            #means = curr_feature.mean(dim=0, keepdim=True)
+            #curr_feature_norm = curr_feature - means.expand_as(curr_feature)
+            #batch_data.append(curr_feature_norm)
+            batch_data.append(curr_feature)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             #name_list.append(file_name)
 
