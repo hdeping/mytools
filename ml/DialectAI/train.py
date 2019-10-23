@@ -43,10 +43,8 @@ dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-toneLengthD = 6
-#dimension = 2*toneLengthD + 1# 40 before
-dimension = 53 # 40 + 13
-data_dimension = 320
+toneLengthD = 20
+dimension = 2*toneLengthD + 1# 40 before
 language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64

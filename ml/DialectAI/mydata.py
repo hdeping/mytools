@@ -5,9 +5,8 @@ import copy
 import random
 
 import torch
-import numpy as np
 
-from readpcm import pcmdata,HTKfile
+from readpcm import pcmdata
 
 
 class TorchDataSet(object):
@@ -38,36 +37,22 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            pcm_file = pcmdata(htk_feature)
-            htk_file = HTKfile(htk_feature)
-            feature_tone = pcm_file.read_data()
-            feature_fb   = htk_file.read_data()
-            # len1 < len2
-            len1 = len(feature_tone)
-            len2 = len(feature_fb)
-            begin = len2 - len1
-            feature_fb = feature_fb[begin:]
-            #feature_data = np.concatenate((feature_fb,feature_tone),axis=1)
+            pcm_file = pcmdata(htk_feature,self._dimension)
+            feature_data = pcm_file.read_data()
             #file_name = pcm_file.get_file_name()
-            feature_frames = len1
+            feature_frames = pcm_file.get_frame_num()
             #print(feature_frames.shape)
 
             if feature_frames > max_frames:
                 max_frames = feature_frames
             
-            curr_feature_fb = torch.Tensor(feature_fb)
-            curr_feature_tone = torch.Tensor(feature_tone)
+            curr_feature = torch.Tensor(feature_data)
             # normalization
             #curr_feature = curr_feature.mul(scale)
-            means = curr_feature_fb.mean(dim=0, keepdim=True)
-            curr_feature_fb = curr_feature_fb - means.expand_as(curr_feature_fb)
-            means = curr_feature_tone.mean(dim=1, keepdim=True)
-            curr_feature_tone = curr_feature_tone - means.expand_as(curr_feature_tone)
-
-
-            # concate the two arrays
-            curr_feature_norm = torch.cat((curr_feature_fb,curr_feature_tone),1)
+            means = curr_feature.mean(dim=1, keepdim=True)
+            curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
+            #batch_data.append(curr_feature)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             #name_list.append(file_name)
 
