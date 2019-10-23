@@ -46,7 +46,7 @@ model.eval()
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
