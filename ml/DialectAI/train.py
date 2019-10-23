@@ -36,7 +36,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -55,9 +55,13 @@ half = 4
 # data augmentation
 
 # save the models
-model_dir = "models"
+import sys
+model_dir = "models" + sys.argv[1]
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
+
+# seed 
+torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
@@ -82,7 +86,7 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
-factor = 1e-4
+factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
@@ -140,12 +144,10 @@ for epoch in range(0,train_iteration):
         # L1 regularization 
         #l1_crit = torch.nn.L1Loss(size_average=False)
         #l1_crit.cuda()
-        # L4 regularization
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            #reg_loss += param.norm(2)
-            reg_loss += param.norm(4)**4
+            reg_loss += param.norm(2)
         backward_loss += factor * reg_loss
                 
         # get the gradients
