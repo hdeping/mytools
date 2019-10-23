@@ -15,10 +15,11 @@ class LanNet(nn.Module):
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.hidden_node = self.hidden_dim // 2
+        self.input_node = self.input_dim// 2
         self.layer0 = nn.Sequential()
-        self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer0.add_module('gru', nn.GRU(self.input_node, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('gru', nn.GRU(self.input_node, self.hidden_node, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -34,9 +35,9 @@ class LanNet(nn.Module):
 
         # get gru output
         # first part
-        out_hidden0, hidd = self.layer0(src)
+        out_hidden0, hidd = self.layer0(src[:,:,0:self.input_node])
         # second part
-        out_hidden1, hidd = self.layer1(src)
+        out_hidden1, hidd = self.layer0(src[:,:,self.input_node:])
         # combine the two parts
         out_hidden = torch.cat((out_hidden0,out_hidden1),dim=2)
         #print(out_hidden.shape)
