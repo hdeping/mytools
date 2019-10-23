@@ -52,8 +52,6 @@ def getSMILES(filename):
 
     return res
 
-    return
-
 filename = "smiles.txt"
 filenames = getSMILES(filename)
 #print(filenames)

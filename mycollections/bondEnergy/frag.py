@@ -1,8 +1,8 @@
 #coding=utf-8
 import openbabel as ob
 import pybel as pb
-from optparse import OptionParser
 import os
+import numpy as np
 
 # Break the bond in ring and generate the radical fragment
 def BreakRing(mol):
@@ -172,15 +172,39 @@ def main(smi_string):
             atomId.append(bondInfo)
     #ListOfFrag = SimplifyLs(ListOfFrag1,ListOfFrag2)
     #DelDuplFrag(ListOfFrag)
-    print("list 1")
-    print(ListOfFrag1)
-    print("list 2")
-    print(ListOfFrag2)
-    print("bonds")
-    print(atomId)
+    #print("list 1")
+    #print(ListOfFrag1)
+    #print("list 2")
+    #print(ListOfFrag2)
+    #print("bonds")
+    #print(atomId)
     #get_frag_tbl(MolSmi,label, ListOfFrag)
     # Output Gaussian input file
+    return len(atomId)
+def getSMILES(filename):
+    fp = open(filename,'r')
+    data = fp.read()
+    fp.close()
+    data = data.split('\n')
+    data = data[:-1]
+    res = []
+    # get the first column
+    for line in data:
+        line = line.split(' ')
+        res.append(line[0])
+    return res
 
-smi_string = "C(C(=O)O)C(CC(=O)O)(O)OC=O"
-main(smi_string)
 
+
+
+count = np.zeros(7)
+
+filename = "smiles.txt"
+filenames = getSMILES(filename)
+for smi_string in filenames:
+    num = main(smi_string)
+    count[num] += 1
+print(num)
+
+count = count.astype(int)
+print(count)
