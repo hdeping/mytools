@@ -149,11 +149,10 @@ def test():
 # output the result
 import numpy as np
 result = []
-number = 5
 for i in range(6):
     print("model ",i)
-    print("loading model%d-%d.model"%(number,i))
-    train_module.load_state_dict(torch.load("models/model%d-%d.model"%(number,i)))
+    print("loading model9-%d.model"%(i))
+    train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
     result_target = test()
     result.append(result_target)
 
