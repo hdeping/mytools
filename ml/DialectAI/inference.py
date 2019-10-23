@@ -29,8 +29,8 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
-from read_data import  TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
+from mydata import  TorchDataSet
 from testmodel import LanNet
 
 ## ======================================
