@@ -37,13 +37,13 @@ class LanNet(nn.Module):
 
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('lstm', nn.LSTM(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer2.add_module('lstm', nn.LSTM(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer3 = nn.Sequential()
-        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer3.add_module('lstm', nn.LSTM(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer4 = nn.Sequential()
-        self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer4.add_module('lstm', nn.LSTM(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
 
     # get phoneme sequence
@@ -84,7 +84,7 @@ class LanNet(nn.Module):
         #print(name_list)
 
         ctc_loss = CTCLoss()
-        # get gru output
+        # get lstm output
         # layer1
         out_hidden, hidd = self.layer1(src)
         out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
@@ -132,5 +132,5 @@ class LanNet(nn.Module):
         loss = ctc_loss(probs, labels, frames, labels_sizes)
 
         loss = loss.cuda()
-        #print(loss)
+        print(loss)
         return loss

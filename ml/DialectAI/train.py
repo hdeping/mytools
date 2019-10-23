@@ -49,8 +49,8 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
-learning_rate = 1e-5
-batch_size = 8
+learning_rate = 1e-4
+batch_size = 128
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
@@ -60,8 +60,8 @@ half = 4
 
 # save the models
 import sys
-#model_dir = "models" + sys.argv[1]
-model_dir = "models"
+model_dir = "models" + sys.argv[1]
+#model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
