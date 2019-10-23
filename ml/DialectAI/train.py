@@ -30,28 +30,28 @@ import torch
 import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
-from read_data import  TorchDataSet
-from mymodel import LanNet
-#from mymodel1 import LanNet as lannet_old
-#from load_oldmodel import getModel
+from mydata import  TorchDataSet
+#from mymodel import LanNet
+from load_oldmodel import getModel
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_list_train.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "../labels/label_list_dev.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
+data_dimension = 400 # 400 point per frame
 language_nums = 10 # 9!
-learning_rate = 0.1
-batch_size = 64
+learning_rate = 0.001
+batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 15
+train_iteration = 20
 display_fre = 50
 half = 4
 # data augmentation
@@ -63,19 +63,19 @@ if not os.path.exists(model_dir):
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
-#train_module = getModel(dimension,language_nums)
+#train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = getModel(dimension,language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models_data10/model2.model"))
+#train_module.load_state_dict(torch.load("models/model9.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -86,18 +86,21 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
+# to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
+# torch.backends.cudnn.benchmark=True
+#torch.backends.cudnn.enabled = False
 
 for epoch in range(0,train_iteration):
-    print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.01
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 12:
-        learning_rate = 0.003
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #print("epoch",epoch)
+    #if epoch == 4:
+    #    learning_rate = 0.05
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 8:
+    #    learning_rate = 0.01
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    #if epoch == 12:
+    #    learning_rate = 0.003
+    #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 ##  train
     train_dataset.reset()
