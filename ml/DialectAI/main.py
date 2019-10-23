@@ -29,14 +29,14 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from mydata import get_samples, get_data, TorchDataSet
-from mydata import  TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
+from read_data import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -55,7 +55,7 @@ half = 4
 # data augmentation
 
 # save the models
-model_dir = "models"
+model_dir = "models_train"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
