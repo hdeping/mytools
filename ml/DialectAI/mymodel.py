@@ -32,6 +32,8 @@ class LanNet(nn.Module):
 
         self.conv1 = baseConv1d(self.input_dim)
         self.conv2 = baseConv1d(self.input_dim)
+        self.conv3 = baseConv1d(self.input_dim)
+        self.conv4 = baseConv1d(self.input_dim)
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -50,6 +52,8 @@ class LanNet(nn.Module):
         src = src.transpose(1,2)
         src = self.conv1(src)
         src = self.conv2(src)
+        src = self.conv3(src)
+        src = self.conv4(src)
 
         # transpose
         src = src.transpose(1,2)
