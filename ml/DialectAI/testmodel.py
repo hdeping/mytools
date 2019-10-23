@@ -65,4 +65,4 @@ class LanNet(nn.Module):
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss,prediction
+        return acc, ce_loss,prediction,predict_target
