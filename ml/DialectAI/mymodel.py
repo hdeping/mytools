@@ -34,7 +34,7 @@ class LanNet(nn.Module):
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         #print(out_hidden.data.shape)
-        out_bn = F.relu(self.layer2(F.relu(out_hidden)))
+        out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 
 
