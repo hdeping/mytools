@@ -8,6 +8,8 @@ import torch
 
 from readhtk import HTKfile
 
+import numpy as np
+
 
 class TorchDataSet(object):
     def __init__(self, file_list, batch_size, chunk_num, dimension):
@@ -46,11 +48,11 @@ class TorchDataSet(object):
             
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
-            std   = curr_feature.std(dim=0, keepdim=True)
+            #std   = curr_feature.std(dim=0, keepdim=True)
             # means
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             # std
-            curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
+            #curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             name_list.append(file_name)
@@ -60,6 +62,9 @@ class TorchDataSet(object):
                 idx = 0
                 data = torch.zeros(self._batch_size, max_frames, self._dimension)
                 target = torch.zeros(self._batch_size, 2)
+                # name list
+                names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
+                names = np.repeat(names,self._batch_size)
 
                 for jj in range(chunk_size):
                     curr_data = batch_data[jj]
@@ -68,14 +73,13 @@ class TorchDataSet(object):
 
                     data[idx,:curr_frame,:] = curr_data[:,:]
                     target[idx,:] = curr_tgt[:]
+                    names[idx] = name_list[jj]
 
                     idx += 1
 
                     if idx % self._batch_size == 0:
-                        begin = jj - self._batch_size + 1
-                        end   = jj + 1
                         idx = 0
-                        yield data, target, name_list[begin:end]
+                        yield data, target, names
                 
                 max_frames = 0
                 batch_data = []
@@ -91,20 +95,24 @@ class TorchDataSet(object):
             idx = 0
             data = torch.zeros(self._batch_size, max_frames, self._dimension)
             target = torch.zeros(self._batch_size, 2)
+            # name list
+            names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
+            names = np.repeat(names,self._batch_size)
+
             for jj in range(chunk_size):
                 curr_data = batch_data[jj]
                 curr_tgt = target_frames[jj]
                 curr_frame = curr_data.size(0)
 
                 data[idx,:curr_frame,:] = curr_data[:,:]
-                target[idx,:] = curr_tgt[:]
+                target[idx,:]           = curr_tgt[:]
+                names[idx]              = name_list[jj]
+
                 idx += 1
 
                 if idx % self._batch_size == 0:
                     idx = 0
-                    begin = self._batch_size * ii
-                    end   = self._batch_size * (ii + 1)
-                    #yield data, target, names
+                    yield data, target, names
 
-                    yield data, target, name_list[begin:end]
+                    #yield data, target, name_list[begin:end]
 

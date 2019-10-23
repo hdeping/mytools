@@ -63,7 +63,7 @@ def phonemeSeq(name_list):
 train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 
 print(len(phonemes_dict))
-for i in range(3):
+for i in range(1):
     train_dataset.reset()
 
     for step, (batch_x, batch_y,name_list) in enumerate(train_dataset): 
@@ -71,11 +71,11 @@ for i in range(3):
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
         batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
         #print(len(name_list),batch_x.shape,batch_target.shape)
-        #print(np.array(name_list))
-        labels , labels_sizes = phonemeSeq(name_list)
+        print(name_list)
+        #labels , labels_sizes = phonemeSeq(name_list)
         #print(labels,labels_sizes)
-        print(len(labels),sum(labels_sizes))
+        #print(len(labels),sum(labels_sizes))
 
-        if step == 9:
-            break
+        #if step == 10:
+        #    break
 
