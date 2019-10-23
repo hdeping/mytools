@@ -54,11 +54,11 @@ data_dimension = 320 # 400 point per frame
 dimension = data_dimension
 hidden_dim = 1280
 language_nums = 10 # 9!
-learning_rate = 0.05
+learning_rate = 0.1
 batch_size = 32
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 50
 display_fre = 50
 half = 4
 # data augmentation
@@ -270,9 +270,9 @@ def test(epoch):
 # random seed
 torch.manual_seed(time.time())
 for epoch in range(1,train_iteration):
-    test(epoch)
     # get lr
-    getLr(epoch)
+    #getLr(epoch)
     # train
     train(epoch)
     #test(epoch)
+    test(epoch)

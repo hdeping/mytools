@@ -38,7 +38,7 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            pcm_file = pcmdata(htk_feature,self._dimension)
+            pcm_file = pcmdata(htk_feature,self._dimension,self._dimension // 2)
             feature_data = pcm_file.read_data()
             #file_name = pcm_file.get_file_name()
             feature_frames = pcm_file.get_frame_num()
