@@ -36,8 +36,7 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-#dev_list   = "label_dev_list_fb.txt"
-dev_list   = "label_train_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -99,8 +98,6 @@ def test():
     
     result_target = []
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        if step % 50 == 0:
-            print("step = ",step)
         #print("step is ",step)
         tic = time.time()
     
@@ -129,12 +126,10 @@ def test():
             
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss,prediction,pre_target = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss,prediction = train_module(batch_dev_data, batch_mask, batch_target)
         #print(batch_target,prediction)
-        pre_target = pre_target.cpu().numpy()
         for i in range(batch_size):
-            result_target.append([batch_target[i].item(),prediction[i].item(),pre_target[i,0],pre_target[i,1]])
-            #print(batch_target[i].item(),prediction[i].item(),pre_target[i,0],pre_target[i,1])
+            result_target.append([batch_target[i].item(),prediction[i].item()])
             #result_target.append(prediction[i].item())
         
         loss = loss.sum()/step_batch_size
@@ -154,16 +149,19 @@ def test():
 # output the result
 import numpy as np
 result = []
-name="models/model0.model"
-print("loading %s"%(name))
-train_module.load_state_dict(torch.load(name))
-result_target = test()
-result_target = np.array(result_target)
-# last two columns 
-res = result_target[:,2:]
-# get log proportion
-res = np.max(res,axis=1) / np.min(res,axis=1)
-res = np.log(res)
-result_target[:,2] = res
-np.savetxt('output.txt',result_target[:,:3],fmt="%g")
+for i in range(200):
+    print("model ",i)
+    train_module.load_state_dict(torch.load("majority_vote/model%d.model"%(i)))
+    result_target = test()
+    result.append(result_target)
 
+# deal with the output
+result = np.array(result)
+print(result.shape)
+result = np.transpose(result,(1,0,2))
+size = len(result)
+#new = np.zeros((5000,2*size))
+#new[:,0] = result[:,0,0]
+#new[:,1:] = result[:,:,1]
+result = np.reshape(result,(size,-1))
+np.savetxt("result.txt",result,fmt='%d')

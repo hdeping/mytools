@@ -4,6 +4,33 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+class baseConv1d(nn.Module):
+    def __init__(self,input_dim=40,output_dim=40):
+        super(baseConv1d, self).__init__()
+        self.input_dim=input_dim
+        self.output_dim=output_dim
+        self.conv1 = nn.Conv1d(self.input_dim,self.output_dim,kernel_size=3,padding=1)
+    def forward(self,x):
+
+        y = self.conv1(x)
+        y = F.relu(y)
+
+        return y
+class resConv1d(nn.Module):
+    def __init__(self,input_dim=40):
+        super(resConv1d, self).__init__()
+        self.input_dim=input_dim
+        self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
+        self.conv2 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
+    def forward(self,x):
+        # x, y are the same size
+        y = self.conv1(x)
+        y = F.relu(y)
+        y = self.conv2(y)
+        y = F.relu(x + y)
+
+        return y
+
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
@@ -12,10 +39,8 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        #self.layer0 = nn.Sequential()
-        #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
-        self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.conv1 = baseConv1d(self.input_dim,self.hidden_dim)
+        self.conv2 = resConv1d(self.hidden_dim)
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -29,8 +54,15 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
+        # conv layer 
+        # transpose
+        src = src.transpose(1,2)
+        src = self.conv1(src)
+        src = self.conv2(src)
+
+        # transpose
+        out_hidden = src.transpose(1,2)
         # get gru output
-        out_hidden, hidd = self.layer1(src)
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
@@ -65,4 +97,5 @@ class LanNet(nn.Module):
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss,prediction,predict_target
+        #return acc, ce_loss,prediction
+        return acc, ce_loss,prediction
