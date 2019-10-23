@@ -36,7 +36,7 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-dev_list   = "../labels/label_dev_list_fb_seven.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -149,19 +149,19 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(20):
+for i in range(0,21):
     print("model ",i)
     train_module.load_state_dict(torch.load("majority/model9-%d.model"%(i)))
-    result_target = test()
-    result.append(result_target)
+    #result_target = test()
+    #result.append(result_target)
 
-# deal with the output
-result = np.array(result)
-print(result.shape)
-result = np.transpose(result,(1,0,2))
-size = len(result)
-#new = np.zeros((5000,2*size))
-#new[:,0] = result[:,0,0]
-#new[:,1:] = result[:,:,1]
-result = np.reshape(result,(size,-1))
-np.savetxt("result.txt",result,fmt='%d')
+## deal with the output
+#result = np.array(result)
+#print(result.shape)
+#result = np.transpose(result,(1,0,2))
+#size = len(result)
+##new = np.zeros((5000,2*size))
+##new[:,0] = result[:,0,0]
+##new[:,1:] = result[:,:,1]
+#result = np.reshape(result,(size,-1))
+#np.savetxt("result.txt",result,fmt='%d')

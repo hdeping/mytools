@@ -5,16 +5,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 '''
-changsha 3
 hebei 0
-hefei 6
 kejia 0
 minnan 0
-nanchang 1
-ningxia 5
 shan3xi 0
-shanghai 4
+nanchang 1
 sichuan 2
+changsha 3
+shanghai 4
+ningxia 5
+hefei 6
 '''
 
 class LanNet(nn.Module):
