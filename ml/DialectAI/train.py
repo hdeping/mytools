@@ -32,6 +32,7 @@ import torch.utils.data as Data
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
+import gc
 
 ## ======================================
 # data list
@@ -47,7 +48,7 @@ dimension = 40 # 40 before
 data_dimension = 400 # 400 point per frame
 language_nums = 9 # 9!
 learning_rate = 0.1
-batch_size = 16
+batch_size = 32
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 16
@@ -142,6 +143,12 @@ for epoch in range(0,train_iteration):
 
         acc, loss = train_module(batch_train_data, batch_mask, batch_target)
         
+        # free the memory
+        del batch_train_data
+        del batch_mask
+        del batch_target
+        gc.collect()
+
         # loss = loss.sum()
         backward_loss = loss
         optimizer.zero_grad()
@@ -219,6 +226,12 @@ for epoch in range(0,train_iteration):
         with torch.no_grad():
             #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
             acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+
+        # free the memory
+        del batch_train_data
+        del batch_mask
+        del batch_target
+        gc.collect()
         
         loss = loss.sum()/step_batch_size
 

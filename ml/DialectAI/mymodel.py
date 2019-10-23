@@ -65,7 +65,7 @@ class LanNet(nn.Module):
 
         # RNN layer
         # flatten the parameters
-        self.layer1.flatten_parameters()
+        #self.layer1.flatten_parameters()
         out_hidden, hidd = self.layer1(x)
         #print(out_hidden.data.shape)
         out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
