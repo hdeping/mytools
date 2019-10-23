@@ -17,6 +17,10 @@ class LanNet(nn.Module):
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer_a = nn.Sequential()
+        self.layer_a.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer_b = nn.Sequential()
+        self.layer_b.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -27,6 +31,17 @@ class LanNet(nn.Module):
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
+    def getBiHidden(self,layer,src,frames):
+        # pack the sequence
+        src = pack_padded_sequence(src,frames,batch_first=True)
+        # get the gru output
+        out_hidden, hidd = layer(src)
+        # unpack the sequence
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add the forward-backward value
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        return out_hidden
+
     #def forward(self, src, mask, target):
     def forward(self, src, frames, target):
         batch_size, fea_frames, fea_dim = src.size()
@@ -34,19 +49,24 @@ class LanNet(nn.Module):
         frames = frames.squeeze()
         # get packed sequence
         sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
-        #print(sorted_frames)
-        #print(sorted_frames.shape)
-        #print(sorted_indeces.shape)
         # new input 
         src = src[sorted_indeces]
-        src = pack_padded_sequence(src,sorted_frames.cpu().numpy(),batch_first=True)
         # new target
         target = target[sorted_indeces]
 
 
+        # frames
+        frames = sorted_frames.cpu().numpy()
         # get gru output
-        out_hidden, hidd = self.layer1(src)
-        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # layer 1
+        out_hidden = self.getBiHidden(self.layer1,src,frames)
+        # layer_a
+        out_hidden_new = self.getBiHidden(self.layer_a,out_hidden,frames)
+        # layer_b
+        out_hidden_new = self.getBiHidden(self.layer_b,out_hidden_new,frames)
+        
+        # residual part
+        out_hidden = out_hidden + out_hidden_new
 
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
@@ -60,7 +80,7 @@ class LanNet(nn.Module):
         #print(sorted_frames)
         out_hidden = out_hidden.sum(dim=1)/sorted_frames
 
-        out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
+        #out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
         # linear parts
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
