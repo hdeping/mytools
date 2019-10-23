@@ -2,13 +2,15 @@
 
 import numpy as np
 import json
+import sys
 
-filename1 = "exist.txt"
+filename1 = sys.argv[1] 
 filenames = np.loadtxt(filename1,dtype=str)
+suffix = '_frag00.out'
 
 
 def getPara(ii):
-    filename = "../data/%s.para"%(filenames[ii])
+    filename = "../data/%s%s.para"%(filenames[ii],suffix)
     data = np.loadtxt(filename,delimiter=' ',dtype=str)
 
     numberR = 0
@@ -49,11 +51,10 @@ def checkPara():
     print("there are %d wrong samples"%(count))
 
 def getSerial(ii):
-    filename = "../data/%s.serial"%(filenames[ii])
+    filename = "../data/%s%s.serial"%(filenames[ii],suffix)
     data = np.loadtxt(filename,delimiter=' ',dtype=str)
     return data
 
-# arr (n,3)
 def arrToDicts(arr):
     res = {}
     res["ID"]    = list(arr[:,0])
@@ -67,12 +68,12 @@ def getSample(ii):
     serial = getSerial(ii)
     result["atoms"] = list(serial[:,0])
 
+    # get bonds, angles, dihedral
     bonds, angles, dihedral = getPara(ii)
     #print(bonds)
     #print(angles)
     #print(dihedral)
 
-    # get bonds
     result["bonds"] = arrToDicts(bonds)
     result["angles"] = arrToDicts(angles)
     result["dihedral"] = arrToDicts(dihedral)
@@ -106,14 +107,16 @@ database = {}
 for i in range(size):
     print("sample",i+1)
     result = getSample(0)
-    name = filenames[i].replace('_frag00.out','')
+    name = filenames[i]
     database[name] = result
 
 # dict to json
 database = json.dumps(database,indent=4)
 
 #### write the data
-filename = "inchikey_filter_database.json"
+filename = "inchikey_filter_database%s.json"%(sys.argv[1])
+filename = filename.replace("name2",'')
+filename = filename.replace(".txt",'')
 fp = open(filename,'w')
 fp.write(database)
 fp.close()
