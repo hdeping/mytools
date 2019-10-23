@@ -7,63 +7,19 @@ import numpy as np
 
 obConversion = ob.OBConversion()
 obConversion.SetInAndOutFormats("smi", "smi")
-mol = ob.OBMol()
+#obFP = ob.OBFingerprint_Tanimoto()
+vec = ob.OBBitVec()
 
 def readSMILES(smi_string):
     # read smiles
+    mol = ob.OBMol()
     obConversion.ReadString(mol, smi_string)
+    new_mol = pybel.Molecule(mol)
+    return mol
 
 
-    new = pybel.Molecule(mol)
-    print(new.calcfp())
-
-
-    # get bonds
-    MolBond = []
-    ChainBond = []
-    
-    #for angle in ob.OBMolAngleIter(mol):    
-    #    print(angle)
-    #for angle in ob.OBMolTorsionIter(mol):    
-    #    print(angle)
-    
-    for bond in ob.OBMolBondIter(mol):    
-        a = bond.GetBeginAtomIdx()
-        b = bond.GetEndAtomIdx()
-        bo = bond.GetBondOrder()
-        MolBond.append((a,b,bo))
-    
-        if bond.IsInRing() or bond.IsAromatic():
-            continue
-    
-        ChainBond.append(bond.GetIdx())
-    
-    #print(MolBond)
-    #print("atom number",mol.NumAtoms())
-    #print("bond number",mol.NumBonds())
-    #print("residue number",mol.NumResidues())
-    #MolBond.sort()
-    #print(MolBond)
-    #NumOfRingBond = len(MolBond) - len(ChainBond)
-def getSMILES(filename):
-    fp = open(filename,'r')
-    data = fp.read()
-    fp.close()
-    data = data.split('\n')
-    data = data[:-1]
-    res = []
-    # get the first column
-    for line in data:
-        line = line.split(' ')
-        res.append(line[0])
-
-    return res
-
-#filename = "smiles.txt"
-filename = "03_sixRepeats.smi"
-filenames = getSMILES(filename)
-
-#print(filenames)
-for smi_string in filenames:
-    readSMILES(smi_string)
-    #break
+string1 = "[CH]OC(CC(=O)O)(CC(=O)O)O"
+string2 = "[C](=O)C[C@@](CC(=O)O)(O)OC=O"
+mol1 = readSMILES(string1)
+mol2 = readSMILES(string2)
+tanimoto = ob.OBFingerprint.Tanimoto(mol1,mol2)
