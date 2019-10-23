@@ -5,7 +5,8 @@ import os
 import numpy as np
 import json
 
-from getsmiles import getSMILES
+# import functions from the 
+from getsmiles import getSMILES,getFingers
 
 # Break the bond in ring and generate the radical fragment
 def BreakRing(mol):
@@ -77,21 +78,12 @@ def FragBondLink(frag, fatom_idx,mol_bond,NumAtomsNoH):
 
 # Simplify is a function to remove the same fragment pair
 
-def main(molecules,smi_string):
-    
-    #file's type conversion and generate a 3D builder
-    obConversion = ob.OBConversion()
-    obConversion.SetInAndOutFormats("smi", "smi")
+obConversion = ob.OBConversion()
+obConversion.SetInAndOutFormats("smi", "smi")
+# rematch the residues
+filename = "rematch_residues.json"
 
-    # create a molecule container
-    mol = ob.OBMol()
-    obConversion.ReadString(mol, smi_string)
-    NumAtomsNoH = mol.NumAtoms()
-    NumOfBonds = mol.NumBonds()
-    #print("atom numbers",NumAtomsNoH)
-    MolSmi = pb.Molecule(mol).write("smi").replace('\t\n','')
-    #mol.AddHydrogens()
-
+def getBondInfo(mol):
     # get the bond information
     MolBond = []
     ChainBond = []
@@ -103,8 +95,18 @@ def main(molecules,smi_string):
         #if bond.IsInRing() or bond.IsAromatic():
         #    continue
         ChainBond.append(bond.GetIdx())
-    #MolBond.sort()
-    NumOfRingBond = len(MolBond) - len(ChainBond)
+    return MolBond,ChainBond
+def main(molecules,smi_string):
+    
+
+    # create a molecule container
+    mol = ob.OBMol()
+    obConversion.ReadString(mol, smi_string)
+    NumAtomsNoH = mol.NumAtoms()
+    NumOfBonds = mol.NumBonds()
+
+    # get the bond information
+    MolBond,ChainBond = getBondInfo(mol)
 
     # prepare to store fragment's SMILES
     ListOfFrag1 = []
@@ -198,7 +200,8 @@ idResidue = readJson(filename)
 
 count = np.zeros(10)
 
-filename = "mismatch.txt"
+#filename = "mismatch.txt"
+filename = "smiles.txt"
 filenames = getSMILES(filename)
 total = 0
 freq = 0
@@ -210,7 +213,7 @@ fp1 = open(filename,'w')
 count_mismatch = np.zeros(9)
 count_mismatch_bond = np.zeros(9)
 for i,smi_string in enumerate(filenames):
-    print("################# %d compounds #########"%(i))
+    #print("################# %d compounds #########"%(i))
     #fp.write("################# %d compounds #########"%(i)+'\n')
     #fp.write(smi_string + '\n')
     num,frag = main(molecules,smi_string)
@@ -224,13 +227,11 @@ for i,smi_string in enumerate(filenames):
         # some items are repeated
         # mismatched ones can be ignored
         #print("compounds %d %s, real num %d, num %d"%(i,smi_string,real_num,num))
-        #fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
         for line in frag:
             if line in molecules:
                 id  = molecules[line]["ID"]
                 fp.write(line +'\n')
                 #mol = molecules[line]["molecule"]
-                #fp1.write(mol + '\n')
         num = real_num
         mismatch_num = num
     else:
@@ -242,7 +243,7 @@ for i,smi_string in enumerate(filenames):
 
         ### match the exact samples
         for line in frag:
-            print("line",line)
+            #print("line",line)
             if line in molecules:
                 a = (line in residues)
                 #id = molecules[line]["ID"]
@@ -256,7 +257,7 @@ for i,smi_string in enumerate(filenames):
                 residues.remove(line)
                 mismatch_num += 1
 
-        print(num,real_num,mismatch_num,len(residues))
+        #print(num,real_num,mismatch_num,len(residues))
 
 
 
@@ -264,9 +265,6 @@ for i,smi_string in enumerate(filenames):
         if len(residues) == 1:
             fp.write(residues[0] + '\n')
             mismatch_num = num 
-        #else:
-        #    for residue in residues:
-        #        fp1.write(residue + " is not in data"+'\n')
 
     # count the mismatch number
     #print(num,mismatch_num)
@@ -274,6 +272,9 @@ for i,smi_string in enumerate(filenames):
         mol = molecules[exactLine]["molecule"]
         count_mismatch_bond[num] += 1
         fp1.write(mol + '\n')
+        # print the fingerprints of the mismatched residues
+        getFingers(residues)
+
     count_mismatch[num - mismatch_num] += 1
     if num - mismatch_num == 1:
         id = molecules[exactLine]["ID"]
