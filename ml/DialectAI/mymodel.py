@@ -111,23 +111,16 @@ class LanNet(nn.Module):
         src = src.transpose(1,2)
         #src = src.transpose(0,1)
 
-        print(src.shape)
+        #print(src.shape)
 
         # get gru output
         # layer 1
         sorted_frames = sorted_frames / 4
         out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
-        # layer2
-        out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
-        ## layer3
-        #out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
-
-        # residual part
-        out_hidden = out_hidden + out_hidden_new
-
 
         # transpose
         out_hidden = out_hidden.transpose(0,1)
+        print(out_hidden.shape)
         #print(out_hidden.shape)
         # get labels and labels_sizes
         labels, labels_sizes = self.phonemeSeq(name_list)

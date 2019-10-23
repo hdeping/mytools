@@ -37,7 +37,7 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -52,7 +52,7 @@ language_nums = 10  # 9!
 batch_size = 16
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 60
+train_iteration = 90
 display_fre = 50
 half = 4
 # data augmentation
@@ -76,14 +76,13 @@ logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
 
+# initialize the model
+#train_module.load_state_dict(torch.load("models/model9.model"))
+#device = torch.device("cuda:2")
 
 def train(count):    
     # 将模型放入GPU中
     train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=30, output_dim=language_nums)
-
-    # initialize the model
-    train_module.load_state_dict(torch.load("models0/model25-0.model"))
-    #device = torch.device("cuda:2")
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -96,7 +95,7 @@ def train(count):
     factor = 0.0005
     learning_rate = 5e-4
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    for epoch in range(26,train_iteration):
+    for epoch in range(0,train_iteration):
         print("epoch",epoch)
         if epoch == 30:
             learning_rate = 3e-4
