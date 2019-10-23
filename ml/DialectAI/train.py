@@ -84,12 +84,12 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models/model49.model"))
+train_module.load_state_dict(torch.load("models/model19.model"))
 # 2 gpus are used
 device = torch.device("cuda:0")
-#if torch.cuda.device_count() > 1:
-#    print("2 GPUs are available")
-#    train_module = nn.DataParallel(train_module,device_ids=[0,1])
+if torch.cuda.device_count() > 1:
+    print("2 GPUs are available")
+    train_module = nn.DataParallel(train_module,device_ids=[0,1])
 # 将模型放入GPU中
 if use_cuda:
     # torch 0.4.0
