@@ -53,7 +53,7 @@ learning_rate = 0.001
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 10
 display_fre = 50
 half = 4
 
