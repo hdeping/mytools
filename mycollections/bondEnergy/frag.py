@@ -208,7 +208,7 @@ idResidue = readJson(filename)
 
 count = np.zeros(10)
 
-filename = "smiles.txt"
+filename = "mismatch.txt"
 filenames = getSMILES(filename)
 total = 0
 freq = 0
@@ -218,6 +218,7 @@ fp = open(filename,'w')
 filename = "mismatch.result"
 fp1 = open(filename,'w')
 count_mismatch = np.zeros(9)
+count_mismatch_bond = np.zeros(9)
 for i,smi_string in enumerate(filenames):
     print("################# %d compounds #########"%(i))
     #fp.write("################# %d compounds #########"%(i)+'\n')
@@ -281,6 +282,7 @@ for i,smi_string in enumerate(filenames):
     #print(num,mismatch_num)
     if num - mismatch_num > 0:
         mol = molecules[exactLine]["molecule"]
+        count_mismatch_bond[num] += 1
         fp1.write(mol + '\n')
     count_mismatch[num - mismatch_num] += 1
     if num - mismatch_num == 1:
@@ -304,7 +306,9 @@ fp.close()
 fp1.close()
 count = count.astype(int)
 count_mismatch = count_mismatch.astype(int)
+count_mismatch_bond = count_mismatch_bond.astype(int)
 print("freq",freq)
 print("count",count)
 print("total",total)
 print("mismatch number is ",count_mismatch)
+print("bond number  is ",count_mismatch_bond)
