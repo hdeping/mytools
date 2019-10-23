@@ -53,7 +53,9 @@ class LanNet(nn.Module):
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
-        ce_loss = -torch.log(tar_select_new) 
+        #ce_loss = -torch.log(tar_select_new) 
+        # new loss
+        ce_loss = -torch.log(tar_select_new) + torch.log(1 - tar_select_new + 1e-4) 
         ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc

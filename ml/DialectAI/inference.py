@@ -36,8 +36,8 @@ from testmodel import LanNet
 ## ======================================
 # data list
 # train
-#dev_list   = "label_dev_list_fb.txt"
-dev_list   = "label_train_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
+#dev_list   = "label_train_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -154,7 +154,7 @@ def test():
 # output the result
 import numpy as np
 result = []
-name="models/model0.model"
+name="models/model9.model"
 print("loading %s"%(name))
 train_module.load_state_dict(torch.load(name))
 result_target = test()
