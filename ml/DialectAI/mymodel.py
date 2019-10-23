@@ -38,6 +38,12 @@ class LanNet(nn.Module):
 
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer2 = nn.Sequential()
+        self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer3 = nn.Sequential()
+        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer4 = nn.Sequential()
+        self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
 
     # get phoneme sequence
@@ -79,10 +85,32 @@ class LanNet(nn.Module):
 
         ctc_loss = CTCLoss()
         # get gru output
+        # layer1
         out_hidden, hidd = self.layer1(src)
         out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
         # add
         out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        # layer2
+        out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
+        out_hidden, hidd = self.layer2(out_hidden)
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        # layer3
+        out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
+        out_hidden, hidd = self.layer3(out_hidden)
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+        # layer4
+        out_hidden = pack_padded_sequence(out_hidden,sorted_frames.cpu().numpy(),batch_first=True)
+        out_hidden, hidd = self.layer4(out_hidden)
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
+
+
+
         # transpose
         out_hidden = out_hidden.transpose(0,1)
         #print(out_hidden.shape)
