@@ -49,10 +49,10 @@ class TorchDataSet(object):
             curr_feature = torch.Tensor(feature_data)
             # normalization
             #curr_feature = curr_feature.mul(scale)
-            #means = curr_feature.mean(dim=0, keepdim=True)
-            #curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            #batch_data.append(curr_feature_norm)
-            batch_data.append(curr_feature)
+            means = curr_feature.mean(dim=1, keepdim=True)
+            curr_feature_norm = curr_feature - means.expand_as(curr_feature)
+            batch_data.append(curr_feature_norm)
+            #batch_data.append(curr_feature)
             target_frames.append(torch.Tensor([target_label, feature_frames]))
             #name_list.append(file_name)
 
