@@ -3,8 +3,7 @@ from testmodel import  inferModel as inferenceModel
 import torch
 import numpy as np
 
-
-dimension = 40
+dimension     = 40
 language_nums = 10
 
 def key2array(model_keys):
@@ -75,6 +74,6 @@ def getHybridModel(num):
     # save file
     modelfile = "models/infer%d.model"%(num)
     torch.save(infer.state_dict(), modelfile)
-for i in range(9):
+for i in range(3,6):
     getHybridModel(i+1)
         

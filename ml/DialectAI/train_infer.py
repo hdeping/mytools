@@ -63,7 +63,7 @@ chunk_num = 10
 train_iteration = 20
 display_fre = 50
 half = 4
-fractional = float(sys.argv[2])
+fractional = 0.80
 # data augmentation
 
 # save the models

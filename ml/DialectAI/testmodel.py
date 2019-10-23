@@ -3,53 +3,103 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.nn.utils.rnn import pack_padded_sequence,pad_packed_sequence
+import numpy as np
 
-class LanNet(nn.Module):
+
+from resnet import resnet18
+
+
+
+class inferModel(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
-        super(LanNet, self).__init__()
+        super(inferModel, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        #self.layer0 = nn.Sequential()
-        #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.conv = resnet18()
+
+        self.layer_gru = nn.Sequential()
+        self.layer_gru.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        # fb origin
+        self.layer_gru_origin = nn.Sequential()
+        self.layer_gru_origin.add_module('gru_origin', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer1.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
+        self.layer1.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
-        # self.layer2.add_module('Sigmoid', nn.Sigmoid())
+        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
+        self.layer2.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
-        self.layer3 = nn.Sequential()
-        self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
-        self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
+    def getBiHidden(self,layer,src,frames,batch_size):
+        # pack the sequence
+        src = pack_padded_sequence(src,frames,batch_first=True)
+        # get the gru output
+        out_hidden, hidd = layer(src)
+        # unpack the sequence
+        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        # add the forward-backward value
+        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
 
-    def forward(self, src, mask, target):
-        batch_size, fea_frames, fea_dim = src.size()
+        # get a vector with fixed size (hidden_dim)
+        frames = frames.view(-1,1)
+        frames = frames.expand(batch_size,out_hidden.size(2))
+        frames = frames.type(torch.cuda.FloatTensor)
 
-        # get gru output
-        out_hidden, hidd = self.layer1(src)
-        # summation of the two hidden states in the same node
-        # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        #print(out_hidden.shape)
-        # get  masked outputs
-        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
-        # output with new size (batch_size, hidden_dim)
-        out_hidden = out_hidden*mask
-        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
-        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        out_bn = self.layer2(out_hidden)
-        out_target = self.layer3(out_bn)
+        out_hidden = out_hidden.sum(dim=1)/frames
+
+        return out_hidden
+
+    def forward(self, x, frames,target,fractional):
+        batch_size, fea_frames, fea_dim = x.size()
+        # squeeze frames:  [batch_size,1] --> [batch_size]
+        frames = frames.squeeze()
+        # get packed sequence
+        sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
+        # new input 
+        x = x[sorted_indeces]
+        # origin x
+        x_origin = x
+        # conv output
+        # new target
+        target = target[sorted_indeces]
+
+        x = x.unsqueeze(1)
+        x = self.conv(x)
+
+        # squeeze
+        # B,F,T -> B,T,F
+        x = x.squeeze()
+        x = x.transpose(1,2)
+
+        # origin frames
+        sorted_frames_origin = sorted_frames
+        sorted_frames = sorted_frames / 4
+
+        new_indeces,older_indeces = torch.sort(sorted_indeces)
+
+        batch_size, time_frame ,hidden_dim = x.size()
+        # gru output
+        # layer gru
+        out_hidden        = self.getBiHidden(self.layer_gru,x,sorted_frames,batch_size)
+
+        #####################################
+        # original ones, gru_origin output
+        #####################################
+        out_hidden_origin = self.getBiHidden(self.layer_gru_origin,x_origin,sorted_frames_origin,batch_size)
 
 
-        #out_target = out_target.contiguous().view(batch_size, fea_frames, -1)
-        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
-        #out_target_mask = out_target * mask
-        #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        x = out_hidden_origin*(1.0 - fractional) + out_hidden*fractional
+
+        # target should be ordered
+        out_bn = self.layer1(x)
+        out_target = self.layer2(out_bn)
+        # softmax
         predict_target = F.softmax(out_target, dim=1)
-        #print(predict_target.shape,target.shape)
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
@@ -58,11 +108,12 @@ class LanNet(nn.Module):
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
-        prediction = predict
+        #prediction = predict
+        prediction = predict[older_indeces]
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
 
-        return acc, ce_loss,prediction
+        return acc, ce_loss, prediction

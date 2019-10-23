@@ -31,12 +31,12 @@ import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
-from testmodel import LanNet
+from testmodel import inferModel as LanNet
 
 ## ======================================
 # data list
 # train
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -71,7 +71,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=64, output_dim=language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
@@ -85,7 +85,10 @@ if use_cuda:
     train_module = train_module.cuda()
 
 # regularization factor
+
 factor = 0.0005
+fractional = 0.70
+infer_num  = 6
 
 ##  -----------------------------------------------------------------------------------------------------------------------------
 ##  dev
@@ -98,38 +101,33 @@ def test():
     
     result_target = []
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        #print("step is ",step)
+        print("step is ",step)
         tic = time.time()
     
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-        batch_frames = batch_y[:,1].contiguous().view(-1, 1)
+        batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
     
         max_batch_frames = int(max(batch_frames).item())
         batch_dev_data = batch_x[:, :max_batch_frames, :]
     
         step_batch_size = batch_target.size(0)
-        batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-        for ii in range(step_batch_size):
-            frames = int(batch_frames[ii].item())
-            batch_mask[ii, :frames] = 1.
+        #batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+        #for ii in range(step_batch_size):
+        #    frames = int(batch_frames[ii].item())
+        #    batch_mask[ii, :frames] = 1.
     
         # 将数据放入GPU中
         if use_cuda:
             # torch 0.4.0
-            #batch_dev_data   = batch_dev_data.to(device)
-            #batch_mask       = batch_mask.to(device)
-            #batch_target     = batch_target.to(device)
-            # torch 0.3.0
             batch_dev_data   = batch_dev_data.cuda()
-            batch_mask       = batch_mask.cuda()
+            batch_frames     = batch_frames.cuda()
             batch_target     = batch_target.cuda()
             
         with torch.no_grad():
-            #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-            acc, loss,prediction = train_module(batch_dev_data, batch_mask, batch_target)
+            acc, loss,prediction,prediction2 = train_module(batch_dev_data, batch_frames, batch_target,fractional)
         #print(batch_target,prediction)
         for i in range(batch_size):
-            result_target.append([batch_target[i].item(),prediction[i].item()])
+            result_target.append([batch_target[i].item(),prediction[i].item(),prediction2[i].item()])
             #result_target.append(prediction[i].item())
         
         loss = loss.sum()/step_batch_size
@@ -149,10 +147,11 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(6):
+
+for i in range(1):
     print("model ",i)
-    print("loading model9-%d.model"%(i))
-    train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
+    print("loading infer%d.model"%(infer_num))
+    train_module.load_state_dict(torch.load("models/infer%d.model"%(infer_num)))
     result_target = test()
     result.append(result_target)
 
