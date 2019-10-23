@@ -66,11 +66,13 @@ from HTKfile import HTKfile
 #    return data, target_frames, name_list
 
 class TorchDataSet(object):
-    def __init__(self, file_list, batch_size, chunk_num, dimension):
+    def __init__(self, file_list, batch_size, chunk_num, dimension,cycle,augmentation):
         self._batch_size = batch_size
         self._chunck_num = chunk_num
         self._chunck_size = self._chunck_num*self._batch_size
         self._dimension = dimension
+        self._augmentation = augmentation
+        self._cycle= cycle
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
@@ -104,8 +106,8 @@ class TorchDataSet(object):
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
-            for jj in range(3):
-                noise = torch.randn(curr_feature_norm.shape)*jj
+            for jj in range(self._cycle):
+                noise = torch.randn(curr_feature_norm.shape)*jj*self._augmentation
                 curr_feature_norm = curr_feature_norm + noise
                 batch_data.append(curr_feature_norm)
                 target_frames.append(torch.Tensor([target_label, feature_frames]))
