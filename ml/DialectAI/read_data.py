@@ -28,7 +28,7 @@ def get_samples(list):
             samples += 1
             print(samples)
     file_list.close()
-    samples = 13000
+    samples = 3000
     return samples, max_frames
 
 
