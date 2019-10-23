@@ -48,7 +48,7 @@ dev_mlf    = "dev.mlf"
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 8 # 40 before
-dimension2 = 40 # 40 before
+dimension2 = 13 # 40 before
 language_nums = 10 # 9!
 learning_rate = 0.2
 batch_size = 64

@@ -45,6 +45,7 @@ class TorchDataSet(object):
             target_label = int(str(splited_line[1])) 
 
             # fb feature
+            htk_feature = htk_feature.replace('fb40','plp0')
             htk_file = HTKfile(htk_feature)
             feature_data_fb = htk_file.read_data()
             feature_frames_fb = htk_file.get_frame_num()
