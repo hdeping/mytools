@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+#2019-03-20 18:18:18
+#by xiaohengdao
+
 import openbabel as ob
 import pybel 
 import numpy as np
@@ -73,6 +76,15 @@ def isNoHydro(atomsSeq,arr):
             return False
     return True
 
+# if there is only carbon and oxygen
+def isOnlyCarbonOxygen(atomsSeq,arr):
+    seq = ['O','C']
+    for i in arr:
+        if atomsSeq[i-1] not in seq:
+            return False
+    return True
+
+# get the dihedral data
 def getDihedral(atoms,parameters):
     dihedral = parameters["dihedral"]
     atomsSeq  = parameters['atoms']
@@ -91,7 +103,7 @@ def getDihedral(atoms,parameters):
                 p1 = (angle[i] in arr)
                 p.append(p1)
             # if there is no hydrogen
-            p1 = isNoHydro(atomsSeq,arr)
+            p1 = isOnlyCarbonOxygen(atomsSeq,arr)
             #if angle[0] in arr and angle[1] in arr and angle[2] in arr:
             if p[0] and p[1] and p[2] and p1:
                 result[key] = dihedral[key]
@@ -139,7 +151,7 @@ count_sample = 0
 dihedral_counts = np.zeros(20,dtype=int)
 for residue in residueBonds:
     count += 1
-    print("residue ",count)
+    #print("residue ",count)
     # index of the carbon and oxygen
     indexC = residueBonds[residue][0]
     indexO = residueBonds[residue][1]
@@ -188,15 +200,15 @@ for residue in residueBonds:
     for dihed in dihedral:
         dihedralNum += 1
     if dihedralNum == 9:
-        print(json.dumps(dihedral,indent = 4))
-        print(json.dumps(angles,indent = 4))
-        print(parameters['atoms'])
-        #break
+        #print(json.dumps(dihedral,indent = 4))
+        #print(json.dumps(angles,indent = 4))
+        #print(parameters['atoms'])
+        break
 
+    #dihedral_counts[dihedralNum] += 1
     filter2 = (bondNum  == 3)
     filter3 = (angleNum == 2)
     
-    #dihedral_counts[dihedralNum] += 1
         
     if filter1 and filter2 and filter3:
         paraDicts[residue] = molInfo
@@ -208,7 +220,7 @@ for residue in residueBonds:
 #paraDicts = json.dumps(paraDicts,indent = 4)
 #print(paraDicts)
 # write the data
-fp = open("inchikey_parameters_NoHydro.json",'w')
+fp = open("inchikey_parameters_CarbonOxygen.json",'w')
 json.dump(paraDicts,fp,indent = 4)
 
 

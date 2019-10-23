@@ -1,4 +1,8 @@
 #coding=utf-8
+
+#2019-03-20 18:18:18
+#by xiaohengdao
+
 import numpy as np
 import json
 
@@ -7,13 +11,20 @@ from getsmiles import getSMILES
 
 # get molecules
 filename = "inchikey_bonds.json"
-bonds = readJson(filename)
+#"inchikey_parameters_CarbonOxygen.json"
+#"inchikey_parameters_NoHydro.json"
+#"inchikey_parameters_total.json"
 
+names = ["inchikey_parameters_CarbonOxygen.json",
+         "inchikey_parameters_NoHydro.json",
+         "inchikey_parameters_total.json"]
+
+bonds = readJson(names[1])
+
+count = 0
 for mol in bonds:
-    bond = bonds[mol]
-    if bond[-1] != 'O':
-        print(mol)
-        
+    count += 1
 
-filename = "inchikey_bonds2.json"
+print(count)
+
 
