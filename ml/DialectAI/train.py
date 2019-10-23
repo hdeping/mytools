@@ -36,33 +36,30 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
-language_nums = 2 # 9!
+language_nums = 10 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
 
+torch.manual_seed(time.time())
 # save the models
 import sys
-#model_dir = "models" + sys.argv[1]
-model_dir = "models"
+model_dir = "models"+sys.argv[1]
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
-
-# seed 
-torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
