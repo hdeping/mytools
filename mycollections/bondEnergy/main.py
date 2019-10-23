@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+#2019-03-20 18:17:06
+#by xiaohengdao
+
+
 import openbabel as ob
 import pybel 
 import numpy as np
@@ -74,7 +78,7 @@ def getDihedral(atoms,parameters):
         arr = stringToArr(key)
         #if arr[1] == indexC and arr[2] == indexO:
         for angle in atoms:
-            print(angle)
+            #print(angle)
             # if the three atoms of the angles 
             # are all in the dihedrals
             p = []
@@ -90,7 +94,7 @@ def getDihedral(atoms,parameters):
 def getBonds(indexC,indexO,parameters):
     #print("iteration")
     bonds = parameters["bonds"]
-    print(bonds)
+    #print(bonds)
     result = {}
     # store the bonds
     atoms = []
@@ -176,8 +180,10 @@ for residue in residueBonds:
     dihedralNum = 0
     for dihed in dihedral:
         dihedralNum += 1
-    if dihedralNum == 10:
-        print(dihedral)
+    if dihedralNum == 12:
+        print(json.dumps(dihedral,indent = 4))
+        print(json.dumps(angles,indent = 4))
+        #break
 
     dihedral_counts[dihedralNum] += 1
     filter2 = (bondNum  == 3)
@@ -201,4 +207,3 @@ print("number of the samples ", count_sample)
 
 print("dihedral statistics")
 print(dihedral_counts)
-print(sum(dihedral_counts))
