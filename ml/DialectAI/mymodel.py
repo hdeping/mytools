@@ -11,13 +11,16 @@ import numpy as np
 
 from resnet import resnet18
 
-class baseConv1d(nn.Module):
-    def __init__(self,input_dim=40,output_dim=40):
+class baseConv2d(nn.Module):
+    def __init__(self,input_dim=128,output_dim=40):
         super(baseConv1d, self).__init__()
         self.input_dim=input_dim
         self.output_dim=output_dim
-        self.conv1 = nn.Conv1d(self.input_dim,self.output_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.output_dim,self.output_dim,kernel_size=3,padding=1)
+        self.conv1 = nn.Conv2d(1,16,kernel_size=3,stride=2,padding=1)
+        self.bn1   = nn.BatchNorm2d(16)
+        self.conv2 = nn.Conv2d(16,32,kernel_size=3,stride=(1,2),padding=1)
+        self.bn2   = nn.BatchNorm2d(32)
+        self.conv3 = nn.Conv2d(32,32,kernel_size=3,stride=(1,2),padding=1)
     def forward(self,x):
 
         y = self.conv1(x)
@@ -41,11 +44,11 @@ class LanNet(nn.Module):
         self.conv  = resnet18()
 
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         self.layer2 = nn.Sequential()
         self.layer2.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        #self.layer3 = nn.Sequential()
-        #self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer3 = nn.Sequential()
+        self.layer3.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
         #self.layer4 = nn.Sequential()
         #self.layer4.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
     def getBiHidden(self,layer,src,frames):
@@ -100,34 +103,45 @@ class LanNet(nn.Module):
         #print(sorted_frames)
         #print(name_list)
 
-        # conv output
 
-        src = src.unsqueeze(1)
-        src = self.conv(src)
-
-        # squeeze
-        # B,F,T -> B,T,F
-        src = src.squeeze()
-        src = src.transpose(1,2)
-        #src = src.transpose(0,1)
-
-        print(src.shape)
 
         # get gru output
         # layer 1
-        sorted_frames = sorted_frames / 4
+        #sorted_frames = sorted_frames / 4
         out_hidden = self.getBiHidden(self.layer1,src,sorted_frames)
+
+        out_hidden = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
         # layer2
-        out_hidden_new = self.getBiHidden(self.layer2,out_hidden,sorted_frames)
+        out_hidden_new = self.getBiHidden(self.layer3,out_hidden,sorted_frames)
         ## layer3
         #out_hidden_new = self.getBiHidden(self.layer3,out_hidden_new,sorted_frames)
 
         # residual part
         out_hidden = out_hidden + out_hidden_new
 
+        # conv output
+
+        print(out_hidden.shape)
+
+
+        out_hidden = out_hidden.unsqueeze(1)
+        print(out_hidden.shape)
+
+        out_hidden = self.conv(out_hidden)
+        print(out_hidden.shape)
+
+        # squeeze
+        # B,F,T -> B,T,F
+        # avg pooling 
+        out_hidden = out_hidden.sum(dim=3) / 2
+        out_hidden = out_hidden.transpose(1,2)
+        #src = src.transpose(0,1)
+
 
         # transpose
         out_hidden = out_hidden.transpose(0,1)
+
+        print(out_hidden.shape)
         #print(out_hidden.shape)
         # get labels and labels_sizes
         labels, labels_sizes = self.phonemeSeq(name_list)
