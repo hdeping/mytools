@@ -235,8 +235,10 @@ for i,smi_string in enumerate(filenames):
         #fp1.write("compounds %d %s, real num %d, num %d\n"%(i,smi_string,real_num,num))
         for line in frag:
             if line in molecules:
-                id = molecules[line]["ID"]
+                id  = molecules[line]["ID"]
                 fp.write(line +'\n')
+                #mol = molecules[line]["molecule"]
+                #fp1.write(mol + '\n')
         num = real_num
     else:
         # some smiles are displayed into diffrent formulas
@@ -264,6 +266,8 @@ for i,smi_string in enumerate(filenames):
                 #residues.remove(line)
                 mismatch_num += 1
 
+
+
         # if there is only one residue in the residues
         #if len(residues) == 1:
         #    fp.write(residues[0] + '\n')
@@ -273,9 +277,10 @@ for i,smi_string in enumerate(filenames):
 
         # count the mismatch number
         #print(num,mismatch_num)
-        #if num - mismatch_num > 0:
-        #    fp1.write()
-        #count_mismatch[num - mismatch_num] += 1
+        if num - mismatch_num > 0:
+            mol = molecules[exactLine]["molecule"]
+            fp1.write(mol + '\n')
+        count_mismatch[num - mismatch_num] += 1
         #if num - mismatch_num == 4:
         #    print(smi_string)
         #    print(frag)
