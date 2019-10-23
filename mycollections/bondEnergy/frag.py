@@ -5,105 +5,26 @@ import os
 import numpy as np
 import json
 
-# import functions from the 
-from getsmiles import getSMILES,getFingers
+# import functions from the file getsmiles.py
+from getsmiles import getSMILES
+from getsmiles import getFingers
+from getsmiles import FillAtom
+from getsmiles import FragBondLink
+from getsmiles import getBondInfo
+from getsmiles import readSMILES
 
-# Break the bond in ring and generate the radical fragment
-def BreakRing(mol):
-    ring_frag = ob.OBMol()
-    for atom in ob.OBMolAtomIter(mol):
-        ring_frag.AddAtom(atom)
-    for bond in ob.OBMolBondIter(mol):
-        ring_frag.AddBond(bond)
-    return ring_frag
-
-# Determinate the second-end atom
-def IsNearTerminal(atom):
-    n = 0
-    if atom.GetSpinMultiplicity() == 0:
-        for _atom in ob.OBAtomAtomIter(atom):
-            if _atom.GetType() in ["H", "F", "Cl", "Br", "I"]:
-                continue
-            else:
-                n = n + 1
-        return n == 1
-    else: 
-        return False
-
-# FillAtom() is a function to find all the atom in fragment
-def FillAtom(mol, atom, frag, fatom_idx):
-    # mol, frag -- Class OBMol
-    # atom -- Class OBAtom
-    # fatom_idx -- Record the atom has existed
-    frag.AddAtom(atom)
-    fatom_idx.append(atom.GetIdx())
-    if atom.GetValence == 0:
-        return frag
-    elif IsNearTerminal(atom):
-        for _atom in ob.OBAtomAtomIter(atom):
-            index = _atom.GetIdx()
-            if index in fatom_idx: continue
-            frag.AddAtom(_atom)
-            fatom_idx.append(index)
-        return frag
-    else:
-        for _atom in ob.OBAtomAtomIter(atom):
-            index = _atom.GetIdx()
-            if index in fatom_idx: continue
-            elif _atom.GetValence == 1:
-                frag.AddAtom(_atom)
-                fatom_idx.append(index)
-            else:
-                FillAtom(mol, _atom, frag, fatom_idx)
-
-# BondLink() is a function to bonding the atoms in the fragment 
-def FragBondLink(frag, fatom_idx,mol_bond,NumAtomsNoH):
-    IdxDict = {}
-    for i in range(len(fatom_idx)):
-        IdxDict[fatom_idx[i]] = i+1
-    
-    n = 0
-    for j in range(NumAtomsNoH,0,-1):
-        if j in fatom_idx:
-            n = j
-            break
-    for BAtom, EAtom, BO in mol_bond:
-        if BAtom > n:
-            break
-        try:
-            frag.AddBond(IdxDict.get(BAtom), IdxDict.get(EAtom), BO)
-        except:
-            continue
-
-
-# Simplify is a function to remove the same fragment pair
 
 obConversion = ob.OBConversion()
 obConversion.SetInAndOutFormats("smi", "smi")
 # rematch the residues
 filename = "rematch_residues.json"
 
-def getBondInfo(mol):
-    # get the bond information
-    MolBond = []
-    ChainBond = []
-    for bond in ob.OBMolBondIter(mol):    
-        a = bond.GetBeginAtomIdx()
-        b = bond.GetEndAtomIdx()
-        bo = bond.GetBondOrder()
-        MolBond.append((a,b,bo))
-        #if bond.IsInRing() or bond.IsAromatic():
-        #    continue
-        ChainBond.append(bond.GetIdx())
-    return MolBond,ChainBond
 def main(molecules,smi_string):
-    
 
     # create a molecule container
-    mol = ob.OBMol()
-    obConversion.ReadString(mol, smi_string)
+    mol = readSMILES(smi_string)
+
     NumAtomsNoH = mol.NumAtoms()
-    NumOfBonds = mol.NumBonds()
 
     # get the bond information
     MolBond,ChainBond = getBondInfo(mol)
@@ -249,7 +170,7 @@ for i,smi_string in enumerate(filenames):
                 #id = molecules[line]["ID"]
                 exactLine = line
                 if not a:
-                    print(line,molecules[line]['ID'],residues)
+                    print("nooooooo",line,molecules[line]['ID'],residues)
                     break
                 #id = molecules[line]["ID"]
                 fp.write(line +'\n')
