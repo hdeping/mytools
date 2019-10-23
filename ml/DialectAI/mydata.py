@@ -70,8 +70,8 @@ class TorchDataSet(object):
                 idx = 0
                 data = torch.zeros(self._batch_size, max_frames, self._dimension)
                 target = torch.zeros(self._batch_size, 2)
-                names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
-                names = np.repeat(names,self._batch_size)
+                #names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
+                #names = np.repeat(names,self._batch_size)
                 for jj in range(chunk_size):
                     curr_data = batch_data[jj]
                     curr_tgt = target_frames[jj]
@@ -79,13 +79,13 @@ class TorchDataSet(object):
 
                     data[idx,:curr_frame,:] = curr_data[:,:]
                     target[idx,:] = curr_tgt[:]
-                    names[idx] = name_list[jj]
+                    #names[idx] = name_list[jj]
 
                     idx += 1
 
                     if idx % self._batch_size == 0:
                         idx = 0
-                        yield data, target,names
+                        yield data, target
                 
                 max_frames = 0
                 batch_data = []
@@ -101,8 +101,8 @@ class TorchDataSet(object):
             idx = 0
             data = torch.zeros(self._batch_size, max_frames, self._dimension)
             target = torch.zeros(self._batch_size, 2)
-            names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
-            names = np.repeat(names,self._batch_size)
+            #names = np.array(['0000000000000000000000000000000000000000000000000000000000000000000000'])
+            #names = np.repeat(names,self._batch_size)
             for jj in range(chunk_size):
                 curr_data = batch_data[jj]
                 curr_tgt = target_frames[jj]
@@ -110,11 +110,11 @@ class TorchDataSet(object):
 
                 data[idx,:curr_frame,:] = curr_data[:,:]
                 target[idx,:] = curr_tgt[:]
-                names[idx] = name_list[jj]
+                #names[idx] = name_list[jj]
 
                 idx += 1
 
                 if idx % self._batch_size == 0:
                     idx = 0
-                    yield data, target,names
+                    yield data, target
 
