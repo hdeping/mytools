@@ -11,7 +11,7 @@ def getStati():
     for (i,j) in data:
         stati[i,j] += 1
     # 3 4 6 8 9
-    arr = np.array([1,8])
+    arr = np.array([3,4,6,8,9])
     size = len(arr)
     index = 0
     new_stati = np.zeros((size,size))

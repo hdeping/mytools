@@ -4,7 +4,7 @@ data = np.loadtxt('result.txt')
 print(data)
 
 data = data.astype(int)
-data = np.reshape(data,(-1,5,2))
+data = np.reshape(data,(-1,12,2))
 num = 10 
 stati = np.zeros((num,num))
 stati = stati.astype(int)
