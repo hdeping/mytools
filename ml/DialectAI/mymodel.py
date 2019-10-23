@@ -26,7 +26,7 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        self.conv1 = TemporalConvNet(self.input_dim,[20,40,80,self.hidden_dim])
+        self.conv1 = TemporalConvNet(self.input_dim,[40,80,160,self.hidden_dim])
         #self.conv2 = baseConv1d(self.hidden_dim,self.hidden_dim)
 
         self.layer2 = nn.Sequential()
