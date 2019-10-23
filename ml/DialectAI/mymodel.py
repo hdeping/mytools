@@ -12,8 +12,8 @@ class LanNet(nn.Module):
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
-        self.conv1 = nn.Conv1d(self.input_dim,self.hidden_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.hidden_dim,self.hidden_dim,kernel_size=3,padding=1)
+        self.layer1 = nn.Sequential()
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -27,24 +27,20 @@ class LanNet(nn.Module):
     def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
-        # conv layer 
-        # transpose
-        src = src.transpose(1,2)
-        src = F.relu(self.conv1(src))
-        src = F.relu(self.conv2(src))
+        for i in range(0,fea_frames - 10,10)
+            out_hidden,hidd = self.layer1(src[:,10:10+i,:])
 
-        # transpose
-        out_hidden = src.transpose(1,2)
         # get gru output
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
         #print(out_hidden.shape)
         # get  masked outputs
-        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
+        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
         # output with new size (batch_size, hidden_dim)
-        out_hidden = out_hidden*mask
-        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
-        #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
+        #out_hidden = out_hidden*mask
+        #out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
+        out_hidden = out_hidden.sum(dim=1) / 10
+        out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 
