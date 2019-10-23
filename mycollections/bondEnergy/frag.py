@@ -165,7 +165,7 @@ for i,smi_string in enumerate(filenames):
         residues = idResidue[smi_string]
 
         ### match the exact samples
-        mismatch_frag = {}
+        mismatch_frag = []
         for line in frag:
             #print("line",line)
             if line in molecules:
@@ -180,6 +180,8 @@ for i,smi_string in enumerate(filenames):
                 #print(line,residues)
                 residues.remove(line)
                 match_num += 1
+            else:
+                mismatch_frag.append(line)
 
         #print(num,real_num,match_num,len(residues))
 
@@ -199,8 +201,12 @@ for i,smi_string in enumerate(filenames):
         # print the fingerprints of the mismatched residues
         result,values = getFingers(residues)
         if result:
-            print(id)
-            print(values)
+            print("% ",id)
+            print(mismatch_frag)
+            print(residues)
+            if len(mismatch_frag) != len(values):
+                print("match is wrong here!!!!!")
+                break
             
 
     count_mismatch[num - match_num] += 1
