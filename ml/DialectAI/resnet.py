@@ -49,19 +49,18 @@ class BasicBlock(nn.Module):
 class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1000):
-        self.inplanes = 32
-        self.chanels = 32
+        self.inplanes = 64
         super(ResNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, self.chanels, kernel_size=7, stride=2, padding=3,
+        self.conv1 = nn.Conv2d(1, 64, kernel_size=7, stride=2, padding=3,
                                bias=False)
-        self.bn1 = nn.BatchNorm2d(self.chanels)
+        self.bn1 = nn.BatchNorm2d(64)
         self.relu = nn.ReLU(inplace=True)
         #self.maxpool = nn.MaxPool2d(kernel_size=3, stride=(2,1), padding=1)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
-        self.layer1 = self._make_layer(block, self.chanels, layers[0],stride=(1,2))
-        self.layer2 = self._make_layer(block, 2*self.chanels, layers[1], stride=(1,2))
-        self.layer3 = self._make_layer(block, 4*self.chanels, layers[2], stride=(1,2))
-        self.layer4 = self._make_layer(block, 8*self.chanels, layers[3], stride=(1,2))
+        self.layer1 = self._make_layer(block, 64, layers[0],stride=(1,2))
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=(1,2))
+        self.layer3 = self._make_layer(block, 256, layers[2], stride=(1,2))
+        self.layer4 = self._make_layer(block, 512, layers[3], stride=(1,2))
         #self.avgpool = nn.AvgPool2d(7, stride=1)
         #self.fc = nn.Linear(512 * block.expansion, num_classes)
 
@@ -120,7 +119,7 @@ def resnet18(**kwargs):
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
     """
-    model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
+    model = ResNet(BasicBlock, [2, 2, 1, 1], **kwargs)
     #if pretrained:
     #    model.load_state_dict(model_zoo.load_url(model_urls['resnet18']))
     return model

@@ -3,7 +3,7 @@ import numpy as np
 data = np.loadtxt('result.txt')
 #print(data) 
 data = data.astype(int)
-data = np.reshape(data,(-1,6,2))
+data = np.reshape(data,(-1,1,2))
 num = 10 
 stati = np.zeros((num,num))
 stati = stati.astype(int)

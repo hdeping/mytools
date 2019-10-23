@@ -37,7 +37,7 @@ from mymodel import pre_model
 
 # pre model
 model = pre_model()
-model_name = "models0/model58-0.model"
+model_name = "models0/model39-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
@@ -59,7 +59,7 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 40
 display_fre = 50
 half = 4
 # data augmentation
@@ -89,7 +89,7 @@ logging.info('finish reading all train data')
 
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=256, bn_dim=64, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=512, bn_dim=64, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -104,13 +104,13 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 5:
+        if epoch == 10:
             learning_rate = 0.03
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 10:
+        if epoch == 20:
             learning_rate = 0.01
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 15:
+        if epoch == 30:
             learning_rate = 0.003
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
