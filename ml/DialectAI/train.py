@@ -50,10 +50,10 @@ use_cuda = torch.cuda.is_available()
 dimension = 40 # 40 before
 language_nums = 10  # 9!
 learning_rate = 1e-3
-batch_size = 128
+batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 80
 display_fre = 20
 half = 4
 # data augmentation
@@ -97,9 +97,9 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        #if epoch == 4:
-        #    learning_rate = 0.05
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 40:
+            learning_rate = 1e-4
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02
         #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
