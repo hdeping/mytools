@@ -38,7 +38,7 @@ from mymodel import pre_model
 # pre model
 import sys
 model = pre_model()
-model_name = "models/model%s-0.model"%(sys.argv[2])
+model_name = "models/model59-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
@@ -89,7 +89,7 @@ logging.info('finish reading all train data')
 
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=64, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
