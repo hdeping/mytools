@@ -30,26 +30,27 @@ import torch
 import torch.utils.data as Data
 
 #from read_data import get_samples, get_data, TorchDataSet
-from read_data import  TorchDataSet
+from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
+train_list = "label_list_train.txt"
 # dev
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "label_list_dev.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
+data_dimension = 400 # 400 point per frame
 language_nums = 9 # 9!
 learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 30
+train_iteration = 15
 display_fre = 50
 half = 4
 # data augmentation
@@ -61,9 +62,9 @@ if not os.path.exists(model_dir):
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -86,13 +87,13 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 8:
+    if epoch == 4:
         learning_rate = 0.05
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 16:
+    if epoch == 8:
         learning_rate = 0.01
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 24:
+    if epoch == 12:
         learning_rate = 0.003
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
