@@ -43,14 +43,14 @@ dev_list   = "label_dev_list_fb.txt"
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 39 # 40 before
+dimension = 13 # 40 before
 language_nums = 2  # 9!
-learning_rate = 0.1
+learning_rate = 0.05
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
-display_fre = 50
+display_fre = 200
 half = 4
 # data augmentation
 
@@ -92,13 +92,13 @@ def train(count):
     learning_rate = 0.1
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
-        print("epoch",epoch)
-        if epoch == 4:
-            learning_rate = 0.05
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 8:
-            learning_rate = 0.02
-            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        #print("epoch",epoch)
+        #if epoch == 4:
+        #    learning_rate = 0.05
+        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        #if epoch == 8:
+        #    learning_rate = 0.02
+        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()
         train_module.train()
