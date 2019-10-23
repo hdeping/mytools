@@ -37,7 +37,7 @@ from mymodel import pre_model
 
 # pre model
 model = pre_model()
-model_name = "models0/model40-0.model"
+model_name = "models0/model39-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
@@ -54,12 +54,12 @@ dev_list   = "../labels/label_dev_list_fb.txt"
 use_cuda = torch.cuda.is_available()
 #use_cuda = False
 # network parameter 
-dimension = 53 # 40 before
+dimension = 40 # 40 before
 language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 40
 display_fre = 50
 half = 4
 # data augmentation
@@ -107,12 +107,12 @@ def train(count):
         if epoch == 10:
             learning_rate = 0.03
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #if epoch == 20:
-        #    learning_rate = 0.01
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #if epoch == 30:
-        #    learning_rate = 0.003
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 20:
+            learning_rate = 0.01
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 30:
+            learning_rate = 0.003
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02
         #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
