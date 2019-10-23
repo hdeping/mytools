@@ -17,12 +17,16 @@ def checkPara():
         data = getPara(i)
         # if the first letter is "R","A" or "D"
         letters = ["R","A","D"]
+        #print(data[:,0])
         for line in data[:,0]:
             first_letter = line[0]
+            #print(first_letter)
             if first_letter not in letters :
                 count = count + 1
-                print(i)
+                print(i,first_letter)
                 break
+
+        #break
 
     print("there are %d wrong samples"%(count))
 
