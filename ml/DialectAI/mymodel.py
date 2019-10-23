@@ -19,8 +19,8 @@ class LanNet(nn.Module):
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim*2))
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim*2, self.bn_dim))
+        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
@@ -60,6 +60,7 @@ class LanNet(nn.Module):
         #print(sorted_frames)
         out_hidden = out_hidden.sum(dim=1)/sorted_frames
 
+        out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
         # linear parts
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
