@@ -30,16 +30,15 @@ import torch
 import torch.utils.data as Data
 import sys
 
-#from mydata import get_samples, get_data, TorchDataSet
-from mydata import  TorchDataSet
+#from read_data import get_samples, get_data, TorchDataSet
+from read_data import  TorchDataSet
 from net_component import LanNet
 
 ## ======================================
 # data list
 #train_list = "./train_list_fb.txt"
 #dev_list   = "./dev_list_fb.txt"
-train_list = "../labels/label_train-0-%s-%s-%s.txt"%(sys.argv[1],sys.argv[2],sys.argv[3])
-#train_list = "../labels/label_train0.txt"
+train_list = "../labels/label_train0.txt"
 dev_list   = "../labels/label_dev_list_fb.txt"
 
 # basic configuration parameter
@@ -47,7 +46,7 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40
 language_nums = 6
-learning_rate = 0.01
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
@@ -57,10 +56,12 @@ half = 4
 # data augmentation
 cycle = 1
 #random = float(sys.argv[1])
+active = 0.001
+random = 0.05
 augmentation = 0
 
 # save the models
-model_dir = "models0-%s-%s-%s"%(sys.argv[1],sys.argv[2],sys.argv[3])
+model_dir = "models_data%d"%(1000*random)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -77,6 +78,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
+#train_module.load_state_dict(torch.load("models_data10/model2.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -87,10 +89,9 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-train_module.load_state_dict(torch.load("models0-1-2-5/model6.model"))
-for epoch in range(7,train_iteration):
+for epoch in range(train_iteration):
     print("epoch",epoch)
-    if epoch == half:
+    if epoch >= half:
         learning_rate /= 2.
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
@@ -114,9 +115,7 @@ for epoch in range(7,train_iteration):
         #max_batch_frames = int(max(batch_frames).item())
         #print(dir(batch_frames))
         max_batch_frames = int(max(batch_frames).item())
-        #print(batch_x.data.shape)
         batch_train_data = batch_x[:, :max_batch_frames, :]
-        #print(batch_train_data.data.shape)
 
         step_batch_size = batch_target.size(0)
         batch_mask = torch.zeros(step_batch_size, max_batch_frames)
@@ -146,7 +145,8 @@ for epoch in range(7,train_iteration):
         reg_loss = 0
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
-            reg_loss += param.norm(2)
+            rand = random*torch.randn(param.data.shape).cuda()
+            reg_loss += param.norm(2) + (rand*param).sum() + active*param.sum()
         backward_loss += factor * reg_loss
                 
         # get the gradients
@@ -216,8 +216,6 @@ for epoch in range(7,train_iteration):
         
         loss = loss.sum()/step_batch_size
 
-        toc = time.time()
-        step_time = toc-tic
 
         dev_loss += loss.item()
         dev_acc += acc
