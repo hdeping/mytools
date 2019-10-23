@@ -37,31 +37,33 @@ from mymodel import LanNet
 # data list
 # train
 train_list = "label_train_list_fb.txt"
-#train_list = "train_long_fb.txt"
 # dev
 dev_list   = "label_dev_list_fb.txt"
-#dev_list = "dev_long_fb.txt"
-# dev
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-# 12 * 7
-dimension = 84 # 40 before
+toneLengthD = 6
+pitch_dim  = 2*toneLengthD + 1# 40 before
+fb_dim     = 40 # 40 + 13
+dimension  = pitch_dim + fb_dim
 language_nums = 2 # 9!
-learning_rate = 0.01
+learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 12
 display_fre = 50
 half = 4
-# data augmentation
 
 # save the models
 import sys
+
+# mixing factor
+alpha = float(sys.argv[1])
 #model_dir = "models" + sys.argv[1]
-model_dir = "models"
+model_dir = "models"+str(alpha)
+print(model_dir)
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
@@ -76,7 +78,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=fb_dim,pitch_dim=pitch_dim, hidden_dim=128, bn_dim=30, output_dim=language_nums,alpha=alpha)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
