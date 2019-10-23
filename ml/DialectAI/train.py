@@ -52,7 +52,7 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-noise_density = 0.01
+noise_density = 0.001
 noise_num     = 5
 # data augmentation
 
@@ -233,5 +233,5 @@ def train(count):
         acc=dev_acc/dev_batch_num
         logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
-for count in range(2):
+for count in range(4):
     train(count)
