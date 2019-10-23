@@ -52,9 +52,6 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-hidden_dim = 256
-hidden_dim2 = 128
-bn_dim = 30
 # data augmentation
 
 # save the models
@@ -71,7 +68,7 @@ torch.manual_seed(time.time())
 # with data augmentation
 train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,weight=False)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -81,7 +78,7 @@ logging.info('finish reading all train data')
 #device = torch.device("cuda:2")
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=hidden_dim,hidden_dim2=hidden_dim2, bn_dim=bn_dim, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:
@@ -115,8 +112,10 @@ def train(count):
         tic = time.time()
         for step, (batch_x, batch_y) in enumerate(train_dataset): 
             #print("step is ",step)
-            batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-            batch_frames = batch_y[:,1].contiguous().view(-1, 1)
+            # target and weight 
+            #batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
+            batch_target = batch_y[:,:2].contiguous().view(-1,2, 1).long()
+            batch_frames = batch_y[:,2].contiguous().view(-1, 1)
     
             #max_batch_frames = int(max(batch_frames).item())
             #print(dir(batch_frames))
@@ -126,6 +125,7 @@ def train(count):
             #print(batch_train_data.data.shape)
     
             step_batch_size = batch_target.size(0)
+            #print(step_batch_size)
             batch_mask = torch.zeros(step_batch_size, max_batch_frames)
             for ii in range(step_batch_size):
                 frames = int(batch_frames[ii].item())
@@ -142,7 +142,7 @@ def train(count):
                 batch_mask       = batch_mask.cuda()
                 batch_target     = batch_target.cuda()
     
-            acc, loss = train_module(batch_train_data, batch_mask, batch_target)
+            acc, loss = train_module(batch_train_data, batch_mask, batch_target,weight=True)
             
             # loss = loss.sum()
             backward_loss = loss
@@ -218,7 +218,7 @@ def train(count):
                 
             with torch.no_grad():
                 #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-                acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
+                acc, loss = train_module(batch_dev_data, batch_mask, batch_target,weight=False)
             
             loss = loss.sum()/step_batch_size
     

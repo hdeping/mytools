@@ -5,11 +5,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48, hidden_dim=2048, hidden_dim2=128,bn_dim=100, output_dim=10):
+    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
-        self.hidden_dim2 = hidden_dim2
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
@@ -18,20 +17,16 @@ class LanNet(nn.Module):
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
-        self.layer_a = nn.Sequential()
-        self.layer_a.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
-        self.layer_a.add_module('linear', nn.Linear(self.hidden_dim, self.hidden_dim2))
-
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim2))
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim2, self.bn_dim))
+        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
-    def forward(self, src, mask, target):
+    def forward(self, src, mask, target,weight=True):
         batch_size, fea_frames, fea_dim = src.size()
 
         # get gru output
@@ -45,8 +40,6 @@ class LanNet(nn.Module):
         out_hidden = out_hidden*mask
         out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
-        out_hidden = self.layer_a(out_hidden)
-        out_hidden = F.relu(out_hidden)
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 
@@ -59,14 +52,28 @@ class LanNet(nn.Module):
         #print(predict_target.shape,target.shape)
 
         # 计算loss
-        tar_select_new = torch.gather(predict_target, 1, target)
-        ce_loss = -torch.log(tar_select_new) 
-        ce_loss = ce_loss.sum() / batch_size
+        #tar_select_new = torch.gather(predict_target, 1, target)
+        if weight:
+            tar_select_new = torch.gather(predict_target, 1, target[:,0,:])
+            # loss with weight
+            # weight = target[:,1]
+            label_weight = target[:,1,:].type(torch.cuda.FloatTensor)
+            ce_loss = -torch.log(tar_select_new)*label_weight
+            # average weight is : (1 + 2)/2 = 1.5
+            ce_loss = ce_loss.sum() / (batch_size * 1.5)
+        else:
+            tar_select_new = torch.gather(predict_target, 1, target)
+            ce_loss = -torch.log(tar_select_new)
+            ce_loss = ce_loss.sum() / (batch_size )
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
         predict = predict.contiguous().view(-1,1)
-        correct = predict.eq(target).float()       
+        # target = target[:,0:,:]
+        if weight:
+            correct = predict.eq(target[:,0,:]).float()       
+        else:
+            correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples
