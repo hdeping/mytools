@@ -45,9 +45,9 @@ model.eval()
 ## ======================================
 # data list
 # train
-train_list = "label_train_list_fb.txt"
+train_list = "../labels/label_train_list_fb.txt"
 # dev
-dev_list   = "label_dev_list_fb.txt"
+dev_list   = "../labels/label_dev_list_fb.txt"
 
 
 # basic configuration parameter
@@ -59,7 +59,7 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 12
+train_iteration = 40
 display_fre = 50
 half = 4
 # data augmentation
@@ -104,11 +104,14 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 4:
+        if epoch == 10:
             learning_rate = 0.03
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 8:
+        if epoch == 20:
             learning_rate = 0.01
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 30:
+            learning_rate = 0.003
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
         #    learning_rate = 0.02
@@ -153,9 +156,9 @@ def train(count):
                 batch_target     = batch_target.cuda()
     
             with torch.no_grad():
-                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_train_data,batch_frames,batch_target)
+                out_hidden,batch_target,older_indeces = model(batch_train_data,batch_frames,batch_target)
             #print("out hidden shape",out_hidden.shape)
-            acc, loss = train_module(out_hidden, sorted_frames,batch_target)
+            acc, loss = train_module(out_hidden, batch_target)
             
             
             # loss = loss.sum()
@@ -236,10 +239,8 @@ def train(count):
                 batch_target     = batch_target.cuda()
                 
             with torch.no_grad():
-                out_hidden,batch_target,older_indeces,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
-                acc, loss = train_module(out_hidden, sorted_frames,batch_target)
-                #out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
-                #acc, loss = train_module(out_hidden, batch_target)
+                out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)
+                acc, loss = train_module(out_hidden, batch_target)
             
             loss = loss.sum()/step_batch_size
     
