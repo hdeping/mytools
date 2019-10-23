@@ -174,6 +174,7 @@ def main(molecules,smi_string):
     #print("bonds")
     #print(atomId)
     return len(atomId),ListOfFrag1
+
 def getSMILES(filename):
     fp = open(filename,'r')
     data = fp.read()
@@ -240,6 +241,7 @@ for i,smi_string in enumerate(filenames):
                 #mol = molecules[line]["molecule"]
                 #fp1.write(mol + '\n')
         num = real_num
+        mismatch_num = num
     else:
         # some smiles are displayed into diffrent formulas
         # which should be equivalent
@@ -275,23 +277,23 @@ for i,smi_string in enumerate(filenames):
         #    for residue in residues:
         #        fp1.write(residue + " is not in data"+'\n')
 
-        # count the mismatch number
-        #print(num,mismatch_num)
-        if num - mismatch_num > 0:
-            mol = molecules[exactLine]["molecule"]
-            fp1.write(mol + '\n')
-        count_mismatch[num - mismatch_num] += 1
-        if num - mismatch_num == 1:
-            id = molecules[exactLine]["ID"]
-            residues = idResidue[id]
-            print(num,mismatch_num,frag,residues)
-            break
-            
-        #if num - mismatch_num == 4:
-        #    print(smi_string)
-        #    print(frag)
-        #    #break
+    # count the mismatch number
+    #print(num,mismatch_num)
+    if num - mismatch_num > 0:
+        mol = molecules[exactLine]["molecule"]
+        fp1.write(mol + '\n')
+    count_mismatch[num - mismatch_num] += 1
+    if num - mismatch_num == 1:
+        id = molecules[exactLine]["ID"]
+        residues = idResidue[id]
+        print(num,mismatch_num,frag,residues)
+        break
         
+    #if num - mismatch_num == 4:
+    #    print(smi_string)
+    #    print(frag)
+    #    #break
+    
     total += num
     count[num] += 1
     freq += 1
