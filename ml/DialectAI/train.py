@@ -46,7 +46,7 @@ import torch.nn as nn
 # train
 train_list = "../labels/label_train_fb_frame.txt"
 # dev
-dev_list   = "../labels/label_train_fb_frame.txt"
+dev_list   = "../labels/label_dev_fb_frame.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
@@ -76,7 +76,7 @@ if not os.path.exists(model_dir):
 # CRNN
 #train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
 # RNN
-#train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,p_vad)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,p_vad)
 # without data augmentation
 dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,p_vad)
 logging.info('finish reading all train data')
@@ -88,7 +88,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-train_module.load_state_dict(torch.load("models/model9.model"))
+#train_module.load_state_dict(torch.load("models/model9.model"))
 # 2 gpus are used
 device = torch.device("cuda:0")
 #if torch.cuda.device_count() > 1:
@@ -102,7 +102,7 @@ if use_cuda:
     #train_module = train_module.cuda()
 
 # regularization factor
-factor = 0.001
+factor = 0.0005
 # to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
 # torch.backends.cudnn.benchmark=True
 #torch.backends.cudnn.enabled = False
@@ -116,17 +116,17 @@ def getACCLoss(batch_train_data,out_target,batch_mask,batch_target):
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, batch_target)
-        ce_loss = -torch.log(tar_select_new) 
+        ce_loss = -torch.log(tar_select_new+1.0e-8) 
         ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
         # output
-        target = batch_target.cpu().numpy()
-        target = np.reshape(target,(-1))
-        pred = predict.cpu().numpy()
-        pred = np.reshape(pred,(-1))
-        print(target,pred)
+        #target = batch_target.cpu().numpy()
+        #target = np.reshape(target,(-1))
+        #pred = predict.cpu().numpy()
+        #pred = np.reshape(pred,(-1))
+        #print(target,pred)
         predict = predict.contiguous().view(-1,1)
         correct = predict.eq(batch_target).float()       
         num_samples = predict.size(0)
@@ -235,7 +235,7 @@ def test(epoch):
     dev_batch_num = 0 
 
     for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-        print("step is ",step)
+        #print("step is ",step)
         tic = time.time()
 
         batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
@@ -283,12 +283,10 @@ def test(epoch):
 # random seed
 torch.manual_seed(time.time())
 
-epoch = 0
-test(epoch)
-#for epoch in range(0,train_iteration):
-#    # get lr
-#    #getLr(epoch)
-#    # train
-#    #train(epoch)
-#    #test(epoch)
-#    test(epoch)
+for epoch in range(0,train_iteration):
+    # get lr
+    getLr(epoch)
+    # train
+    train(epoch)
+    #test(epoch)
+    test(epoch)
