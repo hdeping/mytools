@@ -78,7 +78,9 @@ def getDihedral(atoms,parameters):
     return result
 
 def getBonds(indexC,indexO,parameters):
+    #print("iteration")
     bonds = parameters["bonds"]
+    print(bonds)
     result = {}
     # store the bonds
     atoms = []
@@ -88,10 +90,11 @@ def getBonds(indexC,indexO,parameters):
     if key not in bonds:
         para = json.dumps(parameters,indent = 4)
         #print(para)
-        return False
+        return False,atoms
 
     result[key] = bonds[key]
 
+    #print("iteration")
     for key in bonds:
         arr = stringToArr(key)
         # add to the result
@@ -105,6 +108,7 @@ def getBonds(indexC,indexO,parameters):
             atoms.append([indexC,arr[1]])
             
 
+    print(atoms)
     return result,atoms
 
 # get the bonds connected to "C"
