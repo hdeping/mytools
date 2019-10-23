@@ -40,7 +40,7 @@ train_list = "label_train_list_fb.txt"
 #train_list = "train_long_fb.txt"
 # dev
 #dev_list   = "label_dev_list_fb.txt"
-dev_list = "dev_long_fb.txt"
+dev_list = "dev_short_fb.txt"
 # dev
 
 # basic configuration parameter
