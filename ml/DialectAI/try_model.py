@@ -1,17 +1,12 @@
-from mymodel import baseConv1d
+# -*- coding:utf-8 -*-
+
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
-conv = []
-#chanels = [1,2,4,8,16,32,40,64,80]
-chanels = [1,5,10,20,40]
-# get conv layers
-layer_num = 4
-for i in range(layer_num):
-    conv_layer = baseConv1d(chanels[i],chanels[i+1],3,2,1)
-    conv.append(conv_layer)
-
-arr = torch.rand(100,1,320)
-for i in range(layer_num):
-    arr = conv[i](arr)
-    print(arr.shape)
-
+inf=-float('inf')
+a = [[1,1,1,inf],[-1,2,1,inf],[3,3,3,inf]]
+a = torch.Tensor(a)
+print(a)
+b = F.softmax(a,dim=1)
+print(b)
