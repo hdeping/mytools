@@ -45,7 +45,7 @@ model.eval()
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_list_fb.txt"
+train_list = "../labels/label_train_all.txt"
 # dev
 dev_list   = "../labels/label_dev_list_fb.txt"
 
@@ -60,9 +60,10 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 12
 display_fre = 50
 half = 4
+fractional = float(sys.argv[2])
 # data augmentation
 
 # save the models
@@ -161,7 +162,7 @@ def train(count):
             #print("out hidden shape",out_hidden.shape)
             #acc, loss = train_module(out_hidden, batch_target)
 
-            acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target)
+            acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target,fractional)
             
             
             # loss = loss.sum()
@@ -243,7 +244,7 @@ def train(count):
                 
             with torch.no_grad():
                 out_hidden_origin,out_hidden,batch_target,older_indeces,sorted_frames_origin,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
-                acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target)
+                acc, loss = train_module(out_hidden_origin,out_hidden,sorted_frames_origin,sorted_frames,batch_target,fractional)
                 #out_hidden,batch_target,older_indeces,sorted_frames = model(batch_dev_data,batch_frames,batch_target)
                 #acc, loss = train_module(out_hidden, sorted_frames,batch_target)
                 #out_hidden,batch_target,older_indeces = model(batch_dev_data,batch_frames,batch_target)

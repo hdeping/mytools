@@ -6,7 +6,6 @@ __author__ = 'yfhu3'
 __email__ = 'yfhu3@iflytek.com'
 __version__ = '2018.01.02 with python 2.7.14'
 
-
 import numpy as np
 import struct
 import re

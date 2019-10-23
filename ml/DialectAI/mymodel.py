@@ -66,9 +66,6 @@ class LanNet(nn.Module):
         self.layer_gru_origin = nn.Sequential()
         self.layer_gru_origin.add_module('gru_origin', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
 
-        self.fractional = nn.Sequential()
-        self.fractional.add_module('linear', nn.Linear(2, 1,bias=False))
-
         self.layer1 = nn.Sequential()
         self.layer1.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
         self.layer1.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
@@ -94,7 +91,9 @@ class LanNet(nn.Module):
     # layer_gru_origin      V.S. layer_gru
     # x_origin              V.S. x
     # sorted_frames_origin  V.S. sorted_frames
-    def forward(self, x_origin,x, sorted_frames_origin,sorted_frames,target):
+    # fractional: mixing proportion of hidden_origin and hidden vector
+    # fractional \in (0,1)
+    def forward(self, x_origin,x, sorted_frames_origin,sorted_frames,target,fractional):
 
         batch_size, time_frame ,hidden_dim = x.size()
         # gru output
@@ -120,22 +119,7 @@ class LanNet(nn.Module):
 
 
         # mixing out_hidden_origin and out_hidden with a proportion fractional
-        #x = out_hidden_origin*(1.0 - fractional) + out_hidden*fractional
-        # mixing out_hidden_origin and out_hidden with a neural network
-        # (B,H) -> (B,H,1)
-        out_hidden_origin = out_hidden_origin.unsqueeze(2)
-        out_hidden        = out_hidden.unsqueeze(2)
-        # (B,H,1) --> (B,H,2)
-        x = torch.cat((out_hidden_origin,out_hidden),dim=2)
-
-        # (B,H,2) --> (B*H,2)
-        x = x.contiguous().view(-1,2)
-        # (B*H,2) --> (B*H,1)
-        x = self.fractional(x) 
-        # (B*H,1) --> (B*H)
-        x = x.squeeze()
-        # (B*H) --> (B,H)
-        x = x.contiguous().view(batch_size,-1)
+        x = out_hidden_origin*(1.0 - fractional) + out_hidden*fractional
 
         # target should be ordered
         out_bn = self.layer1(x)
