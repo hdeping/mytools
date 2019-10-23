@@ -174,12 +174,12 @@ class AugmentedLstm(torch.nn.Module):
                                        projected_state[:, 0 * self.hidden_size:1 * self.hidden_size])
             forget_gate = torch.sigmoid(projected_input[:, 1 * self.hidden_size:2 * self.hidden_size] +
                                         projected_state[:, 1 * self.hidden_size:2 * self.hidden_size])
-            memory_init = torch.tanh(projected_input[:, 2 * self.hidden_size:3 * self.hidden_size] +
+            memory_init = torch.relu(projected_input[:, 2 * self.hidden_size:3 * self.hidden_size] +
                                      projected_state[:, 2 * self.hidden_size:3 * self.hidden_size])
             output_gate = torch.sigmoid(projected_input[:, 3 * self.hidden_size:4 * self.hidden_size] +
                                         projected_state[:, 3 * self.hidden_size:4 * self.hidden_size])
             memory = input_gate * memory_init + forget_gate * previous_memory
-            timestep_output = output_gate * torch.tanh(memory)
+            timestep_output = output_gate * torch.relu(memory)
 
             if self.use_highway:
                 highway_gate = torch.sigmoid(projected_input[:, 4 * self.hidden_size:5 * self.hidden_size] +

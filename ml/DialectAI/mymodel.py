@@ -42,15 +42,19 @@ class LanNet(nn.Module):
 
 
         # get gru output
+        print(src[0:2])
         out_hidden, hidd = self.layer1(src)
         out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
+        print(out_hidden)
 
         # get a vector with fixed size length 
         sorted_frames = sorted_frames.view(-1,1)
         sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))
         sorted_frames = sorted_frames.type(torch.cuda.FloatTensor)
         #print(sorted_frames)
+        #print(sorted_frames)
         out_hidden = out_hidden.sum(dim=1)/sorted_frames
+        #print(out_hidden)
 
         #out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
         # linear parts
@@ -63,11 +67,13 @@ class LanNet(nn.Module):
         #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_target.size(2))
         #out_target_mask = out_target * mask
         #out_target_mask = out_target_mask.sum(dim=1)/mask.sum(dim=1)
+        #print(out_target)
         predict_target = F.softmax(out_target, dim=1)
         #print(predict_target.shape,target.shape)
 
         # 计算loss
         tar_select_new = torch.gather(predict_target, 1, target)
+        #print(tar_select_new)
         ce_loss = -torch.log(tar_select_new) 
         ce_loss = ce_loss.sum() / batch_size
 
