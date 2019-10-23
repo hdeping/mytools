@@ -193,15 +193,18 @@ for residue in residueBonds:
 
     # judge
     if bonds == False:
-        print(id)
-        print(mol)
+        #print(id)
+        #print(mol)
         continue
         
     # get the adjacent elements and its valence elctrons
     elements = {}
-    print(atomsSeq)
+    #print(atomsSeq)
+    # get the number of the elements
+    elem_count = 0
     for atom in atomsSeq:
         elements[atom] = valence[atom]
+        elem_count += 1
 
     molInfo['bonds'] = bonds
     molInfo["elements"] = elements
@@ -227,6 +230,12 @@ for residue in residueBonds:
         break
 
     #dihedral_counts[dihedralNum] += 1
+    if bondNum - elem_count == 1:
+        print(elem_count,bondNum,bonds,elements)
+        #print(bonds)
+        #print(elements)
+        #break
+        
     filter2 = (bondNum  == 3)
     filter3 = (angleNum == 2)
     
@@ -241,7 +250,7 @@ for residue in residueBonds:
 #paraDicts = json.dumps(paraDicts,indent = 4)
 #print(paraDicts)
 # write the data
-fp = open("inchikey_parameters_CarbonOxygen.json",'w')
+fp = open("inchikey_parameters_CarbonOxygen_valence.json",'w')
 json.dump(paraDicts,fp,indent = 4)
 
 
