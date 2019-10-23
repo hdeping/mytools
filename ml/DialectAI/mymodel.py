@@ -20,8 +20,8 @@ class LanNet(nn.Module):
                     num_layers=1, 
                     bidirectional=False,
                     use_tanh=0,
-                    use_relu=1,
-                    use_selu=0,
+                    use_relu=0,
+                    use_selu=1,
                     weight_norm=False,
                     layer_norm = False,
                     highway_bias = 0))
