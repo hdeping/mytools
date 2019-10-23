@@ -4,8 +4,21 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+class baseConv1d(nn.Module):
+    def __init__(self,input_dim=40):
+        super(baseConv1d, self).__init__()
+        self.input_dim=input_dim
+        self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
+        self.bn1   = nn.BatchNorm1d(self.input_dim)
+    def forward(self,x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = F.relu(x)
+        return x
+
+
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
+    def __init__(self, input_dim=40, hidden_dim=2048, bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
@@ -17,8 +30,8 @@ class LanNet(nn.Module):
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
-        self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
+        self.conv1 = baseConv1d(self.input_dim)
+        self.conv2 = baseConv1d(self.input_dim)
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -35,8 +48,8 @@ class LanNet(nn.Module):
         # conv layer 
         # transpose
         src = src.transpose(1,2)
-        src = F.relu(self.conv1(src))
-        src = F.relu(self.conv2(src))
+        src = self.conv1(src)
+        src = self.conv2(src)
 
         # transpose
         src = src.transpose(1,2)
