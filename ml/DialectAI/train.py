@@ -145,7 +145,7 @@ for epoch in range(0,train_iteration):
         for param in train_module.parameters():
             #reg_loss += l1_crit(param)
             #reg_loss += param.norm(2)
-            reg_loss += param.norm(2)**2
+            reg_loss += param.norm(4)**4
         backward_loss += factor * reg_loss
                 
         # get the gradients
