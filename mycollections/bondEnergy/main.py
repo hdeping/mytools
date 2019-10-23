@@ -12,6 +12,10 @@ obConversion.ReadFile(mol, filename)
 MolBond = []
 ChainBond = []
 
+for atom in ob.OBMolAtomIter(mol):
+    print(atom.GetType())
+#print(dir(atom))
+
 for bond in ob.OBMolBondIter(mol):    
     a = bond.GetBeginAtomIdx()
     b = bond.GetEndAtomIdx()
@@ -23,10 +27,10 @@ for bond in ob.OBMolBondIter(mol):
 
     ChainBond.append(bond.GetIdx())
 
-print(MolBond)
-MolBond.sort()
-print(MolBond)
-NumOfRingBond = len(MolBond) - len(ChainBond)
+#print(MolBond)
+#MolBond.sort()
+#print(MolBond)
+#NumOfRingBond = len(MolBond) - len(ChainBond)
 
 
 
