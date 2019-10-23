@@ -7,7 +7,6 @@ __email__ = 'xiaohengdao@gmail.com'
 __version__ = '2018.08.08 with python 3.6'
 
 import numpy as np
-import gc
 
 
 def sliceArray(array,windows,stride):
@@ -37,8 +36,6 @@ def sliceArray(array,windows,stride):
         start_column = stride*slice_num
         end_column = windows
         res[:,start_column:end_column] = tmp[i:i+size,0:res_num]
-    del tmp
-    gc.collect()
     return res,size
 
 class pcmdata(object):
@@ -51,8 +48,6 @@ class pcmdata(object):
         self.windows = windows
         self.stride  = stride
         self.data,self.frame = sliceArray(data,self.windows,self.stride)
-        del data
-        gc.collect()
 
     def read_data(self):
         return self.data
