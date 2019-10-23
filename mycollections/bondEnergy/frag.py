@@ -207,7 +207,7 @@ idResidue = readJson(filename)
 
 count = np.zeros(10)
 
-filename = "mismatch2.txt"
+filename = "smiles.txt"
 filenames = getSMILES(filename)
 total = 0
 freq = 0
@@ -218,7 +218,7 @@ filename = "mismatch.result"
 fp1 = open(filename,'w')
 count_mismatch = np.zeros(9)
 for i,smi_string in enumerate(filenames):
-    #print("################# %d compounds #########"%(i))
+    print("################# %d compounds #########"%(i))
     #fp.write("################# %d compounds #########"%(i)+'\n')
     #fp.write(smi_string + '\n')
     num,frag = main(molecules,smi_string)
@@ -252,7 +252,9 @@ for i,smi_string in enumerate(filenames):
                 break
 
         ### match the exact samples
+        print(residues)
         for line in frag:
+            print("line",line)
             if line in molecules:
                 a = (line in residues)
                 #id = molecules[line]["ID"]
@@ -266,7 +268,8 @@ for i,smi_string in enumerate(filenames):
                 residues.remove(line)
                 mismatch_num += 1
 
-        print(num,real_num,len(residues))
+        print(num,real_num,mismatch_num,len(residues))
+
 
 
         #if there is only one residue in the residues
@@ -283,6 +286,12 @@ for i,smi_string in enumerate(filenames):
             mol = molecules[exactLine]["molecule"]
             fp1.write(mol + '\n')
         count_mismatch[num - mismatch_num] += 1
+        if num - mismatch_num == 1:
+            id = molecules[exactLine]["ID"]
+            residues = idResidue[id]
+            print(num,mismatch_num,frag,residues)
+            break
+            
         #if num - mismatch_num == 4:
         #    print(smi_string)
         #    print(frag)
