@@ -18,7 +18,6 @@ class LanNet(nn.Module):
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.conv1 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
-        self.conv2 = nn.Conv1d(self.input_dim,self.input_dim,kernel_size=3,padding=1)
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -36,7 +35,6 @@ class LanNet(nn.Module):
         # transpose
         src = src.transpose(1,2)
         src = F.relu(self.conv1(src))
-        src = F.relu(self.conv2(src))
 
         # transpose
         src = src.transpose(1,2)
