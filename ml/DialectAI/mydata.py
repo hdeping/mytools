@@ -18,7 +18,6 @@ class TorchDataSet(object):
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
-        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
@@ -37,8 +36,10 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
+            #htk_feature = htk_feature.replace("fb40","plp0")
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
+            #print(feature_data.shape)
             file_name = htk_file.get_file_name()
             feature_frames = htk_file.get_frame_num()
 
@@ -47,8 +48,8 @@ class TorchDataSet(object):
             
             curr_feature = torch.Tensor(feature_data)
             means = curr_feature.mean(dim=0, keepdim=True)
-            std   = curr_feature.std(dim=0, keepdim=True)
-            # means
+            std = curr_feature.std(dim=0, keepdim=True)
+            # mean
             curr_feature_norm = curr_feature - means.expand_as(curr_feature)
             # std
             curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)

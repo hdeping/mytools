@@ -3,7 +3,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.nn.utils.rnn import pack_padded_sequence,pad_packed_sequence
 
 class LanNet(nn.Module):
     def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
@@ -16,11 +15,11 @@ class LanNet(nn.Module):
         #self.layer0 = nn.Sequential()
         #self.layer0.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
         self.layer1 = nn.Sequential()
-        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer_a = nn.Sequential()
-        self.layer_a.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
-        self.layer_b = nn.Sequential()
-        self.layer_b.add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=True))
+        self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer_a  = nn.Sequential()
+        self.layer_a .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
+        self.layer_b  = nn.Sequential()
+        self.layer_b .add_module('gru', nn.GRU(self.hidden_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
         self.layer2 = nn.Sequential()
         self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
@@ -31,60 +30,23 @@ class LanNet(nn.Module):
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
-    def getBiHidden(self,layer,src,frames):
-        # pack the sequence
-        src = pack_padded_sequence(src,frames,batch_first=True)
-        # get the gru output
-        out_hidden, hidd = layer(src)
-        # unpack the sequence
-        out_hidden,lengths = pad_packed_sequence(out_hidden,batch_first=True)
-        # add the forward-backward value
-        out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        return out_hidden
-
-    #def forward(self, src, mask, target):
-    def forward(self, src, frames, target):
+    def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
-        # squeeze frames:  [batch_size,1] --> [batch_size]
-        frames = frames.squeeze()
-        # get packed sequence
-        sorted_frames,sorted_indeces = torch.sort(frames,descending=True)
-        # new input 
-        src = src[sorted_indeces]
-        # new target
-        target = target[sorted_indeces]
 
-
-        # frames
-        frames = sorted_frames.cpu().numpy()
         # get gru output
-        # layer 1
-        out_hidden = self.getBiHidden(self.layer1,src,frames)
-        # layer_a
-        out_hidden_new = self.getBiHidden(self.layer_a,out_hidden,frames)
-        
-        # residual part
+        out_hidden, hidd = self.layer1(src)
+        out_hidden_new, hidd = self.layer_a(out_hidden)
+        out_hidden_new, hidd = self.layer_b(out_hidden_new)
+        # res
         out_hidden = out_hidden + out_hidden_new
-
-        # layer_b
-        out_hidden_new = self.getBiHidden(self.layer_b,out_hidden,frames)
-        # residual part
-        out_hidden = out_hidden + out_hidden_new
-
         # summation of the two hidden states in the same node
         # out_hidden = out_hidden[:,:,0:self.hidden_dim] + out_hidden[:,:,self.hidden_dim:]
-        #mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
+        #print(out_hidden.shape)
+        # get  masked outputs
+        mask = mask.contiguous().view(batch_size, fea_frames, 1).expand(batch_size, fea_frames, out_hidden.size(2))
         # output with new size (batch_size, hidden_dim)
-        #out_hidden = out_hidden*mask
-        # get a vector with fixed size length 
-        sorted_frames = sorted_frames.view(-1,1)
-        sorted_frames = sorted_frames.expand(batch_size,out_hidden.size(2))
-        sorted_frames = sorted_frames.type(torch.cuda.FloatTensor)
-        #print(sorted_frames)
-        out_hidden = out_hidden.sum(dim=1)/sorted_frames
-
-        #out_hidden = out_hidden[:,0:self.hidden_dim] + out_hidden[:,self.hidden_dim:]
-        # linear parts
+        out_hidden = out_hidden*mask
+        out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)

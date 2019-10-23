@@ -113,7 +113,7 @@ def train(count):
         for step, (batch_x, batch_y) in enumerate(train_dataset): 
             #print("step is ",step)
             batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-            batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
+            batch_frames = batch_y[:,1].contiguous().view(-1, 1)
     
             #max_batch_frames = int(max(batch_frames).item())
             #print(dir(batch_frames))
@@ -123,10 +123,10 @@ def train(count):
             #print(batch_train_data.data.shape)
     
             step_batch_size = batch_target.size(0)
-            #batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-            #for ii in range(step_batch_size):
-            #    frames = int(batch_frames[ii].item())
-            #    batch_mask[ii, :frames] = 1.
+            batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+            for ii in range(step_batch_size):
+                frames = int(batch_frames[ii].item())
+                batch_mask[ii, :frames] = 1.
     
             # 将数据放入GPU中
             if use_cuda:
@@ -136,11 +136,10 @@ def train(count):
                 #batch_target     = batch_target.to(device)
                 # torch 0.3.0
                 batch_train_data = batch_train_data.cuda()
-                #batch_mask       = batch_mask.cuda()
-                batch_frames       = batch_frames.cuda()
+                batch_mask       = batch_mask.cuda()
                 batch_target     = batch_target.cuda()
     
-            acc, loss = train_module(batch_train_data, batch_frames, batch_target)
+            acc, loss = train_module(batch_train_data, batch_mask, batch_target)
             
             # loss = loss.sum()
             backward_loss = loss
@@ -192,16 +191,16 @@ def train(count):
             tic = time.time()
     
             batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-            batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
+            batch_frames = batch_y[:,1].contiguous().view(-1, 1)
     
             max_batch_frames = int(max(batch_frames).item())
             batch_dev_data = batch_x[:, :max_batch_frames, :]
     
             step_batch_size = batch_target.size(0)
-            #batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-            #for ii in range(step_batch_size):
-            #    frames = int(batch_frames[ii].item())
-            #    batch_mask[ii, :frames] = 1.
+            batch_mask = torch.zeros(step_batch_size, max_batch_frames)
+            for ii in range(step_batch_size):
+                frames = int(batch_frames[ii].item())
+                batch_mask[ii, :frames] = 1.
     
             # 将数据放入GPU中
             if use_cuda:
@@ -211,13 +210,12 @@ def train(count):
                 #batch_target     = batch_target.to(device)
                 # torch 0.3.0
                 batch_dev_data   = batch_dev_data.cuda()
-                #batch_mask       = batch_mask.cuda()
-                batch_frames       = batch_frames.cuda()
+                batch_mask       = batch_mask.cuda()
                 batch_target     = batch_target.cuda()
                 
             with torch.no_grad():
                 #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-                acc, loss = train_module(batch_dev_data, batch_frames, batch_target)
+                acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
             
             loss = loss.sum()/step_batch_size
     
@@ -233,5 +231,5 @@ def train(count):
         acc=dev_acc/dev_batch_num
         logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
-for count in range(1):
+for count in range(2):
     train(count)
