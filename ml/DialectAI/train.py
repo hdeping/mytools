@@ -37,7 +37,7 @@ from mymodel import pre_model
 
 # pre model
 model = pre_model()
-model_name = "models/model27-0.model"
+model_name = "models/model40-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
@@ -59,7 +59,7 @@ language_nums = 10  # 9!
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 40
+train_iteration = 20
 display_fre = 50
 half = 4
 # data augmentation
@@ -104,13 +104,13 @@ def train(count):
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
         print("epoch",epoch)
-        if epoch == 10:
+        if epoch == 5:
             learning_rate = 0.03
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 20:
+        if epoch == 10:
             learning_rate = 0.01
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        if epoch == 30:
+        if epoch == 15:
             learning_rate = 0.003
             optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
         #if epoch == 8:
