@@ -9,6 +9,7 @@ __version__ = '2018.01.02 with python 2.7.14'
 import numpy as np
 import struct
 import re
+from scipy.fftpack import dct
 
 # HTK文件结构：
 # 帧数：4字节（第0-第3字节）
@@ -51,8 +52,15 @@ class HTKfile(object):
         curr_data = struct.unpack('>'+'f'*self.__frame_num*self.__feature_dim, self.__input.read(self.__frame_num*self.__bytes_of_one_frame))
         data = np.array(curr_data, dtype= 'float32')
         data = data.reshape(self.__frame_num, self.__feature_dim)
+        # get dct   2018-08-28 11:42
+        # fbank 40 to mfcc 13
+        output = []
+        for line in data:
+            line = dct(line)
+            line = line[0:13]
+            output.append(line)
 
-        return data[self.__start_frame: self.__end_frame]
+        return output[self.__start_frame: self.__end_frame]
 
     # 下方是在外界获取变量值的函数
     def get_start_frame(self):

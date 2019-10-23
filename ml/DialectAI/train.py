@@ -36,35 +36,39 @@ from mymodel import LanNet
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_list_train_hardFour.txt"
+train_list = "../labels/label_train_list_fb_hardFour.txt"
 # dev
-dev_list   = "../labels/label_list_dev_hardFour.txt"
+dev_list   = "../labels/label_dev_list_fb_hardFour.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
-dimension = 40 # 40 before
-data_dimension = 400 # 400 point per frame
+dimension  = 13
 language_nums = 10 # 9!
 learning_rate = 0.1
-batch_size = 32
+batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 20
+train_iteration = 12
 display_fre = 50
 half = 4
 # data augmentation
 
 # save the models
+import sys
+#model_dir = "models" + sys.argv[1]
 model_dir = "models"
 if not os.path.exists(model_dir):
     os.makedirs(model_dir)
 
+# seed 
+torch.manual_seed(time.time())
+
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, data_dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, data_dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -73,7 +77,7 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
 # initialize the model
-#train_module.load_state_dict(torch.load("models/model11.model"))
+#train_module.load_state_dict(torch.load("models/model9.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
@@ -84,9 +88,6 @@ if use_cuda:
 
 # regularization factor
 factor = 0.0005
-# to avoid the error of CUDNN_STATUS_NOT_SUPPORTED
-# torch.backends.cudnn.benchmark=True
-#torch.backends.cudnn.enabled = False
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
@@ -94,12 +95,8 @@ for epoch in range(0,train_iteration):
         learning_rate = 0.05
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     if epoch == 8:
-        learning_rate = 0.01
+        learning_rate = 0.02
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 12:
-        learning_rate = 0.003
-        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-
 ##  train
     train_dataset.reset()
     train_module.train()
