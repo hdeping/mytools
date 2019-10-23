@@ -103,8 +103,9 @@ def main(smi_string):
     obConversion.ReadString(mol, smi_string)
     NumAtomsNoH = mol.NumAtoms()
     NumOfBonds = mol.NumBonds()
+    print("atom numbers",NumAtomsNoH)
     MolSmi = pb.Molecule(mol).write("smi").replace('\t\n','')
-    mol.AddHydrogens()
+    #mol.AddHydrogens()
 
     # get the bond information
     MolBond = []
@@ -114,10 +115,10 @@ def main(smi_string):
         b = bond.GetEndAtomIdx()
         bo = bond.GetBondOrder()
         MolBond.append((a,b,bo))
-        if bond.IsInRing() or bond.IsAromatic():
-            continue
+        #if bond.IsInRing() or bond.IsAromatic():
+        #    continue
         ChainBond.append(bond.GetIdx())
-    MolBond.sort()
+    #MolBond.sort()
     NumOfRingBond = len(MolBond) - len(ChainBond)
 
     # prepare to store fragment's SMILES
@@ -126,7 +127,19 @@ def main(smi_string):
     atomId = []
     for BondIdx in range(len(MolBond)):
         obConversion.ReadString(mol, smi_string)
-        mol.AddHydrogens()
+        #mol.AddHydrogens()
+        a,b,bo = MolBond[BondIdx]
+        # if A or B is oxygen
+        AisO = mol.GetAtom(a).IsOxygen()
+        BisO = mol.GetAtom(b).IsOxygen()
+        #if (AisO or BisO) == False:
+        #    print(a,b,False)
+        #    continue
+        #else:
+        #    print(a,b,True)
+        if (AisO or BisO) == False:
+            continue
+        
 
         Frag1 = ob.OBMol()
         Frag1_idx = []
@@ -140,10 +153,6 @@ def main(smi_string):
         breakBO = mol.GetBond(BondIdx).GetBondOrder()
         # bonds information
         bond = mol.GetBond(BondIdx)
-        a = bond.GetBeginAtomIdx()
-        b = bond.GetEndAtomIdx()
-        bo = bond.GetBondOrder()
-        bondInfo = [a,b,bo]
 
 
         # homolysis, create radical 
@@ -169,11 +178,12 @@ def main(smi_string):
             ListOfFrag1.append(frag1_smi)
             ListOfFrag2.append(frag2_smi)
             # get bonds
-            atomId.append(bondInfo)
+            atomId.append(MolBond[BondIdx])
     #ListOfFrag = SimplifyLs(ListOfFrag1,ListOfFrag2)
     #DelDuplFrag(ListOfFrag)
     #print("list 1")
     #print(ListOfFrag1)
+    print(ListOfFrag1,ListOfFrag2)
     #print("list 2")
     #print(ListOfFrag2)
     #print("bonds")
@@ -197,19 +207,27 @@ def getSMILES(filename):
 
 
 
-count = np.zeros(7)
+count = np.zeros(10)
 
 filename = "smiles.txt"
 filenames = getSMILES(filename)
 total = 0
+freq = 0
+
 for i,smi_string in enumerate(filenames):
-    print(i)
+    print("################# %d compounds #########"%(i))
+    print(smi_string)
     num = main(smi_string)
+    if num == 8:
+        
     total += num
-    #count[num] += 1
-    #break
+    count[num] += 1
+    freq += 1
+    if freq == 1000:
+        break
 print(num)
 
 count = count.astype(int)
-print(count)
-print(total)
+print("freq",freq)
+print("count",count)
+print("total",total)
