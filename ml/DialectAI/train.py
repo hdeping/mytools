@@ -49,7 +49,7 @@ learning_rate = 0.1
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
-train_iteration = 10
+train_iteration = 70
 display_fre = 50
 half = 4
 # data augmentation
@@ -91,11 +91,23 @@ factor = 0.0005
 
 for epoch in range(0,train_iteration):
     print("epoch",epoch)
-    if epoch == 4:
-        learning_rate = 0.05
+    if epoch == 9:
+        learning_rate = 0.03
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-    if epoch == 8:
-        learning_rate = 0.02
+    if epoch == 19:
+        learning_rate = 0.01
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 29:
+        learning_rate = 0.003
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 39:
+        learning_rate = 0.001
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 49:
+        learning_rate = 0.0003
+        optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+    if epoch == 59:
+        learning_rate = 0.0001
         optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 ##  train
     train_dataset.reset()
@@ -226,5 +238,6 @@ for epoch in range(0,train_iteration):
     epoch_time = epoch_toc-epoch_tic
     acc=dev_acc/dev_batch_num
     logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
-modelfile = '%s/model9-%s.model'%(model_dir, sys.argv[1])
-torch.save(train_module.state_dict(), modelfile)
+    if epoch%5==1:
+        modelfile = '%s/model9-%d-%s.model'%(model_dir,epoch, sys.argv[1])
+        torch.save(train_module.state_dict(), modelfile)
