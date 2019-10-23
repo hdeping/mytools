@@ -28,22 +28,26 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
-import sys
 
 #from read_data import get_samples, get_data, TorchDataSet
 from read_data import  TorchDataSet
 from net_component import LanNet
 
 ## ======================================
-# data list
+# 配置文件和参数
+# 数据列表
 #train_list = "./train_list_fb.txt"
 #dev_list   = "./dev_list_fb.txt"
 train_list = "./label_train_list_fb.txt"
 dev_list   = "./label_dev_list_fb.txt"
 
-# basic configuration parameter
+# 基本配置参数
 use_cuda = torch.cuda.is_available()
-# network parameter 
+# 保存模型地址
+model_dir = "models"
+if not os.path.exists(model_dir):
+    os.makedirs(model_dir)
+# 网络参数
 dimension = 40
 language_nums = 6
 learning_rate = 0.1
@@ -53,20 +57,11 @@ chunk_num = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-# data augmentation
-cycle = 3
-augmentation = float(sys.argv[1])
 
-# save the models
-model_dir = "models_data%d"%(1000*augmentation)
-if not os.path.exists(model_dir):
-    os.makedirs(model_dir)
 
 ## ======================================
-# with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,cycle,augmentation)
-# without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,1,augmentation)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -74,6 +69,8 @@ train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
+# initial the network
+train_module.load_state_dict(torch.load("models1/model2.model"))
 
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
