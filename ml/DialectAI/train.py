@@ -46,7 +46,7 @@ use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40
 language_nums = 6
-learning_rate = 0.01
+learning_rate = 0.02
 batch_size = 64
 chunk_num = 10
 #train_iteration = 10
@@ -75,8 +75,6 @@ logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 #optimizer = torch.optim.Adam(train_module.parameters(), lr=learning_rate, betas=(0.9,0.999),eps=1e-8)
 
-# initialize the model
-train_module.load_state_dict(torch.load("models1/model3.model"))
 #device = torch.device("cuda:2")
 # 将模型放入GPU中
 if use_cuda:
