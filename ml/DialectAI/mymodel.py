@@ -26,7 +26,7 @@ class LanNet(nn.Module):
         self.layer3.add_module('batchnorm', nn.BatchNorm1d(self.bn_dim))
         self.layer3.add_module('linear', nn.Linear(self.bn_dim, self.output_dim))
 
-    def forward(self, src, mask, target,weight=True):
+    def forward(self, src, mask, target):
         batch_size, fea_frames, fea_dim = src.size()
 
         # get gru output
@@ -52,28 +52,14 @@ class LanNet(nn.Module):
         #print(predict_target.shape,target.shape)
 
         # 计算loss
-        #tar_select_new = torch.gather(predict_target, 1, target)
-        if weight:
-            tar_select_new = torch.gather(predict_target, 1, target[:,0,:])
-            # loss with weight
-            # weight = target[:,1]
-            label_weight = target[:,1,:].type(torch.cuda.FloatTensor)
-            ce_loss = -torch.log(tar_select_new)*label_weight
-            # average weight is : (1 + 2)/2 = 1.5
-            ce_loss = ce_loss.sum() / (batch_size * 1.5)
-        else:
-            tar_select_new = torch.gather(predict_target, 1, target)
-            ce_loss = -torch.log(tar_select_new)
-            ce_loss = ce_loss.sum() / (batch_size )
+        tar_select_new = torch.gather(predict_target, 1, target)
+        ce_loss = -torch.log(tar_select_new) 
+        ce_loss = ce_loss.sum() / batch_size
 
         # 计算acc
         (data, predict) = predict_target.max(dim=1)
         predict = predict.contiguous().view(-1,1)
-        # target = target[:,0:,:]
-        if weight:
-            correct = predict.eq(target[:,0,:]).float()       
-        else:
-            correct = predict.eq(target).float()       
+        correct = predict.eq(target).float()       
         num_samples = predict.size(0)
         sum_acc = correct.sum().item()
         acc = sum_acc/num_samples

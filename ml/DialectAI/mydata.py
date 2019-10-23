@@ -10,15 +10,15 @@ from readhtk import HTKfile
 
 
 class TorchDataSet(object):
-    def __init__(self, file_list, batch_size, chunk_num, dimension,weight=True):
+    def __init__(self, file_list, batch_size, chunk_num, dimension):
         self._batch_size = batch_size
         self._chunck_num = chunk_num
         self._chunck_size = self._chunck_num*self._batch_size
         self._dimension = dimension
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
-        self._weight = weight
         self._dataset = self._file_point.readlines()
         self._file_point.close()
+        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
@@ -35,9 +35,7 @@ class TorchDataSet(object):
             #print(splited_line)
             htk_feature = splited_line[0]
             #print("ii = ",ii)
-            target_label  = int(str(splited_line[1])) 
-            if self._weight:
-                target_weight = int(str(splited_line[2])) 
+            target_label = int(str(splited_line[1])) 
 
             htk_file = HTKfile(htk_feature)
             feature_data = htk_file.read_data()
@@ -55,20 +53,14 @@ class TorchDataSet(object):
             # std
             curr_feature_norm = curr_feature_norm / std.expand_as(curr_feature)
             batch_data.append(curr_feature_norm)
-            if self._weight:
-                target_frames.append(torch.Tensor([target_label,target_weight, feature_frames]))
-            else:
-                target_frames.append(torch.Tensor([target_label,feature_frames]))
+            target_frames.append(torch.Tensor([target_label, feature_frames]))
             name_list.append(file_name)
 
             if (ii+1) % self._chunck_size == 0:
                 chunk_size = len(batch_data)
                 idx = 0
                 data = torch.zeros(self._batch_size, max_frames, self._dimension)
-                if self._weight:
-                    target = torch.zeros(self._batch_size, 3)
-                else:
-                    target = torch.zeros(self._batch_size, 2)
+                target = torch.zeros(self._batch_size, 2)
                 for jj in range(chunk_size):
                     curr_data = batch_data[jj]
                     curr_tgt = target_frames[jj]
@@ -95,10 +87,7 @@ class TorchDataSet(object):
         if chunk_size > self._batch_size: 
             idx = 0
             data = torch.zeros(self._batch_size, max_frames, self._dimension)
-            if self._weight:
-                target = torch.zeros(self._batch_size, 3)
-            else:
-                target = torch.zeros(self._batch_size, 2)
+            target = torch.zeros(self._batch_size, 2)
             for jj in range(chunk_size):
                 curr_data = batch_data[jj]
                 curr_tgt = target_frames[jj]

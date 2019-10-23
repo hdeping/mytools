@@ -149,7 +149,7 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(12):
+for i in range(6):
     print("model ",i)
     print("loading model9-%d.model"%(i))
     train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
