@@ -37,7 +37,7 @@ from mymodel import pre_model
 
 # pre model
 model = pre_model()
-model_name = "models0/model29-0.model"
+model_name = "models0/model40-0.model"
 model.load_state_dict(torch.load(model_name))
 model = model.cuda()
 model.eval()
