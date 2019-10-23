@@ -2,12 +2,17 @@
 
 
 import openbabel as ob
+import pybel 
 
-filename = "input.smi"
-obConversion = ob.OBConversion()
-mol = ob.OBMol()
-# read smiles
-obConversion.ReadFile(mol, filename)
+string = "C1=CC=CC=C1"
+mol = pybel.readstring("smi",string)
+print(mol)
+
+#filename = "input.smi"
+#obConversion = ob.OBConversion()
+#mol = ob.OBMol()
+## read smiles
+#obConversion.ReadFile(mol, filename)
 # get bonds
 MolBond = []
 ChainBond = []
