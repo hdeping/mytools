@@ -10,12 +10,11 @@ from readpcm import pcmdata
 
 
 class TorchDataSet(object):
-    def __init__(self, file_list, batch_size, chunk_num, dimension,data_dimension):
+    def __init__(self, file_list, batch_size, chunk_num, dimension):
         self._batch_size = batch_size
         self._chunck_num = chunk_num
         self._chunck_size = self._chunck_num*self._batch_size
         self._dimension = dimension
-        self._data_dimension = data_dimension
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
@@ -38,7 +37,7 @@ class TorchDataSet(object):
             #print("ii = ",ii)
             target_label = int(str(splited_line[1])) 
 
-            pcm_file = pcmdata(htk_feature,windows=self._data_dimension,dimension=self._dimension)
+            pcm_file = pcmdata(htk_feature)
             feature_data = pcm_file.read_data()
             #file_name = pcm_file.get_file_name()
             feature_frames = pcm_file.get_frame_num()

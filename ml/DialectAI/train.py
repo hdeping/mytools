@@ -68,9 +68,9 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,data_dimension)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,data_dimension)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
