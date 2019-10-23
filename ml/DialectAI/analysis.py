@@ -28,4 +28,3 @@ def printArrStati(arr):
 printArrStati(arr0)
 printArrStati(arr1)
 
-

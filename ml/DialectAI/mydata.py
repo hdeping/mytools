@@ -18,7 +18,6 @@ class TorchDataSet(object):
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
-        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
