@@ -54,6 +54,7 @@ def getSMILES(filename):
 
 filename = "smiles.txt"
 filenames = getSMILES(filename)
+
 #print(filenames)
 for smi_string in filenames:
     readSMILES(smi_string)
