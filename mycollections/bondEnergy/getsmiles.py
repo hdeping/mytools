@@ -1,8 +1,4 @@
 #!/usr/bin/python
-
-#2019-03-20 18:18:18
-#by xiaohengdao
-
 import openbabel as ob
 import pybel
 import json
