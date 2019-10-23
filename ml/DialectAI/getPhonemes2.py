@@ -1,15 +1,15 @@
 import numpy  as np
 
 # get the binary sequence with a fixed length 8 of a number
-def seq2arr(num):
-    res = []
-    tmp = num
-    for i in range(8):
-        res.append(tmp%2)
-        tmp = tmp // 2
-    res = np.array(res)
-    #print(res)
-    return res
+#def seq2arr(num):
+#    res = []
+#    tmp = num
+#    for i in range(8):
+#        res.append(tmp%2)
+#        tmp = tmp // 2
+#    res = np.array(res)
+#    #print(res)
+#    return res
 
 def getPhonemes():
 
@@ -19,7 +19,7 @@ def getPhonemes():
     # get phonemes dictionary
     phonemes_dict = {}
     for i,phoneme in enumerate(data):
-        phonemes_dict[phoneme] = seq2arr(i)
+        phonemes_dict[phoneme] = i+1
     return phonemes_dict
 def dealMlf(filename):
     phonemes_dict = getPhonemes()
@@ -60,10 +60,11 @@ def dealMlf(filename):
 
     return output_dict
 
+#phonemes_dict = getPhonemes()
 #print(phonemes_dict)
-# cat `find . -name "*train*mlf"` > train.mlf
-# sed -i '/MLF/'d
-#filename = "train.mlf"
+## cat `find . -name "*train*mlf"` > train.mlf
+## sed -i '/MLF/'d
+#filename = "../labels/train.mlf"
 #output_dict = dealMlf(filename)
 #print(output_dict)
 

@@ -18,7 +18,6 @@ class TorchDataSet(object):
         self._file_point = codecs.open(file_list, 'r', 'utf-8')
         self._dataset = self._file_point.readlines()
         self._file_point.close()
-        random.shuffle(self._dataset)
 
     def reset(self):
         random.shuffle(self._dataset)
@@ -61,6 +60,7 @@ class TorchDataSet(object):
                 idx = 0
                 data = torch.zeros(self._batch_size, max_frames, self._dimension)
                 target = torch.zeros(self._batch_size, 2)
+
                 for jj in range(chunk_size):
                     curr_data = batch_data[jj]
                     curr_tgt = target_frames[jj]
@@ -68,11 +68,14 @@ class TorchDataSet(object):
 
                     data[idx,:curr_frame,:] = curr_data[:,:]
                     target[idx,:] = curr_tgt[:]
+
                     idx += 1
 
                     if idx % self._batch_size == 0:
+                        begin = jj - self._batch_size + 1
+                        end   = jj + 1
                         idx = 0
-                        yield data, target
+                        yield data, target, name_list[begin:end]
                 
                 max_frames = 0
                 batch_data = []
@@ -99,5 +102,9 @@ class TorchDataSet(object):
 
                 if idx % self._batch_size == 0:
                     idx = 0
-                    yield data, target
+                    begin = self._batch_size * ii
+                    end   = self._batch_size * (ii + 1)
+                    #yield data, target, names
+
+                    yield data, target, name_list[begin:end]
 

@@ -28,6 +28,7 @@ logging.basicConfig(level = logging.DEBUG,
 
 import torch
 import torch.utils.data as Data
+import numpy as np
 
 #from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
@@ -40,8 +41,11 @@ train_list = "label_train_list_fb.txt"
 # dev
 dev_list   = "label_dev_list_fb.txt"
 
+mlf_file  = "../label/train.dev"
+
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
+use_cuda = False
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
@@ -50,7 +54,7 @@ batch_size = 50
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
-display_fre = 50
+display_fre = 10
 half = 4
 # data augmentation
 
@@ -76,6 +80,7 @@ logging.info('finish reading all train data')
 # initialize the model
 #train_module.load_state_dict(torch.load("models/model9.model"))
 #device = torch.device("cuda:2")
+
 def train(count):    
     # 将模型放入GPU中
     train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
@@ -104,16 +109,17 @@ def train(count):
         train_module.train()
         epoch_tic = time.time()
         train_loss = 0.
-        train_acc = 0.
     
         sum_batch_size = 0
         curr_batch_size = 0
-        curr_batch_acc = 0
         tic = time.time()
-        for step, (batch_x, batch_y) in enumerate(train_dataset): 
+        for step, (batch_x, batch_y,name_list) in enumerate(train_dataset): 
             #print("step is ",step)
             batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
             batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
+            #print(len(name_list),batch_x.shape,batch_target.shape)
+            #print(np.array(name_list))
+            name_list = np.array(name_list)
     
             #max_batch_frames = int(max(batch_frames).item())
             #print(dir(batch_frames))
@@ -140,7 +146,8 @@ def train(count):
                 batch_frames       = batch_frames.cuda()
                 batch_target     = batch_target.cuda()
     
-            acc, loss = train_module(batch_train_data, batch_frames, batch_target)
+            #acc, loss = train_module(batch_train_data, batch_frames, batch_target)
+            loss = train_module(batch_train_data, batch_frames, name_list)
             
             # loss = loss.sum()
             backward_loss = loss
@@ -148,11 +155,11 @@ def train(count):
             # L1 regularization 
             #l1_crit = torch.nn.L1Loss(size_average=False)
             #l1_crit.cuda()
-            reg_loss = 0
-            for param in train_module.parameters():
-                #reg_loss += l1_crit(param)
-                reg_loss += param.norm(2)
-            backward_loss += factor * reg_loss
+            #reg_loss = 0
+            #for param in train_module.parameters():
+            #    #reg_loss += l1_crit(param)
+            #    reg_loss += param.norm(2)
+            #backward_loss += factor * reg_loss
                     
             # get the gradients
             backward_loss.backward()
@@ -161,14 +168,13 @@ def train(count):
     
     
             train_loss += loss.item()
-            train_acc += acc
-            curr_batch_acc += acc
             sum_batch_size += 1
             curr_batch_size += 1
+
             if step % display_fre == 0:
                 toc = time.time()
                 step_time = toc-tic
-                logging.info('Epoch:%d, Batch:%d, acc:%.6f, loss:%.6f, cost time :%.6fs', epoch, step, curr_batch_acc/curr_batch_size, loss.item(), step_time)
+                logging.info('Epoch:%d, Batch:%d,  loss:%.6f, cost time :%.6fs', epoch, step, loss.item(), step_time)
                 curr_batch_acc = 0.
                 curr_batch_size = 0
                 tic = toc
@@ -177,61 +183,9 @@ def train(count):
         
         epoch_toc = time.time()
         epoch_time = epoch_toc-epoch_tic
-        logging.info('Epoch:%d, train-acc:%.6f, train-loss:%.6f, cost time :%.6fs', epoch, train_acc/sum_batch_size, train_loss/sum_batch_size, epoch_time)
+        logging.info('Epoch:%d, train-loss:%.6f, cost time :%.6fs', epoch, train_loss/sum_batch_size, epoch_time)
         modelfile = '%s/model%d-%d.model'%(model_dir,epoch,count)
         torch.save(train_module.state_dict(), modelfile)
-    ##  -----------------------------------------------------------------------------------------------------------------------------
-    ##  dev
-        train_module.eval()
-        epoch_tic = time.time()
-        dev_loss = 0.
-        dev_acc = 0.
-        dev_batch_num = 0 
-    
-        for step, (batch_x, batch_y) in enumerate(dev_dataset): 
-            tic = time.time()
-    
-            batch_target = batch_y[:,0].contiguous().view(-1, 1).long()
-            batch_frames = batch_y[:,1].contiguous().view(-1, 1).long()
-    
-            max_batch_frames = int(max(batch_frames).item())
-            batch_dev_data = batch_x[:, :max_batch_frames, :]
-    
-            step_batch_size = batch_target.size(0)
-            #batch_mask = torch.zeros(step_batch_size, max_batch_frames)
-            #for ii in range(step_batch_size):
-            #    frames = int(batch_frames[ii].item())
-            #    batch_mask[ii, :frames] = 1.
-    
-            # 将数据放入GPU中
-            if use_cuda:
-                # torch 0.4.0
-                #batch_dev_data   = batch_dev_data.to(device)
-                #batch_mask       = batch_mask.to(device)
-                #batch_target     = batch_target.to(device)
-                # torch 0.3.0
-                batch_dev_data   = batch_dev_data.cuda()
-                #batch_mask       = batch_mask.cuda()
-                batch_frames       = batch_frames.cuda()
-                batch_target     = batch_target.cuda()
-                
-            with torch.no_grad():
-                #acc, loss = train_module(batch_dev_data, batch_mask, batch_target)
-                acc, loss = train_module(batch_dev_data, batch_frames, batch_target)
-            
-            loss = loss.sum()/step_batch_size
-    
-            toc = time.time()
-            step_time = toc-tic
-    
-            dev_loss += loss.item()
-            dev_acc += acc
-            dev_batch_num += 1
-        
-        epoch_toc = time.time()
-        epoch_time = epoch_toc-epoch_tic
-        acc=dev_acc/dev_batch_num
-        logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
 for count in range(1):
     train(count)
