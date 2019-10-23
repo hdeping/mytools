@@ -245,6 +245,9 @@ class ResidueSMILES(BondAngle):
 
     def getMolecules(self):
         """
+        get molecules from "idResidue.json"
+        return:
+            residues and molecules
         """
         filename = "idResidue.json"
         data = self.loadJson(filename)
