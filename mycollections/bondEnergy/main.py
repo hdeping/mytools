@@ -68,6 +68,11 @@ def getBonds(indexC,indexO,parameters):
     result = {}
     # first one should be C-O 
     key = "R(%d,%d)"%(indexC,indexO)
+    if key not in bonds:
+        para = json.dumps(parameters,indent = 4)
+        #print(para)
+        return False
+
     result[key] = bonds[key]
 
     for key in bonds:
@@ -85,6 +90,7 @@ def getBonds(indexC,indexO,parameters):
 
 # get the bonds connected to "C"
 count = 0
+count_no_bond = 0
 for residue in residueBonds:
     count += 1
     print("residue ",count)
@@ -108,6 +114,17 @@ for residue in residueBonds:
     molInfo['molecule'] = mol
     molInfo['type'] = resDicts['type']
     bonds = getBonds(indexC,indexO,parameters)
+
+    # judge
+    if bonds == False:
+        print(id)
+        print(mol)
+        break
+        continue
+
+        
+        
+
     molInfo['bonds'] = bonds
     angles = getAngles(indexC,indexO,parameters)
     molInfo['angles'] = angles
@@ -116,10 +133,10 @@ for residue in residueBonds:
 
     #break
 
-paraDicts = json.dumps(paraDicts,indent = 4)
-print(paraDicts)
+#paraDicts = json.dumps(paraDicts,indent = 4)
+#print(paraDicts)
 # write the data
-# fp = open("inchikey_parameters.json",'w')
-# json.dump(paraDicts,fp,indent = 4)
+fp = open("inchikey_parameters.json",'w')
+json.dump(paraDicts,fp,indent = 4)
 
 
