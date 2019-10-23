@@ -220,16 +220,8 @@ class MyCommon():
             dicts, sorted dicts, the first value should
             be a maximum
         """
-        keys   = []
-        values = []
-        for key in dicts:
-            value = dicts[key]
-            keys.append(key)
-            values.append(value)
-
-        result  = {}
-        keys    = np.array(keys)
-        values  = np.array(values)
+        keys, values = self.dicts2KeyValue(dicts)
+        
         indeces = np.argsort(values)
         # small --> big transformed to
         # big   --> small
@@ -241,5 +233,22 @@ class MyCommon():
         for key,value in zip(keys,values):
             result[key] = value
         return result
+    def dicts2KeyValue(self,dicts):
+        """
+        input:
+            dicts
+        return:
+            keys and values with numpy array type
+        """
+        keys   = []
+        values = []
+        for key in dicts:
+            value = dicts[key]
+            keys.append(key)
+            values.append(value)
+
+        keys    = np.array(keys)
+        values  = np.array(values)
+        return keys,values
 
 
