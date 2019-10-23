@@ -1,10 +1,10 @@
 import numpy as np
 
 data = np.loadtxt('result.txt')
-#print(data)
+print(data)
 
 data = data.astype(int)
-data = np.reshape(data,(-1,6,2))
+data = np.reshape(data,(-1,12,2))
 num = 10 
 stati = np.zeros((num,num))
 stati = stati.astype(int)
@@ -12,11 +12,6 @@ size = len(data)
 # get the majorityVote
 target = data[:,0,0]
 majority = []
-
-
-dev_names = np.loadtxt("label_dev_list_fb.txt",dtype=str)
-print(dev_names.shape)
-#print(dev_names)
 
 vote_num = len(data[0])
 print("vote_num ",vote_num)
@@ -28,14 +23,12 @@ for i in range(size):
         ii = data[i,j,1]
         vote[ii] += 1
     # append the vote result
-    #print(vote)
+    print(vote)
     majority.append(np.argmax(vote))
 
 for i in range(size):
     ii = target[i]
     jj = majority[i]
-    if ii != jj:
-        print(dev_names[i,0])
     stati[ii,jj] += 1
 
 print("size ",size)

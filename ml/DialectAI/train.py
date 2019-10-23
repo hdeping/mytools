@@ -53,6 +53,7 @@ train_iteration = 12
 display_fre = 50
 half = 4
 hidden_dim = 256
+hidden_dim2 = 128
 bn_dim = 30
 # data augmentation
 
@@ -80,7 +81,7 @@ logging.info('finish reading all train data')
 #device = torch.device("cuda:2")
 def train(count):    
     # 将模型放入GPU中
-    train_module = LanNet(input_dim=dimension, hidden_dim=hidden_dim, bn_dim=bn_dim, output_dim=language_nums)
+    train_module = LanNet(input_dim=dimension, hidden_dim=hidden_dim,hidden_dim2=hidden_dim2, bn_dim=bn_dim, output_dim=language_nums)
     if count == 0:
         logging.info(train_module)
     if use_cuda:

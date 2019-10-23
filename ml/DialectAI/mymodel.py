@@ -5,10 +5,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class LanNet(nn.Module):
-    def __init__(self, input_dim=48, hidden_dim=2048, bn_dim=100, output_dim=10):
+    def __init__(self, input_dim=48, hidden_dim=2048, hidden_dim2=128,bn_dim=100, output_dim=10):
         super(LanNet, self).__init__()
         self.input_dim = input_dim
         self.hidden_dim = hidden_dim
+        self.hidden_dim2 = hidden_dim2
         self.bn_dim = bn_dim
         self.output_dim = output_dim
 
@@ -17,9 +18,13 @@ class LanNet(nn.Module):
         self.layer1 = nn.Sequential()
         self.layer1.add_module('gru', nn.GRU(self.input_dim, self.hidden_dim, num_layers=1, batch_first=True, bidirectional=False))
 
+        self.layer_a = nn.Sequential()
+        self.layer_a.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
+        self.layer_a.add_module('linear', nn.Linear(self.hidden_dim, self.hidden_dim2))
+
         self.layer2 = nn.Sequential()
-        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim))
-        self.layer2.add_module('linear', nn.Linear(self.hidden_dim, self.bn_dim))
+        self.layer2.add_module('batchnorm', nn.BatchNorm1d(self.hidden_dim2))
+        self.layer2.add_module('linear', nn.Linear(self.hidden_dim2, self.bn_dim))
         # self.layer2.add_module('Sigmoid', nn.Sigmoid())
 
         self.layer3 = nn.Sequential()
@@ -40,6 +45,8 @@ class LanNet(nn.Module):
         out_hidden = out_hidden*mask
         out_hidden = out_hidden.sum(dim=1)/mask.sum(dim=1)
         #out_hidden = out_hidden.contiguous().view(-1, out_hidden.size(-1))   
+        out_hidden = self.layer_a(out_hidden)
+        out_hidden = F.relu(out_hidden)
         out_bn = self.layer2(out_hidden)
         out_target = self.layer3(out_bn)
 

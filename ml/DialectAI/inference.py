@@ -71,7 +71,7 @@ dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
-train_module = LanNet(input_dim=dimension, hidden_dim=256, bn_dim=30, output_dim=language_nums)
+train_module = LanNet(input_dim=dimension, hidden_dim=128, bn_dim=30, output_dim=language_nums)
 logging.info(train_module)
 optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
 
@@ -149,7 +149,7 @@ def test():
 # output the result
 import numpy as np
 result = []
-for i in range(6):
+for i in range(12):
     print("model ",i)
     print("loading model9-%d.model"%(i))
     train_module.load_state_dict(torch.load("models/model9-%d.model"%(i)))
