@@ -29,31 +29,29 @@ logging.basicConfig(level = logging.DEBUG,
 import torch
 import torch.utils.data as Data
 
-#from read_data import get_samples, get_data, TorchDataSet
+#from mydata import get_samples, get_data, TorchDataSet
 from mydata import  TorchDataSet
 from mymodel import LanNet
 
 ## ======================================
 # data list
 # train
-train_list = "../labels/label_train_all.txt"
+train_list = "label_train_list_fb.txt"
 # dev
-dev_list   = "../labels/label_dev_list_fb.txt"
+dev_list   = "label_dev_list_fb.txt"
 
 # basic configuration parameter
 use_cuda = torch.cuda.is_available()
 # network parameter 
 dimension = 40 # 40 before
 language_nums = 10  # 9!
-learning_rate = 0.001
-batch_size = 64
+learning_rate = 0.1
+batch_size = 50
 chunk_num = 10
 #train_iteration = 10
 train_iteration = 12
 display_fre = 50
 half = 4
-noise_density = 0.001
-noise_num     = 5
 # data augmentation
 
 # save the models
@@ -68,9 +66,9 @@ torch.manual_seed(time.time())
 
 ## ======================================
 # with data augmentation
-train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension,noise_density,noise_num)
+train_dataset = TorchDataSet(train_list, batch_size, chunk_num, dimension)
 # without data augmentation
-dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension,0,1)
+dev_dataset = TorchDataSet(dev_list, batch_size, chunk_num, dimension)
 logging.info('finish reading all train data')
 
 # 优化器，SGD更新梯度
@@ -91,16 +89,16 @@ def train(count):
     
     # regularization factor
     factor = 0.0005
-    #learning_rate = 0.1
+    learning_rate = 0.1
     optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     for epoch in range(0,train_iteration):
-        #print("epoch",epoch)
-        #if epoch == 4:
-        #    learning_rate = 0.05
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
-        #if epoch == 8:
-        #    learning_rate = 0.02
-        #    optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        print("epoch",epoch)
+        if epoch == 4:
+            learning_rate = 0.05
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
+        if epoch == 8:
+            learning_rate = 0.02
+            optimizer = torch.optim.SGD(train_module.parameters(), lr=learning_rate, momentum=0.9)
     ##  train
         train_dataset.reset()
         train_module.train()
@@ -233,5 +231,5 @@ def train(count):
         acc=dev_acc/dev_batch_num
         logging.info('Epoch:%d, dev-acc:%.6f, dev-loss:%.6f, cost time :%.6fs', epoch, acc, dev_loss/dev_batch_num, epoch_time)
 
-for count in range(4):
+for count in range(5):
     train(count)
