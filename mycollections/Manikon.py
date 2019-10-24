@@ -11,6 +11,11 @@ class Manikon():
         super(Manikon,self).__init__()
 
     def checkPoint(self,res,a,b):
+        """
+        check the point res (x,y)
+        (x,y), (a,b) --> 
+        return x^2/a^2 + y^2/b^2
+        """
         print("output")
         axis = np.array([a**2,b**2])
         output = res**2/axis

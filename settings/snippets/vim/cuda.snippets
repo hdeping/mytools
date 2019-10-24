@@ -1,0 +1,40 @@
+extends c
+
+# cuda free
+snippet cf "cuda free"
+cudaFree(${1:device});
+
+endsnippet
+
+# cuda free
+snippet cm "cuda malloc"
+cudaMalloc((void **)&${1:device},
+                     ${2:size});
+
+endsnippet
+
+# copy memory to gpu from cpu
+# 1: host 2: device
+snippet htd	 "host to device"
+cudaMemcpy(${1:device}, 
+		   ${2:host},
+		   ${3:size},
+           cudaMemcpyHostToDevice);
+
+endsnippet
+	
+# copy memory to cpu from gpu
+# 1: host 2: device
+snippet dth	 "host to device"
+cudaMemcpy(${2:host}, 
+		   ${1:device},
+		   ${3:size},
+           cudaMemcpyDeviceToHost);
+
+endsnippet
+	
+snippet << "<<<blocks,threads>>>"
+<<<${1:blocks},${2:threads}>>>(${3:parameters});
+
+endsnippet
+	

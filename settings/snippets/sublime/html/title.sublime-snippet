@@ -1,0 +1,42 @@
+<snippet>
+	<content><![CDATA[
+<!DOCTYPE html>
+
+<!-- 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : ${1:ctrl+shift+,}
+    @project      : ${2:project}
+    @version      : ${3:version}
+    @source file  : ${4:ctrl+shift+.}
+
+============================
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>${5:title}</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script 
+        type="text/javascript"
+        src = "http://210.45.125.225/jquery.min.js">
+    </script>
+
+</head>
+<body>
+    <script 
+        type="text/javascript"
+        src = "run.js">
+    </script>
+</body>
+</html>
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>ti</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html</scope>
+</snippet>

@@ -1,0 +1,106 @@
+snippet ex
+var express = require("express");
+var app = express();
+app.get('/',function(req,res){
+   ${1:// content here} 
+});
+
+var server = app.listen(3000,function(){});
+endsnippet
+
+snippet fr
+fs.readFile(${1:filename},function(err,${2:data}) {
+   if (err) {
+       return console.error(err);
+   }
+});
+
+endsnippet
+
+snippet fsr
+fs.readFileSync("${1:filename}");
+
+endsnippet
+
+snippet fw
+fs.writeFile(${1:filename},${2:data}, function(err) {
+   if (err) {
+       return console.error(err);
+   }
+});
+
+endsnippet
+
+snippet fs
+var fs = require('fs');
+
+endsnippet
+
+snippet fori
+for(var ${1:i} = 0; $1 < ${2:end}; $1 ++)
+{
+    ${3:/* -- code -- */}
+}
+
+endsnippet
+
+snippet ford
+for(var key in ${1:dict})
+{
+    ${2:/* -- code -- */}
+}
+
+endsnippet
+
+snippet ht
+var http = require("http");
+
+endsnippet
+
+snippet hu
+var http = require("http");
+var url = require("url");
+
+endsnippet
+
+snippet mo
+module.exports = {
+    ${1:// modules}
+}
+
+endsnippet
+
+snippet pr
+console.log(${1:output});
+
+endsnippet
+
+snippet rq
+var request = require("request");
+
+endsnippet
+
+snippet require
+var ${1:package} = require("${1:package}");
+
+endsnippet
+
+snippet ti
+/*
+
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : ${1:ctrl+shift+,}
+    @project      : ${2:project}
+    @version      : ${3:version}
+    @source file  : ${4:ctrl+shift+.}
+
+============================
+
+*/
+
+
+endsnippet
+

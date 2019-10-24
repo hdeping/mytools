@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+cudaFree(${1:device});
+
+]]></content>
+    <tabTrigger>cf</tabTrigger>
+    <scope>source.cuda</scope>
+</snippet>

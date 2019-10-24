@@ -1,0 +1,11 @@
+<snippet>
+    <content><![CDATA[
+\begin{eqnarray}
+	${1:form1} & = & ${2:form2} \\
+	${3:form1} & = & ${4:form2} \\
+	           & = &            \\
+\end{eqnarray}
+]]></content>
+    <tabTrigger>ti</tabTrigger>
+    <scope>text.tex</scope>
+</snippet>

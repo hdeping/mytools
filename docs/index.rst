@@ -10,9 +10,6 @@ Welcome to mytools's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-    modules
-    mytools
-
 
 
 Indices and tables

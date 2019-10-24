@@ -1,0 +1,11 @@
+<snippet>
+    <content><![CDATA[
+cudaMemcpy(${1:device}, 
+		   ${2:host},
+		   ${3:size},
+           cudaMemcpyHostToDevice);
+
+]]></content>
+    <tabTrigger>htd</tabTrigger>
+    <scope>source.cuda-c++</scope>
+</snippet>

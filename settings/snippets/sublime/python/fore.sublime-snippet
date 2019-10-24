@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+for ${1:i},${2:line} in enumerate(${3:iterator}):
+	${4:pass}
+]]></content>
+    <tabTrigger>fore</tabTrigger>
+    <scope>source.python</scope>
+</snippet>
