@@ -57,6 +57,14 @@ class Test(object):
         data = test.loadFile(filename)
         print(data)
 
+        filename = "data.txt"
+        data     = test.loadStrings(filename)
+        result   = test.getStringStati(data)
+        result   = test.sortDicts(result)
+        print(result)
+
+
+
         return
     def getTestData(self):
         """

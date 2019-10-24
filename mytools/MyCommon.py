@@ -16,6 +16,7 @@
 """
 import json
 import yaml
+import numpy as np
 
 
 class MyCommon():
@@ -178,5 +179,103 @@ class MyCommon():
                 fp.write(str(line[-1]+'\n'))
 
         return
-    
+    def loadStrings(self,filename):
+        """
+        input: 
+            filename, text
+        return:
+            data, array type, strings line by line
+        """
+        fp = open(filename,'r')
+        data = fp.read()
+        fp.close()
+        data = data.split("\n")
+        data.pop()
+        return data        
+        
+    def getStringStati(self, array):
+        """
+        get the statistic information of a string array
+        input:
+            array, string array
+        return:
+            result, dicts type, such as {"aaa":100,"bbb":10,...}
+
+        """
+        result = {}
+        for line in array:
+            if line in result:
+                result[line] += 1
+            else:
+                result[line] = 1
+        return result
+
+    def sortDicts(self,dicts):
+        """
+        sort the input dicts
+        input:
+            dicts, with number as values,
+            such as {"aaa":100,...}
+        output:
+            dicts, sorted dicts, the first value should
+            be a maximum
+        """
+        keys, values = self.dicts2KeyValue(dicts)
+        
+        indeces = np.argsort(values)
+        # small --> big transformed to
+        # big   --> small
+        indeces = np.flip(indeces)
+        keys    = keys[indeces]
+        values  = values[indeces]
+        result  = self.keyValue2Dicts(keys,values)
+        
+        return result
+
+        
+    def keyValue2Dicts(self,keys,values):
+        """
+        input:
+            keys and values with numpy array type,
+            which should be the same shape
+        return:
+            dicts
+        """
+        assert len(keys) == len(values)
+        result = {}
+        for key,value in zip(keys,values):
+            result[key] = value
+        return result
+    def dicts2KeyValue(self,dicts):
+        """
+        input:
+            dicts
+        return:
+            keys and values with numpy array type
+        """
+        keys   = []
+        values = []
+        for key in dicts:
+            value = dicts[key]
+            keys.append(key)
+            values.append(value)
+
+        keys    = np.array(keys)
+        values  = np.array(values)
+        return keys,values
+    def printDicts(self,dicts,num):
+        """
+        input:
+            dicts: dicts type
+            num: interger type, print first num elements
+        return:
+            None
+        """
+        for i,key in enumerate(dicts):
+            value = dicts[key]
+            print(i,key,value)
+            if i > num - 1:
+                break
+        pass
+
 
