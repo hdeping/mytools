@@ -36,7 +36,7 @@ class OpenFiles():
         """
         super(OpenFiles, self).__init__()
         self.video_types = ["mp4","avi","rmvb","webm","ts",
-                            "mp3","ogg","wav","flac"]
+                            "mp3","ogg","wav","flac","mov"]
         self.image_types = ["jpg","jpeg","gif","png","bmp","icon"]
         self.text_types  = ["txt","py","c","h","html","css","js","gh",
                             "lisp","cpp","go","f","f90",
