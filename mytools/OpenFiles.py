@@ -59,7 +59,7 @@ class OpenFiles():
         """
         open the i-th file withe a specific program
         """
-        command = "%s %s"%(program,sys.argv[i])
+        command = "%s '%s'"%(program,sys.argv[i])
         os.system(command)
         return
 
