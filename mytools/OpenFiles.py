@@ -51,7 +51,8 @@ class OpenFiles():
                             "pptx":"wpp",
                             "xls":"et",
                             "xlsx":"et",
-                            "doc":"wps"
+                            "doc":"wps",
+                            "blend":"blender"
                             }
 
     def runCommand(self,program,i):
