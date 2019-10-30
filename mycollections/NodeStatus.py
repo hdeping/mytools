@@ -85,7 +85,7 @@ class NodeStatus():
             print("%s %3d %3d"%(node,runNum,remainNum))
             
 
-         return 
-        
+        return 
 
-
+node = NodeStatus()
+node.run()
