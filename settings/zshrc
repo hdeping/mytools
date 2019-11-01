@@ -1,0 +1,621 @@
+# .zshrc
+
+
+# User specific aliases and functions
+#  about fcitx
+export XMODIFIERS="@im=fcitx"
+export QT_MODULE=fcitx
+export GTK_MODULE=fcitx
+export ZSH=~/.oh-my-zsh
+export LANGUAGE="en_US.UTF-8"
+#source ~/.login
+# my paths {{{
+# python path
+# myPythonPath=~/miniconda3/lib/python3.7/site-packages/pymouse:~/c/02_python/44_mytools
+myPythonPath=~/c/02_python/44_mytools
+PYTHONPATH=$myPythonPath:$PYTHONPATH
+export PYTHONPATH
+#PATH=$mender:$ifort/intel64:$icc/intel64:$tex:$PATH:/usr/x86_64-w64-mingw32/bin/qt5
+sbin=/sbin:/usr/sbin
+myshell=/Users/huangdeping/shell:/usr/local/texlive/2018/bin/x86_64-darwin
+bin=/usr/bin:/usr/local/bin:/usr/lib64/openmpi/bin:/bin
+# for CUDA
+anahome=/Users/huangdeping/miniconda3
+ana=$anahome/bin
+analib=$anahome/lib:/Users/huangdeping/miniconda3/lib/python3.7/site-packages/sklearn/.dylibs
+anainc=$anahome/include
+nmap=/usr/local/Cellar/nmap/7.70/bin
+adb=/Users/huangdeping/Library/Android/sdk/platform-tools
+jni=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
+jni_inc=$jni/include
+jni_lib=$jni/jre/lib
+PATH=$ana:$nmap:$PATH:$myshell:/usr/local/opt/mariadb/bin:$adb
+export PATH
+cv=/Users/huangdeping/miniconda3/lib/pkgconfig
+export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$cv
+export LIBRARY_PATH=$LIBRARY_PATH:$analib:$jni_lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$analib:$jni_lib
+export C_INCLUDE_PATH=$C_INCLUDE_PATH:$anainc:$jni_inc
+export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$anainc:$jni_inc
+export MANPATH=$codeMan:$MANPATH
+#}}}
+#some varibales{{{
+lapip=114.214.189.87
+labip=202.38.82.23
+gpuip=210.45.125.100
+gpuip1=202.38.82.113
+gpuip2=202.38.82.114
+gpuip3=202.38.82.115
+domip=222.195.64.223
+g0=hdp@$gpuip
+g1=hdp@$gpuip1
+g2=hdp@$gpuip2
+g3=hdp@$gpuip3
+# gpu=ncl@$gpuip
+gpu=ncl@$labip
+yoyoip=172.16.12.200
+yo=yoyo@$yoyoip
+
+bl=/home/hdeping/myWorks/02_blender/
+serverip=210.45.125.225
+hdp=hdp@$serverip
+hdp1=hdp@222.195.94.17
+xian=ncl@210.45.117.35
+ncl=ncl@222.195.94.7
+ncl1=ncl@222.195.94.17
+ouyang=ustcncg@gpt.tsuniv.edu
+boat=ouyang@172.16.7.68
+lap=hdeping@${lapip}
+lab=hdeping@${labip}
+dom=hdeping@${domip}
+mailhdp="hdeping@mail.ustc.edu.cn"
+
+ref=/home/huangdeping/complexNetwork/01_myReference/
+sum=/home/huangdeping/complexNetwork/06_summaryEveryday/
+note=/home/huangdeping/complexNetwork/02_ReferenceNote/
+reftex=/home/huangdeping/complexNetwork/01_myReferrence/08_refTexSummary
+group=/Users/huangdeping/Desktop/beamer/01_groupmeeting
+meeting=/home/huangdeping/tex/beamer/01_groupmeeting/08_20170413/01_v1
+code=/home/huangdeping/complexNetwork/00_CCodes
+work=/home/huangdeping/complexNetwork/00_CCodes/19_reactionInversePara/02_enzymeKinetics
+pap=/Users/huangdeping/Desktop/05_myPaper
+ppt=/home/huangdeping/complexNetwork/05_myPaper/02_myGraduation/02_20171125_EnglishSymposium
+vim=/home/huangdeping/.vim/ftplugin
+tex=/home/huangdeping/tex/beamer/01_groupmeeting/05_20160519
+#}}}
+#some common alias command{{{
+# gm for git commit
+alias ga="git add"
+alias ggc="git gc"
+alias gup="git branch --set-upstream"
+alias gdi="git log --graph --decorate"
+alias gcp="git cat-file -p"
+alias gme="git merge"
+alias gst="git status"
+alias gm="git commit -m"
+alias gch="git checkout"
+alias glp="git log --pretty=format:'%h %ad %an'"
+alias gbr="git branch"
+alias gre="git rebase -i"
+alias gam="git add . && git commit -m"
+alias ap="sudo apachectl start"
+alias yo="ssh yoyo@$yoyoip"
+# alias ou="ssh ouyang@172.16.7.68"
+alias boat="ssh ouyang@172.16.7.68"
+alias ap2="sudo apachectl restart"
+alias mon="nohup sudo mongod --auth > /dev/null 2> /dev/null &"
+alias note="jupyter notebook"
+alias s3="subl3"
+alias sql="mysql -u root -pnclhuang"
+alias ty="typora"
+alias discuz="rsync -avz hdp@210.45.125.225:/home/http/ /home/hdeping/disk/bak_discuzFromServer/ && rsync -avz root@210.45.125.225:/var/lib/mysql/ultrax /home/hdeping/disk/"
+#alias discuzDb="
+alias cam2="sudo umount /dev/sdd1"
+alias sc="scrot -s" 
+alias rpmOp="scp *rpm ${g0}:package26 && rm *rpm"
+alias disp="nvidia-smi"
+alias tl="tlmgr.pl"
+alias ink="inkscape"
+alias nsc="sudo pkill Xorg"
+alias vga="lspci -v|grep -i vga -A 10"
+alias xi="xinit /usr/bin/lxsession"
+alias up="scp *cpp *\.h ${hdp}:"
+alias ind="indent -i4 -bli4 <"
+alias xing="sudo rtcwake -m mem -s"
+alias mkavi="ffmpeg -i %4d.png -b:v 5000k"
+alias qlr="mysql -u root -p"
+alias qlh="mysql -u hdeping"
+alias leak="valgrind --leak-check=full --show-leak-kinds=all"
+alias pdh="pdf2htmlEX"
+alias gd="vim *.gdb"
+alias sv="vim *.svg"
+alias lib="pkg-config --libs"
+alias ncl="ssh 'ncl@222.195.94.7'"
+alias key="ssh-copy-id -i ~/.ssh/id_rsa.pub"
+alias lock="xscreensaver-command --lock"
+alias start="sudo systemctl start"
+alias restart="sudo systemctl restart"
+alias stop="sudo systemctl stop"
+alias status="systemctl status"
+alias zx="xrdb -load ~/.Xresources"
+alias mg="mv ~/pictures/fig*png figures;rename fig0 fig figures/*png"
+alias jpg="jpegoptim"
+alias v1="mkdir ../01_v1 && mv * ../01_v1 && mv ../01_v1 ."
+alias cour="coursera-dl -u 1214316795@qq.com -p gtsjyz389416"
+alias pk="pkg-config --libs"
+# alias syncVim="rsync -avz ~/.vim hdp@210.45.125.225:"
+alias ouyang="ssh ustcncg@gpt.tsuniv.edu"
+alias gin="git init"
+alias gco="git commit"
+alias myconfig="tar zcvf config.tgz .vim .vimrc .emacs .emacs.d .oh-my-zsh .zshrc .bashrc .config .gimp-2.8 .gitconfig .gitignore .gnuplot-wxt .gvimrc .login .mplayer .tmux.conf .vimperator .vimperatorrc .xmodmap Desktop"
+alias gsl="gcc -lgsl -lgslcblas -lm"
+alias gra="gcc -ligraph"
+alias bai="ping www.baidu.com"
+alias ref="rsync -avz ~/complexNetwork/01_myReference/  hdp@210.45.125.225:networkRef"
+alias hx="html2tex"
+alias pdfallnum="numall|grep pages|cut -d ' ' -f 3|getnum"
+alias oc="octave"
+alias you="youtube-dl"
+alias mhdp="sudo mount -t nfs  210.45.125.225:/home/hdp /home/hdeping/nfs/hdp"
+alias umhdp="sudo umount 210.45.125.225:/home/hdp"
+alias e="chmod a+x"
+alias la="ls -a"
+alias mx="rlwrap maxima -q"
+alias em="emacs" 
+alias gf="gprof"
+alias cr="cp -r"
+alias hdp="ssh hdp@${serverip}"
+# alias hdp="ssh hdp@${labip} -p 22022"
+alias hdpx="ssh -X  hdp@${serverip}"
+#alias hdp="TERM=screen ssh hdp@210.45.125.225"
+# alias gpu="ssh ncl@$gpuip"
+alias gpu="ssh ncl@$labip -p 22021"
+alias g0="ssh hdp@$gpuip"
+alias g1="ssh hdp@$gpuip1"
+alias g2="ssh hdp@$gpuip2"
+alias g3="ssh hdp@$gpuip3"
+alias lap="ssh hdeping@$lapip"
+alias lab="ssh hdeping@$labip"
+alias hdp1="ssh hdp@222.195.94.17"
+alias xian="ssh ncl@210.45.117.35"
+alias nclx="ssh -X ncl@222.195.94.7"
+alias dom="ssh  hdeping@$domip"
+alias ncl="ssh ncl@222.195.94.7"
+alias ncl1="ssh ncl@222.195.94.17"
+alias ncl1x="ssh -X  ncl@222.195.94.17"
+alias sdb4="sudo umount /dev/sdb4"   # for u disk
+alias sdb1="sudo umount /dev/sdb1"   #  for the elements
+alias vo="alsamixer"
+alias tel="rlwrap telnet"
+alias mp="mplayer"
+alias sp="smplayer"
+alias ev="evince -f"
+alias detect="sudo tcpdump -i p3p1 -s 0 -X 'tcp and port 80' -w urlcap"
+alias pin="brew install"
+alias cin="conda install"
+alias crm="conda uninstall"
+alias prm="brew uninstall"
+# scrapy
+alias sppro="scrapy startproject"
+alias spgen="scrapy genspider"
+alias sprun="scrapy crawl"
+alias nin="npm install -g"
+alias nrm="npm uninstall "
+alias nch="npm search"
+alias pyin="pip install"
+alias pyrm="pip uninstall"
+alias pin2="yaourt -S"
+alias sr="source"
+alias mpl="mplayer  -shuffle -loop 0 -playlist"
+alias mpv="mplayer -volume"
+alias mpc="mplayer -vo caca"
+alias down="wget -U Mozilla"
+alias doc="libreoffice"
+alias gw="gwenview"
+alias px="ps aux|grep -i"
+alias wl="wc -l"
+alias scr="scp -r"
+alias rmd="rm -fr"
+alias ori="TreeMaker"
+alias du="du -h"
+alias df="df -h"
+alias ..="cd .."
+alias ...="cd ../.."
+alias du="du -h"
+alias guan="sudo shutdown -h now"
+alias shut="sudo shutdown -h"
+# alias gp="gnuplot"
+alias pdf="pdflatex"
+alias ud="sudo mount /dev/sdb4 /home/hdeping/disk/udisk"
+alias hd="sudo mount /dev/sdb1 /home/hdeping/disk/hdisk"
+alias shd="sudo service sshd start"
+alias info="info --vi-keys"
+alias pxt="pdftotext"
+alias x="xbacklight -set"
+alias fig='find . -name "*"|grep -i'
+alias gi="gvim"
+alias del="sudo umount"
+alias tgz="tar -zcvf"
+alias bz2="tar -jcvf"
+alias win="VirtualBox"
+alias fx="firefox"
+alias xe="xelatex"
+alias xy="python ~/downloads/goagent*/local/proxy.py"
+alias cpvim="tar -cf vim.tar ~/.vim && scp vim.tar hdp@210.45.125.225: && rm -f vim.tar"
+alias nt="netstat"
+# open files with vim
+alias zi="open ~/.zshrc"
+alias s="open *\.sh"
+alias vi="vim"
+alias f="open *\.f90 makefile"
+alias c="open *\.c *\.h makefile"
+alias cu="vim *\.cu *\.h makefile"
+alias vc="vim *\.cpp *\.h makefile"
+alias j="vim *\.java makefile"
+alias x="vim *\.tex makefile"
+alias r="vim *\.R "
+alias l="vim *\.lisp makefile"
+alias pl="vim *\.pl"
+alias p="vim *\.py "
+alias jl="vim *\.jl makefile"
+alias gl="vim ~/downloads/f03gl/source/*\.f90"
+alias h="vim *\.html"
+# emacs 
+alias ems="emacs *\.sh"
+alias emf="emacs *\.f90 makefile"
+alias emc="emacs *\.c makefile"
+alias emj="emacs *\.java makefile"
+alias emx="emacs *\.tex makefile"
+alias emr="emacs *\.R "
+alias eml="emacs *\.lisp makefile"
+alias empl="emacs *\.pl"
+alias emp="emacs *\.py "
+alias emjl="emacs *\.jl makefile"
+alias emh="emacs *\.html"
+
+# create template for all kinds of languages
+alias lnew="cp -r /home/hdeping/c/03_dataStructure/01_linkList/09_v9"
+alias fnew="cp -r /home/hdeping/fortran/sample"
+alias cnew="cp -r /home/hdeping/c/sample"
+alias dnew="cp -r /home/hdeping/summary/01_Discuz/example"
+alias cppnew="cp -r /home/hdeping/c/cpp_sample"
+alias jnew="cp -r /home/hdeping/tmp/java/sample"
+alias pnew="cp -r /home/hdeping/tmp/python/sample"
+alias gnew="cp -r /home/hdeping/c/06_opengl/sample"
+alias tnew="cp -r /home/hdeping/tex/sample"
+alias tfnew="cp -r /home/hdeping/complexNetwork/00_CCodes/15_MachineLearning/07_tensorflow/samples"
+alias snew="cp -r /home/hdeping/complexNetwork/06_summaryEveryday/samples"
+alias bnew="cp -r /home/hdeping/tex/beamer/sample"
+alias znew="cp -r /home/hdeping/tex/cjk_sample/01_xelatex"
+alias py="python3"
+alias pyw="pythonw"
+alias py2="python2"
+alias m="make"
+alias g="gvim *f90"
+alias  mc="make -C"
+alias ok="okular"
+alias ct="ctags -R"
+alias vp="vi figure.mp makefile"
+alias pch="brew search"
+# query the package which contains the file 
+alias  ns="netstat"
+alias html="wkhtmltopdf"
+alias td="texdoc"
+alias wlt="ping wlt.ustc.edu.cn"
+alias  x0="startx -bpp 32 -quiet"
+alias  xm="xmodmap ~/.xmodmap"
+alias  z="source ~/.zshrc"
+alias  t="tmux"
+#alias x1="startx :1 -bpp 32 -quiet"
+#alias x2="startx :2 -bpp 32 -quiet"
+#alias x3="startx :3 -bpp 32 -quiet"
+#alias x4="startx :4 -bpp 32 -quiet"
+#alias x5="startx :5 -bpp 32 -quiet"
+#}}}
+#set the theme {{{
+autoload -U colors && colors
+ZSH_THEME="cloud"
+#ZSH_THEME="agnoster"
+source $ZSH/oh-my-zsh.sh
+# # }}}
+#复制代码
+#color{{{
+autoload colors
+colors
+for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+eval _$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+eval $color='%{$fg[${(L)color}]%}'
+(( count = $count + 1 ))
+done
+FINISH="%{$terminfo[sgr0]%}"
+#}}}
+
+#RPROMPT=$(echo "$RED%D %T$FINISH")
+#$CYAN%n@$BLUE%M:$GREEN%/$_YELLOW>>>$FINISH ")
+#标题栏、任务栏样式{{{
+case $TERM in (*xterm*|*rxvt*|(dt|k|E)term)
+precmd () { print -Pn "\e]0;%n@%M//%/\a" }
+preexec () { print -Pn "\e]0;%n@%M//%/\ $1\a" }
+;;
+esac
+#}}}
+#编辑器
+#输入法
+export XMODIFIERS="@im=fcitx"
+export QT_MODULE=fcitx
+export GTK_MODULE=fcitx
+#关于历史纪录的配置 {{{
+#历史纪录条目数量
+export HISTSIZE=10000
+#注销后保存的历史纪录条目数量
+export SAVEHIST=10000
+#历史纪录文件
+export HISTFILE=~/.zhistory
+#以附加的方式写入历史纪录
+setopt INC_APPEND_HISTORY
+#如果连续输入的命令相同，历史纪录中只保留一个
+setopt HIST_IGNORE_DUPS
+#为历史纪录中的命令添加时间戳
+setopt EXTENDED_HISTORY
+
+#启用 cd 命令的历史纪录，cd -[TAB]进入历史路径
+setopt AUTO_PUSHD
+#相同的历史路径只保留一个
+setopt PUSHD_IGNORE_DUPS
+
+#在命令前添加空格，不将此命令添加到纪录文件中
+#setopt HIST_IGNORE_SPACE
+#}}}
+#每个目录使用独立的历史纪录{{{
+cd() {
+builtin cd "$@"                             # do actual cd
+fc -W                                       # write current history  file
+local HISTDIR="$HOME/.zsh_history$PWD"      # use nested folders for history
+if  [ ! -d "$HISTDIR" ] ; then          # create folder if needed
+mkdir -p "$HISTDIR"
+fi
+export HISTFILE="$HISTDIR/zhistory"     # set new history file
+touch $HISTFILE
+local ohistsize=$HISTSIZE
+HISTSIZE=0                              # Discard previous dir's history
+HISTSIZE=$ohistsize                     # Prepare for new dir's history
+fc -R                                       #read from current histfile
+}
+mkdir -p $HOME/.zsh_history$PWD
+export HISTFILE="$HOME/.zsh_history$PWD/zhistory"
+
+function allhistory { cat $(find $HOME/.zsh_history -name zhistory) }
+function convhistory {
+sort $1 | uniq |
+sed 's/^:\([ 0-9]*\):[0-9]*;\(.*\)/\1::::::\2/' |
+awk -F"::::::" '{ $1=strftime("%Y-%m-%d %T",$1) "|"; print }'
+}
+#使用 histall 命令查看全部历史纪录
+function histall { convhistory =(allhistory) |
+sed '/^.\{20\} *cd/i\\' }
+#使用 hist 查看当前目录历史纪录
+function hist { convhistory $HISTFILE }
+
+#全部历史纪录 top50
+function top50 { allhistory | awk -F':[ 0-9]*:[0-9]*;' '{ $1="" ; print }' | sed 's/ /\n/g' | sed '/^$/d' | sort | uniq -c | sort -nr | head -n 50 }
+
+#}}}
+#杂项 {{{
+#允许在交互模式中使用注释  例如：
+#cmd #这是注释
+setopt INTERACTIVE_COMMENTS
+
+#启用自动 cd，输入目录名回车进入目录
+#稍微有点混乱，不如 cd 补全实用
+setopt AUTO_CD
+
+#扩展路径
+#/v/c/p/p => /var/cache/pacman/pkg
+setopt complete_in_word
+
+#禁用 core dumps
+limit coredumpsize 0
+
+#Emacs风格 键绑定
+bindkey -e
+#bindkey -v
+#设置 [DEL]键 为向后删除
+#bindkey "\e[3~" delete-char
+
+#以下字符视为单词的一部分
+WORDCHARS='*?_-[]~=&;!#$%^(){}<>'
+#}}}
+#自动补全功能 {{{
+setopt AUTO_LIST
+setopt AUTO_MENU
+#开启此选项，补全时会直接选中菜单项
+#setopt MENU_COMPLETE
+
+autoload -U compinit
+compinit
+
+#自动补全缓存
+#zstyle ':completion::complete:*' use-cache on
+#zstyle ':completion::complete:*' cache-path .zcache
+#zstyle ':completion:*:cd:*' ignore-parents parent pwd
+
+#自动补全选项
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' menu select
+zstyle ':completion:*:*:default' force-list always
+zstyle ':completion:*' select-prompt '%SSelect:  lines: %L  matches: %M  [%p]'
+
+zstyle ':completion:*:match:*' original only
+zstyle ':completion::prefix-1:*' completer _complete
+zstyle ':completion:predict:*' completer _complete
+zstyle ':completion:incremental:*' completer _complete _correct
+zstyle ':completion:*' completer _complete _prefix _correct _prefix _match _approximate
+
+#路径补全
+zstyle ':completion:*' expand 'yes'
+zstyle ':completion:*' squeeze-shlashes 'yes'
+zstyle ':completion::complete:*' '\\'
+
+#彩色补全菜单
+#eval $(dircolors -b)
+#export ZLSCOLORS="${LS_COLORS}"
+export LSCOLORS=GxFxCxDxBxegedabagaced
+zmodload zsh/complist
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+
+#修正大小写
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
+#错误校正
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+
+#kill 命令补全
+compdef pkill=kill
+compdef pkill=killall
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:*:*:*:processes' force-list always
+zstyle ':completion:*:processes' command 'ps -au$USER'
+
+#补全类型提示分组
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+zstyle ':completion:*:descriptions' format $'\e[01;33m -- %d --\e[0m'
+zstyle ':completion:*:messages' format $'\e[01;35m -- %d --\e[0m'
+zstyle ':completion:*:warnings' format $'\e[01;31m -- No Matches Found --\e[0m'
+zstyle ':completion:*:corrections' format $'\e[01;32m -- %d (errors: %e) --\e[0m'
+
+# cd ~ 补全顺序
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+#}}}
+##行编辑高亮模式 {{{
+# Ctrl+@ 设置标记，标记和光标点之间为 region
+zle_highlight=(region:bg=magenta #选中区域
+special:bold      #特殊字符
+isearch:underline)#搜索时使用的关键字
+#}}}
+##空行(光标在行首)补全 "cd " {{{
+user-complete(){
+case $BUFFER in
+"" )                       # 空行填入 "cd "
+BUFFER="cd "
+zle end-of-line
+zle expand-or-complete
+;;
+"cd --" )                  # "cd --" 替换为 "cd +"
+BUFFER="cd +"
+zle end-of-line
+zle expand-or-complete
+;;
+"cd +-" )                  # "cd +-" 替换为 "cd -"
+BUFFER="cd -"
+zle end-of-line
+zle expand-or-complete
+;;
+* )
+zle expand-or-complete
+;;
+esac
+}
+zle -N user-complete
+bindkey "\t" user-complete
+#}}}
+##在命令前插入 sudo {{{
+#定义功能
+sudo-command-line() {
+[[ -z $BUFFER ]] && zle up-history
+[[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
+zle end-of-line                 #光标移动到行末
+}
+zle -N sudo-command-line
+#定义快捷键为： [Esc] [Esc]
+bindkey "\e\e" sudo-command-line
+#}}}
+#历史命令 top10
+alias top10='print -l  ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
+#}}}
+#路径别名 {{{
+#进入相应的路径时只要 cd ~xxx
+hash -d A="/media/ayu/dearest"
+hash -d H="/media/data/backup/ayu"
+hash -d E="/etc/"
+hash -d D="/home/ayumi/Documents"
+#}}}
+##for Emacs {{{
+#在 Emacs终端 中使用 Zsh 的一些设置 不推荐在 Emacs 中使用它
+#if [[ "$TERM" == "dumb" ]]; then
+#setopt No_zle
+#PROMPT='%n@%M %/
+#>>'
+#alias ls='ls -F'
+#fi
+#}}}
+#{{{自定义补全
+#补全 ping
+zstyle ':completion:*:ping:*' hosts 192.168.1.{1,50,51,100,101} www.google.com
+
+#补全 ssh scp sftp 等
+#zstyle -e ':completion::*:*:*:hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
+#}}}
+#{{{ F1 计算器
+arith-eval-echo() {
+LBUFFER="${LBUFFER}echo \$(( "
+RBUFFER=" ))$RBUFFER"
+}
+zle -N arith-eval-echo
+bindkey "^[[11~" arith-eval-echo
+#}}}
+####{{{
+function timeconv { date -d @$1 +"%Y-%m-%d %T" }
+
+# }}}
+zmodload zsh/mathfunc
+autoload -U zsh-mime-setup
+zsh-mime-setup
+setopt EXTENDED_GLOB
+
+setopt correctall
+autoload compinstall
+#漂亮又实用的命令高亮界面{{{
+setopt extended_glob
+TOKENS_FOLLOWED_BY_COMMANDS=('|' '||' ';' '&' '&&' 'sudo' 'do' 'time' 'strace')
+
+recolor-cmd() {
+region_highlight=()
+colorize=true
+start_pos=0
+for arg in ${(z)BUFFER}; do
+((start_pos+=${#BUFFER[$start_pos+1,-1]}-${#${BUFFER[$start_pos+1,-1]## #}}))
+((end_pos=$start_pos+${#arg}))
+if $colorize; then
+colorize=false
+res=$(LC_ALL=C builtin type $arg 2>/dev/null)
+case $res in
+*'reserved word'*)   style="fg=magenta,bold";;
+*'alias for'*)       style="fg=cyan,bold";;
+*'shell builtin'*)   style="fg=yellow,bold";;
+*'shell function'*)  style='fg=green,bold';;
+*"$arg is"*)
+[[ $arg = 'sudo' ]] && style="fg=red,bold" || style="fg=blue,bold";;
+*)                   style='none,bold';;
+esac
+region_highlight+=("$start_pos $end_pos $style")
+fi
+[[ ${${TOKENS_FOLLOWED_BY_COMMANDS[(r)${arg//|/\|}]}:+yes} = 'yes' ]] && colorize=true
+start_pos=$end_pos
+done
+}
+check-cmd-self-insert() { zle .self-insert && recolor-cmd }
+check-cmd-backward-delete-char() { zle .backward-delete-char && recolor-cmd }
+
+zle -N self-insert check-cmd-self-insert
+zle -N backward-delete-char check-cmd-backward-delete-char
+
+# vi style
+set -o vi
+# # }}}
+
+
