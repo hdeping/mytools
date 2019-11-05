@@ -21,3 +21,5 @@ from .SlurmState   import SlurmState
 from .Ris2Bib      import Ris2Bib
 from .QTable       import QTable
 from .             import Triangle
+from .VimSublime   import VimToSublime
+from .Wiki2Txt     import Wiki2Txt

@@ -52,6 +52,7 @@ class OpenFiles():
                             "xls":"et",
                             "xlsx":"et",
                             "doc":"wps",
+                            "lyx":"lyx",
                             "blend":"blender"
                             }
 
