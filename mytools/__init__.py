@@ -28,4 +28,6 @@ from .DistanceMeasure import DistanceMeasure
 from .GetLines        import GetLines
 from .OpenFiles       import OpenFiles
 from .RunCommand      import RunCommand
+from .MyPdf           import MyPdf
+
 
