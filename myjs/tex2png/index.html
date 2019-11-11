@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!-- 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-04-26 20:42:46
+    @project      : tex2png
+    @version      : 0.9
+    @source file  : index.html
+
+============================
+ -->
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script type="text/javascript" 
+            src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+            
+        </script>
+        <script type="text/javascript" 
+            src = "https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+            
+        </script>
+
+        <script type="text/javascript" 
+            src = "html2canvas.js">
+            
+        </script>     
+
+    </head>
+ 
+<body>
+    
+    <div class="title">Tex->png 转换器</div>
+    <div class="block" id="block">
+        <textarea name="text1" id="text1"></textarea>
+
+        <!-- input the width of the formula block -->
+        <div class="rangePanel">
+          <div class = "text">宽度</div>
+          <div><input type="range"
+                class = "range" 
+                id="input-width"
+                min=200 max=2000 step=1 value=500
+                onchange="update_formula()"
+                oninput="update_formula()"
+          ></div>
+          <!-- input the height of the formula block -->
+          <div class = "text">高度</div>
+          <div><input type="range" 
+                class = "range"
+                class = "range"
+                id="input-height"
+                min=200 max=2000 step=1 value=300
+                onchange="update_formula()"
+                oninput="update_formula()"
+          ></div>
+          <!-- input the font size of the formula block -->
+          <div class = "text">字体</div>
+          <div><input type="range" 
+                class = "range"
+                id="input-font-size"
+                min=20 max=100 step=1 value=40
+                onchange="update_formula()"
+                oninput="update_formula()"
+          ></div>
+          <!-- input the font size of the formula  block -->
+          <div class = "text">位置</div>
+          <div><input type="range" 
+                class = "range"
+                id="input-line-height"
+                min=200 max=2000 step=1 value=300
+                onchange="update_formula()"
+                oninput="update_formula()"
+          ></div>
+          <div> <button class="clear"
+            id = "clear">清空</button> </div>
+        </div>
+        <div class = "text">背景</div>
+        <div class="background">
+          <ul class = "ulbackground">
+            <li id="li1"></li>
+            <li id="li2"></li>
+            <li id="li3"></li>
+            <li id="li4"></li>
+            <li id="li5"></li>
+            <li id="li6"></li>
+            <li id="li7"></li>
+            <li id="li8"></li>
+          </ul>
+        </div>
+        <div class = "text">颜色</div>
+        <div class="fontcolor">
+          <ul class="ulcolor">
+            <li id="li1"></li>
+            <li id="li2"></li>
+            <li id="li3"></li>
+            <li id="li4"></li>
+            <li id="li5"></li>
+            <li id="li6"></li>
+            <li id="li7"></li>
+            <li id="li8"></li>
+          </ul>
+        </div>
+        
+        <div> <button class="get"
+            id = "get"
+           
+            >转换</button> </div>
+    </div>
+
+
+    <div class = "formula" id = "formula">
+
+    \begin{eqnarray*}
+    \zeta (s)    &=& \frac{1}{\Gamma(s)}\int_{0}^{\infty}\frac{x^{s-1}}{e^{x}-1}dx 
+    
+    \\
+    \Gamma(s)&  = &\int_{0}^{\infty}t^{s-1}e^{-t}dt
+    \end{eqnarray*}
+    </div>
+
+    <script type="text/javascript" src = "run.js"></script>
+    
+   
+</body>
+</html>
