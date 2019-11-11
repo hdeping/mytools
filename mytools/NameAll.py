@@ -46,7 +46,10 @@ class NameAll():
         filename[-3:] = "xxx"
         """
         # print("------ %s -------"%(filename))
-        for i in range(1,7):
+        num = len(filename)
+        if num > 7:
+            num = 7
+        for i in range(1,num):
             if filename[-i] == '.':
                 res = 1 - i 
                 return res
@@ -105,6 +108,7 @@ class NameAll():
         #name = re.sub(r"[?()[]'\"{}#&/\\,.]",'',filename)
         name = re.sub(r"[ .,#?\\{}()\[\]@*#&%!^]",'',filename)
         new_name   = name.split(' ')
+        # if there is no strange characters
         p1 = (len(filename) - len(new_name[0]) == 1) 
         p2 = (filename == new_name[0])
         if  p1 or p2: 
@@ -112,7 +116,14 @@ class NameAll():
         # split the words with ' '
         
         output = self.getStdStr(new_name)
-        output = "%s.%s"%(output[:suffix_start],new_name[-1][suffix_start:])
+        if suffix_start != -1:
+            output = "%s.%s"%(output[:suffix_start],new_name[-1][suffix_start:])
+        # get rif of z-lib.org
+        output = output.replace("z-liborg","")
+        # new_good_times.pdf --> NewGoodTimes.pdf
+        if "_" in output:
+            output = output.split("_")
+            output = self.getStdStr(output)
         return output
         
     def run(self):
