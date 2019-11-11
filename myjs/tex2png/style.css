@@ -1,0 +1,154 @@
+/*
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-04-26 20:42:19
+    @project      : tex2png
+    @version      : 0.9
+    @source file  : style.css
+
+============================
+*/
+
+*{
+   /* user-select: none;
+    -moz-user-select: none;*/
+}
+body{
+    background: #60afe4;
+}
+
+.title{
+    width: 540px;
+    height: 100px;
+    background: #f4f1f4;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 30px;
+    margin: auto;
+    font-size:50px;
+    color:blue;
+    line-height: 100px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.block{
+    width: 540px;
+    height: 315px;
+    background: #f4f1f4;
+   /* -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;*/
+    /*border-radius: 30px;*/
+    margin:20px auto;
+}
+.rangePanel{
+    width: 45%;
+    height: 47%;
+    /*background: #f4f1f4;*/
+    background: white;
+   /* -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;*/
+    /*border-radius: 30px;*/
+    /*margin:20px auto;*/
+    top:-25px;
+    }
+.rangePanel div{
+    float:left;
+}
+.block div{
+    float:left;
+}
+#text1{
+    width: 99%;
+    height: 50%;
+   /* -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 30px;
+    text-align: center;*/
+
+}
+.text{
+    width: 70px;
+    height:20px;
+    color:black;
+    font-size:18px;
+    background: cyan;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+}
+
+.formula{
+    width: 540px;
+    height: 200px;
+    /*background: #f4f1f4;*/
+    background: white;
+    /*-webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;*/
+    margin: auto;
+    color:blue;
+    font-size: 30px;
+    line-height: 200px;
+    font-weight: bold;
+}
+.get{
+    width: 290px;
+    height: 60px;
+    background: #f4f1f4;
+    /*-webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;*/
+    position: relative;
+    margin: auto;
+    color:blue;
+    font-size: 35px;
+    line-height: 55px;
+    font-weight: bold;
+    background:linear-gradient(#f00,#ff0);
+    top:8px;
+}
+.clear{
+    width: 240px;
+    height: 60px;
+    background: #f4f1f4;
+    /*-webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;*/
+    margin: auto;
+    color:blue;
+    font-size: 35px;
+    line-height: 55px;
+    font-weight: bold;
+    background:linear-gradient(#f00,#ff0);
+    /*top:-20px;*/
+}
+.ulcolor li{
+    float:left;
+}
+.ulbackground li{
+    float:left;
+}
+li{
+    width: 18px;
+    height: 18px;
+    border-radius:50%;
+    /*background: red;*/
+    margin:2px;
+    list-style-type: none;
+    position: relative;
+    top: -15px;
+    left:-30px;
+}
+
+.range{
+    width: 80%;
+    height: 20%;
+
+    background: red;
+}
+
+
+
