@@ -23,3 +23,4 @@ from .QTable       import QTable
 from .             import Triangle
 from .VimSublime   import VimToSublime
 from .Wiki2Txt     import Wiki2Txt
+from .EggCurve     import EggCurve
