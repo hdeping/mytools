@@ -30,13 +30,16 @@ class Bitcoin(MyCommon):
         super(Bitcoin, self).__init__()
         self.command = "bitcoin-cli getblock `bitcoin-cli getblockhash %d`"
         self.keys    = ["size","weight","height",
-                        "time","nonce","ntx","difficulty"]
+                        "time","nonce","nTx","difficulty"]
+        self.blocksNum = 607621
         return
 
     def getInfo(self,content):
         dicts = {}
         for key in self.keys:
             dicts[key] = content[key]
+
+        dicts["date"] = self.getDate(content["time"])
 
         return dicts
 
@@ -48,17 +51,24 @@ class Bitcoin(MyCommon):
             date 
         """
         timeArray = time.localtime(timestamp)
-        date = time.strftime("%Y--%m--%d %H:%M:%S", timeArray)
+        date = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
 
         return date 
     def run(self):
-        for i in range(0,1,100000):
+        results = {}
+        for i in range(self.blocksNum):
             command = self.command % (i)
             content = os.popen(command).read()
             content = json.loads(content)
 
-            print(i,content)
+            key     = content["hash"]
+            results[key] = self.getInfo(content)
+            if i % 1000 == 0:
+                print(i)
+                
 
+
+        print(json.dumps(results,indent = 4))
 
         return
 
