@@ -31,7 +31,8 @@ class Bitcoin(MyCommon):
         self.command = "bitcoin-cli getblock `bitcoin-cli getblockhash %d`"
         self.keys    = ["size","weight","height",
                         "time","nonce","nTx","difficulty"]
-        self.blocksNum = 607621
+        # self.blocksNum = 500
+        self.blocksNum = 607625
         return
 
     def getInfo(self,content):
@@ -56,6 +57,7 @@ class Bitcoin(MyCommon):
         return date 
     def run(self):
         results = {}
+        t1 = time.time()
         for i in range(self.blocksNum):
             command = self.command % (i)
             content = os.popen(command).read()
@@ -63,12 +65,13 @@ class Bitcoin(MyCommon):
 
             key     = content["hash"]
             results[key] = self.getInfo(content)
-            if i % 1000 == 0:
+            if i % 100000 == 0:
                 print(i)
+                self.writeJson(results,"bitcoin%d.json"%(i))
+
                 
-
-
-        print(json.dumps(results,indent = 4))
+        self.writeJson(results,"bitcoin.json")
+        print(time.time() - t1)
 
         return
 
