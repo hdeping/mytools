@@ -102,8 +102,23 @@ class Formulas():
             s.append(Pm)
 
         return
+
+    def bernoulliGen(self):
+        """
+        docstring for bernoulliGen
+        """
+        x = sympy.Symbol("x")
+        s = x/(sympy.exp(x) - 1)
+        for i in range(30):
+            s = sympy.diff(s,x,2)
+            value = sympy.limit(s,x,0)
+            print("B%d = "%(i*2+2),sympy.latex(value))
+        
+        
+        return
   
 
 formula = Formulas()
-formula.bernoulliNum() 
+# formula.bernoulliNum() 
+formula.bernoulliGen() 
 # formula.test()     
