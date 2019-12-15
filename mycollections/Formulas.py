@@ -46,11 +46,11 @@ class Formulas():
         """
         docstring for getBinomial
         n:
-            positive integer and n >= 3
+            positive integer and n >= 2
         return:
             [1,n,C_n^i...]
         """
-        assert(n >= 3)
+        assert(n >= 2)
         binomial = [1]
         for i in range(n-2):
             num = binomial[i]*(n-i) // (i+1)
@@ -109,16 +109,46 @@ class Formulas():
         """
         x = sympy.Symbol("x")
         s = x/(sympy.exp(x) - 1)
-        for i in range(30):
-            s = sympy.diff(s,x,2)
-            value = sympy.limit(s,x,0)
-            print("B%d = "%(i*2+2),sympy.latex(value))
+        # for i in range(30):
+        #     s = sympy.diff(s,x,2)
+        #     value = sympy.limit(s,x,0)
+        #     print("B%d = "%(i*2+2),sympy.latex(value))
+        s = sympy.limit(s,x,0)
+        print((s/234)**2)
         
         
+        return
+    def getBernoulli(self,s,m):
+        """
+        docstring for getBernoulli
+        """
+        binomial = self.getBinomial(m+1)
+        result   = s[0]
+        for i in range(m):
+            result = result - binomial[i]*s[i]/(m+1)
+
+        return result
+    def bernoulliNum2(self):
+        """
+        docstring for bernoulliNum2
+        """
+        x = sympy.Symbol("x")
+        zero = sympy.diff(x,x,2)
+        s = [sympy.diff(x,x)]
+        s.append(s[0]/2)
+
+        for i in range(2,102,2):
+            result = self.getBernoulli(s,i)
+            s.append(result)
+            s.append(zero)
+            print("B_{%d} & = & "%(i),sympy.latex(result), "\\\\")
+            
+
+
         return
   
 
 formula = Formulas()
-# formula.bernoulliNum() 
-formula.bernoulliGen() 
+formula.bernoulliNum2() 
+# formula.bernoulliGen() 
 # formula.test()     
