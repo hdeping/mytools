@@ -16,6 +16,8 @@
 """
 
 import sympy
+import numpy as np
+
 
 class Formulas():
     """Formulas Deriations with sympy"""
@@ -57,15 +59,6 @@ class Formulas():
             binomial.append(num)
 
         return binomial
-    def test(self):
-        """
-        docstring for test
-        """
-        print(self.getBinomial(3))
-        print(self.getBinomial(4))
-        print(self.getBinomial(6))
-        
-        return
     def getExpSum(self,s,n,m):
         """
         docstring for getExpSum
@@ -146,9 +139,111 @@ class Formulas():
 
 
         return
+    def getDivisorSeq(self,m,n):
+        """
+        docstring for getDivisorSeq
+        m,n:
+            two positive integers
+        return:
+            divisor, a inversed array
+        for example, (11,3) => [1,3]
+        """
+        assert(m > 0 and n > 0)
+        divisor = []
+        while n != 1:
+            divisor.append(m//n)
+            k = n 
+            n = m%n
+            m = k
+
+        divisor = np.array(divisor)
+        divisor = np.flip(divisor)
+        return divisor
+    def diophantine(self,m,n):
+        """
+        solution to diophantine equation
+        \begin{eqnarray*}
+        x_{1}&=&1\\
+        x_{2}&=&-b_{1}\\
+        x_{k+1}&=&-b_{k}x_{k}+x_{k-1}\\
+        (x,y)&=&\left(x_{n-1},x_{n}\right)
+        \end{eqnarray*}
+        m,n:
+            two integers which is coprime to each other
+        
+        """
+        
+
+        divisor = self.getDivisorSeq(m,n)
+        solution = [1,-divisor[0]]
+        for i in range(1,len(divisor)):
+            value = - divisor[i]*solution[i] + solution[i-1]
+            solution.append(value)
+
+        # print(solution)
+        print("solution: ",solution[-2:])
+        print("%d*%d+%d*%d = 1"%(m,solution[-2],n,solution[-1]))
+        print(m*solution[-2]+n*solution[-1])
+
+
+        return solution[-2:]
+    def residueTheorem(self):
+        """
+        docstring for residueTheorem
+        check the residue theorem based 
+        on the diophantine equation
+        """
+        p = np.array([55,73,111,128])
+        P = np.prod(p)
+        q = P // p
+        a = [2,3,7,1]
+
+        solution = 0
+        for i in range(len(p)):
+            value = self.diophantine(p[i],q[i])[1]
+            solution += value*a[i]*q[i]
+        print(solution)
+        solution = solution % P
+        print(solution)
+        print(solution % p)
+        
+
+        return
+    def pellSol(self):
+        """
+        docstring for pellSol
+        x_{2}   &=& x_{1}^{2}+Dy_{1}^{2}\\
+        x_{n+1} &=& 2x_{1}x_{n}-x_{n-1}\\
+        y_{2}   &=& 2x_{1}y_{1}\\
+        y_{n+1} &=& 2x_{1}y_{n}-y_{n-1}
+        """
+        x = [[1,0],[3,2]] # D = 2
+        
+        for i in range(10):
+            x0 = 6*x[-1][0] - x[-2][0]
+            x1 = 6*x[-1][1] - x[-2][1]
+            print(x0,x1,x0**2 - 2*x1**2)
+            x.append([x0,x1])
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """
+        # print(self.getBinomial(3))
+        # print(self.getBinomial(4))
+        # print(self.getBinomial(6))
+        # divisor = self.getDivisorSeq(39,37)
+        # print(divisor)
+
+        # self.diophantine(1027,712)
+        # self.residueTheorem()  
+        self.pellSol()  
+        
+        return
   
 
 formula = Formulas()
-formula.bernoulliNum2() 
+# formula.diophantine() 
 # formula.bernoulliGen() 
-# formula.test()     
+formula.test()     
