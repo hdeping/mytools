@@ -312,6 +312,14 @@ class Formulas(MyCommon):
         # self.diophantine(1027,712)
         # self.residueTheorem()  
         # self.pellSol()
+        
+        
+        return
+
+    def testPell(self):
+        """
+        docstring for testPell
+        """
         output = {}
         for i in range(2,1000): 
             if i == (int(i**0.5))**2:
@@ -357,7 +365,7 @@ class Formulas(MyCommon):
                 stati[num] += 1 
             else:
                 stati[num] = 1
-            if num == "2":
+            if num == "27":
                 print(line[:2])
                 z.append(int(index))
         # plt.plot(x,y,"o")
@@ -365,11 +373,34 @@ class Formulas(MyCommon):
         x = np.arange(len(z))
         # plt.plot(x,z,"o")
         # plt.show()
-        print(json.dumps(stati,indent = 4))
+        # print(json.dumps(stati,indent = 4))
+        res = []
+        for key in stati:
+            value = stati[key]
+            res.append([int(key),value])
+
+        res.sort()
+        res = np.array(res)
+        print(res)
+
+        plt.bar(res[:,0],res[:,1])
+        plt.savefig("continuedFraction.png",dpi=200)
+        plt.show()
 
 
-        self.writeJson(output,"continuedFraction.json")
+        # self.writeJson(output,"continuedFraction.json")
 
+        return
+    def continueFrac(self):
+        """
+        docstring for continueFrac
+        """
+        x = self.xyz[0]
+        array = [1, 1, 3, 5, 3, 1, 1, 10]
+        num = len(array)
+        for i in range(num):
+            x = 1/(array[num - 1 - i]+x)
+            print(i,x)
         return
   
 
@@ -377,4 +408,4 @@ formula = Formulas()
 # formula.diophantine() 
 # formula.bernoulliGen() 
 # formula.test() 
-formula.dealData()    
+# formula.dealData()    
