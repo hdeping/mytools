@@ -17,9 +17,10 @@
 
 import sympy
 import numpy as np
+from mytools import MyCommon
 
 
-class Formulas():
+class Formulas(MyCommon):
     """
     Formulas Deriations with sympy
     self.one:
@@ -306,11 +307,19 @@ class Formulas():
         # self.diophantine(1027,712)
         # self.residueTheorem()  
         # self.pellSol()
-        for i in range(2,100): 
+        output = {}
+        for i in range(2,1000): 
             if i == (int(i**0.5))**2:
                 continue
             result = self.getInitPell(i) 
+            res = {}
+            res["number"] = i
+            res["length"] = len(result) - 1 
+            res["result"] = result
+            output[str(i)] = res
             print(i,len(result)-1,result)
+
+        self.writeJson("continuedFraction.json",output)
         
         return
   
