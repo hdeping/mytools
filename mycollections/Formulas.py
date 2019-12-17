@@ -271,7 +271,7 @@ class Formulas():
         
         return  
 
-    def getInitPell1(self,D):
+    def getInitPell(self,D):
         """
         docstring for getInitPell
         D:
@@ -279,9 +279,20 @@ class Formulas():
             positive integer and not square one and  D > 1
             x_n = a_n + 1/(a_{n+1} + x_{n-1})
         """
+        x = sympy.sqrt(D)
+        # print(x)
+        result = []
+        target = 2*(x//1)
+        for i in range(100):
+            a = x // 1 
+            x = sympy.simplify(1/(x - a))
+            result.append(a)
+            if a == target:
+                break
+
         
 
-        return
+        return result
     def test(self):
         """
         docstring for test
@@ -295,7 +306,11 @@ class Formulas():
         # self.diophantine(1027,712)
         # self.residueTheorem()  
         # self.pellSol()
-        self.getInitPell(3)  
+        for i in range(2,100): 
+            if i == (int(i**0.5))**2:
+                continue
+            result = self.getInitPell(i) 
+            print(i,len(result)-1,result)
         
         return
   
