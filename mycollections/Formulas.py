@@ -324,25 +324,6 @@ class Formulas(MyCommon):
                 break
         return x,y
 
-    def test(self):
-        """
-        docstring for test
-        """
-        # print(self.getBinomial(3))
-        # print(self.getBinomial(4))
-        # print(self.getBinomial(6))
-        # divisor = self.getDivisorSeq(39,37)
-        # print(divisor)
-
-        # self.diophantine(1027,712)
-        # self.residueTheorem()  
-        # self.pellSol()
-        # self.getInitPell(999)
-        self.pellSol(11111)
-
-        
-        
-        return
 
     def testPell(self):
         """
@@ -437,6 +418,64 @@ class Formulas(MyCommon):
         print(s)
         y = 2885
         x = 5*y + 1638
+        return
+
+    def num2Digits(self,num):
+        """
+        docstring for num2Digits
+        num:
+            positive integers
+        return:
+            array for all the digits 
+            such as 1234 => [1,2,3,4]
+        """
+        digits = []
+        while num:
+            digits.append(num%10)
+            num = num // 10
+        digits = np.flip(digits)
+        return digits
+
+    def getMultiNum(self,num):
+        """
+        docstring for getMultiNum
+        num:
+            positive integers
+        return:
+            a number 
+            1234 => [1,2,3,4] => 24 => [2,4] => 8
+            1234 => 24 => 8
+            the number is 2
+
+        """
+        for i in range(100):
+            digits = self.num2Digits(num)
+            print(i,num,digits)
+
+            num    = np.prod(digits)
+            if len(digits) <= 1:
+                break
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """
+        # print(self.getBinomial(3))
+        # print(self.getBinomial(4))
+        # print(self.getBinomial(6))
+        # divisor = self.getDivisorSeq(39,37)
+        # print(divisor)
+
+        # self.diophantine(1027,712)
+        # self.residueTheorem()  
+        # self.pellSol()
+        # self.getInitPell(999)
+        # self.pellSol(11111)
+        num = 277777788888899
+        digits = self.num2Digits(num)
+        print(digits)
+        self.getMultiNum(num)
         return
   
 
