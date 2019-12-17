@@ -231,7 +231,7 @@ class Formulas(MyCommon):
         
 
         return
-    def pellSol(self):
+    def pellSol(self,D):
         """
         docstring for pellSol
         x_{2}   &=& x_{1}^{2}+Dy_{1}^{2}\\
@@ -239,12 +239,13 @@ class Formulas(MyCommon):
         y_{2}   &=& 2x_{1}y_{1}\\
         y_{n+1} &=& 2x_{1}y_{n}-y_{n-1}
         """
-        x = [[1,0],[3,2]] # D = 2
+        a,b = self.getInitPell(D)
+        x = [[1,0],[a,b]] # D = 2
         
         for i in range(10):
-            x0 = 6*x[-1][0] - x[-2][0]
-            x1 = 6*x[-1][1] - x[-2][1]
-            print(x0,x1,x0**2 - 2*x1**2)
+            x0 = 2*a*x[-1][0] - x[-2][0]
+            x1 = 2*a*x[-1][1] - x[-2][1]
+            print(x0,x1,x0**2 - D*x1**2)
             x.append([x0,x1])
         
         return
@@ -297,6 +298,32 @@ class Formulas(MyCommon):
                 break 
 
         return result
+    def getInitPell(self,D):
+        """
+        docstring for getInitPell
+        D:
+            x^2 - Dy^2 = 1,
+        """
+        result = self.getContinueSeq(D)
+        print("result",result)
+        m      = result[0]
+        sequence = result[1:]
+        A = [1,0]
+        B = [0,1]
+        for i in range(60):
+            item = sequence[i % len(sequence)]
+            a = item*A[-1] + A[-2]
+            b = item*B[-1] + B[-2]
+            x = m*b + a
+            y = b 
+            judge = x**2 - D*y**2
+            A.append(a)
+            B.append(b)
+            if judge == 1:
+                print(i+1,x,y,judge)
+                break
+        return x,y
+
     def test(self):
         """
         docstring for test
@@ -310,6 +337,9 @@ class Formulas(MyCommon):
         # self.diophantine(1027,712)
         # self.residueTheorem()  
         # self.pellSol()
+        # self.getInitPell(999)
+        self.pellSol(11111)
+
         
         
         return
@@ -413,6 +443,6 @@ class Formulas(MyCommon):
 formula = Formulas()
 # formula.diophantine() 
 # formula.bernoulliGen() 
-# formula.test() 
+formula.test() 
 # formula.dealData() 
-formula.continueFrac()   
+# formula.continueFrac()   
