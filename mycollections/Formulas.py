@@ -396,11 +396,19 @@ class Formulas(MyCommon):
         docstring for continueFrac
         """
         x = self.xyz[0]
+        y = x
         array = [1, 1, 3, 5, 3, 1, 1, 10]
         num = len(array)
         for i in range(num):
             x = 1/(array[num - 1 - i]+x)
-            print(i,x)
+            x = sympy.simplify(x)
+            print(i,x,sympy.latex(x))
+        print(x,y)
+        s = (273*y + 2885)*y - (155*y + 1638)
+        s = sympy.factor(s)
+        print(s)
+        y = 2885
+        x = 5*y + 1638
         return
   
 
@@ -408,4 +416,5 @@ formula = Formulas()
 # formula.diophantine() 
 # formula.bernoulliGen() 
 # formula.test() 
-# formula.dealData()    
+# formula.dealData() 
+formula.continueFrac()   
