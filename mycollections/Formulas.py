@@ -277,7 +277,7 @@ class Formulas(MyCommon):
         
         return  
 
-    def getInitPell(self,D):
+    def getContinueSeq(self,D):
         """
         docstring for getInitPell
         D:
@@ -294,9 +294,7 @@ class Formulas(MyCommon):
             x = sympy.simplify(1/(x - a))
             result.append(a)
             if a == target:
-                break
-
-        
+                break 
 
         return result
     def test(self):
