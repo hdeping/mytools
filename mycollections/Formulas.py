@@ -18,6 +18,11 @@
 import sympy
 import numpy as np
 from mytools import MyCommon
+import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
+import json
+
 
 
 class Formulas(MyCommon):
@@ -322,9 +327,54 @@ class Formulas(MyCommon):
         self.writeJson("continuedFraction.json",output)
         
         return
+    def dealData(self):
+        """
+        docstring for dealData
+        read data from continued.json
+        """
+        data = self.loadStrings("continued.json")
+        # print(data)
+        x = []
+        y = []
+        stati = {}
+        z = []
+        output = {}
+        for line in data:
+            line  = line.split(" ")
+
+            index = line[0]
+            num   = line[1]
+            res = {}
+            res
+            res["number"] = int(index)
+            res["length"] = int(num)
+            arr = np.array(line[2:])
+            arr = arr.astype(int)
+            res["result"] = arr.tolist()
+            output[index] = res
+            
+            if num in stati:
+                stati[num] += 1 
+            else:
+                stati[num] = 1
+            if num == "2":
+                print(line[:2])
+                z.append(int(index))
+        # plt.plot(x,y,"o")
+        # plt.show()
+        x = np.arange(len(z))
+        # plt.plot(x,z,"o")
+        # plt.show()
+        print(json.dumps(stati,indent = 4))
+
+
+        self.writeJson(output,"continuedFraction.json")
+
+        return
   
 
 formula = Formulas()
 # formula.diophantine() 
 # formula.bernoulliGen() 
-formula.test()     
+# formula.test() 
+formula.dealData()    
