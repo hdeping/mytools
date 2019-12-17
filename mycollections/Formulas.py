@@ -20,9 +20,25 @@ import numpy as np
 
 
 class Formulas():
-    """Formulas Deriations with sympy"""
+    """
+    Formulas Deriations with sympy
+    self.one:
+    self.zero:
+        one and zero in sympy
+    self.xyz: 
+        x, y and z
+    """
     def __init__(self):
         super(Formulas, self).__init__()
+
+        self.one  = sympy.ones(1)[0,0]
+        self.zero = sympy.zeros(1)[0,0]
+        self.xyz  = []
+        self.xyz.append(sympy.Symbol("x"))
+        self.xyz.append(sympy.Symbol("y"))
+        self.xyz.append(sympy.Symbol("z"))
+
+        return 
     def run(self):
         """
         docstring for run
@@ -254,6 +270,18 @@ class Formulas():
             print(i+1,x,x**2 - D)
         
         return  
+
+    def getInitPell1(self,D):
+        """
+        docstring for getInitPell
+        D:
+            x^2 - Dy^2 = 1, 
+            positive integer and not square one and  D > 1
+            x_n = a_n + 1/(a_{n+1} + x_{n-1})
+        """
+        
+
+        return
     def test(self):
         """
         docstring for test
