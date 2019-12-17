@@ -226,6 +226,34 @@ class Formulas():
             x.append([x0,x1])
         
         return
+    def getInitPell1(self,D):
+        """
+        docstring for getInitPell
+        D:
+            x^2 - Dy^2 = 1, 
+            positive integer and not square one and  D > 1
+            2m+1, D^2 = (m+1)^2 - m^2
+            2m, D^2 = (m^2+1)^2 - (m^2-1)^2
+            x^2 = D
+            x^2 - p^2 = q^2
+            x = p + q/(x+p)
+        """
+        m = D // 2
+        if D % 2 == 1:
+            p = m + 1
+            q = m 
+        else:
+            p = m**2 + 1
+            q = m**2 - 1 
+
+        one = sympy.ones(1)[0,0]
+        zero = sympy.zeros(1)[0,0]
+        x   = 0
+        for i in range(10):
+            x = p + q/(p+x)
+            print(i+1,x,x**2 - D)
+        
+        return  
     def test(self):
         """
         docstring for test
@@ -238,7 +266,8 @@ class Formulas():
 
         # self.diophantine(1027,712)
         # self.residueTheorem()  
-        self.pellSol()  
+        # self.pellSol()
+        self.getInitPell(3)  
         
         return
   
