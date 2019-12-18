@@ -472,7 +472,7 @@ class Formulas(MyCommon):
             a = m**2 - n**2 
             b = 2*m*n 
             c = m**2 + n**2 
-            print(i,min([a,b]),max([a,b]),c)
+            print("%4d%4d%4d"%(min([a,b]),max([a,b]),c))
             
         return
 
