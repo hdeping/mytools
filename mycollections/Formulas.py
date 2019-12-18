@@ -246,7 +246,7 @@ class Formulas(MyCommon):
         for i in range(10):
             x0 = 2*a*x[-1][0] - x[-2][0]
             x1 = 2*a*x[-1][1] - x[-2][1]
-            print(x0,x1,x0**2 - D*x1**2)
+            print("|%d|%d|%d|%d|"%(i+2,x0,x1,x0**2 - D*x1**2))
             x.append([x0,x1])
         
         return
