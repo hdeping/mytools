@@ -320,6 +320,7 @@ class Formulas(MyCommon):
             judge = x**2 - D*y**2
             A.append(a)
             B.append(b)
+            print(i+1,x,y,judge)
             if judge == 1:
                 print(i+1,x,y,judge)
                 break
@@ -487,17 +488,17 @@ class Formulas(MyCommon):
         # print(divisor)
 
         # self.diophantine(1027,712)
-        # self.residueTheorem()  
+        # self.remainderTheorem()  
         # self.pellSol()
         # self.getInitPell(999)
-        # self.pellSol(11111)
+        self.pellSol(31)
         # num = 277777788888899
         # digits = self.num2Digits(num)
         # print(digits)
         # self.getMultiNum(num)
 
         # self.remainderTheorem()
-        self.pythagorean()
+        # self.pythagorean()
         return
   
 
