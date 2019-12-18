@@ -458,6 +458,24 @@ class Formulas(MyCommon):
                 break
         
         return
+    def pythagorean(self):
+        """
+        docstring for pythagorean
+        """
+        array = []
+        num = 10
+        for n in range(1,num):
+            for m in range(n+1,num):
+                array.append([m+n,m,n])
+        array.sort()
+        for i,(A,m,n) in enumerate(array):
+            a = m**2 - n**2 
+            b = 2*m*n 
+            c = m**2 + n**2 
+            print(i,min([a,b]),max([a,b]),c)
+            
+        return
+
     def test(self):
         """
         docstring for test
@@ -478,7 +496,8 @@ class Formulas(MyCommon):
         # print(digits)
         # self.getMultiNum(num)
 
-        self.remainderTheorem()
+        # self.remainderTheorem()
+        self.pythagorean()
         return
   
 
