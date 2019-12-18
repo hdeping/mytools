@@ -209,20 +209,21 @@ class Formulas(MyCommon):
 
 
         return solution[-2:]
-    def residueTheorem(self):
+    def remainderTheorem(self):
         """
-        docstring for residueTheorem
-        check the residue theorem based 
+        docstring for remainderTheorem
+        check the remainder theorem based 
         on the diophantine equation
         """
-        p = np.array([55,73,111,128])
+        p = np.array([3,5,7])
         P = np.prod(p)
         q = P // p
-        a = [2,3,7,1]
+        a = [2,3,2]
 
         solution = 0
         for i in range(len(p)):
             value = self.diophantine(p[i],q[i])[1]
+            print(a[i],value)
             solution += value*a[i]*q[i]
         print(solution)
         solution = solution % P
@@ -472,10 +473,12 @@ class Formulas(MyCommon):
         # self.pellSol()
         # self.getInitPell(999)
         # self.pellSol(11111)
-        num = 277777788888899
-        digits = self.num2Digits(num)
-        print(digits)
-        self.getMultiNum(num)
+        # num = 277777788888899
+        # digits = self.num2Digits(num)
+        # print(digits)
+        # self.getMultiNum(num)
+
+        self.remainderTheorem()
         return
   
 
