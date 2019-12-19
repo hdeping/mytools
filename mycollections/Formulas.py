@@ -477,6 +477,25 @@ class Formulas(MyCommon):
             
         return
 
+    def inverseNum(self,m):
+        """
+        docstring for inverseNum
+        """
+        n = 0
+        while m != 0:
+            n = 10*n + (m % 10)
+            m = m // 10 
+        return n
+
+    def testInverseNum(self):
+        """
+        docstring for testInverseNum
+        4*ABCDE = EDCBA
+        """
+        for i in range(25,2500000):
+            if self.inverseNum(i) == 4*i:
+                print(i)
+        return
     def test(self):
         """
         docstring for test
@@ -491,7 +510,7 @@ class Formulas(MyCommon):
         # self.remainderTheorem()  
         # self.pellSol()
         # self.getInitPell(999)
-        self.pellSol(31)
+        # self.pellSol(31)
         # num = 277777788888899
         # digits = self.num2Digits(num)
         # print(digits)
@@ -499,6 +518,9 @@ class Formulas(MyCommon):
 
         # self.remainderTheorem()
         # self.pythagorean()
+
+        self.testInverseNum()
+        
         return
   
 
