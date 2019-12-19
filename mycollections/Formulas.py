@@ -648,34 +648,50 @@ class Formulas(MyCommon):
         print(sum(a%1000 == 0))
         
         return
+
+    def getMod(self,a,p):
+        """
+        docstring for getMod
+        check if a^{p-1} = 0 (mod p)
+        """
+        code
+        return
+
+    def testBefore(self):
+        """
+        docstring for testBefore
+        """
+        print(self.getBinomial(3))
+        print(self.getBinomial(4))
+        print(self.getBinomial(6))
+        divisor = self.getDivisorSeq(39,37)
+        print(divisor)
+
+        self.diophantine(1027,712)
+        self.remainderTheorem()  
+        self.pellSol()
+        self.getInitPell(999)
+        self.pellSol(31)
+        num = 277777788888899
+        digits = self.num2Digits(num)
+        print(digits)
+        self.getMultiNum(num)
+
+        self.remainderTheorem()
+        self.pythagorean()
+
+        self.testInverseNum()
+        self.testPrime()
+        self.isPrime(39252)
+        print(self.getFactors(39252))
+        self.testAverageProblem()
+        
+        return
     def test(self):
         """
         docstring for test
         """
-        # print(self.getBinomial(3))
-        # print(self.getBinomial(4))
-        # print(self.getBinomial(6))
-        # divisor = self.getDivisorSeq(39,37)
-        # print(divisor)
-
-        # self.diophantine(1027,712)
-        # self.remainderTheorem()  
-        # self.pellSol()
-        # self.getInitPell(999)
-        # self.pellSol(31)
-        # num = 277777788888899
-        # digits = self.num2Digits(num)
-        # print(digits)
-        # self.getMultiNum(num)
-
-        # self.remainderTheorem()
-        # self.pythagorean()
-
-        # self.testInverseNum()
-        self.testPrime()
-        # self.isPrime(39252)
-        # print(self.getFactors(39252))
-        # self.testAverageProblem()
+        
         
         return
   
