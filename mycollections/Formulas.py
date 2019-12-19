@@ -596,14 +596,15 @@ class Formulas(MyCommon):
         return:
             10 => [2,5]
         """
-        n = int(m**0.5)
+        # n = int(m**0.5)
         count = 0
         factors = []
-        for i in range(2,n+1):
+        for i in range(2,m+1):
             if m % i == 0:
                 count += 1
                 factors.append(i)
                 factors = factors + self.getFactors(m // i)
+                break
         return factors
     def test(self):
         """
@@ -629,9 +630,9 @@ class Formulas(MyCommon):
         # self.pythagorean()
 
         # self.testInverseNum()
-        # self.testPrime()
-        self.isPrime(2014)
-        self.isPrime(2014)
+        self.testPrime()
+        # self.isPrime(39252)
+        # print(self.getFactors(39252))
         # self.testAverageProblem()
         
         return
