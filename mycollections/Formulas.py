@@ -677,7 +677,10 @@ class Formulas(MyCommon):
         """
         result = 0
         for i in range(2,1002):
-            result += self.getMod(i,p)
+            x = self.getMod(i,p)
+            result += x
+            if x != 1:
+                return False
         if result == 1000:
             print("%d may be prime"%(p))
             return True
@@ -688,11 +691,13 @@ class Formulas(MyCommon):
         """
         docstring for testFermat
         """
-        p = 131071
-        for i in range(2,1000,2):
+        p = 1<<968
+        p = p - 1
+        for i in range(0,10000,2):
             s = p + i
-            if self.fermatPrimeTest(p+i):
-                print(self.getFactors(s))
+            print(i)
+            self.fermatPrimeTest(p+i)
+                
         return
         
     def testBefore(self):
@@ -734,7 +739,8 @@ class Formulas(MyCommon):
         """
         docstring for test
         """
-        self.testFermat()
+        # self.testFermat()
+        self.diophantine(19,21)
         
         return
   
