@@ -579,14 +579,13 @@ class Formulas(MyCommon):
         for i in range(2,n+1):
             if m % i == 0:
                 count += 1
-                factors.append(i)
-                factors.append(m // i)
 
         if count == 0:
             print(m,"is prime")
+            return True
         else:
-            print(factors)
-        return factors
+            return False
+            
 
     def getFactors(self,m):
         """
@@ -681,15 +680,19 @@ class Formulas(MyCommon):
             result += self.getMod(i,p)
         if result == 1000:
             print("%d may be prime"%(p))
+            return True
         else:
-            print("%d is not prime"%(p))
-        return
+        #     print("%d is not prime!!!!!!!"%(p))
+            return False
     def testFermat(self):
         """
         docstring for testFermat
         """
         p = 131071
-        self.fermatPrimeTest(p)
+        for i in range(2,1000,2):
+            s = p + i
+            if self.fermatPrimeTest(p+i):
+                print(self.getFactors(s))
         return
         
     def testBefore(self):
@@ -720,20 +723,23 @@ class Formulas(MyCommon):
         self.isPrime(39252)
         print(self.getFactors(39252))
         self.testAverageProblem()
+
+        self.diophantine() 
+        self.bernoulliGen() 
+        self.dealData() 
+        self.continueFrac() 
         
         return
     def test(self):
         """
         docstring for test
         """
-        self.fermatPrimeTest()
+        self.testFermat()
         
         return
   
 
 formula = Formulas()
-# formula.diophantine() 
-# formula.bernoulliGen() 
+
 formula.test() 
-# formula.dealData() 
-# formula.continueFrac()   
+  
