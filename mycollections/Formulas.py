@@ -508,6 +508,62 @@ class Formulas(MyCommon):
             else:
                 print(i,j,i+j)
         return
+    def testAverageProblem(self):
+        """
+        docstring for testAverageProblem
+        (45,a,b,c,d,100)
+        The next one is the average of the previous two,
+        how much is a?
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        a = sympy.solve(x-(x-45)/16-100)
+        print("a",a)
+        # a = self.one*311/3 
+        a = x
+        b = 45
+        for i in range(4):
+            c = a 
+            a = (a+b)/2
+            a = sympy.expand(a)
+            b = c 
+            print(i+2,a)
+        a = sympy.solve(a-100)
+        print("a",a)
+        a = sympy.solve(x**2-x/2-1/2)
+        print("a",a)
+        a = sympy.Symbol("a")
+        b = sympy.Symbol("b")
+        print(x,y)
+        # s = sympy.solve([x**2-y+3,2*x+y**2-10],[x,y])
+        # print(sympy.latex(s[0]))
+        p = (sympy.sqrt(6177)/9+9107*self.one/27)**(self.one/3)
+        q = sympy.sqrt(40*self.one/3+872/p/9+2*p)
+        s = sympy.sqrt(-q**2 - 8/q + 40)
+        y0 = -(q + s)/2 
+        x0 = 5-(y0**2)/2
+        print("p = ",p)
+        print("q = ",q)
+        print("s = ",s)
+        k = x0**2 - y0 
+        k = sympy.expand(k)
+        k = sympy.simplify(k)
+        print(k)
+
+        p = (np.sqrt(6177)/9+9107/27)**(1/3)
+        q = sympy.sqrt(40/3+872/p/9+2*p)
+        s = sympy.sqrt(-q**2 - 8/q + 40)
+        y0 = -(q + s)/2 
+        x0 = 5-(y0**2)/2
+        x0 = sympy.expand(x0)
+        print("p = ",p)
+        print("q = ",q)
+        print("s = ",s)
+        print("x0 = ",x0)
+        print("y0 = ",y0)
+        print(abs(x0))
+        
+        return
     def test(self):
         """
         docstring for test
@@ -531,7 +587,8 @@ class Formulas(MyCommon):
         # self.remainderTheorem()
         # self.pythagorean()
 
-        self.testInverseNum()
+        # self.testInverseNum()
+        self.testAverageProblem()
         
         return
   
