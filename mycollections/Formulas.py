@@ -496,17 +496,21 @@ class Formulas(MyCommon):
         #     if self.inverseNum(i) == *i:
         #         print(i)
 
-        factor = 99
+        factor = 999
         num1   = 1
-        num2   = 1001
+        num2   = 10001
         for i in range(num1,num2):
             num = self.inverseNum(i*factor)
             j   = num // factor
-            j   = self.inverseNum(j)
-            if i%10 == 0:   
-                print(i,j,i // 10 + j)
-            else:
-                print(i,j,i+j)
+            # j   = self.inverseNum(j)
+            # if i%10 == 0:   
+            #     print(i,j,i // 10 + j)
+            # else:
+            #     print(i,j,i+j)
+            k = i // j 
+            if i == (k*j) and i != j :
+            # if i == (k*j) and i != j and i*factor%10 != 0:
+                print(i,j,k,i*factor,j*factor)
         return
     def testAverageProblem(self):
         """
@@ -564,6 +568,43 @@ class Formulas(MyCommon):
         print(abs(x0))
         
         return
+
+    def isPrime(self,m):
+        """
+        docstring for isP
+        """
+        n = int(m**0.5)
+        count = 0
+        factors = []
+        for i in range(2,n+1):
+            if m % i == 0:
+                count += 1
+                factors.append(i)
+                factors.append(m // i)
+
+        if count == 0:
+            print(m,"is prime")
+        else:
+            print(factors)
+        return factors
+
+    def getFactors(self,m):
+        """
+        docstring for getFactors
+        m:
+            positive integers
+        return:
+            10 => [2,5]
+        """
+        n = int(m**0.5)
+        count = 0
+        factors = []
+        for i in range(2,n+1):
+            if m % i == 0:
+                count += 1
+                factors.append(i)
+                factors = factors + self.getFactors(m // i)
+        return factors
     def test(self):
         """
         docstring for test
@@ -588,7 +629,10 @@ class Formulas(MyCommon):
         # self.pythagorean()
 
         # self.testInverseNum()
-        self.testAverageProblem()
+        # self.testPrime()
+        self.isPrime(2014)
+        self.isPrime(2014)
+        # self.testAverageProblem()
         
         return
   
