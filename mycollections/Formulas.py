@@ -654,9 +654,30 @@ class Formulas(MyCommon):
         docstring for getMod
         check if a^{p-1} = 0 (mod p)
         """
-        code
-        return
+        binary = bin(p - 1)[2:]
+        length = len(binary)
+        if binary[-1] == "1":
+            result = a 
+        else:
+            result = 1
+        x = a
+        for i in range(length - 1):
+            x = x * x
+            x = x % p
+            if binary[-2-i] == "1":
+                result = result*x
+                result = result%p
 
+        print(a,p,result)
+        return result
+    def fermatPrimeTest(self):
+        """
+        docstring for fermatPrimeTest
+        """
+        p = 131071
+        for i in range(2,990):
+            self.getMod(i)
+        return
     def testBefore(self):
         """
         docstring for testBefore
@@ -691,7 +712,7 @@ class Formulas(MyCommon):
         """
         docstring for test
         """
-        
+        self.fermatPrimeTest()
         
         return
   
