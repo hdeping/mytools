@@ -606,6 +606,48 @@ class Formulas(MyCommon):
                 factors = factors + self.getFactors(m // i)
                 break
         return factors
+
+    def testPrime(self):
+        """
+        docstring for testPrime
+        pick any x,y,z (positive integers), 
+        how much is the probability for xyz is divided by 100?
+        100,1,1 *3
+        1,4,25 *6
+        10,10,1 *3
+        2,5,10 *6
+        4,5,5 *3
+        20,1,5 *6
+        25,2,2 *3
+        50,1,2 *6
+        no,no,no!!!!
+        no less than two 2 and no less than two 5
+        p(more than two 2) = 1 - p(no 2) - p(one 2)
+         = 1-1/8-3/16 = 11/16
+         one 2: (2m+1)(2n+1)(4k+2)
+        p(more than two 5) = 1 - p(no 5) - p(one 5)
+         = 1 - 
+        """
+        # a = [[2,0,0],
+        #      [0,2,0],
+        #      [0,0,2],]
+        # b = [[0,1,1],
+        #      [1,0,1],
+        #      [1,1,0],]
+        # a = np.array(a)
+        # b = np.array(b)
+        # for i in range(3):
+        #     for j in range(3):
+        #         x = 2**b[i]
+        #         y = 5**a[j]
+        #         print(x*y)
+        num = 1000000
+        a = np.random.random((num,3))*10000
+        a = a.astype(int)
+        a = np.prod(a,axis=1)
+        print(sum(a%1000 == 0))
+        
+        return
     def test(self):
         """
         docstring for test
