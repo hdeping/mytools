@@ -492,9 +492,21 @@ class Formulas(MyCommon):
         docstring for testInverseNum
         4*ABCDE = EDCBA
         """
-        for i in range(25,2500000):
-            if self.inverseNum(i) == 4*i:
-                print(i)
+        # for i in range(25,25000):
+        #     if self.inverseNum(i) == *i:
+        #         print(i)
+
+        factor = 99
+        num1   = 1
+        num2   = 1001
+        for i in range(num1,num2):
+            num = self.inverseNum(i*factor)
+            j   = num // factor
+            j   = self.inverseNum(j)
+            if i%10 == 0:   
+                print(i,j,i // 10 + j)
+            else:
+                print(i,j,i+j)
         return
     def test(self):
         """
