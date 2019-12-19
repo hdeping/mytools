@@ -668,16 +668,30 @@ class Formulas(MyCommon):
                 result = result*x
                 result = result%p
 
-        print(a,p,result)
+        # print(a,p,result)
         return result
-    def fermatPrimeTest(self):
+    def fermatPrimeTest(self,p):
         """
         docstring for fermatPrimeTest
+        p:
+            a positive integer
+        """
+        result = 0
+        for i in range(2,1002):
+            result += self.getMod(i,p)
+        if result == 1000:
+            print("%d may be prime"%(p))
+        else:
+            print("%d is not prime"%(p))
+        return
+    def testFermat(self):
+        """
+        docstring for testFermat
         """
         p = 131071
-        for i in range(2,990):
-            self.getMod(i)
+        self.fermatPrimeTest(p)
         return
+        
     def testBefore(self):
         """
         docstring for testBefore
