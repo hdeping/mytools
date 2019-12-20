@@ -16,6 +16,8 @@
 """
 
 import sympy
+from sympy import expand,simplify,cos,sin,exp,sqrt
+from sympy import latex
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -750,6 +752,21 @@ class Formulas(MyCommon):
         b = 25/54
         y = (b+a)**(1/3) + (b-a)**(1/3)-1/3
         print(a,x,x**3,y,1/x)
+
+
+        a = ((60*3**0.5+108)/216)**(1/3) + ((-60*3**0.5+108)/216)**(1/3)
+        y1 = (60*sqrt(3)+108)/216
+        y2 = (-60*sqrt(3)+108)/216
+        k  = self.one / 3
+        x  = y1**k + y2**k
+        x  = simplify(expand(x**3))
+        print(a,a**3,2**(1/3))
+        print(latex(x))
+        x = 3 - sqrt(3)
+        x = expand(x**3)
+        print(x)
+
+
         return
     def test(self):
         """
