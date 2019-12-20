@@ -209,20 +209,21 @@ class Formulas(MyCommon):
 
 
         return solution[-2:]
-    def residueTheorem(self):
+    def remainderTheorem(self):
         """
-        docstring for residueTheorem
-        check the residue theorem based 
+        docstring for remainderTheorem
+        check the remainder theorem based 
         on the diophantine equation
         """
-        p = np.array([55,73,111,128])
+        p = np.array([3,5,7])
         P = np.prod(p)
         q = P // p
-        a = [2,3,7,1]
+        a = [2,3,2]
 
         solution = 0
         for i in range(len(p)):
             value = self.diophantine(p[i],q[i])[1]
+            print(a[i],value)
             solution += value*a[i]*q[i]
         print(solution)
         solution = solution % P
@@ -245,7 +246,7 @@ class Formulas(MyCommon):
         for i in range(10):
             x0 = 2*a*x[-1][0] - x[-2][0]
             x1 = 2*a*x[-1][1] - x[-2][1]
-            print(x0,x1,x0**2 - D*x1**2)
+            print("|%d|%d|%d|%d|"%(i+2,x0,x1,x0**2 - D*x1**2))
             x.append([x0,x1])
         
         return
@@ -319,6 +320,7 @@ class Formulas(MyCommon):
             judge = x**2 - D*y**2
             A.append(a)
             B.append(b)
+            print(i+1,x,y,judge)
             if judge == 1:
                 print(i+1,x,y,judge)
                 break
@@ -457,31 +459,293 @@ class Formulas(MyCommon):
                 break
         
         return
-    def test(self):
+    def pythagorean(self):
         """
-        docstring for test
+        docstring for pythagorean
         """
-        # print(self.getBinomial(3))
-        # print(self.getBinomial(4))
-        # print(self.getBinomial(6))
-        # divisor = self.getDivisorSeq(39,37)
-        # print(divisor)
+        array = []
+        num = 10
+        for n in range(1,num):
+            for m in range(n+1,num):
+                array.append([m+n,m,n])
+        array.sort()
+        for i,(A,m,n) in enumerate(array):
+            a = m**2 - n**2 
+            b = 2*m*n 
+            c = m**2 + n**2 
+            print("%4d%4d%4d"%(min([a,b]),max([a,b]),c))
+            
+        return
 
-        # self.diophantine(1027,712)
-        # self.residueTheorem()  
-        # self.pellSol()
-        # self.getInitPell(999)
-        # self.pellSol(11111)
+    def inverseNum(self,m):
+        """
+        docstring for inverseNum
+        """
+        n = 0
+        while m != 0:
+            n = 10*n + (m % 10)
+            m = m // 10 
+        return n
+
+    def testInverseNum(self):
+        """
+        docstring for testInverseNum
+        4*ABCDE = EDCBA
+        """
+        # for i in range(25,25000):
+        #     if self.inverseNum(i) == *i:
+        #         print(i)
+
+        factor = 999
+        num1   = 1
+        num2   = 10001
+        for i in range(num1,num2):
+            num = self.inverseNum(i*factor)
+            j   = num // factor
+            # j   = self.inverseNum(j)
+            # if i%10 == 0:   
+            #     print(i,j,i // 10 + j)
+            # else:
+            #     print(i,j,i+j)
+            k = i // j 
+            if i == (k*j) and i != j :
+            # if i == (k*j) and i != j and i*factor%10 != 0:
+                print(i,j,k,i*factor,j*factor)
+        return
+    def testAverageProblem(self):
+        """
+        docstring for testAverageProblem
+        (45,a,b,c,d,100)
+        The next one is the average of the previous two,
+        how much is a?
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        a = sympy.solve(x-(x-45)/16-100)
+        print("a",a)
+        # a = self.one*311/3 
+        a = x
+        b = 45
+        for i in range(4):
+            c = a 
+            a = (a+b)/2
+            a = sympy.expand(a)
+            b = c 
+            print(i+2,a)
+        a = sympy.solve(a-100)
+        print("a",a)
+        a = sympy.solve(x**2-x/2-1/2)
+        print("a",a)
+        a = sympy.Symbol("a")
+        b = sympy.Symbol("b")
+        print(x,y)
+        # s = sympy.solve([x**2-y+3,2*x+y**2-10],[x,y])
+        # print(sympy.latex(s[0]))
+        p = (sympy.sqrt(6177)/9+9107*self.one/27)**(self.one/3)
+        q = sympy.sqrt(40*self.one/3+872/p/9+2*p)
+        s = sympy.sqrt(-q**2 - 8/q + 40)
+        y0 = -(q + s)/2 
+        x0 = 5-(y0**2)/2
+        print("p = ",p)
+        print("q = ",q)
+        print("s = ",s)
+        k = x0**2 - y0 
+        k = sympy.expand(k)
+        k = sympy.simplify(k)
+        print(k)
+
+        p = (np.sqrt(6177)/9+9107/27)**(1/3)
+        q = sympy.sqrt(40/3+872/p/9+2*p)
+        s = sympy.sqrt(-q**2 - 8/q + 40)
+        y0 = -(q + s)/2 
+        x0 = 5-(y0**2)/2
+        x0 = sympy.expand(x0)
+        print("p = ",p)
+        print("q = ",q)
+        print("s = ",s)
+        print("x0 = ",x0)
+        print("y0 = ",y0)
+        print(abs(x0))
+        
+        return
+
+    def isPrime(self,m):
+        """
+        docstring for isP
+        """
+        n = int(m**0.5)
+        count = 0
+        factors = []
+        for i in range(2,n+1):
+            if m % i == 0:
+                count += 1
+
+        if count == 0:
+            print(m,"is prime")
+            return True
+        else:
+            return False
+            
+
+    def getFactors(self,m):
+        """
+        docstring for getFactors
+        m:
+            positive integers
+        return:
+            10 => [2,5]
+        """
+        # n = int(m**0.5)
+        count = 0
+        factors = []
+        for i in range(2,m+1):
+            if m % i == 0:
+                count += 1
+                factors.append(i)
+                factors = factors + self.getFactors(m // i)
+                break
+        return factors
+
+    def testPrime(self):
+        """
+        docstring for testPrime
+        pick any x,y,z (positive integers), 
+        how much is the probability for xyz is divided by 100?
+        100,1,1 *3
+        1,4,25 *6
+        10,10,1 *3
+        2,5,10 *6
+        4,5,5 *3
+        20,1,5 *6
+        25,2,2 *3
+        50,1,2 *6
+        no,no,no!!!!
+        no less than two 2 and no less than two 5
+        p(more than two 2) = 1 - p(no 2) - p(one 2)
+         = 1-1/8-3/16 = 11/16
+         one 2: (2m+1)(2n+1)(4k+2)
+        p(more than two 5) = 1 - p(no 5) - p(one 5)
+         = 1 - 
+        """
+        # a = [[2,0,0],
+        #      [0,2,0],
+        #      [0,0,2],]
+        # b = [[0,1,1],
+        #      [1,0,1],
+        #      [1,1,0],]
+        # a = np.array(a)
+        # b = np.array(b)
+        # for i in range(3):
+        #     for j in range(3):
+        #         x = 2**b[i]
+        #         y = 5**a[j]
+        #         print(x*y)
+        num = 1000000
+        a = np.random.random((num,3))*10000
+        a = a.astype(int)
+        a = np.prod(a,axis=1)
+        print(sum(a%1000 == 0))
+        
+        return
+
+    def getMod(self,a,p):
+        """
+        docstring for getMod
+        check if a^{p-1} = 0 (mod p)
+        """
+        binary = bin(p - 1)[2:]
+        length = len(binary)
+        if binary[-1] == "1":
+            result = a 
+        else:
+            result = 1
+        x = a
+        for i in range(length - 1):
+            x = x * x
+            x = x % p
+            if binary[-2-i] == "1":
+                result = result*x
+                result = result%p
+
+        # print(a,p,result)
+        return result
+    def fermatPrimeTest(self,p):
+        """
+        docstring for fermatPrimeTest
+        p:
+            a positive integer
+        """
+        result = 0
+        for i in range(2,1002):
+            x = self.getMod(i,p)
+            result += x
+            if x != 1:
+                return False
+        if result == 1000:
+            print("%d may be prime"%(p))
+            return True
+        else:
+        #     print("%d is not prime!!!!!!!"%(p))
+            return False
+    def testFermat(self):
+        """
+        docstring for testFermat
+        """
+        p = 1<<968
+        p = p - 1
+        for i in range(0,10000,2):
+            s = p + i
+            print(i)
+            self.fermatPrimeTest(p+i)
+                
+        return
+        
+    def testBefore(self):
+        """
+        docstring for testBefore
+        """
+        print(self.getBinomial(3))
+        print(self.getBinomial(4))
+        print(self.getBinomial(6))
+        divisor = self.getDivisorSeq(39,37)
+        print(divisor)
+
+        self.diophantine(1027,712)
+        self.remainderTheorem()  
+        self.pellSol()
+        self.getInitPell(999)
+        self.pellSol(31)
         num = 277777788888899
         digits = self.num2Digits(num)
         print(digits)
         self.getMultiNum(num)
+
+        self.remainderTheorem()
+        self.pythagorean()
+
+        self.testInverseNum()
+        self.testPrime()
+        self.isPrime(39252)
+        print(self.getFactors(39252))
+        self.testAverageProblem()
+
+        self.diophantine() 
+        self.bernoulliGen() 
+        self.dealData() 
+        self.continueFrac() 
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """
+        # self.testFermat()
+        self.diophantine(19,21)
+        
         return
   
 
 formula = Formulas()
-# formula.diophantine() 
-# formula.bernoulliGen() 
+
 formula.test() 
-# formula.dealData() 
-# formula.continueFrac()   
+  
