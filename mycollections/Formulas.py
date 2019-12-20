@@ -735,14 +735,32 @@ class Formulas(MyCommon):
         self.continueFrac() 
         
         return
+
+    def testCubic(self):
+        """
+        docstring for testCubic
+        
+        \phi^{3} &=& \phi+1 \\
+        \phi    &=& \sqrt[3]{\frac{1}{2}+\frac{1}{6}\sqrt{\frac{23}{3}}}+
+                    \sqrt[3]{\frac{1}{2}-\frac{1}{6}\sqrt{\frac{23}{3}}}
+        """
+        a = (23/3)**0.5/6 
+        b = 0.5
+        x = (b+a)**(1/3) + (b-a)**(1/3)
+        b = 25/54
+        y = (b+a)**(1/3) + (b-a)**(1/3)-1/3
+        print(a,x,x**3,y,1/x)
+        return
     def test(self):
         """
         docstring for test
         """
         # self.testFermat()
-        self.diophantine(19,21)
+        # self.diophantine(19,21)
+        self.testCubic()
         
         return
+
   
 
 formula = Formulas()
