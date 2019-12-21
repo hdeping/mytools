@@ -804,6 +804,40 @@ class Formulas(MyCommon):
             result.append(x)
     
         return result
+    def getModAdd(self,array,p):
+        """
+        docstring for getModAdd
+        """
+        result = np.array(array)
+        result = result.reshape((-1,2))
+        num = len(result)
+        total = []
+        for i in range(num):
+            x = result[i,0]+result[:,1]
+            x = x%p
+            total.append(x)
+        total = np.array(total)
+        total = total.reshape(-1)
+        total.sort()
+        numbers = np.zeros(p-1,np.int)
+        for i,j in enumerate(total):
+            numbers[j-1] += 1
+
+        print(numbers)
+        return total
+
+    def testAllMod(self):
+        """
+        docstring for testAllMod
+        """
+        a = 3 
+        p = 17
+        result = self.getAllMod(a,p)
+        print(result)
+        total = self.getModAdd(result,p)
+        print(total)
+        
+        return
     def polygon17(self):
         """
         docstring for polygon17
@@ -821,7 +855,8 @@ class Formulas(MyCommon):
         # self.diophantine(19,21)
         # self.testCubic()
         # self.hardyWeinberg()
-        self.polygon17()
+        self.testAllMod()
+        # self.polygon17()
         
         return
 
