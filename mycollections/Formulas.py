@@ -653,7 +653,7 @@ class Formulas(MyCommon):
     def getMod(self,a,p):
         """
         docstring for getMod
-        check if a^{p-1} = 0 (mod p)
+        check if a^{p-1} = 1 (mod p)
         """
         binary = bin(p - 1)[2:]
         length = len(binary)
@@ -787,7 +787,23 @@ class Formulas(MyCommon):
             print(i+1,p0)
         
         return
-
+    def getAllMod(self,a,p):
+        """
+        docstring for getAllMod
+        a:
+            such as 3,5...
+        p:
+            such as 5,7...
+        return:
+            array, (2,5) => (1,2,4,3)
+        """
+        result = [1]
+        for i in range(p-2):
+            x = result[-1]*a
+            x = x%p 
+            result.append(x)
+    
+        return result
     def polygon17(self):
         """
         docstring for polygon17
