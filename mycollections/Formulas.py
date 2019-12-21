@@ -804,10 +804,11 @@ class Formulas(MyCommon):
             result.append(x)
     
         return result
-    def getModAdd(self,array,p):
+    def getModAdd(self,result,p):
         """
         docstring for getModAdd
         """
+        result = self.getOddEven(result)
         num = len(result)
         total = []
         for i in range(num):
@@ -821,27 +822,32 @@ class Formulas(MyCommon):
         for i,j in enumerate(total):
             numbers[j-1] += 1
 
-        print(numbers)
-        return total
+        # print(result)
+        print("numbers",numbers,total)
+        return result,total
 
     def getOddEven(self,result):
         """
         docstring for getOddEven
         """
-        result = np.array(array)
+        result = np.array(result)
         result = result.reshape((-1,2))
         return result
     def testAllMod(self):
         """
         docstring for testAllMod
         """
-        a = 3 
+        a = 3
         p = 257
         result = self.getAllMod(a,p)
-
         print(result)
-        total = self.getModAdd(result,p)
-        print(total)
+        res,total = self.getModAdd(result,p)
+        print("1",res[:,0])
+        res,total = self.getModAdd(res[:,0],p)
+        print("2",res[:,0])
+        res,total = self.getModAdd(res[:,0],p)
+        print("3",res[:,0])
+        
         
         return
     def polygon17(self):
@@ -853,6 +859,76 @@ class Formulas(MyCommon):
         x     = np.cos(x)
         print(x,sum(x))
         return
+
+    def isRepeated(self,array):
+        """
+        docstring for isRepeated
+        array has been sorted
+        return:
+            bool value, [1,1,2] ==> True
+        """
+        
+        for i in range(len(array) - 1):
+            if array[i] == array[i+1]:
+                return True 
+
+        return False
+
+    def isSame(self,array):
+        """
+        docstring for isSame
+        return:
+            bool, [1,1] => True
+        """
+        array = np.array(array)
+        if sum(array == array[0]) == len(array):
+            return True
+        return False
+    def selectNum70(self):
+        """
+        docstring for selectNum70
+
+        select 25 out of 70 (1 to 70)
+        which should satisfy
+        1. any of them is different
+        2. all of them are not primes
+        3. There are more than two different 
+           prime divisors for any of them
+        4. the multiplication for each five numbers 
+           are the same.
+        """
+
+        count = 0
+        divisors = []
+
+        results = []
+        for i in range(2,71):
+            factors = self.getFactors(i)
+            # if len(factors) > 1 and (not self.isRepeated(factors)):
+            p1 = (not self.isSame(factors)) 
+            p2 = (max(factors) <= 11)
+            p3 = (i not in [70,35,63])
+            if len(factors) > 1 and p1 and p2 and p3:
+            # if len(factors) > 1:
+                count += 1
+                print(count,i,factors)
+                results.append(i)
+                if  7 in factors or 11 in factors:
+                    print(factors)
+                divisors = divisors + factors 
+        print(divisors)
+        stati = {}
+        for i in divisors:
+            if str(i) in stati:
+                stati[str(i)] += 1 
+            else:
+                stati[str(i)]  = 1
+        print(stati)
+
+        print(results)
+        print(self.getFactors(196883))
+        return
+
     def test(self):
         """
         docstring for test
@@ -861,7 +937,8 @@ class Formulas(MyCommon):
         # self.diophantine(19,21)
         # self.testCubic()
         # self.hardyWeinberg()
-        self.testAllMod()
+        # self.testAllMod()
+        self.selectNum70()
         # self.polygon17()
         
         return
