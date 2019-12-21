@@ -768,13 +768,44 @@ class Formulas(MyCommon):
 
 
         return
+    def hardyWeinberg(self):
+        """
+        docstring for hardyWeinberg
+
+        initialized by [p,2q,r]
+        p_{n+1} = p^{2}
+        q_{n+1} = pq
+        r_{n+1} = q^{2} 
+        p=p_{n}+q_{n},
+        q=r_{n}+q_{n}
+        """
+        p0 = [0.9,0.1,0]
+        for i in range(10):
+            q1 = p0[0] + p0[1]/2
+            q2 = p0[2] + p0[1]/2
+            p0 = [q1*q1,2*q1*q2,q2*q2]
+            print(i+1,p0)
+        
+        return
+
+    def polygon17(self):
+        """
+        docstring for polygon17
+        """
+        theta = np.pi/17 
+        x     = np.arange(1,17,2)
+        x     = np.cos(x)
+        print(x,sum(x))
+        return
     def test(self):
         """
         docstring for test
         """
         # self.testFermat()
         # self.diophantine(19,21)
-        self.testCubic()
+        # self.testCubic()
+        # self.hardyWeinberg()
+        self.polygon17()
         
         return
 
