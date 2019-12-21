@@ -808,8 +808,6 @@ class Formulas(MyCommon):
         """
         docstring for getModAdd
         """
-        result = np.array(array)
-        result = result.reshape((-1,2))
         num = len(result)
         total = []
         for i in range(num):
@@ -826,13 +824,21 @@ class Formulas(MyCommon):
         print(numbers)
         return total
 
+    def getOddEven(self,result):
+        """
+        docstring for getOddEven
+        """
+        result = np.array(array)
+        result = result.reshape((-1,2))
+        return result
     def testAllMod(self):
         """
         docstring for testAllMod
         """
         a = 3 
-        p = 17
+        p = 257
         result = self.getAllMod(a,p)
+
         print(result)
         total = self.getModAdd(result,p)
         print(total)
