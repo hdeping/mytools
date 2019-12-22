@@ -818,9 +818,12 @@ class Formulas(MyCommon):
         total = np.array(total)
         total = total.reshape(-1)
         total.sort()
+
         numbers = np.zeros(p-1,np.int)
         for i,j in enumerate(total):
-            numbers[j-1] += 1
+            # get the index of z
+            k = self.inverseMap[j-1]
+            numbers[k] += 1
 
         # print(result)
         print("numbers",numbers,total)
@@ -838,8 +841,14 @@ class Formulas(MyCommon):
         docstring for testAllMod
         """
         a = 3
-        p = 257
+        p = 65537
         result = self.getAllMod(a,p)
+        # (0,1),(1,3) ==> (1-1,0),(3-1,1)
+        # inverse map of result
+        self.inverseMap = np.zeros(p-1,np.int)
+        for i,k in enumerate(result):
+            self.inverseMap[k-1] = i
+
         print(result)
         res,total = self.getModAdd(result,p)
         print("1",res[:,0])
@@ -1073,10 +1082,10 @@ class Formulas(MyCommon):
         # self.diophantine(19,21)
         # self.testCubic()
         # self.hardyWeinberg()
-        # self.testAllMod()
+        self.testAllMod()
         # self.selectNum70()
         # self.polygon17()
-        self.polygon257()
+        # self.polygon257()
         
         return
 
