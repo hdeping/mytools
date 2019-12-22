@@ -876,6 +876,22 @@ class Formulas(MyCommon):
         x2 = np.arccos(x2)*17/np.pi
         print("x2:",x2)
 
+        a0 = -self.one
+        prod =  4*a0
+        a1 = (a0 + sqrt(a0**2 - 4*prod))/2
+        prod =  4*a0
+        a2 = (a0 - sqrt(a0**2 - 4*prod))/2
+        prod =  1*a0
+        a5 = (a1 - sqrt(a1**2 - 4*prod))/2
+        prod =  1*a0
+        a6 = (a2 - sqrt(a2**2 - 4*prod))/2
+        prod =  1*a6
+        a13 = (a5 + sqrt(a5**2 - 4*prod))/2
+        x2 = a13/2
+        x2 = simplify(expand(x2))
+        print(latex(x2))
+        
+
         return
 
     def isRepeated(self,array):
@@ -902,6 +918,7 @@ class Formulas(MyCommon):
         if sum(array == array[0]) == len(array):
             return True
         return False
+
     def selectNum70(self):
         """
         docstring for selectNum70
@@ -965,7 +982,7 @@ class Formulas(MyCommon):
         # self.hardyWeinberg()
         # self.testAllMod()
         # self.selectNum70()
-        # self.polygon17()
+        self.polygon17()
         # self.polygon257()
         
         return
