@@ -854,10 +854,28 @@ class Formulas(MyCommon):
         """
         docstring for polygon17
         """
-        theta = np.pi/17 
-        x     = np.arange(1,17,2)
+        theta = 2*np.pi/17 
+        x     = np.arange(1,17)*theta
         x     = np.cos(x)
         print(x,sum(x))
+
+        a0 = -1
+        prod =  4*a0
+        a1 = (a0 + np.sqrt(a0**2 - 4*prod))/2
+        prod =  4*a0
+        a2 = (a0 - np.sqrt(a0**2 - 4*prod))/2
+        prod =  1*a0
+        a5 = (a1 - np.sqrt(a1**2 - 4*prod))/2
+        prod =  1*a0
+        a6 = (a2 - np.sqrt(a2**2 - 4*prod))/2
+        prod =  1*a6
+        a13 = (a5 + np.sqrt(a5**2 - 4*prod))/2
+        x2 = a13/2
+
+        print("x2:",x2)
+        x2 = np.arccos(x2)*17/np.pi
+        print("x2:",x2)
+
         return
 
     def isRepeated(self,array):
@@ -946,8 +964,9 @@ class Formulas(MyCommon):
         # self.testCubic()
         # self.hardyWeinberg()
         # self.testAllMod()
-        self.selectNum70()
+        # self.selectNum70()
         # self.polygon17()
+        # self.polygon257()
         
         return
 
