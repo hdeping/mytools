@@ -972,6 +972,99 @@ class Formulas(MyCommon):
         # print(self.getFactors(196883))
         return
 
+    def polygon257(self):
+        """
+        docstring for polygon257
+        """
+        
+        a0 = -1
+        prod = 64*a0
+        a1 = (a0 + np.sqrt(a0**2 - 4*prod))/2
+        prod = 64*a0
+        a2 = (a0 - np.sqrt(a0**2 - 4*prod))/2
+        prod = 16*a0
+        a3 = (a1 + np.sqrt(a1**2 - 4*prod))/2
+        prod = 16*a0
+        a4 = (a2 + np.sqrt(a2**2 - 4*prod))/2
+        prod = 16*a0
+        a5 = (a1 - np.sqrt(a1**2 - 4*prod))/2
+        prod = 16*a0
+        a6 = (a2 - np.sqrt(a2**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a3
+        a7 = (a3 + np.sqrt(a3**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a4
+        a8 = (a4 - np.sqrt(a4**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a5
+        a9 = (a5 + np.sqrt(a5**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a6
+        a10 = (a6 - np.sqrt(a6**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a3
+        a11 = (a3 - np.sqrt(a3**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a4
+        a12 = (a4 + np.sqrt(a4**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a5
+        a13 = (a5 - np.sqrt(a5**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a6
+        a14 = (a6 + np.sqrt(a6**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a7 - 2*a8 + 1*a9
+        a15 = (a7 + np.sqrt(a7**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a8 - 2*a9 + 1*a10
+        a16 = (a8 + np.sqrt(a8**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a9 - 2*a10 + 1*a11
+        a17 = (a9 + np.sqrt(a9**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a10 - 2*a11 + 1*a12
+        a18 = (a10 + np.sqrt(a10**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a11 - 2*a12 + 1*a13
+        a19 = (a11 + np.sqrt(a11**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a12 - 2*a13 + 1*a14
+        a20 = (a12 + np.sqrt(a12**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a13 - 2*a14 + 1*a7
+        a21 = (a13 - np.sqrt(a13**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a14 - 2*a7 + 1*a8
+        a22 = (a14 + np.sqrt(a14**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a7 - 2*a8 + 1*a9
+        a23 = (a7 - np.sqrt(a7**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a8 - 2*a9 + 1*a10
+        a24 = (a8 - np.sqrt(a8**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a9 - 2*a10 + 1*a11
+        a25 = (a9 - np.sqrt(a9**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a10 - 2*a11 + 1*a12
+        a26 = (a10 - np.sqrt(a10**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a11 - 2*a12 + 1*a13
+        a27 = (a11 - np.sqrt(a11**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a12 - 2*a13 + 1*a14
+        a28 = (a12 - np.sqrt(a12**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a13 - 2*a14 + 1*a7
+        a29 = (a13 + np.sqrt(a13**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a14 - 2*a7 + 1*a8
+        a30 = (a14 - np.sqrt(a14**2 - 4*prod))/2
+        prod = 1*a23 + 1*a24 + 1*a25 + 1*a28
+        a39 = (a23 - np.sqrt(a23**2 - 4*prod))/2
+        prod = 1*a24 + 1*a25 + 1*a26 + 1*a29
+        a40 = (a24 - np.sqrt(a24**2 - 4*prod))/2
+        prod = 1*a30 + 1*a15 + 1*a16 + 1*a19
+        a46 = (a30 + np.sqrt(a30**2 - 4*prod))/2
+        prod = 1*a15 + 1*a16 + 1*a17 + 1*a20
+        a47 = (a15 - np.sqrt(a15**2 - 4*prod))/2
+        prod = 1*a16 + 1*a17 + 1*a18 + 1*a21
+        a48 = (a16 - np.sqrt(a16**2 - 4*prod))/2
+        prod = 1*a22 + 1*a23 + 1*a24 + 1*a27
+        a54 = (a22 + np.sqrt(a22**2 - 4*prod))/2
+        prod = 1*a23 + 1*a24 + 1*a25 + 1*a28
+        a55 = (a23 + np.sqrt(a23**2 - 4*prod))/2
+        prod = 1*a30 + 1*a40 - 1*a46
+        a71 = (a39 - np.sqrt(a39**2 - 4*prod))/2
+        prod = 1*a22 + 1*a48 - 1*a54
+        a111 = (a47 + np.sqrt(a47**2 - 4*prod))/2
+        prod = 1*a7 - 1*a15 - 1*a55 - 1*a71
+        a239 = (a111 - np.sqrt(a111**2 - 4*prod))/2
+        x32 = a239/2
+        print(x32)
+        print(np.arccos(x32)*257/np.pi)
+
+
+        return  
+
     def test(self):
         """
         docstring for test
@@ -982,8 +1075,8 @@ class Formulas(MyCommon):
         # self.hardyWeinberg()
         # self.testAllMod()
         # self.selectNum70()
-        self.polygon17()
-        # self.polygon257()
+        # self.polygon17()
+        self.polygon257()
         
         return
 
