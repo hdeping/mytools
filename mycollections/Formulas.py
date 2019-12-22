@@ -912,9 +912,8 @@ class Formulas(MyCommon):
             # if len(factors) > 1:
                 count += 1
                 print(count,i,factors)
-                results.append(i)
-                if  7 in factors or 11 in factors:
-                    print(factors)
+                if   11 not in factors:
+                    results.append(i)
                 divisors = divisors + factors 
         print(divisors)
         stati = {}
@@ -925,8 +924,17 @@ class Formulas(MyCommon):
                 stati[str(i)]  = 1
         print(stati)
 
-        print(results)
-        print(self.getFactors(196883))
+        print(len(results))
+        for i1 in range(20):
+            for i2 in range(i1+1,20):
+                for i3 in range(i2+1,20):
+                    for i4 in range(i3+1,20):
+                        s = results[i1]*results[i2]*results[i3]*results[i4]
+                        k1 = 19958400 // s 
+                        k2 = 19958400 %  s 
+                        if k1%11 == 0 and k2 == 0 and k1//11 < 7:
+                            print(results[i1],results[i2],results[i3],results[i4],k1,k2,s)
+        # print(self.getFactors(196883))
         return
 
     def test(self):
