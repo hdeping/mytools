@@ -1086,11 +1086,39 @@ class Formulas(MyCommon):
 
         return  
 
+    def idCardCheck(self):
+        """
+        docstring for idCardCheck
+        mod 12-2 method
+        """
+        idCard = 350121191206231210
+        weight = [2]
+        for i in range(16):
+            x = weight[-1]*2 
+            x = x%11 
+            weight.append(x)
+        weight = np.flip(weight)
+        print(weight)
+
+        # get digits
+        digits = self.num2Digits(idCard)
+        print(digits)
+
+        checkNum = 12 - sum(weight*digits[:-1])%11
+        checkNum = checkNum%11 
+        print(idCard,checkNum)
+        if checkNum == digits[-1]:
+            print(idCard,"check succeed")
+        else:
+            print(idCard,"check failed!")
+            
+
+        return 
     def test(self):
         """
         docstring for test
         """
-        self.testFermat()
+        # self.testFermat()
         # self.diophantine(19,21)
         # self.testCubic()
         # self.hardyWeinberg()
@@ -1098,6 +1126,8 @@ class Formulas(MyCommon):
         # self.selectNum70()
         # self.polygon17()
         # self.polygon257()
+
+        self.idCardCheck()
         
         return
 
