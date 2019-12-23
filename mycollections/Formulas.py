@@ -695,10 +695,22 @@ class Formulas(MyCommon):
         """
         p = 1<<968
         p = p - 1
-        for i in range(0,10000,2):
-            s = p + i
-            print(i)
-            self.fermatPrimeTest(p+i)
+        # for i in range(0,10000,2):
+        #     s = p + i
+        #     print(i)
+        #     self.fermatPrimeTest(p+i)
+
+        p = (1<<16) + 1
+        a = p
+        for i in range(3,1002,2):
+            x = self.getMod(i,p)
+            if x < a:
+                a = x 
+            print(i,x)
+        print("minimum: ",a)
+        print(self.getFactors(p))
+        p = 6700417 - 1
+        print(self.getFactors(17449))
                 
         return
         
@@ -1078,11 +1090,11 @@ class Formulas(MyCommon):
         """
         docstring for test
         """
-        # self.testFermat()
+        self.testFermat()
         # self.diophantine(19,21)
         # self.testCubic()
         # self.hardyWeinberg()
-        self.testAllMod()
+        # self.testAllMod()
         # self.selectNum70()
         # self.polygon17()
         # self.polygon257()
