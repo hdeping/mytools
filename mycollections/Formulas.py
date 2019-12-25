@@ -1234,7 +1234,11 @@ class Formulas(MyCommon):
         docstring for test
         """
         # self.testFermat()
-        # self.diophantine(19,21)
+        # self.diophantine(98765432123456789,12345678987654321)
+        # print(self.getFactors(98765432123456789))
+        print(self.getFactors(12345678987654321))
+        # self.isPrime
+        print(self.fermatPrimeTest(987654321234567834349))
         # self.testCubic()
         # self.hardyWeinberg()
         # self.testAllMod()
@@ -1243,7 +1247,7 @@ class Formulas(MyCommon):
         # self.polygon257()
 
         # self.idCardCheck()
-        self.fermatAndGroup(56)
+        # self.fermatAndGroup(56)
         
         return
 
