@@ -9,4 +9,5 @@ test.yml
 run.sh
 .DS_Store
 *.txt
+*zip
 *.png
