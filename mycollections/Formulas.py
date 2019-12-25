@@ -16,6 +16,8 @@
 """
 
 import sympy
+from sympy import expand,simplify,cos,sin,exp,sqrt
+from sympy import latex
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -651,7 +653,7 @@ class Formulas(MyCommon):
     def getMod(self,a,p):
         """
         docstring for getMod
-        check if a^{p-1} = 0 (mod p)
+        check if a^{p-1} = 1 (mod p)
         """
         binary = bin(p - 1)[2:]
         length = len(binary)
@@ -693,10 +695,22 @@ class Formulas(MyCommon):
         """
         p = 1<<968
         p = p - 1
-        for i in range(0,10000,2):
-            s = p + i
-            print(i)
-            self.fermatPrimeTest(p+i)
+        # for i in range(0,10000,2):
+        #     s = p + i
+        #     print(i)
+        #     self.fermatPrimeTest(p+i)
+
+        p = (1<<16) + 1
+        a = p
+        for i in range(3,1002,2):
+            x = self.getMod(i,p)
+            if x < a:
+                a = x 
+            print(i,x)
+        print("minimum: ",a)
+        print(self.getFactors(p))
+        p = 6700417 - 1
+        print(self.getFactors(17449))
                 
         return
         
@@ -735,14 +749,388 @@ class Formulas(MyCommon):
         self.continueFrac() 
         
         return
+
+    def testCubic(self):
+        """
+        docstring for testCubic
+        
+        \phi^{3} &=& \phi+1 \\
+        \phi    &=& \sqrt[3]{\frac{1}{2}+\frac{1}{6}\sqrt{\frac{23}{3}}}+
+                    \sqrt[3]{\frac{1}{2}-\frac{1}{6}\sqrt{\frac{23}{3}}}
+        """
+        a = (23/3)**0.5/6 
+        b = 0.5
+        x = (b+a)**(1/3) + (b-a)**(1/3)
+        b = 25/54
+        y = (b+a)**(1/3) + (b-a)**(1/3)-1/3
+        print(a,x,x**3,y,1/x)
+
+
+        a = ((60*3**0.5+108)/216)**(1/3) + ((-60*3**0.5+108)/216)**(1/3)
+        y1 = (60*sqrt(3)+108)/216
+        y2 = (-60*sqrt(3)+108)/216
+        k  = self.one / 3
+        x  = y1**k + y2**k
+        x  = simplify(expand(x**3))
+        print(a,a**3,2**(1/3))
+        print(latex(x))
+        x = 3 - sqrt(3)
+        x = expand(x**3)
+        print(x)
+
+
+        return
+    def hardyWeinberg(self):
+        """
+        docstring for hardyWeinberg
+
+        initialized by [p,2q,r]
+        p_{n+1} = p^{2}
+        q_{n+1} = pq
+        r_{n+1} = q^{2} 
+        p=p_{n}+q_{n},
+        q=r_{n}+q_{n}
+        """
+        p0 = [0.9,0.1,0]
+        for i in range(10):
+            q1 = p0[0] + p0[1]/2
+            q2 = p0[2] + p0[1]/2
+            p0 = [q1*q1,2*q1*q2,q2*q2]
+            print(i+1,p0)
+        
+        return
+    def getAllMod(self,a,p):
+        """
+        docstring for getAllMod
+        a:
+            such as 3,5...
+        p:
+            such as 5,7...
+        return:
+            array, (2,5) => (1,2,4,3)
+        """
+        result = [1]
+        for i in range(p-2):
+            x = result[-1]*a
+            x = x%p 
+            result.append(x)
+    
+        return result
+    def getModAdd(self,result,p):
+        """
+        docstring for getModAdd
+        """
+        result = self.getOddEven(result)
+        num = len(result)
+        total = []
+        for i in range(num):
+            x = result[i,0]+result[:,1]
+            x = x%p
+            total.append(x)
+        total = np.array(total)
+        total = total.reshape(-1)
+        total.sort()
+
+        numbers = np.zeros(p-1,np.int)
+        for i,j in enumerate(total):
+            # get the index of z
+            k = self.inverseMap[j-1]
+            numbers[k] += 1
+
+        # print(result)
+        print("numbers",numbers,total)
+        return result,total
+
+    def getOddEven(self,result):
+        """
+        docstring for getOddEven
+        """
+        result = np.array(result)
+        result = result.reshape((-1,2))
+        return result
+    def testAllMod(self):
+        """
+        docstring for testAllMod
+        """
+        a = 3
+        p = 65537
+        result = self.getAllMod(a,p)
+        # (0,1),(1,3) ==> (1-1,0),(3-1,1)
+        # inverse map of result
+        self.inverseMap = np.zeros(p-1,np.int)
+        for i,k in enumerate(result):
+            self.inverseMap[k-1] = i
+
+        print(result)
+        res,total = self.getModAdd(result,p)
+        print("1",res[:,0])
+        res,total = self.getModAdd(res[:,0],p)
+        print("2",res[:,0])
+        res,total = self.getModAdd(res[:,0],p)
+        print("3",res[:,0])
+        
+        
+        return
+    def polygon17(self):
+        """
+        docstring for polygon17
+        """
+        theta = 2*np.pi/17 
+        x     = np.arange(1,17)*theta
+        x     = np.cos(x)
+        print(x,sum(x))
+
+        a0 = -1
+        prod =  4*a0
+        a1 = (a0 + np.sqrt(a0**2 - 4*prod))/2
+        prod =  4*a0
+        a2 = (a0 - np.sqrt(a0**2 - 4*prod))/2
+        prod =  1*a0
+        a5 = (a1 - np.sqrt(a1**2 - 4*prod))/2
+        prod =  1*a0
+        a6 = (a2 - np.sqrt(a2**2 - 4*prod))/2
+        prod =  1*a6
+        a13 = (a5 + np.sqrt(a5**2 - 4*prod))/2
+        x2 = a13/2
+
+        print("x2:",x2)
+        x2 = np.arccos(x2)*17/np.pi
+        print("x2:",x2)
+
+        a0 = -self.one
+        prod =  4*a0
+        a1 = (a0 + sqrt(a0**2 - 4*prod))/2
+        prod =  4*a0
+        a2 = (a0 - sqrt(a0**2 - 4*prod))/2
+        prod =  1*a0
+        a5 = (a1 - sqrt(a1**2 - 4*prod))/2
+        prod =  1*a0
+        a6 = (a2 - sqrt(a2**2 - 4*prod))/2
+        prod =  1*a6
+        a13 = (a5 + sqrt(a5**2 - 4*prod))/2
+        x2 = a13/2
+        x2 = simplify(expand(x2))
+        print(latex(x2))
+        
+
+        return
+
+    def isRepeated(self,array):
+        """
+        docstring for isRepeated
+        array has been sorted
+        return:
+            bool value, [1,1,2] ==> True
+        """
+        
+        for i in range(len(array) - 1):
+            if array[i] == array[i+1]:
+                return True 
+
+        return False
+
+    def isSame(self,array):
+        """
+        docstring for isSame
+        return:
+            bool, [1,1] => True
+        """
+        array = np.array(array)
+        if sum(array == array[0]) == len(array):
+            return True
+        return False
+
+    def selectNum70(self):
+        """
+        docstring for selectNum70
+
+        select 25 out of 70 (1 to 70)
+        which should satisfy
+        1. any of them is different
+        2. all of them are not primes
+        3. There are more than two different 
+           prime divisors for any of them
+        4. the multiplication for each five numbers 
+           are the same.
+        """
+
+        count = 0
+        divisors = []
+
+        results = []
+        for i in range(2,71):
+            factors = self.getFactors(i)
+            # if len(factors) > 1 and (not self.isRepeated(factors)):
+            p1 = (not self.isSame(factors)) 
+            p2 = (max(factors) <= 11)
+            p3 = (i not in [70,35,63])
+            if len(factors) > 1 and p1 and p2 and p3:
+            # if len(factors) > 1:
+                count += 1
+                print(count,i,factors)
+                if   11 not in factors:
+                    results.append(i)
+                divisors = divisors + factors 
+        print(divisors)
+        stati = {}
+        for i in divisors:
+            if str(i) in stati:
+                stati[str(i)] += 1 
+            else:
+                stati[str(i)]  = 1
+        print(stati)
+
+        print(len(results))
+        for i1 in range(20):
+            for i2 in range(i1+1,20):
+                for i3 in range(i2+1,20):
+                    for i4 in range(i3+1,20):
+                        s = results[i1]*results[i2]*results[i3]*results[i4]
+                        k1 = 19958400 // s 
+                        k2 = 19958400 %  s 
+                        if k1%11 == 0 and k2 == 0 and k1//11 < 7:
+                            print(results[i1],results[i2],results[i3],results[i4],k1,k2,s)
+        # print(self.getFactors(196883))
+        return
+
+    def polygon257(self):
+        """
+        docstring for polygon257
+        """
+        
+        a0 = -1
+        prod = 64*a0
+        a1 = (a0 + np.sqrt(a0**2 - 4*prod))/2
+        prod = 64*a0
+        a2 = (a0 - np.sqrt(a0**2 - 4*prod))/2
+        prod = 16*a0
+        a3 = (a1 + np.sqrt(a1**2 - 4*prod))/2
+        prod = 16*a0
+        a4 = (a2 + np.sqrt(a2**2 - 4*prod))/2
+        prod = 16*a0
+        a5 = (a1 - np.sqrt(a1**2 - 4*prod))/2
+        prod = 16*a0
+        a6 = (a2 - np.sqrt(a2**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a3
+        a7 = (a3 + np.sqrt(a3**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a4
+        a8 = (a4 - np.sqrt(a4**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a5
+        a9 = (a5 + np.sqrt(a5**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a6
+        a10 = (a6 - np.sqrt(a6**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a3
+        a11 = (a3 - np.sqrt(a3**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a4
+        a12 = (a4 + np.sqrt(a4**2 - 4*prod))/2
+        prod = 5*a0 - 1*a1 - 2*a5
+        a13 = (a5 - np.sqrt(a5**2 - 4*prod))/2
+        prod = 5*a0 - 1*a2 - 2*a6
+        a14 = (a6 + np.sqrt(a6**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a7 - 2*a8 + 1*a9
+        a15 = (a7 + np.sqrt(a7**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a8 - 2*a9 + 1*a10
+        a16 = (a8 + np.sqrt(a8**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a9 - 2*a10 + 1*a11
+        a17 = (a9 + np.sqrt(a9**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a10 - 2*a11 + 1*a12
+        a18 = (a10 + np.sqrt(a10**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a11 - 2*a12 + 1*a13
+        a19 = (a11 + np.sqrt(a11**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a12 - 2*a13 + 1*a14
+        a20 = (a12 + np.sqrt(a12**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a13 - 2*a14 + 1*a7
+        a21 = (a13 - np.sqrt(a13**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a14 - 2*a7 + 1*a8
+        a22 = (a14 + np.sqrt(a14**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a7 - 2*a8 + 1*a9
+        a23 = (a7 - np.sqrt(a7**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a8 - 2*a9 + 1*a10
+        a24 = (a8 - np.sqrt(a8**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a9 - 2*a10 + 1*a11
+        a25 = (a9 - np.sqrt(a9**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a10 - 2*a11 + 1*a12
+        a26 = (a10 - np.sqrt(a10**2 - 4*prod))/2
+        prod = 1*a1 + 2*a4 + 1*a11 - 2*a12 + 1*a13
+        a27 = (a11 - np.sqrt(a11**2 - 4*prod))/2
+        prod = 1*a2 + 2*a5 + 1*a12 - 2*a13 + 1*a14
+        a28 = (a12 - np.sqrt(a12**2 - 4*prod))/2
+        prod = 1*a1 + 2*a6 + 1*a13 - 2*a14 + 1*a7
+        a29 = (a13 + np.sqrt(a13**2 - 4*prod))/2
+        prod = 1*a2 + 2*a3 + 1*a14 - 2*a7 + 1*a8
+        a30 = (a14 - np.sqrt(a14**2 - 4*prod))/2
+        prod = 1*a23 + 1*a24 + 1*a25 + 1*a28
+        a39 = (a23 - np.sqrt(a23**2 - 4*prod))/2
+        prod = 1*a24 + 1*a25 + 1*a26 + 1*a29
+        a40 = (a24 - np.sqrt(a24**2 - 4*prod))/2
+        prod = 1*a30 + 1*a15 + 1*a16 + 1*a19
+        a46 = (a30 + np.sqrt(a30**2 - 4*prod))/2
+        prod = 1*a15 + 1*a16 + 1*a17 + 1*a20
+        a47 = (a15 - np.sqrt(a15**2 - 4*prod))/2
+        prod = 1*a16 + 1*a17 + 1*a18 + 1*a21
+        a48 = (a16 - np.sqrt(a16**2 - 4*prod))/2
+        prod = 1*a22 + 1*a23 + 1*a24 + 1*a27
+        a54 = (a22 + np.sqrt(a22**2 - 4*prod))/2
+        prod = 1*a23 + 1*a24 + 1*a25 + 1*a28
+        a55 = (a23 + np.sqrt(a23**2 - 4*prod))/2
+        prod = 1*a30 + 1*a40 - 1*a46
+        a71 = (a39 - np.sqrt(a39**2 - 4*prod))/2
+        prod = 1*a22 + 1*a48 - 1*a54
+        a111 = (a47 + np.sqrt(a47**2 - 4*prod))/2
+        prod = 1*a7 - 1*a15 - 1*a55 - 1*a71
+        a239 = (a111 - np.sqrt(a111**2 - 4*prod))/2
+        x32 = a239/2
+        print(x32)
+        print(np.arccos(x32)*257/np.pi)
+
+
+        return  
+
+    def idCardCheck(self):
+        """
+        docstring for idCardCheck
+        mod 12-2 method
+        """
+        idCard = 350121191206231210
+        weight = [2]
+        for i in range(16):
+            x = weight[-1]*2 
+            x = x%11 
+            weight.append(x)
+        weight = np.flip(weight)
+        print(weight)
+
+        # get digits
+        digits = self.num2Digits(idCard)
+        print(digits)
+
+        checkNum = 12 - sum(weight*digits[:-1])%11
+        checkNum = checkNum%11 
+        print(idCard,checkNum)
+        if checkNum == digits[-1]:
+            print(idCard,"check succeed")
+        else:
+            print(idCard,"check failed!")
+            
+
+        return 
     def test(self):
         """
         docstring for test
         """
         # self.testFermat()
-        self.diophantine(19,21)
+        # self.diophantine(19,21)
+        # self.testCubic()
+        # self.hardyWeinberg()
+        # self.testAllMod()
+        # self.selectNum70()
+        # self.polygon17()
+        # self.polygon257()
+
+        self.idCardCheck()
         
         return
+
   
 
 formula = Formulas()
