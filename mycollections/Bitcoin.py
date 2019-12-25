@@ -17,12 +17,14 @@
 import json
 import os
 from mytools import MyCommon
+from mytools import DrawCurve
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
-class Bitcoin(MyCommon):
+class Bitcoin(MyCommon,DrawCurve):
     """
     wrapper for bitcoin-cli"""
     def __init__(self):
@@ -36,6 +38,7 @@ class Bitcoin(MyCommon):
                         "time","nonce","nTx","difficulty"]
         # self.blocksNum = 500
         self.blocksNum = 607625
+        self.width  = 4
         return
 
     def getInfo(self,content):
@@ -77,19 +80,10 @@ class Bitcoin(MyCommon):
         print(time.time() - t1)
 
         return
-    def test(self):
-        filename = "bitcoin.json"
-        data = self.loadJson(filename)
-        # print(data)
-        y = []
-        z = []
-        blockTime = []
-        for key in data:
-            y.append(data[key]["nTx"])
-            z.append(data[key]["difficulty"])
-            blockTime.append(data[key]["time"])
+    def plotData(self,y,z):
         # print(y)
         freq = 1000
+        print("sum of nTx: ",sum(y))
         num = (len(y) // freq)*freq
         y = np.array(y[:num])
         y = y.reshape((-1,freq))
@@ -101,10 +95,33 @@ class Bitcoin(MyCommon):
         z = np.average(z,axis=1)
         # z = np.log10(z)
         # y = np.log10(y)
-
-        plt.semilogy(x,y,lw = self.width)
-        plt.semilogy(x,z,lw = self.width)
+        plt.figure(figsize=(9,9))
+        plt.xlabel("Time/year",fontsize=24)
+        plt.ylabel("Difficulty/Transactions",fontsize=24)
+        plt.title("Difficulty/Transactions --- Time",fontsize=28)
+        plt.xticks(fontsize=22)
+        plt.yticks(fontsize=22)
+        plt.semilogy(x,y,lw = self.width,label="Transactions")
+        plt.semilogy(x,z,lw = self.width,label="Difficulty")
+        plt.legend(loc = "upper left",fontsize = 24)
+        plt.savefig("bitcoin.png",dvi=200)
         plt.show()
+
+        return
+    def test(self):
+        filename = "bitcoin.json"
+        data = self.loadJson(filename)
+        # print(data)
+        y = []
+        z = []
+        blockTime = []
+        for key in data:
+            y.append(data[key]["nTx"])
+            z.append(data[key]["difficulty"])
+            blockTime.append(data[key]["time"])
+        self.plotData(y,z)
+
+
         blockTime = np.array(blockTime)
         blockTime = blockTime / 60
         print(blockTime)
