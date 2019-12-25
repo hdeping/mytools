@@ -1114,6 +1114,121 @@ class Formulas(MyCommon):
             
 
         return 
+    def fermatAndGroup(self,n):
+        """
+        docstring for fermatAndGroup
+        n and phi(n)
+        Fermat's theorem and Euler's theorem
+        """
+        result = self.getFactors(n)
+        print(result)
+        # get rid of repeated numbers
+        factors = []
+        for i in result:
+            if i not in factors:
+                factors.append(i)
+        print(factors)
+        elements = np.arange(1,n+1).tolist()
+        for i in factors:
+            result = []
+            for j in elements:
+                if j%i != 0:
+                    result.append(j)
+            elements = result
+        print(elements,len(elements))
+        # print(A)
+        # find the exponent of an element
+        species = {}
+        inverse = 1
+        for i in elements:
+            s = i
+            count = 1
+            while s != 1:
+                inverse = s
+                s = (s*i)%n 
+                count += 1
+            print(i,inverse,count)
+            key = str(count)
+            if key in species:
+                species[key].append(i)
+            else:
+                species[key] = [i]
+        print(species)
+        res = [1] + species["3"]
+        self.getCharacterTable(elements,n)
+
+        # subgroups
+        # 13 39  9  5 31  1 27 53 23 19 45 15 41 11 37 33  3 29 55 25 51 47 17 43
+        # 1  3   5  9 11 13 15 17 19 23 25 27 29 31 33 37 39 41 43 45 47 51 53 55
+        # 15 45 19 23 53 27  1 31  5  9 39 13 43 17 47 51 25 55 29  3 33 37 11 41
+        # [1,13]*[3,39] = [3,39]
+        # [1,13]*[1,3,5,11,15,17,19,25,29,33,43,47] 2**11 subgroups of  C12
+        # [1,15]*[1,3,5,11,13,17,25,27,29,33,37,41]
+        # 7*2**11 subgroups of C12
+        # [1,13,15,27]*[[1, 3, 5, 11, 29, 33]]
+        # 3*4**5 subgroups of C6
+        # 1 C8
+        # all the subgroups 
+        # 
+        # a = np.array([1,3,9,11,15,17,19,25,29,33,43,47])
+        a = np.array([1,13,15,27])
+        b = self.getQuotientGroup(elements, a,n)
+        self.getMultiGroup([1,13],[1,15],n)
+        c = self.getMultiGroup(a,b,n)
+        c.sort()
+        print(c,len(c))
+        c = self.getMultiGroup(a,[1,43],n)
+        c.sort()
+        print(c,len(c))
+
+        return
+    def getMultiGroup(self,a1,a2,n):
+        """
+        docstring for getMultiGroup
+        """
+        a1 = np.array(a1)
+        a2 = np.array(a2)
+        result = []
+        for i in a1:
+            for j in a2:
+                x = (i*j)%n 
+                if x not in result:
+                    result.append(x)
+        print(result)
+        return result
+    def getQuotientGroup(self,elements,a,n):
+        """
+        docstring for getQuotient
+        elements:
+            array
+        a: 
+            a subgroup of the elements
+        n:
+            the modular number
+        """
+        result = elements
+        print(result)
+        num = len(elements) // len(a)
+        for i in range(num):
+            elems = (result[i]*a)%n
+            print(elems)
+            for k in range(1,len(a)):
+                x = elems[k]
+                if x in result:
+                    result.remove(x)
+        print(result)
+        return result
+    def getCharacterTable(self,array,n):
+        """
+        docstring for getCharacterTable
+        """
+        array  = np.array(array)
+        result = []
+        for i in array:
+            result.append((i*array)%n)
+        result = np.array(result)
+        print(result)
+        return
     def test(self):
         """
         docstring for test
@@ -1127,7 +1242,8 @@ class Formulas(MyCommon):
         # self.polygon17()
         # self.polygon257()
 
-        self.idCardCheck()
+        # self.idCardCheck()
+        self.fermatAndGroup(56)
         
         return
 
