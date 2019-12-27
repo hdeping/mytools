@@ -26,7 +26,6 @@ import matplotlib.pyplot as plt
 import json
 
 
-
 class Formulas(MyCommon):
     """
     Formulas Deriations with sympy
@@ -671,6 +670,27 @@ class Formulas(MyCommon):
 
         # print(a,p,result)
         return result
+    def getModN(self,a,n,p):
+        """
+        docstring for getMod
+        check if a^{p-1} = 1 (mod p)
+        """
+        binary = bin(n)[2:]
+        length = len(binary)
+        if binary[-1] == "1":
+            result = a 
+        else:
+            result = 1
+        x = a
+        for i in range(length - 1):
+            x = x * x
+            x = x % p
+            if binary[-2-i] == "1":
+                result = result*x
+                result = result%p
+
+        # print(a,p,result)
+        return result
     def fermatPrimeTest(self,p):
         """
         docstring for fermatPrimeTest
@@ -1242,10 +1262,10 @@ class Formulas(MyCommon):
         import time
         primes = [2,3,5,7,11,13,17,19,23]
         factors = np.array([3,5,7,11,13,17,19,23])
-        n = 10000   
+        n = 500 
         count = 1
         t1 = time.time()
-        for i in range(25,n+1,2):
+        for i in range(25,n*n+1,2):
             # none number in factors can 
             # divide i
             if sum(i%factors == 0) == 0:
@@ -1253,26 +1273,52 @@ class Formulas(MyCommon):
                     primes.append(i)
                     # self.fermatPrimeTest(i)
         # print(time.time() - t1, primes)
-        indeces = np.zeros(n,"int")*255
+        indeces = np.ones(n*n,"int")*255
         for ii in primes:
             indeces[ii - 1] = 0
         # print(indeces[:1000])
         
         # get the spiral array
-        n = 2 
-        rotation = [[0,1],[-1,0],[0,-1],[1,0]]
-        k = n // 2 
+        # n should be even
+        rotation = [[0,1],[1,0],[0,-1],[-1,0]]
         matrix = np.zeros((n,n),"int")
-        x0,y0 = -k,k-1
+        x0,y0 = 0,0
         threshold = 1
-        for i in range(n**2):
-            matrix[x0,y0] = i+1 
+        rotation_index = 0 
+        ii,jj = rotation[rotation_index]
+        for i in range(n**2,0,-1):
+            matrix[x0,y0] = i
+            x1 = x0 + ii
+            y1 = y0 + jj
+            p1 = (x1 >= n or y1 >= n)
+            if p1 or ((not p1) and matrix[x1,y1] != 0):
+                rotation_index = (rotation_index + 1)%4 
+                ii,jj = rotation[rotation_index]
+                x1 = x0 + ii
+                y1 = y0 + jj
 
-        print(matrix)
+            x0,y0 = x1,y1
+                
 
-            
+        # print(matrix)
+        image = np.ones((n,n,3),np.uint8)
+        for i in range(n):
+            for j in range(n):
+                index = matrix[i,j] - 1
+                image[i,j,:] = [255,indeces[index],255]
 
-            
+        # print(image[:,:,0])
+        image = Image.fromarray(image)
+        # image.show()
+        image.save("new.png")
+        
+        return
+
+    def alternatedGroup(self):
+        """
+        docstring for alternatedGroup
+        n > 4, A_n is a simple group
+        """
         
         return
     def test(self):
