@@ -1363,6 +1363,7 @@ class Formulas(MyCommon):
         index = self.getGroupIndex(arr3)
         id3   = self.dicts[str(index)]
         return id3
+    
     def alternatedGroup(self):
         """
         docstring for alternatedGroup
@@ -1384,8 +1385,20 @@ class Formulas(MyCommon):
                 count += 1
         # print(elements,len(elements))
         # print(dicts,len(dicts))
-        print(self.getPermuProd(elements[3],elements[4]))
-        print(self.getPermuProd(elements[4],elements[3]))
+        # print(self.getPermuProd(elements[3],elements[4]))
+        # print(self.getPermuProd(elements[4],elements[3]))
+        # print(self.getPermuIdProd(3,4))
+        # print(self.getPermuIdProd(4,3))
+        group_table = []
+        order = 60
+        for i in range(order):
+            for j in range(order):
+                k = self.getPermuIdProd(i,j)
+                group_table.append(k)
+        group_table = np.array(group_table)
+        group_table = group_table.reshape((order,-1))
+        print(group_table)
+        np.savetxt("table.json",group_table,fmt="%d")
         return
 
     def RSA(self):
