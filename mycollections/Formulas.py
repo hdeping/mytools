@@ -1313,13 +1313,57 @@ class Formulas(MyCommon):
         image.save("new.png")
         
         return
+    def isArrayEven(self,array):
+        """
+        judge if a array is even permutation
+        by computing inverse order
+        [0,1,2,3,4]  even
+        [0,1,2,4,3]  odd
+        [0,1,4,2,3]  even
+        """
 
+        n = len(array)
+        count = 0 
+        for i in range(n-1):
+            for j in range(i+1,n):
+                if array[i] > array[j]:
+                    count += 1
+        if count%2 == 0:
+            return True 
+        else:
+            return False
+
+    def getGroupIndex(self,array):
+        """
+        docstring for getGroupIndex
+        hash with n-scale
+        """
+        n = len(array)
+        index = 0 
+        for i in array:
+            index = n*index + i
+        return index
     def alternatedGroup(self):
         """
         docstring for alternatedGroup
         n > 4, A_n is a simple group
         """
+        import itertools
         
+        # get A5
+        elements = []
+        arr = np.arange(5)
+        arr = arr.tolist()
+        count = 0
+        dicts = {}
+        for line in itertools.permutations(arr,len(arr)):
+            if self.isArrayEven(line):
+                elements.append(line)
+                index = self.getGroupIndex(line)
+                dicts[str(index)] = count 
+                count += 1
+        print(elements,len(elements))
+        print(dicts,len(dicts))
         return
 
     def RSA(self):
@@ -1372,7 +1416,8 @@ class Formulas(MyCommon):
 
         # self.primeSpiral()
         # print(self.getModN(2,18000,349589))
-        self.RSA()
+        # self.RSA()
+        self.alternatedGroup()
         
         return
 
