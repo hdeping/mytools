@@ -583,7 +583,7 @@ class Formulas(MyCommon):
                 count += 1
 
         if count == 0:
-            print(m,"is prime")
+            # print(m,"is prime")
             return True
         else:
             return False
@@ -1229,6 +1229,52 @@ class Formulas(MyCommon):
         result = np.array(result)
         print(result)
         return
+
+    def primeSpiral(self):
+        """
+        docstring for primeSpiral
+        16 15 14 13
+        5   4  3 12
+        6   1  2 11
+        7   8  9 10
+        """
+        from PIL import Image
+        import time
+        primes = [2,3,5,7,11,13,17,19,23]
+        factors = np.array([3,5,7,11,13,17,19,23])
+        n = 10000   
+        count = 1
+        t1 = time.time()
+        for i in range(25,n+1,2):
+            # none number in factors can 
+            # divide i
+            if sum(i%factors == 0) == 0:
+                if self.isPrime(i):
+                    primes.append(i)
+                    # self.fermatPrimeTest(i)
+        # print(time.time() - t1, primes)
+        indeces = np.zeros(n,"int")*255
+        for ii in primes:
+            indeces[ii - 1] = 0
+        # print(indeces[:1000])
+        
+        # get the spiral array
+        n = 2 
+        rotation = [[0,1],[-1,0],[0,-1],[1,0]]
+        k = n // 2 
+        matrix = np.zeros((n,n),"int")
+        x0,y0 = -k,k-1
+        threshold = 1
+        for i in range(n**2):
+            matrix[x0,y0] = i+1 
+
+        print(matrix)
+
+            
+
+            
+        
+        return
     def test(self):
         """
         docstring for test
@@ -1236,9 +1282,9 @@ class Formulas(MyCommon):
         # self.testFermat()
         # self.diophantine(98765432123456789,12345678987654321)
         # print(self.getFactors(98765432123456789))
-        print(self.getFactors(12345678987654321))
+        # print(self.getFactors(12345678987654321))
         # self.isPrime
-        print(self.fermatPrimeTest(987654321234567834349))
+        # print(self.fermatPrimeTest(987654321234567834349))
         # self.testCubic()
         # self.hardyWeinberg()
         # self.testAllMod()
@@ -1248,6 +1294,8 @@ class Formulas(MyCommon):
 
         # self.idCardCheck()
         # self.fermatAndGroup(56)
+
+        self.primeSpiral()
         
         return
 
