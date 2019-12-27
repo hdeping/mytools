@@ -1363,7 +1363,30 @@ class Formulas(MyCommon):
         index = self.getGroupIndex(arr3)
         id3   = self.dicts[str(index)]
         return id3
-    
+    def checkGroupTable(self,table):
+        """
+        docstring for checkGroupTable
+        """
+        n = len(table)
+        baseline = np.arange(n)
+        count = 0
+        arr = np.zeros(n,int)
+        for i in range(n):
+            arr[:] = table[:,i]
+            arr.sort()
+            if sum(arr == baseline) == n:
+                count += 1
+            arr[:] = table[i,:]
+            arr.sort()
+            if sum(arr == baseline) == n:
+                count += 1
+        # print(count,table[1,1],table[:,1].sort())
+        if count == 2*n:
+            print("it is a group table!!")
+        else:
+            print("NOT GROUP !!!")
+            
+        return  
     def alternatedGroup(self):
         """
         docstring for alternatedGroup
@@ -1372,25 +1395,27 @@ class Formulas(MyCommon):
         import itertools
         
         # get A5
+        n = 4
         self.elements = []
-        arr = np.arange(5)
+        arr = np.arange(n)
         arr = arr.tolist()
         count = 0
         self.dicts = {}
-        for line in itertools.permutations(arr,len(arr)):
+        for line in itertools.permutations(arr,n):
             if self.isArrayEven(line):
                 self.elements.append(line)
                 index = self.getGroupIndex(line)
                 self.dicts[str(index)] = count 
                 count += 1
         # print(elements,len(elements))
+        print(len(self.elements))
         # print(dicts,len(dicts))
         # print(self.getPermuProd(elements[3],elements[4]))
         # print(self.getPermuProd(elements[4],elements[3]))
         # print(self.getPermuIdProd(3,4))
         # print(self.getPermuIdProd(4,3))
         group_table = []
-        order = 60
+        order = np.math.factorial(n)//2
         for i in range(order):
             for j in range(order):
                 k = self.getPermuIdProd(i,j)
@@ -1398,7 +1423,30 @@ class Formulas(MyCommon):
         group_table = np.array(group_table)
         group_table = group_table.reshape((order,-1))
         print(group_table)
-        np.savetxt("table.json",group_table,fmt="%d")
+        # np.savetxt("table.json",group_table,fmt="%d")
+        # get cosets
+        arr1 = []
+        arr2 = []
+        for i in range(3,order):
+            arr3 = []
+            arr4 = []
+            for j in range(3):
+                k1 = self.getPermuIdProd(i,j)
+                k2 = self.getPermuIdProd(j,i)
+                arr3.append(k1)
+                arr4.append(k2)
+                if k1 not in arr1:
+                    arr1.append(k1)
+                if k2 not in arr2:
+                    arr2.append(k2)
+            print(i,arr3,arr4)
+
+        arr1.sort()
+        arr2.sort()
+        print(arr1)
+        print(arr2)
+
+        self.checkGroupTable(group_table)
         return
 
     def RSA(self):
