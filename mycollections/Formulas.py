@@ -1353,7 +1353,16 @@ class Formulas(MyCommon):
         for i in arr1:
             res.append(arr2[i])
         return res
-    
+    def getPermuIdProd(self,id1,id2):
+        """
+        docstring for getPer
+        """
+        arr1 = self.elements[id1]
+        arr2 = self.elements[id2]
+        arr3 = self.getPermuProd(arr1,arr2)
+        index = self.getGroupIndex(arr3)
+        id3   = self.dicts[str(index)]
+        return id3
     def alternatedGroup(self):
         """
         docstring for alternatedGroup
