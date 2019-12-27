@@ -1343,6 +1343,17 @@ class Formulas(MyCommon):
         for i in array:
             index = n*index + i
         return index
+
+    def getPermuProd(self,arr1,arr2):
+        """
+        docstring for getPermuProd
+        """
+        res = []
+        assert len(arr1) == len(arr2)
+        for i in arr1:
+            res.append(arr2[i])
+        return res
+    
     def alternatedGroup(self):
         """
         docstring for alternatedGroup
@@ -1351,19 +1362,21 @@ class Formulas(MyCommon):
         import itertools
         
         # get A5
-        elements = []
+        self.elements = []
         arr = np.arange(5)
         arr = arr.tolist()
         count = 0
-        dicts = {}
+        self.dicts = {}
         for line in itertools.permutations(arr,len(arr)):
             if self.isArrayEven(line):
-                elements.append(line)
+                self.elements.append(line)
                 index = self.getGroupIndex(line)
-                dicts[str(index)] = count 
+                self.dicts[str(index)] = count 
                 count += 1
-        print(elements,len(elements))
-        print(dicts,len(dicts))
+        # print(elements,len(elements))
+        # print(dicts,len(dicts))
+        print(self.getPermuProd(elements[3],elements[4]))
+        print(self.getPermuProd(elements[4],elements[3]))
         return
 
     def RSA(self):
