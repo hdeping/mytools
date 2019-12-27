@@ -673,7 +673,7 @@ class Formulas(MyCommon):
     def getModN(self,a,n,p):
         """
         docstring for getMod
-        check if a^{p-1} = 1 (mod p)
+        return a^{n} (mod p)
         """
         binary = bin(n)[2:]
         length = len(binary)
@@ -1321,6 +1321,35 @@ class Formulas(MyCommon):
         """
         
         return
+
+    def RSA(self):
+        """
+        docstring for RSA
+        public key (n,e1)
+        private key (n,e2)
+        message m, crypted message c
+        r = (p-1)(q-1)
+        m^e1 = c mod n
+        c^e2 = m mod n
+        c^e2 = m^(e1*e2)=m^(kr+1)=m mod n 
+        """
+        p = 131071
+        q = 524287
+        n = p*q 
+        r = (p-1)*(q-1)
+        print(self.getFactors(p-1))
+        print(self.getFactors(q-1))
+        e1 = 11*23*29 
+        e2 = self.diophantine(e1,r)[0]
+        e2 = e2%r
+        print(e1,e2)
+        A = 2
+        B = self.getModN(A,e1,n)
+        print("1",B)
+        B = self.getModN(B,e2,n)
+        print("2",B)
+        print(e2,e1*e2%r)
+        return  
     def test(self):
         """
         docstring for test
@@ -1341,7 +1370,9 @@ class Formulas(MyCommon):
         # self.idCardCheck()
         # self.fermatAndGroup(56)
 
-        self.primeSpiral()
+        # self.primeSpiral()
+        # print(self.getModN(2,18000,349589))
+        self.RSA()
         
         return
 
