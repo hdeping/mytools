@@ -1476,7 +1476,46 @@ class Formulas(MyCommon):
         B = self.getModN(B,e2,n)
         print("2",B)
         print(e2,e1*e2%r)
-        return  
+        return 
+
+    def fibonacci(self):
+         """
+         docstring for fibonacci
+         Fibonacci 1,1,2,3,... 
+            
+         Pell 1,2,5,12
+            P_{2n+1} = P_{n}^2 + P_{n+1}^2
+         """
+         a = 1  
+         p = 1
+         b = p  
+         for i in range(40):
+             c = a + p*b 
+             a = b
+             b = c 
+             print(i+3,c,a**2+b**2)
+
+             
+         return 
+    def divideNumber(self,num):
+        """
+        docstring for divideNumber
+        """
+        if num%2 == 0:
+            return
+        elif num == 3:
+            return [3]
+        else:
+            a = num // 2
+            res = [] 
+            if a%2 == 1:
+                res.append(a+1)
+                res = res + self.divideNumber(a)
+            else:
+                res.append(a)
+                res = res + self.divideNumber(a+1)
+            return res 
+          
     def test(self):
         """
         docstring for test
@@ -1500,7 +1539,9 @@ class Formulas(MyCommon):
         # self.primeSpiral()
         # print(self.getModN(2,18000,349589))
         # self.RSA()
-        self.alternatedGroup()
+        # self.alternatedGroup()
+        # self.fibonacci()
+        print(self.divideNumber(12231))
         
         return
 
