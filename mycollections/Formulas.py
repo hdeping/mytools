@@ -24,6 +24,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import json
+import time
 
 
 class Formulas(MyCommon):
@@ -1497,7 +1498,7 @@ class Formulas(MyCommon):
 
              
          return 
-    def divideNumber(self,num):
+    def divideNumber2(self,num):
         """
         docstring for divideNumber
         """
@@ -1515,6 +1516,27 @@ class Formulas(MyCommon):
                 res.append(a)
                 res = res + self.divideNumber(a+1)
             return res 
+
+    def divideNumber(self,num):
+        """
+        docstring for divideNumber
+        """
+        if num%2 == 0:
+            return
+        else:
+            res = [] 
+            while num > 3:
+                
+                a = num // 2
+                if a%2 == 1:
+                    res.append(a+1)
+                    num = a
+                else:
+                    res.append(a)
+                    num = a+1
+            res.append(3)
+            return res 
+        return
           
     def test(self):
         """
@@ -1541,8 +1563,10 @@ class Formulas(MyCommon):
         # self.RSA()
         # self.alternatedGroup()
         # self.fibonacci()
-        print(self.divideNumber(12231))
-        
+        t1   = time.time()
+        num  = 95
+        s    = self.divideNumber2(num)
+        print(time.time() - t1)
         return
 
   
