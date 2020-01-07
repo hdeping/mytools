@@ -1537,7 +1537,25 @@ class Formulas(MyCommon):
             res.append(3)
             return res 
         return
-          
+    
+    def polyhedron (self):
+        """
+        docstring for polohedron   
+        """
+        x = (sqrt(5) - 1)/2 
+        x = (2 - x**2)/2
+        x = expand(x)
+        print(x)
+        print((5**0.5+1)/4,np.cos(np.pi/5))
+        y = expand(1-x**2)
+        y = sqrt(y)
+        tan = (10 - 2*sqrt(5))*(6-2*sqrt(5))/16
+        tan = expand(tan)
+        print(y,tan)
+        print("tan pi/5:",np.tan(np.pi/5),np.sqrt(5-2*5**0.5))
+        
+        return
+
     def test(self):
         """
         docstring for test
@@ -1563,10 +1581,11 @@ class Formulas(MyCommon):
         # self.RSA()
         # self.alternatedGroup()
         # self.fibonacci()
-        t1   = time.time()
-        num  = 95
-        s    = self.divideNumber2(num)
-        print(time.time() - t1)
+        # t1   = time.time()
+        # num  = 95
+        # s    = self.divideNumber2(num)
+        # print(time.time() - t1)
+        self.polyhedron()
         return
 
   
