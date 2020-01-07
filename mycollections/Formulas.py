@@ -1538,7 +1538,7 @@ class Formulas(MyCommon):
             return res 
         return
     
-    def polyhedron (self):
+    def polyhedron(self):
         """
         docstring for polohedron   
         """
@@ -1553,6 +1553,18 @@ class Formulas(MyCommon):
         tan = expand(tan)
         print(y,tan)
         print("tan pi/5:",np.tan(np.pi/5),np.sqrt(5-2*5**0.5))
+
+        x = sqrt(5)
+        y = (x-1)/(3-x)
+        print(simplify(y))
+
+        # dedocahedron
+        # r: radii of the inscribed sphere
+        y = simplify((25+10*x)/100*((x+1)/2)**2)
+        print(y)
+        # volume
+        y = simplify((25+10*x)/10*((x+1)/2))
+        print(y)
         
         return
 
