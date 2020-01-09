@@ -1571,6 +1571,26 @@ class Formulas(MyCommon):
         print(x,8*x**3-4*x)
         y = 2**0.5*(self.getValue(19,3*33**0.5) - 2)/3 
         print(y,1/x)
+        # \sin a/2
+        y = ((8 - self.getValue(19,3*33**0.5))/12)**0.5 
+        print(y,x**2+y**2)
+
+        t = self.xyz[0]
+        y = sqrt(2)*(1+t)/4/t
+        y = simplify(y**3-y/2-sqrt(2)/8)
+        print(y)
+        q = (2+9*21-27*49)//2 
+        p = -9*7 - 1
+        det = q**2+p**3
+        print(q,p,det,42*42*33)
+        print(self.getFactors(det))
+        print(self.getFactors(-q))
+
+        y = (self.getValue(566,42*33**0.5) - 1)/21 
+        print(7*y**3+y**2-3*y-1)
+        print(y,x,1/(2**1.5*x-1))
+        
+        self.getCubicSol([7,1,-3,-10])
         
         return
 
@@ -1580,6 +1600,19 @@ class Formulas(MyCommon):
         """
         res = (a+b)**(1/3) + (a-b)**(1/3)
         return res
+
+    def getCubicSol(self,parameters):
+        """
+        docstring for getCubicSol
+        """
+        a,b,c,d = parameters
+        q = -(2*b**3-9*a*b*c+27*a**2*d)*self.one/2
+        p = 3*a*c - b**2 
+        delta = sqrt(q**2+p**3)
+        x = (-b+(q+delta)**(self.one/3)+(q-delta)**(self.one/3))/(3*a)
+        x = simplify(x)
+        print(latex(x))
+        return x
     def test(self):
         """
         docstring for test
