@@ -1540,7 +1540,7 @@ class Formulas(MyCommon):
     
     def polyhedron(self):
         """
-        docstring for polohedron   
+        docstring for polyhedron   
         """
         x = (sqrt(5) - 1)/2 
         x = (2 - x**2)/2
@@ -1568,9 +1568,57 @@ class Formulas(MyCommon):
 
         return
 
+    def polyhedron33335(self):
+        """
+        docstring for polyhedron33335
+        """
+        k = -(sqrt(5)+1)/16
+        sq5 = 5**0.5
+        x = self.getCubicSol([1,0,-self.one/2,k])
+        # print(x)
+        x = self.getValue(54+54*sq5,6*(102+162*sq5)**0.5)/12 
+        k1 = x
+        print(x,(x**3-x/2)*16-1-5**0.5)
+
+        # new equation
+        t = self.xyz[0]
+        y = (sqrt(5)+1)/4*(1+1/t)
+        y = expand(y**3-y/2-(sqrt(5)+1)/16)
+        y = -y*(16*t**3)*(sqrt(5)+1)/2
+        y = simplify(y)
+        print(y)
+
+
+        para = [2,-15 - 7*sqrt(5),-21 - 9*sqrt(5),-7 - 3*sqrt(5)]
+        x = self.getCubicSol(para)
+
+        # test the solution
+
+        y  = (15+7*sq5+self.getValue(20448+9140*sq5,12*(7137+3192*sq5)**0.5))/6
+        k2 = y
+        print(k1,k2,1/((sq5-1)*k1-1))
+        k3  = k1*(1+k2)**(0.5)
+        s1  = 15*(5+2*sq5)
+        s2  = - 15*(11+5*sq5)/2
+        volume = (20*k3+(s1*k3**2+s2)**0.5)/3
+        print(volume)
+        print((125+43*sq5)/4)
+
+        # print(self.getFactors(26419))
+
+
+        # para = [1,-10 - 4*sqrt(5),-18 - 6*sqrt(5),-4 - 4*sqrt(5)]
+        # x = self.getCubicSol(para)
+
+        # # test the solution
+
+        # y  = (10+4*sq5) 
+        # k2 = y
+
+        return
     def polyhedron33334(self):
         """
-        docstring for polohedron33334
+        docstring for polyhedron33334
         """
         # 3,3,3,3,4
         x = self.getValue(108*2**0.5,12*66**0.5)/12 
@@ -1673,7 +1721,7 @@ class Formulas(MyCommon):
         # num  = 95
         # s    = self.divideNumber2(num)
         # print(time.time() - t1)
-        self.polyhedron33334()
+        self.polyhedron33335()
         return
 
   
