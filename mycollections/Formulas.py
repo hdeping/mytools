@@ -768,6 +768,35 @@ class Formulas(MyCommon):
         self.bernoulliGen() 
         self.dealData() 
         self.continueFrac() 
+
+
+        # self.testFermat()
+        # self.diophantine(98765432123456789,12345678987654321)
+        # print(self.getFactors(98765432123456789))
+        # print(self.getFactors(12345678987654321))
+        # self.isPrime
+        # print(self.fermatPrimeTest(987654321234567834349))
+        # self.testCubic()
+        # self.hardyWeinberg()
+        # self.testAllMod()
+        # self.selectNum70()
+        # self.polygon17()
+        # self.polygon257()
+
+        # self.idCardCheck()
+        # self.fermatAndGroup(56)
+
+        # self.primeSpiral()
+        # print(self.getModN(2,18000,349589))
+        # self.RSA()
+        # self.alternatedGroup()
+        # self.fibonacci()
+        # t1   = time.time()
+        # num  = 95
+        # s    = self.divideNumber2(num)
+        # print(time.time() - t1)
+        # self.polyhedron33335()
+        # self.polyhedron3454()
         
         return
 
@@ -1583,6 +1612,7 @@ class Formulas(MyCommon):
         print((195+98*5**0.5)/12)
 
         return
+
     def polyhedron33335(self):
         """
         docstring for polyhedron33335
@@ -1707,37 +1737,20 @@ class Formulas(MyCommon):
         x = simplify(x)
         print(latex(x))
         return x
+
+    def polyhedron468(self):
+        """
+        docstring for polyhedron468
+        """
+        print()
+        return
+
     def test(self):
         """
         docstring for test
         """
-        # self.testFermat()
-        # self.diophantine(98765432123456789,12345678987654321)
-        # print(self.getFactors(98765432123456789))
-        # print(self.getFactors(12345678987654321))
-        # self.isPrime
-        # print(self.fermatPrimeTest(987654321234567834349))
-        # self.testCubic()
-        # self.hardyWeinberg()
-        # self.testAllMod()
-        # self.selectNum70()
-        # self.polygon17()
-        # self.polygon257()
-
-        # self.idCardCheck()
-        # self.fermatAndGroup(56)
-
-        # self.primeSpiral()
-        # print(self.getModN(2,18000,349589))
-        # self.RSA()
-        # self.alternatedGroup()
-        # self.fibonacci()
-        # t1   = time.time()
-        # num  = 95
-        # s    = self.divideNumber2(num)
-        # print(time.time() - t1)
-        # self.polyhedron33335()
-        self.polyhedron3454()
+        
+        self.polyhedron468()
         return
 
   
