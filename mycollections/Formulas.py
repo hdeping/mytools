@@ -1565,9 +1565,21 @@ class Formulas(MyCommon):
         # volume
         y = simplify((25+10*x)/10*((x+1)/2))
         print(y)
+
+        # 3,3,3,3,4
+        x = self.getValue(108*2**0.5,12*66**0.5)/12 
+        print(x,8*x**3-4*x)
+        y = 2**0.5*(self.getValue(19,3*33**0.5) - 2)/3 
+        print(y,1/x)
         
         return
 
+    def getValue(self,a,b):
+        """
+        docstring for getValue
+        """
+        res = (a+b)**(1/3) + (a-b)**(1/3)
+        return res
     def test(self):
         """
         docstring for test
