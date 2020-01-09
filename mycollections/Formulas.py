@@ -1566,10 +1566,18 @@ class Formulas(MyCommon):
         y = simplify((25+10*x)/10*((x+1)/2))
         print(y)
 
+        return
+
+    def polyhedron33334(self):
+        """
+        docstring for polohedron33334
+        """
         # 3,3,3,3,4
         x = self.getValue(108*2**0.5,12*66**0.5)/12 
+        k1 = x
         print(x,8*x**3-4*x)
         y = 2**0.5*(self.getValue(19,3*33**0.5) - 2)/3 
+        k2 = y
         print(y,1/x)
         # \sin a/2
         y = ((8 - self.getValue(19,3*33**0.5))/12)**0.5 
@@ -1587,13 +1595,36 @@ class Formulas(MyCommon):
         print(self.getFactors(-q))
 
         y = (self.getValue(566,42*33**0.5) - 1)/21 
+        k3 = y
         print(7*y**3+y**2-3*y-1)
         print(y,x,1/(2**1.5*x-1))
         
-        self.getCubicSol([7,1,-3,-10])
-        
-        return
+        t = self.xyz[0]
+        y = sqrt(2)*(1+t)/2/t
+        z = 4*sqrt(2)*y**3/(sqrt(2)*y-1)
+        z = simplify(z)
+        y = simplify(y**3-y/2-sqrt(2)/8)
+        print(z)
 
+        print(y)
+
+        sol = self.getCubicSol([1,-4,-6,-2])
+        sol = simplify(expand(sol**2))
+        k4 = (self.getValue(199,3*33**0.5) + 4)/3
+        print(sol)
+        print(self.getFactors(39898))
+
+        print(k1,k2,k1*k2)
+        print(k3,(1/(1-k1**2)-2)/2)
+        print(k4,1/(k1*2**0.5-1))
+        print(2*k1*(1+k4)**0.5)
+
+        print("k1,k2,k3 and volume")
+        k2 = k4 
+        k3 = k1*(1+k2)**0.5 
+        volume = (8*k3+(12*k3**2-6)**0.5)/3
+        print(k1,k2,k3,volume)
+        return
     def getValue(self,a,b):
         """
         docstring for getValue
@@ -1642,7 +1673,7 @@ class Formulas(MyCommon):
         # num  = 95
         # s    = self.divideNumber2(num)
         # print(time.time() - t1)
-        self.polyhedron()
+        self.polyhedron33334()
         return
 
   
