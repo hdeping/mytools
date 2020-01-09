@@ -1568,6 +1568,21 @@ class Formulas(MyCommon):
 
         return
 
+    def polyhedron3454(self):
+        """
+        docstring for polyhedron3454
+        """
+        x = sqrt(5)
+        v3 = (15+10*x)*self.one/2
+        v4 = 30+15*x
+        v5 = 9*(5+2*x)*self.one/4
+        volume = (v3 + v4 + v5)*4
+
+        print(volume)
+
+        print((195+98*5**0.5)/12)
+
+        return
     def polyhedron33335(self):
         """
         docstring for polyhedron33335
@@ -1721,7 +1736,8 @@ class Formulas(MyCommon):
         # num  = 95
         # s    = self.divideNumber2(num)
         # print(time.time() - t1)
-        self.polyhedron33335()
+        # self.polyhedron33335()
+        self.polyhedron3454()
         return
 
   
