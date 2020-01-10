@@ -1778,12 +1778,39 @@ class Formulas(MyCommon):
 
         return
 
+    def polyhedron3434(self):
+        """
+        docstring for polyhedron3434
+        """
+        x = sqrt(5)
+        y = (1250+410*x)*(25+10*x)
+        y = simplify(y/250)
+        print(y)
+        return
+
+    def polyhedronTrun(self):
+        """
+        docstring for polyhedronTrun
+        truncated polyhedron
+        """
+        
+        x = sqrt(2)
+        x = expand((1+x)**3)
+        print(x)
+
+        x = sqrt(5)
+        y = 5*(x+3)/2 + 3*(5+2*x)
+        y = simplify(y/3)
+        print(y)
+
+
+        return
     def test(self):
         """
         docstring for test
         """
         
-        self.polyhedron4610()
+        self.polyhedronTrun()
         return
 
   
