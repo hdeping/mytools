@@ -1820,12 +1820,80 @@ class Formulas(MyCommon):
         K1_prime = (K1**2-1/4)**0.5
         K2 = (8*k3+(12*k3**2-6)**0.5)/3
 
+        k1 = self.getValue(54+54*sq5,6*(102+162*sq5)**0.5)/12 
+        k2 = 1/((sq5-1)*k1-1)
+        k3 = k1*(1+k2)**0.5 
         K3 = ((k3**2+1)/3)**0.5
         K3_prime = (K1**2-1/4)**0.5
         K4 = (8*k3+(12*k3**2-6)**0.5)/3
 
         res = [K1,K2,K3,K4]
         return res 
+
+    def getAllPolyhedra(self):
+        """
+        docstring for getAllPolyhedra
+        """
+        length = 1.0
+        sq2    = 2**0.5
+        sq5    = 5**0.5
+        sq6    = 6**0.5
+
+        keys = ["tetrahedron","hexahedron","octahedron","dedocahedron",
+                "isocahedron","6,6,5","10,10,3","3,3,3,3,4","3,3,3,3,5",
+                "3,5,4,5","4,6,8","4,6,10","4,4,4,3","8,8,3","6,6,3",
+                "6,6,4","3,4,3,4","3,5,3,5"]
+
+        polyhedra = {}
+        K1,K2,K3,K4 = self.getCoefs()
+
+        radius  = [sq6/4,
+                   sq3/2,
+                   sq2/2,
+                   sq3*(1+sq5)/4,
+                   (10+2*sq5)**0.5/4,
+                   (58+18*sq5)**0.5/4,
+                   (74+30*sq5)**0.5/4,
+                   K1,
+                   K3,
+                   (11+4*sq5)**0.5/2,
+                   (13+6*sq2)**0.5/2,
+                   (31+12*sq5)**0.5/2,
+                   (5+2*sq2)**0.5/2,
+                   (7+4*sq2)**0.5/2,
+                   22**0.5/2,
+                   10**0.5/2,
+                   1,
+                   (sq5+1)/2]
+        volumes = [sq2/2,
+                   1,
+                   sq2/3,
+                   (15+7*sq5)/4,
+                   (15+5*sq5)/12,
+                   (125+43*sq5)/4,
+                   (515+215*sq5)/12,
+                   K2,
+                   K4,
+                   (195+98*sq5)/12,
+                   (11+7*sq2)*2,
+                   (19+7*sq5)*2,
+                   (12+10*sq2)/3,
+                   (21+14*sq2)/3,
+                   23*sq2/12,
+                   8*sq2,
+                   5*sq2/3,
+                   (45+17*sq5)/6
+                   ]
+        volumes = np.array(volumes)*length
+        radius  = np.array(radius)*length**3 
+        for i in range(len(radius)):
+            R = radius[i]
+            V = volumes[i]
+            rate = V/(4*np.pi*R**3/3)
+            print(i,R,V,rate)
+
+        return      
+
     def test(self):
         """
         docstring for test
