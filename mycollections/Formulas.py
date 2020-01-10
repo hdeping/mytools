@@ -1805,6 +1805,27 @@ class Formulas(MyCommon):
 
 
         return
+
+    def getCoefs(self):
+        """
+        docstring for getCoefs
+        """
+        sq2 = 2**0.5
+        sq5 = 5**0.5
+        sq6 = 6**0.5
+        k1 = self.getValue(108*2**0.5,12*66**0.5)/12 
+        k2 = 1/(sq2*k1-1)
+        k3 = k1*(1+k2)**0.5 
+        K1 = ((k3**2+1)/3)**0.5
+        K1_prime = (K1**2-1/4)**0.5
+        K2 = (8*k3+(12*k3**2-6)**0.5)/3
+
+        K3 = ((k3**2+1)/3)**0.5
+        K3_prime = (K1**2-1/4)**0.5
+        K4 = (8*k3+(12*k3**2-6)**0.5)/3
+
+        res = [K1,K2,K3,K4]
+        return res 
     def test(self):
         """
         docstring for test
