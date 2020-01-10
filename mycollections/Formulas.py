@@ -1742,7 +1742,19 @@ class Formulas(MyCommon):
         """
         docstring for polyhedron468
         """
-        print()
+        print(np.cos(np.pi/8),np.sqrt(2+2**0.5)/2)
+        # self.getCubicSol([1,0,-1,-1])
+        # x = self.getValue(108,12*69**0.5)/6
+        # print(x,x**3,x+1)
+
+        x = sqrt(2)
+        v4 = (3+x)*6
+        v6 = (1+x)*18
+        v8 = (5+3*x)*6
+        volume = (v4+v6+v8)/3
+        print(volume)
+
+
         return
 
     def test(self):
