@@ -1757,12 +1757,33 @@ class Formulas(MyCommon):
 
         return
 
+    def polyhedron4610(self):
+        """
+        docstring for polyhedron4610
+        """
+        x = sqrt(5)
+        y = 5*(x-1)**2*(10-2*x)
+        y = simplify(y/16)
+        print(y)
+
+        print(np.tan(2*np.pi/5),(5+2*5**0.5)**0.5)
+        y = (15+3*x)*(x+1)**2
+        print(simplify(y))
+
+        v4 = (3+2*x)*15
+        v6 = (2+x)*45
+        v8 = (10+2*x)*15
+        volume = (v4+v6+v8)/3/5
+        print(volume)
+
+        return
+
     def test(self):
         """
         docstring for test
         """
         
-        self.polyhedron468()
+        self.polyhedron4610()
         return
 
   
