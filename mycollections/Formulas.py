@@ -1937,23 +1937,30 @@ class Formulas(MyCommon):
                     r*sin(theta1)*sin(theta2)*cos(theta3),
                     r*sin(theta1)*cos(theta2),
                     r*cos(theta1)]
+        quotients = [1,r**2,(r*sin(theta1))**2,(r*sin(theta1)*sin(theta2))**2]
         dim = len(variables)
+        format_string = self.getFormatString(dim)
+        # print(format_string)
+
+        # get inverse differential matrix
+        tangent = []
         for i in range(dim):
             line = []
+            array = []
             for j in range(dim):
-                line.append(0)
+                x   = formulas[i]
+                var = variables[j]
+                y   = diff(x,var)/quotients[j]
+                y   = simplify(y)
+                array.append(y)
+                y   = self.getLatex(y)
+                line.append(y)
+                # print(j,y)
 
-            for j in range(dim):
-                
-
-        formulas = [[],
-                    [],
-                    [],
-                    []]
-
-
+            tangent.append(array)
+            print(format_string % (tuple(line)))
         
-        # self.getLaplacian(variables,formulas)
+        self.getLaplacian(variables,tangent)
 
     def getFormatString(self,dim):
         """
@@ -1965,6 +1972,7 @@ class Formulas(MyCommon):
         format_string += "%s \\\\"
 
         return format_string
+
     def getLaplacian(self,variables,formulas):
         """
         docstring for getLaplacian
@@ -2011,6 +2019,7 @@ class Formulas(MyCommon):
             x = self.getLatex(x)
             print(x)
         return
+
     def getLatex(self,y):
         """
         docstring for getLatex
@@ -2019,6 +2028,7 @@ class Formulas(MyCommon):
         y = y.replace("{\\left(","")
         y = y.replace("\\right)}","")
         return y
+
     def test(self):
         """
         docstring for test
@@ -2026,13 +2036,9 @@ class Formulas(MyCommon):
         
         # self.polyhedronTrun()
         # self.getAllPolyhedra()
-        self.laplacian()
-        # self.laplacian4D()
+        # self.laplacian()
+        self.laplacian4D()
         return
 
-  
-
 formula = Formulas()
-
 formula.test() 
-  
