@@ -1895,7 +1895,8 @@ class Formulas(MyCommon):
             rate = V/(4*np.pi*R**3/3)
             rates.append(rate)
             # print("%2d,%15s,%7.3f,%7.3f,%7.3f"%(i,keys[i],R,V,rate))
-            print("$%7.3fa$ $%7.3fa^3$ %5.1f%s"%(R,V,rate*100,"%"))
+            # print("$%7.3fa$ $%7.3fa^3$ %5.1f%s"%(R,V,rate*100,"%"))
+            print("%7.3f %7.3f %5.1f"%(R,V,rate*100))
 
         # keys = np.array(keys)
         # print(keys[np.argsort(rates)])
@@ -1917,25 +1918,73 @@ class Formulas(MyCommon):
 
 
         variables = [r,theta,phi]
-        # for i in range(9):
-        #     n    = i // 3
-        #     m    = i %  3
-        #     x    = formulas[n][m]
-        #     line = []
-        #     for j in range(3):
-        #         var = variables[j]
-        #         y = diff(x,var)
-        #         y = latex(y)
-        #         y = y.replace("{\\left(","")
-        #         y = y.replace("\\right)}","")
-        #         line.append(y)
-        # (0,0,0),(0,1,0),(0,2,0),
-        # (0,0,1),(0,1,1),(0,2,1),
-        # (0,0,2),(0,1,2),(0,2,2),
-        dim = 3
-        total = [0,0,0]
+        self.getLaplacian(variables,formulas)
+
+        
+
+        return
+    def laplacian4D(self):
+        """
+        docstring for laplacian
+        compute the deriations
+        """
+        theta1 = Symbol("theta1")
+        theta2 = Symbol("theta2")
+        theta3 = Symbol("theta3")
+        r      = Symbol("r")
+        variables = [r,theta1,theta2,theta3]
+        formulas = [r*sin(theta1)*sin(theta2)*sin(theta3),
+                    r*sin(theta1)*sin(theta2)*cos(theta3),
+                    r*sin(theta1)*cos(theta2),
+                    r*cos(theta1)]
+        dim = len(variables)
         for i in range(dim):
-            additions = [0,0,0]
+            line = []
+            for j in range(dim):
+                line.append(0)
+
+            for j in range(dim):
+                
+
+        formulas = [[],
+                    [],
+                    [],
+                    []]
+
+
+        
+        # self.getLaplacian(variables,formulas)
+
+    def getFormatString(self,dim):
+        """
+        docstring for getFormatString
+        """
+        format_string = ""
+        for i in range(dim - 1):
+            format_string += "%s & "
+        format_string += "%s \\\\"
+
+        return format_string
+    def getLaplacian(self,variables,formulas):
+        """
+        docstring for getLaplacian
+        variables:
+            [r,theta,phi...]
+        formulas:
+            differential matrix
+        """
+        dim = len(variables)
+        # print(dim)
+        format_string = self.getFormatString(dim)
+
+        total = []
+        for i in range(dim):
+            total.append(0)
+
+        for i in range(dim):
+            additions = []
+            for k in range(dim):
+                additions.append(0)
             for j in range(dim):
                 line = []
                 for k in range(dim):
@@ -1947,21 +1996,21 @@ class Formulas(MyCommon):
                     line.append(y)
 
                 # print(y)
-                print(j,"%s & %s & %s \\\\"%(tuple(line)))
+                print(j,format_string % (tuple(line)))
             line = []
             for k in range(dim):
                 x = simplify(additions[k])
                 total[k] += x
                 x = self.getLatex(x)
                 line.append(x)
-            print(i,"summation: ","%s & %s & %s \\\\"%(tuple(line)))
+            print(i,"summation: ",format_string % (tuple(line)))
+
         print("------------- final results ------------")
         for k in range(dim):
             x = simplify(total[k])
             x = self.getLatex(x)
             print(x)
         return
-
     def getLatex(self,y):
         """
         docstring for getLatex
@@ -1978,6 +2027,7 @@ class Formulas(MyCommon):
         # self.polyhedronTrun()
         # self.getAllPolyhedra()
         self.laplacian()
+        # self.laplacian4D()
         return
 
   
