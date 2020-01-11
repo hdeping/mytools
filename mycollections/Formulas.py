@@ -1825,9 +1825,10 @@ class Formulas(MyCommon):
         k3 = k1*(1+k2)**0.5 
         K3 = ((k3**2+1)/3)**0.5
         K3_prime = (K1**2-1/4)**0.5
-        K4 = (8*k3+(12*k3**2-6)**0.5)/3
+        K4 = (20*k3+(15*(5+2*sq5)*k3**2-15*(11+5*sq5)/2)**0.5)/3
 
         res = [K1,K2,K3,K4]
+
         return res 
 
     def getAllPolyhedra(self):
@@ -1836,6 +1837,7 @@ class Formulas(MyCommon):
         """
         length = 1.0
         sq2    = 2**0.5
+        sq3    = 3**0.5
         sq5    = 5**0.5
         sq6    = 6**0.5
 
@@ -1865,7 +1867,7 @@ class Formulas(MyCommon):
                    10**0.5/2,
                    1,
                    (sq5+1)/2]
-        volumes = [sq2/2,
+        volumes = [sq2/12,
                    1,
                    sq2/3,
                    (15+7*sq5)/4,
@@ -1885,13 +1887,19 @@ class Formulas(MyCommon):
                    (45+17*sq5)/6
                    ]
         volumes = np.array(volumes)*length
-        radius  = np.array(radius)*length**3 
+        radius  = np.array(radius)*length**3
+        rates   = [] 
         for i in range(len(radius)):
             R = radius[i]
             V = volumes[i]
             rate = V/(4*np.pi*R**3/3)
-            print(i,R,V,rate)
+            rates.append(rate)
+            print(i,keys[i],R,V,rate)
 
+        keys = np.array(keys)
+        print(keys[np.argsort(rates)])
+        print(np.sort(rates))
+        print(np.sort(volumes))
         return      
 
     def test(self):
@@ -1899,7 +1907,8 @@ class Formulas(MyCommon):
         docstring for test
         """
         
-        self.polyhedronTrun()
+        # self.polyhedronTrun()
+        self.getAllPolyhedra()
         return
 
   
