@@ -17,7 +17,7 @@
 
 import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
-from sympy import latex
+from sympy import latex,Symbol,diff
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -1894,21 +1894,90 @@ class Formulas(MyCommon):
             V = volumes[i]
             rate = V/(4*np.pi*R**3/3)
             rates.append(rate)
-            print(i,keys[i],R,V,rate)
+            # print("%2d,%15s,%7.3f,%7.3f,%7.3f"%(i,keys[i],R,V,rate))
+            print("$%7.3fa$ $%7.3fa^3$ %5.1f%s"%(R,V,rate*100,"%"))
 
-        keys = np.array(keys)
-        print(keys[np.argsort(rates)])
-        print(np.sort(rates))
-        print(np.sort(volumes))
+        # keys = np.array(keys)
+        # print(keys[np.argsort(rates)])
+        # print(np.sort(rates))
+        # print(np.sort(volumes))
         return      
 
+    def laplacian(self):
+        """
+        docstring for laplacian
+        compute the deriations
+        """
+        theta = Symbol("theta")
+        phi   = Symbol("phi")
+        r     = Symbol("r")
+        formulas = [[sin(theta)*cos(phi),cos(theta)*cos(phi)/r,-sin(phi)/(r*sin(theta))],
+                    [sin(theta)*sin(phi),cos(theta)*sin(phi)/r,cos(phi)/(r*sin(theta))],
+                    [cos(theta),-sin(theta)/r,0]]
+
+
+        variables = [r,theta,phi]
+        # for i in range(9):
+        #     n    = i // 3
+        #     m    = i %  3
+        #     x    = formulas[n][m]
+        #     line = []
+        #     for j in range(3):
+        #         var = variables[j]
+        #         y = diff(x,var)
+        #         y = latex(y)
+        #         y = y.replace("{\\left(","")
+        #         y = y.replace("\\right)}","")
+        #         line.append(y)
+        # (0,0,0),(0,1,0),(0,2,0),
+        # (0,0,1),(0,1,1),(0,2,1),
+        # (0,0,2),(0,1,2),(0,2,2),
+        dim = 3
+        total = [0,0,0]
+        for i in range(dim):
+            additions = [0,0,0]
+            for j in range(dim):
+                line = []
+                for k in range(dim):
+                    x   = formulas[i][k]
+                    var = variables[j]
+                    y = diff(x,var)
+                    additions[k] += formulas[i][j]*y
+                    y = self.getLatex(y)
+                    line.append(y)
+
+                # print(y)
+                print(j,"%s & %s & %s \\\\"%(tuple(line)))
+            line = []
+            for k in range(dim):
+                x = simplify(additions[k])
+                total[k] += x
+                x = self.getLatex(x)
+                line.append(x)
+            print(i,"summation: ","%s & %s & %s \\\\"%(tuple(line)))
+        print("------------- final results ------------")
+        for k in range(dim):
+            x = simplify(total[k])
+            x = self.getLatex(x)
+            print(x)
+        return
+
+    def getLatex(self,y):
+        """
+        docstring for getLatex
+        """
+        y = latex(y)
+        y = y.replace("{\\left(","")
+        y = y.replace("\\right)}","")
+        return y
     def test(self):
         """
         docstring for test
         """
         
         # self.polyhedronTrun()
-        self.getAllPolyhedra()
+        # self.getAllPolyhedra()
+        self.laplacian()
         return
 
   
