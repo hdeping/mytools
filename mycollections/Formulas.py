@@ -1962,6 +1962,54 @@ class Formulas(MyCommon):
         
         self.getLaplacian(variables,tangent)
 
+    def laplacianAnyD(self,dim):
+        """
+        docstring for laplacianAnyD
+        """
+        # get variables
+        variables = [Symbol("r")]
+        for i in range(1,dim):
+            variables.append(Symbol("theta%d"%(i)))
+
+        # get expressions
+        formulas = [variables[0]]
+        for i in range(1,dim):
+            x = sin(variables[i])
+            formulas.append(formulas[-1]*x)
+        for i in range(dim-1):
+            x = cos(variables[i+1])
+            formulas[i] *= x
+
+        # get quotients
+        quotients = [1,variables[0]**2]
+        for i in range(1,dim - 1):
+            x = (sin(variables[i]))**2
+            quotients.append(quotients[-1]*x)
+        format_string = self.getFormatString(dim)
+        # print(variables)
+        # print(formulas)
+        # print(quotients)
+        # get inverse differential matrix
+        tangent = []
+        for i in range(dim):
+            line = []
+            array = []
+            for j in range(dim):
+                x   = formulas[i]
+                var = variables[j]
+                y   = diff(x,var)/quotients[j]
+                y   = simplify(y)
+                array.append(y)
+                y   = self.getLatex(y)
+                line.append(y)
+                # print(j,y)
+
+            tangent.append(array)
+            # print(format_string % (tuple(line)))
+        
+        self.getLaplacian(variables,tangent)
+        return
+
     def getFormatString(self,dim):
         """
         docstring for getFormatString
@@ -2004,20 +2052,20 @@ class Formulas(MyCommon):
                     line.append(y)
 
                 # print(y)
-                print(j,format_string % (tuple(line)))
+                # print(j,format_string % (tuple(line)))
             line = []
             for k in range(dim):
                 x = simplify(additions[k])
                 total[k] += x
                 x = self.getLatex(x)
                 line.append(x)
-            print(i,"summation: ",format_string % (tuple(line)))
+            # print(i,"summation: ",format_string % (tuple(line)))
 
-        print("------------- final results ------------")
+        # print("------------- final results ------------")
         for k in range(dim):
             x = simplify(total[k])
             x = self.getLatex(x)
-            print(x)
+            # prisnt(x)
         return
 
     def getLatex(self,y):
@@ -2029,6 +2077,33 @@ class Formulas(MyCommon):
         y = y.replace("\\right)}","")
         return y
 
+    def testLaplacian(self):
+        """
+        docstring for testLaplacian
+        """
+        print("test begins")
+        t1 = time.time()
+        for i in range(2,8):
+            # self.laplacianAnyD(i)
+            t2 = time.time()
+            print(i,t2 - t1)
+            t1 = t2
+
+
+        data = [[2, 0.415179967880249],
+                [3, 1.5404701232910156],
+                [4, 4.624369859695435],
+                [5,11.405637979507446],
+                [6,30.010880947113037],
+                [7,86.04127788543701]]
+        data = np.array(data)
+        # data = data[:,1]
+        # print(data,data[1:]/data[:-1]) 
+        # plt.plot(data[:,0],np.log(data[:,1]))
+        plt.plot(data[:,0]**4,data[:,1],"o-")
+        plt.show()
+        return
+        
     def test(self):
         """
         docstring for test
@@ -2037,7 +2112,9 @@ class Formulas(MyCommon):
         # self.polyhedronTrun()
         # self.getAllPolyhedra()
         # self.laplacian()
-        self.laplacian4D()
+        # self.laplacian4D()
+        self.testLaplacian()
+
         return
 
 formula = Formulas()
