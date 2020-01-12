@@ -17,7 +17,8 @@
 
 import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
-from sympy import latex,Symbol,diff
+from sympy import latex,Symbol,diff,solve,factor
+from sympy import sympify
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -2103,7 +2104,38 @@ class Formulas(MyCommon):
         plt.plot(data[:,0]**4,data[:,1],"o-")
         plt.show()
         return
-        
+    
+    def intersection(self):
+        """
+        docstring for intersection
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        n = Symbol("n")
+        i = Symbol("i")
+
+        y1 = n*(x/(i)+y/(n+1-i))-1
+        y2 = y1.subs(i,i+1)
+        z = solve([y1,y2],[x,y])
+        x1 = z[x]
+        y1 = factor(z[y])
+        x2 = x1.subs(i,i+1)
+        y2 = y1.subs(i,i+1)
+        area = -factor(x1*y2 - x2*y1)/2
+        print(area)
+        y = sympy.summation(area,(i,0,n-1))
+        y = factor(y)
+        print(y)
+
+        for i in range(1,10):
+            print(i,y.subs(n,i))
+
+        z = sympify("x**2 + y**2 - sin(z)")
+        z = expand(z**2)
+        print(z)
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -2113,7 +2145,8 @@ class Formulas(MyCommon):
         # self.getAllPolyhedra()
         # self.laplacian()
         # self.laplacian4D()
-        self.testLaplacian()
+        # self.testLaplacian()
+        self.intersection()
 
         return
 
