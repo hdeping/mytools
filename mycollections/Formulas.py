@@ -1990,26 +1990,19 @@ class Formulas(MyCommon):
             quotients.append(quotients[-1]*x)
         format_string = self.getFormatString(dim)
         # print(variables)
-        # print(formulas)
+        print(formulas)
         # print(quotients)
         # get inverse differential matrix
-        tangent = []
+        tangent = sympy.zeros(dim)
+        formulas = Matrix(formulas)
         for i in range(dim):
-            line = []
-            array = []
-            for j in range(dim):
-                x   = formulas[i]
-                var = variables[j]
-                y   = diff(x,var)/quotients[j]
-                y   = simplify(y)
-                array.append(y)
-                y   = self.getLatex(y)
-                line.append(y)
-                # print(j,y)
-
-            tangent.append(array)
-            # print(format_string % (tuple(line)))
-        
+            var = variables[i]
+            x   = diff(formulas,var)
+            tangent[i,:] = x.transpose()/quotients[i]
+        tangent = tangent.transpose()
+        # print(tangent)
+        # y = tangent[:,0].transpose()*tangent
+        # print(trigsimp(tangent.transpose()*tangent))
         self.getLaplacian(variables,tangent)
         return
 
@@ -2036,47 +2029,30 @@ class Formulas(MyCommon):
         # print(dim)
         format_string = self.getFormatString(dim)
 
-        total = []
-        for i in range(dim):
-            total.append(0)
+        total = sympy.zeros(dim)[0,:]
 
-        for i in range(dim):
-            additions = []
-            for k in range(dim):
-                additions.append(0)
-            for j in range(dim):
-                line = []
-                for k in range(dim):
-                    x   = formulas[i][k]
-                    var = variables[j]
-                    y = diff(x,var)
-                    additions[k] += formulas[i][j]*y
-                    y = self.getLatex(y)
-                    line.append(y)
-
-                # print(y)
-                # print(j,format_string % (tuple(line)))
-            line = []
-            for k in range(dim):
-                x = trigsimp(additions[k])
-                total[k] += x
-                x = self.getLatex(x)
-                line.append(x)
-            # print(i,"summation: ",format_string % (tuple(line)))
+        for k in range(dim):    
+            tmp = sympy.zeros(dim)
+            for i in range(dim):
+                var = variables[i]
+                x   = diff(formulas[k,:],var)
+                tmp[i,:] = x
+            total += formulas[k,:]*tmp
 
         print("------------- final results ------------")
-        for k in range(dim):
-            x = expand_trig(total[k])
-            x = simplify(x)
-            x = self.getLatex(x)
-            print(x)
+        x = expand_trig(total)
+        x = simplify(x)
+        print(x)
+        x = self.getLatex(x)
+        print(x)
+           
         return
 
     def getLatex(self,y):
         """
         docstring for getLatex
         """
-        y = trigsimp(y)
+        # y = trigsimp(y)
         y = latex(y)
         y = y.replace("{\\left(","")
         y = y.replace("\\right)}","")
@@ -2088,7 +2064,7 @@ class Formulas(MyCommon):
         """
         print("test begins")
         t1 = time.time()
-        for i in range(2,4):
+        for i in range(3,8):
             self.laplacianAnyD(i)
             t2 = time.time()
             print(i,t2 - t1)
