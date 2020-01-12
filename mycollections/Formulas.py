@@ -18,7 +18,8 @@
 import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
 from sympy import latex,Symbol,diff,solve,factor
-from sympy import sympify
+from sympy import sympify,trigsimp,expand_trig
+from sympy import Matrix
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -1969,8 +1970,9 @@ class Formulas(MyCommon):
         """
         # get variables
         variables = [Symbol("r")]
-        for i in range(1,dim):
-            variables.append(Symbol("theta%d"%(i)))
+        variables += list(sympy.symbols("theta1:%d"%(dim)))
+        # for i in range(1,dim):
+        #     variables.append(Symbol("theta%d"%(i)))
 
         # get expressions
         formulas = [variables[0]]
@@ -2056,23 +2058,25 @@ class Formulas(MyCommon):
                 # print(j,format_string % (tuple(line)))
             line = []
             for k in range(dim):
-                x = simplify(additions[k])
+                x = trigsimp(additions[k])
                 total[k] += x
                 x = self.getLatex(x)
                 line.append(x)
             # print(i,"summation: ",format_string % (tuple(line)))
 
-        # print("------------- final results ------------")
+        print("------------- final results ------------")
         for k in range(dim):
-            x = simplify(total[k])
+            x = expand_trig(total[k])
+            x = simplify(x)
             x = self.getLatex(x)
-            # prisnt(x)
+            print(x)
         return
 
     def getLatex(self,y):
         """
         docstring for getLatex
         """
+        y = trigsimp(y)
         y = latex(y)
         y = y.replace("{\\left(","")
         y = y.replace("\\right)}","")
@@ -2084,8 +2088,8 @@ class Formulas(MyCommon):
         """
         print("test begins")
         t1 = time.time()
-        for i in range(2,8):
-            # self.laplacianAnyD(i)
+        for i in range(2,4):
+            self.laplacianAnyD(i)
             t2 = time.time()
             print(i,t2 - t1)
             t1 = t2
@@ -2101,8 +2105,8 @@ class Formulas(MyCommon):
         # data = data[:,1]
         # print(data,data[1:]/data[:-1]) 
         # plt.plot(data[:,0],np.log(data[:,1]))
-        plt.plot(data[:,0]**4,data[:,1],"o-")
-        plt.show()
+        # plt.plot(data[:,0]**4,data[:,1],"o-")
+        # plt.show()
         return
     
     def intersection(self):
@@ -2136,6 +2140,53 @@ class Formulas(MyCommon):
 
         return
 
+    def testMatrices(self):
+        """
+        docstring for testMatrices
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        A = Matrix([[sin(x),-cos(y)],
+                      [-cos(x),sin(y)]])
+        B = Matrix([x**2,y**3])
+        print(B.transpose()*B)
+        print(A)
+        a = A.det()
+        a = trigsimp(a)
+
+        print(A.diff(x))
+        print(a)
+
+        print(A*B)
+
+        print(A.transpose())
+        print(A[:,1])
+        print(A*A)
+        print(trigsimp(A**2))
+        s = []
+        s.append(latex(A))
+        print(s)
+
+        print(latex(A))
+
+
+        x = sympy.symbols("theta1:3")
+        y = Matrix([[sin(x[0])*cos(x[1])],
+                    [sin(x[0])*sin(x[1])],
+                    [cos(x[0])*sin(x[1])],
+                    [cos(x[0])*sin(x[1])]])
+        z1 = diff(y,x[0])
+        z2 = diff(y,x[1])
+        z  = sympy.zeros(4)
+        for i in range(2):
+            z[i,:]   = z1.transpose()
+            z[i+2,:] = z2.transpose()
+        print(z)
+
+
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -2145,8 +2196,9 @@ class Formulas(MyCommon):
         # self.getAllPolyhedra()
         # self.laplacian()
         # self.laplacian4D()
-        # self.testLaplacian()
-        self.intersection()
+        self.testLaplacian()
+        # self.intersection()
+        # self.testMatrices()
 
         return
 
