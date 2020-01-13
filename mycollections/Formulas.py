@@ -19,7 +19,7 @@ import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
 from sympy import latex,Symbol,diff,solve,factor
 from sympy import sympify,trigsimp,expand_trig
-from sympy import Matrix,limit
+from sympy import Matrix,limit,tan,Integer
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -2054,7 +2054,7 @@ class Formulas(MyCommon):
         """
         # y = trigsimp(y)
         y = latex(y)
-        y = y.replace("{\\left(","")
+        y = y.replace("{\\left("," ")
         y = y.replace("\\right)}","")
         return y
 
@@ -2174,7 +2174,69 @@ class Formulas(MyCommon):
             y = y.diff(x)
             
         return
-        
+    
+    def tangentSeries(self):
+        """
+        docstring for tangentSeries
+        """
+        x = self.xyz[0]
+        y = tan(x)
+        # y = y.series(x,0,20)
+        # for i in range(10):
+        #     y = y.diff(x)
+        #     y = expand(y)
+        #     print(self.getLatex(y) + "\\\\")
+        # initialized by tan(x)
+        coef = [0,1]
+
+        bernoulli_index = []
+        for i in range(20000):
+            # get new coef
+            for j in range(len(coef)):
+                coef[j] = coef[j]*j 
+            # expand the coef
+            coef.append(coef[-1])
+            n = len(coef)
+            for j in range(-1,-n,-2):
+                coef[j] = coef[j-1] + coef[j+1]
+                coef[j+1] = 0
+            # print(j,coef)
+            if n%2 == 1:
+                coef[0] = coef[1]
+                coef[1] = 0
+                s = 2**(n-1)
+                bernoulli = Integer(coef[0])*(n-1)/s/(s-1)
+                # get the numerator and the denominator
+                num,denom = sympy.fraction(bernoulli)
+                # print(n-2,coef[0],n,d)
+                if denom == 6:
+                    # print("B%d"%(n-1),num,denom)
+                    print("B%d"%(n-1),(n-1)%12,num%denom,denom)
+                    bernoulli_index.append(n-1)
+
+            # self.printInverseOdd(coef)
+            # print(coef)
+
+        print(bernoulli_index)
+        print(len(bernoulli_index))
+
+        return
+    def printInverseOdd(self,array):
+        """
+        docstring for printInverseOdd
+        array:
+            input array, [1,2,3,4,5] --> 5,3,1
+            [1,2,3,4] -> 4,2
+        """
+        n = len(array)
+        if n%2 == 1:
+            n = n+1 
+        res = []
+        for i in range(-1,-n,-2):
+            # print(array,i)
+            res.append(array[i])
+        # print(res)
+        return res[-1]
     def test(self):
         """
         docstring for test
@@ -2189,6 +2251,7 @@ class Formulas(MyCommon):
         # self.testMatrices()
         # self.getCubicSol([1,1,0,-1])
         # self.testSeries()
+        self.tangentSeries()
 
 
         return
