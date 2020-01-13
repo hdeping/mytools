@@ -2237,6 +2237,35 @@ class Formulas(MyCommon):
             res.append(array[i])
         # print(res)
         return res[-1]
+
+
+    def testBernoulli6(self):
+        """
+        docstring for testBernoulli6
+        """
+        data = np.loadtxt("bernoulli6.json",delimiter=" ",dtype="int")
+        # print(data)
+        data = data[:,1]
+        print(sum(data==2),len(data))
+
+        ii = data[0]
+        counts = []
+        count  = 1
+        for jj in data[1:]:
+            if jj == ii:
+                count += 1 
+            else:
+                counts.append(count)
+                count = 1
+            ii = jj
+        counts = np.array(counts)
+        counts = counts.reshape((-1,2))
+        print(counts)
+        stati = np.zeros(10)
+        for i in counts[:,0]:
+            stati[i] += 1 
+        print(stati)
+        return
     def test(self):
         """
         docstring for test
@@ -2251,7 +2280,8 @@ class Formulas(MyCommon):
         # self.testMatrices()
         # self.getCubicSol([1,1,0,-1])
         # self.testSeries()
-        self.tangentSeries()
+        # self.tangentSeries()
+        self.testBernoulli6()
 
 
         return
