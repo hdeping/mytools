@@ -19,7 +19,7 @@ import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
 from sympy import latex,Symbol,diff,solve,factor
 from sympy import sympify,trigsimp,expand_trig
-from sympy import Matrix
+from sympy import Matrix,limit
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -2160,9 +2160,21 @@ class Formulas(MyCommon):
         print(z)
 
 
-
-
         return
+
+    def testSeries(self):
+        """
+        docstring for testSeries
+        """
+        x = self.xyz[0]
+        y = x/(exp(x) - 1)
+        for i in range(20):
+            s = limit(y,x,0)
+            print(y,s)
+            y = y.diff(x)
+            
+        return
+        
     def test(self):
         """
         docstring for test
@@ -2172,9 +2184,12 @@ class Formulas(MyCommon):
         # self.getAllPolyhedra()
         # self.laplacian()
         # self.laplacian4D()
-        self.testLaplacian()
+        # self.testLaplacian()
         # self.intersection()
         # self.testMatrices()
+        # self.getCubicSol([1,1,0,-1])
+        # self.testSeries()
+
 
         return
 
