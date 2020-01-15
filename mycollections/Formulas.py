@@ -1990,7 +1990,7 @@ class Formulas(MyCommon):
             quotients.append(quotients[-1]*x)
         format_string = self.getFormatString(dim)
         # print(variables)
-        print(formulas)
+        # print(formulas)
         # print(quotients)
         # get inverse differential matrix
         tangent = sympy.zeros(dim)
@@ -2037,6 +2037,7 @@ class Formulas(MyCommon):
                 var = variables[i]
                 x   = diff(formulas[k,:],var)
                 tmp[i,:] = x
+            # print(k,self.getLatex(simplify(expand_trig(tmp))))
             total += formulas[k,:]*tmp
 
         print("------------- final results ------------")
@@ -2064,7 +2065,7 @@ class Formulas(MyCommon):
         """
         print("test begins")
         t1 = time.time()
-        for i in range(3,8):
+        for i in range(2,5):
             self.laplacianAnyD(i)
             t2 = time.time()
             print(i,t2 - t1)
@@ -2190,7 +2191,7 @@ class Formulas(MyCommon):
         coef = [0,1]
 
         bernoulli_index = []
-        for i in range(20000):
+        for i in range(2000):
             # get new coef
             for j in range(len(coef)):
                 coef[j] = coef[j]*j 
@@ -2208,8 +2209,9 @@ class Formulas(MyCommon):
                 bernoulli = Integer(coef[0])*(n-1)/s/(s-1)
                 # get the numerator and the denominator
                 num,denom = sympy.fraction(bernoulli)
+                # print(n-1,denom)
                 # print(n-2,coef[0],n,d)
-                if denom == 6:
+                if denom == 66:
                     # print("B%d"%(n-1),num,denom)
                     print("B%d"%(n-1),(n-1)%12,num%denom,denom)
                     bernoulli_index.append(n-1)
@@ -2275,13 +2277,13 @@ class Formulas(MyCommon):
         # self.getAllPolyhedra()
         # self.laplacian()
         # self.laplacian4D()
-        # self.testLaplacian()
+        self.testLaplacian()
         # self.intersection()
         # self.testMatrices()
         # self.getCubicSol([1,1,0,-1])
         # self.testSeries()
         # self.tangentSeries()
-        self.testBernoulli6()
+        # self.testBernoulli6()
 
 
         return
