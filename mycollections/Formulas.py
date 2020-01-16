@@ -17,14 +17,16 @@
 
 import sympy
 from sympy import expand,simplify,cos,sin,exp,sqrt
-from sympy import latex
+from sympy import latex,Symbol,diff,solve,factor
+from sympy import sympify,trigsimp,expand_trig
+from sympy import Matrix,limit,tan,Integer
 import numpy as np
 from mytools import MyCommon
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import json
-
+import time
 
 
 class Formulas(MyCommon):
@@ -583,7 +585,7 @@ class Formulas(MyCommon):
                 count += 1
 
         if count == 0:
-            print(m,"is prime")
+            # print(m,"is prime")
             return True
         else:
             return False
@@ -656,6 +658,27 @@ class Formulas(MyCommon):
         check if a^{p-1} = 1 (mod p)
         """
         binary = bin(p - 1)[2:]
+        length = len(binary)
+        if binary[-1] == "1":
+            result = a 
+        else:
+            result = 1
+        x = a
+        for i in range(length - 1):
+            x = x * x
+            x = x % p
+            if binary[-2-i] == "1":
+                result = result*x
+                result = result%p
+
+        # print(a,p,result)
+        return result
+    def getModN(self,a,n,p):
+        """
+        docstring for getMod
+        return a^{n} (mod p)
+        """
+        binary = bin(n)[2:]
         length = len(binary)
         if binary[-1] == "1":
             result = a 
@@ -747,6 +770,35 @@ class Formulas(MyCommon):
         self.bernoulliGen() 
         self.dealData() 
         self.continueFrac() 
+
+
+        # self.testFermat()
+        # self.diophantine(98765432123456789,12345678987654321)
+        # print(self.getFactors(98765432123456789))
+        # print(self.getFactors(12345678987654321))
+        # self.isPrime
+        # print(self.fermatPrimeTest(987654321234567834349))
+        # self.testCubic()
+        # self.hardyWeinberg()
+        # self.testAllMod()
+        # self.selectNum70()
+        # self.polygon17()
+        # self.polygon257()
+
+        # self.idCardCheck()
+        # self.fermatAndGroup(56)
+
+        # self.primeSpiral()
+        # print(self.getModN(2,18000,349589))
+        # self.RSA()
+        # self.alternatedGroup()
+        # self.fibonacci()
+        # t1   = time.time()
+        # num  = 95
+        # s    = self.divideNumber2(num)
+        # print(time.time() - t1)
+        # self.polyhedron33335()
+        # self.polyhedron3454()
         
         return
 
@@ -1229,31 +1281,1012 @@ class Formulas(MyCommon):
         result = np.array(result)
         print(result)
         return
+
+    def primeSpiral(self):
+        """
+        docstring for primeSpiral
+        16 15 14 13
+        5   4  3 12
+        6   1  2 11
+        7   8  9 10
+        """
+        from PIL import Image
+        import time
+        primes = [2,3,5,7,11,13,17,19,23]
+        factors = np.array([3,5,7,11,13,17,19,23])
+        n = 500 
+        count = 1
+        t1 = time.time()
+        for i in range(25,n*n+1,2):
+            # none number in factors can 
+            # divide i
+            if sum(i%factors == 0) == 0:
+                if self.isPrime(i):
+                    primes.append(i)
+                    # self.fermatPrimeTest(i)
+        # print(time.time() - t1, primes)
+        indeces = np.ones(n*n,"int")*255
+        for ii in primes:
+            indeces[ii - 1] = 0
+        # print(indeces[:1000])
+        
+        # get the spiral array
+        # n should be even
+        rotation = [[0,1],[1,0],[0,-1],[-1,0]]
+        matrix = np.zeros((n,n),"int")
+        x0,y0 = 0,0
+        threshold = 1
+        rotation_index = 0 
+        ii,jj = rotation[rotation_index]
+        for i in range(n**2,0,-1):
+            matrix[x0,y0] = i
+            x1 = x0 + ii
+            y1 = y0 + jj
+            p1 = (x1 >= n or y1 >= n)
+            if p1 or ((not p1) and matrix[x1,y1] != 0):
+                rotation_index = (rotation_index + 1)%4 
+                ii,jj = rotation[rotation_index]
+                x1 = x0 + ii
+                y1 = y0 + jj
+
+            x0,y0 = x1,y1
+                
+
+        # print(matrix)
+        image = np.ones((n,n,3),np.uint8)
+        for i in range(n):
+            for j in range(n):
+                index = matrix[i,j] - 1
+                image[i,j,:] = [255,indeces[index],255]
+
+        # print(image[:,:,0])
+        image = Image.fromarray(image)
+        # image.show()
+        image.save("new.png")
+        
+        return
+    def isArrayEven(self,array):
+        """
+        judge if a array is even permutation
+        by computing inverse order
+        [0,1,2,3,4]  even
+        [0,1,2,4,3]  odd
+        [0,1,4,2,3]  even
+        """
+
+        n = len(array)
+        count = 0 
+        for i in range(n-1):
+            for j in range(i+1,n):
+                if array[i] > array[j]:
+                    count += 1
+        if count%2 == 0:
+            return True 
+        else:
+            return False
+
+    def getGroupIndex(self,array):
+        """
+        docstring for getGroupIndex
+        hash with n-scale
+        """
+        n = len(array)
+        index = 0 
+        for i in array:
+            index = n*index + i
+        return index
+
+    def getPermuProd(self,arr1,arr2):
+        """
+        docstring for getPermuProd
+        """
+        res = []
+        assert len(arr1) == len(arr2)
+        for i in arr1:
+            res.append(arr2[i])
+        return res
+    def getPermuIdProd(self,id1,id2):
+        """
+        docstring for getPer
+        """
+        arr1 = self.elements[id1]
+        arr2 = self.elements[id2]
+        arr3 = self.getPermuProd(arr1,arr2)
+        index = self.getGroupIndex(arr3)
+        id3   = self.dicts[str(index)]
+        return id3
+    def checkGroupTable(self,table):
+        """
+        docstring for checkGroupTable
+        """
+        n = len(table)
+        baseline = np.arange(n)
+        count = 0
+        arr = np.zeros(n,int)
+        for i in range(n):
+            arr[:] = table[:,i]
+            arr.sort()
+            if sum(arr == baseline) == n:
+                count += 1
+            arr[:] = table[i,:]
+            arr.sort()
+            if sum(arr == baseline) == n:
+                count += 1
+        # print(count,table[1,1],table[:,1].sort())
+        if count == 2*n:
+            print("it is a group table!!")
+        else:
+            print("NOT GROUP !!!")
+            
+        return  
+    def alternatedGroup(self):
+        """
+        docstring for alternatedGroup
+        n > 4, A_n is a simple group
+        """
+        import itertools
+        
+        # get A5
+        n = 4
+        self.elements = []
+        arr = np.arange(n)
+        arr = arr.tolist()
+        count = 0
+        self.dicts = {}
+        for line in itertools.permutations(arr,n):
+            if self.isArrayEven(line):
+                self.elements.append(line)
+                index = self.getGroupIndex(line)
+                self.dicts[str(index)] = count 
+                count += 1
+        # print(elements,len(elements))
+        print(len(self.elements))
+        # print(dicts,len(dicts))
+        # print(self.getPermuProd(elements[3],elements[4]))
+        # print(self.getPermuProd(elements[4],elements[3]))
+        # print(self.getPermuIdProd(3,4))
+        # print(self.getPermuIdProd(4,3))
+        group_table = []
+        order = np.math.factorial(n)//2
+        for i in range(order):
+            for j in range(order):
+                k = self.getPermuIdProd(i,j)
+                group_table.append(k)
+        group_table = np.array(group_table)
+        group_table = group_table.reshape((order,-1))
+        print(group_table)
+        # np.savetxt("table.json",group_table,fmt="%d")
+        # get cosets
+        arr1 = []
+        arr2 = []
+        for i in range(3,order):
+            arr3 = []
+            arr4 = []
+            for j in range(3):
+                k1 = self.getPermuIdProd(i,j)
+                k2 = self.getPermuIdProd(j,i)
+                arr3.append(k1)
+                arr4.append(k2)
+                if k1 not in arr1:
+                    arr1.append(k1)
+                if k2 not in arr2:
+                    arr2.append(k2)
+            print(i,arr3,arr4)
+
+        arr1.sort()
+        arr2.sort()
+        print(arr1)
+        print(arr2)
+
+        self.checkGroupTable(group_table)
+        return
+
+    def RSA(self):
+        """
+        docstring for RSA
+        public key (n,e1)
+        private key (n,e2)
+        message m, crypted message c
+        r = (p-1)(q-1)
+        m^e1 = c mod n
+        c^e2 = m mod n
+        c^e2 = m^(e1*e2)=m^(kr+1)=m mod n 
+        """
+        p = 131071
+        q = 524287
+        n = p*q 
+        r = (p-1)*(q-1)
+        print(self.getFactors(p-1))
+        print(self.getFactors(q-1))
+        e1 = 11*23*29 
+        e2 = self.diophantine(e1,r)[0]
+        e2 = e2%r
+        print(e1,e2)
+        A = 2
+        B = self.getModN(A,e1,n)
+        print("1",B)
+        B = self.getModN(B,e2,n)
+        print("2",B)
+        print(e2,e1*e2%r)
+        return 
+
+    def fibonacci(self):
+         """
+         docstring for fibonacci
+         Fibonacci 1,1,2,3,... 
+            
+         Pell 1,2,5,12
+            P_{2n+1} = P_{n}^2 + P_{n+1}^2
+         """
+         a = 1  
+         p = 1
+         b = p  
+         for i in range(40):
+             c = a + p*b 
+             a = b
+             b = c 
+             print(i+3,c,a**2+b**2)
+
+             
+         return 
+    def divideNumber2(self,num):
+        """
+        docstring for divideNumber
+        """
+        if num%2 == 0:
+            return
+        elif num == 3:
+            return [3]
+        else:
+            a = num // 2
+            res = [] 
+            if a%2 == 1:
+                res.append(a+1)
+                res = res + self.divideNumber(a)
+            else:
+                res.append(a)
+                res = res + self.divideNumber(a+1)
+            return res 
+
+    def divideNumber(self,num):
+        """
+        docstring for divideNumber
+        """
+        if num%2 == 0:
+            return
+        else:
+            res = [] 
+            while num > 3:
+                
+                a = num // 2
+                if a%2 == 1:
+                    res.append(a+1)
+                    num = a
+                else:
+                    res.append(a)
+                    num = a+1
+            res.append(3)
+            return res 
+        return
+    
+    def polyhedron(self):
+        """
+        docstring for polyhedron   
+        """
+        x = (sqrt(5) - 1)/2 
+        x = (2 - x**2)/2
+        x = expand(x)
+        print(x)
+        print((5**0.5+1)/4,np.cos(np.pi/5))
+        y = expand(1-x**2)
+        y = sqrt(y)
+        tan = (10 - 2*sqrt(5))*(6-2*sqrt(5))/16
+        tan = expand(tan)
+        print(y,tan)
+        print("tan pi/5:",np.tan(np.pi/5),np.sqrt(5-2*5**0.5))
+
+        x = sqrt(5)
+        y = (x-1)/(3-x)
+        print(simplify(y))
+
+        # dedocahedron
+        # r: radii of the inscribed sphere
+        y = simplify((25+10*x)/100*((x+1)/2)**2)
+        print(y)
+        # volume
+        y = simplify((25+10*x)/10*((x+1)/2))
+        print(y)
+
+        return
+
+    def polyhedron3454(self):
+        """
+        docstring for polyhedron3454
+        """
+        x = sqrt(5)
+        v3 = (15+10*x)*self.one/2
+        v4 = 30+15*x
+        v5 = 9*(5+2*x)*self.one/4
+        volume = (v3 + v4 + v5)*4
+
+        print(volume)
+
+        print((195+98*5**0.5)/12)
+
+        return
+
+    def polyhedron33335(self):
+        """
+        docstring for polyhedron33335
+        """
+        k = -(sqrt(5)+1)/16
+        sq5 = 5**0.5
+        x = self.getCubicSol([1,0,-self.one/2,k])
+        # print(x)
+        x = self.getValue(54+54*sq5,6*(102+162*sq5)**0.5)/12 
+        k1 = x
+        print(x,(x**3-x/2)*16-1-5**0.5)
+
+        # new equation
+        t = self.xyz[0]
+        y = (sqrt(5)+1)/4*(1+1/t)
+        y = expand(y**3-y/2-(sqrt(5)+1)/16)
+        y = -y*(16*t**3)*(sqrt(5)+1)/2
+        y = simplify(y)
+        print(y)
+
+
+        para = [2,-15 - 7*sqrt(5),-21 - 9*sqrt(5),-7 - 3*sqrt(5)]
+        x = self.getCubicSol(para)
+
+        # test the solution
+
+        y  = (15+7*sq5+self.getValue(20448+9140*sq5,12*(7137+3192*sq5)**0.5))/6
+        k2 = y
+        print(k1,k2,1/((sq5-1)*k1-1))
+        k3  = k1*(1+k2)**(0.5)
+        s1  = 15*(5+2*sq5)
+        s2  = - 15*(11+5*sq5)/2
+        volume = (20*k3+(s1*k3**2+s2)**0.5)/3
+        print(volume)
+        print((125+43*sq5)/4)
+
+        # print(self.getFactors(26419))
+
+
+        # para = [1,-10 - 4*sqrt(5),-18 - 6*sqrt(5),-4 - 4*sqrt(5)]
+        # x = self.getCubicSol(para)
+
+        # # test the solution
+
+        # y  = (10+4*sq5) 
+        # k2 = y
+
+        return
+    def polyhedron33334(self):
+        """
+        docstring for polyhedron33334
+        """
+        # 3,3,3,3,4
+        x = self.getValue(108*2**0.5,12*66**0.5)/12 
+        k1 = x
+        print(x,8*x**3-4*x)
+        y = 2**0.5*(self.getValue(19,3*33**0.5) - 2)/3 
+        k2 = y
+        print(y,1/x)
+        # \sin a/2
+        y = ((8 - self.getValue(19,3*33**0.5))/12)**0.5 
+        print(y,x**2+y**2)
+
+        t = self.xyz[0]
+        y = sqrt(2)*(1+t)/4/t
+        y = simplify(y**3-y/2-sqrt(2)/8)
+        print(y)
+        q = (2+9*21-27*49)//2 
+        p = -9*7 - 1
+        det = q**2+p**3
+        print(q,p,det,42*42*33)
+        print(self.getFactors(det))
+        print(self.getFactors(-q))
+
+        y = (self.getValue(566,42*33**0.5) - 1)/21 
+        k3 = y
+        print(7*y**3+y**2-3*y-1)
+        print(y,x,1/(2**1.5*x-1))
+        
+        t = self.xyz[0]
+        y = sqrt(2)*(1+t)/2/t
+        z = 4*sqrt(2)*y**3/(sqrt(2)*y-1)
+        z = simplify(z)
+        y = simplify(y**3-y/2-sqrt(2)/8)
+        print(z)
+
+        print(y)
+
+        sol = self.getCubicSol([1,-4,-6,-2])
+        sol = simplify(expand(sol**2))
+        k4 = (self.getValue(199,3*33**0.5) + 4)/3
+        print(sol)
+        print(self.getFactors(39898))
+
+        print(k1,k2,k1*k2)
+        print(k3,(1/(1-k1**2)-2)/2)
+        print(k4,1/(k1*2**0.5-1))
+        print(2*k1*(1+k4)**0.5)
+
+        print("k1,k2,k3 and volume")
+        k2 = k4 
+        k3 = k1*(1+k2)**0.5 
+        volume = (8*k3+(12*k3**2-6)**0.5)/3
+        print(k1,k2,k3,volume)
+        return
+    def getValue(self,a,b):
+        """
+        docstring for getValue
+        """
+        res = (a+b)**(1/3) + (a-b)**(1/3)
+        return res
+
+    def getCubicSol(self,parameters):
+        """
+        docstring for getCubicSol
+        """
+        a,b,c,d = parameters
+        q = -(2*b**3-9*a*b*c+27*a**2*d)*self.one/2
+        p = 3*a*c - b**2 
+        delta = sqrt(q**2+p**3)
+        x = (-b+(q+delta)**(self.one/3)+(q-delta)**(self.one/3))/(3*a)
+        x = simplify(x)
+        print(latex(x))
+        return x
+
+    def polyhedron468(self):
+        """
+        docstring for polyhedron468
+        """
+        print(np.cos(np.pi/8),np.sqrt(2+2**0.5)/2)
+        # self.getCubicSol([1,0,-1,-1])
+        # x = self.getValue(108,12*69**0.5)/6
+        # print(x,x**3,x+1)
+
+        x = sqrt(2)
+        v4 = (3+x)*6
+        v6 = (1+x)*18
+        v8 = (5+3*x)*6
+        volume = (v4+v6+v8)/3
+        print(volume)
+
+
+        return
+
+    def polyhedron4610(self):
+        """
+        docstring for polyhedron4610
+        """
+        x = sqrt(5)
+        y = 5*(x-1)**2*(10-2*x)
+        y = simplify(y/16)
+        print(y)
+
+        print(np.tan(2*np.pi/5),(5+2*5**0.5)**0.5)
+        y = (15+3*x)*(x+1)**2
+        print(simplify(y))
+
+        v4 = (3+2*x)*15
+        v6 = (2+x)*45
+        v8 = (10+2*x)*15
+        volume = (v4+v6+v8)/3/5
+        print(volume)
+
+        return
+
+    def polyhedron3434(self):
+        """
+        docstring for polyhedron3434
+        """
+        x = sqrt(5)
+        y = (1250+410*x)*(25+10*x)
+        y = simplify(y/250)
+        print(y)
+        return
+
+    def polyhedronTrun(self):
+        """
+        docstring for polyhedronTrun
+        truncated polyhedron
+        """
+        
+        x = sqrt(2)
+        x = expand((1+x)**3)
+        print(x)
+
+        x = sqrt(5)
+        y = 5*(x+3)/2 + 3*(5+2*x)
+        y = simplify(y/3)
+        print(y)
+
+
+        return
+
+    def getCoefs(self):
+        """
+        docstring for getCoefs
+        """
+        sq2 = 2**0.5
+        sq5 = 5**0.5
+        sq6 = 6**0.5
+        k1 = self.getValue(108*2**0.5,12*66**0.5)/12 
+        k2 = 1/(sq2*k1-1)
+        k3 = k1*(1+k2)**0.5 
+        K1 = ((k3**2+1)/3)**0.5
+        K1_prime = (K1**2-1/4)**0.5
+        K2 = (8*k3+(12*k3**2-6)**0.5)/3
+
+        k1 = self.getValue(54+54*sq5,6*(102+162*sq5)**0.5)/12 
+        k2 = 1/((sq5-1)*k1-1)
+        k3 = k1*(1+k2)**0.5 
+        K3 = ((k3**2+1)/3)**0.5
+        K3_prime = (K1**2-1/4)**0.5
+        K4 = (20*k3+(15*(5+2*sq5)*k3**2-15*(11+5*sq5)/2)**0.5)/3
+
+        res = [K1,K2,K3,K4]
+
+        return res 
+
+    def getAllPolyhedra(self):
+        """
+        docstring for getAllPolyhedra
+        """
+        length = 1.0
+        sq2    = 2**0.5
+        sq3    = 3**0.5
+        sq5    = 5**0.5
+        sq6    = 6**0.5
+
+        keys = ["tetrahedron","hexahedron","octahedron","dedocahedron",
+                "isocahedron","6,6,5","10,10,3","3,3,3,3,4","3,3,3,3,5",
+                "3,5,4,5","4,6,8","4,6,10","4,4,4,3","8,8,3","6,6,3",
+                "6,6,4","3,4,3,4","3,5,3,5"]
+
+        polyhedra = {}
+        K1,K2,K3,K4 = self.getCoefs()
+
+        radius  = [sq6/4,
+                   sq3/2,
+                   sq2/2,
+                   sq3*(1+sq5)/4,
+                   (10+2*sq5)**0.5/4,
+                   (58+18*sq5)**0.5/4,
+                   (74+30*sq5)**0.5/4,
+                   K1,
+                   K3,
+                   (11+4*sq5)**0.5/2,
+                   (13+6*sq2)**0.5/2,
+                   (31+12*sq5)**0.5/2,
+                   (5+2*sq2)**0.5/2,
+                   (7+4*sq2)**0.5/2,
+                   22**0.5/2,
+                   10**0.5/2,
+                   1,
+                   (sq5+1)/2]
+        volumes = [sq2/12,
+                   1,
+                   sq2/3,
+                   (15+7*sq5)/4,
+                   (15+5*sq5)/12,
+                   (125+43*sq5)/4,
+                   (515+215*sq5)/12,
+                   K2,
+                   K4,
+                   (195+98*sq5)/12,
+                   (11+7*sq2)*2,
+                   (19+7*sq5)*2,
+                   (12+10*sq2)/3,
+                   (21+14*sq2)/3,
+                   23*sq2/12,
+                   8*sq2,
+                   5*sq2/3,
+                   (45+17*sq5)/6
+                   ]
+        volumes = np.array(volumes)*length
+        radius  = np.array(radius)*length**3
+        rates   = [] 
+        for i in range(len(radius)):
+            R = radius[i]
+            V = volumes[i]
+            rate = V/(4*np.pi*R**3/3)
+            rates.append(rate)
+            # print("%2d,%15s,%7.3f,%7.3f,%7.3f"%(i,keys[i],R,V,rate))
+            # print("$%7.3fa$ $%7.3fa^3$ %5.1f%s"%(R,V,rate*100,"%"))
+            print("%7.3f %7.3f %5.1f"%(R,V,rate*100))
+
+        # keys = np.array(keys)
+        # print(keys[np.argsort(rates)])
+        # print(np.sort(rates))
+        # print(np.sort(volumes))
+        return      
+
+    def laplacian(self):
+        """
+        docstring for laplacian
+        compute the deriations
+        """
+        theta = Symbol("theta")
+        phi   = Symbol("phi")
+        r     = Symbol("r")
+        formulas = [[sin(theta)*cos(phi),cos(theta)*cos(phi)/r,-sin(phi)/(r*sin(theta))],
+                    [sin(theta)*sin(phi),cos(theta)*sin(phi)/r,cos(phi)/(r*sin(theta))],
+                    [cos(theta),-sin(theta)/r,0]]
+
+
+        variables = [r,theta,phi]
+        self.getLaplacian(variables,formulas)
+
+        
+
+        return
+    def laplacian4D(self):
+        """
+        docstring for laplacian
+        compute the deriations
+        """
+        theta1 = Symbol("theta1")
+        theta2 = Symbol("theta2")
+        theta3 = Symbol("theta3")
+        r      = Symbol("r")
+        variables = [r,theta1,theta2,theta3]
+        formulas = [r*sin(theta1)*sin(theta2)*sin(theta3),
+                    r*sin(theta1)*sin(theta2)*cos(theta3),
+                    r*sin(theta1)*cos(theta2),
+                    r*cos(theta1)]
+        quotients = [1,r**2,(r*sin(theta1))**2,(r*sin(theta1)*sin(theta2))**2]
+        dim = len(variables)
+        format_string = self.getFormatString(dim)
+        # print(format_string)
+
+        # get inverse differential matrix
+        tangent = []
+        for i in range(dim):
+            line = []
+            array = []
+            for j in range(dim):
+                x   = formulas[i]
+                var = variables[j]
+                y   = diff(x,var)/quotients[j]
+                y   = simplify(y)
+                array.append(y)
+                y   = self.getLatex(y)
+                line.append(y)
+                # print(j,y)
+
+            tangent.append(array)
+            print(format_string % (tuple(line)))
+        
+        self.getLaplacian(variables,tangent)
+
+    def laplacianAnyD(self,dim):
+        """
+        docstring for laplacianAnyD
+        """
+        # get variables
+        variables = [Symbol("r")]
+        variables += list(sympy.symbols("theta1:%d"%(dim)))
+        # for i in range(1,dim):
+        #     variables.append(Symbol("theta%d"%(i)))
+
+        # get expressions
+        formulas = [variables[0]]
+        for i in range(1,dim):
+            x = sin(variables[i])
+            formulas.append(formulas[-1]*x)
+        for i in range(dim-1):
+            x = cos(variables[i+1])
+            formulas[i] *= x
+
+        # get quotients
+        quotients = [1,variables[0]**2]
+        for i in range(1,dim - 1):
+            x = (sin(variables[i]))**2
+            quotients.append(quotients[-1]*x)
+        format_string = self.getFormatString(dim)
+        # print(variables)
+        # print(formulas)
+        # print(quotients)
+        # get inverse differential matrix
+        tangent = sympy.zeros(dim)
+        formulas = Matrix(formulas)
+        for i in range(dim):
+            var = variables[i]
+            x   = diff(formulas,var)
+            tangent[i,:] = x.transpose()/quotients[i]
+        tangent = tangent.transpose()
+        # print(tangent)
+        # y = tangent[:,0].transpose()*tangent
+        # print(trigsimp(tangent.transpose()*tangent))
+        self.getLaplacian(variables,tangent)
+        return
+
+    def getFormatString(self,dim):
+        """
+        docstring for getFormatString
+        """
+        format_string = ""
+        for i in range(dim - 1):
+            format_string += "%s & "
+        format_string += "%s \\\\"
+
+        return format_string
+
+    def getLaplacian(self,variables,formulas):
+        """
+        docstring for getLaplacian
+        variables:
+            [r,theta,phi...]
+        formulas:
+            differential matrix
+        """
+        dim = len(variables)
+        # print(dim)
+        format_string = self.getFormatString(dim)
+
+        total = sympy.zeros(dim)[0,:]
+
+        for k in range(dim):    
+            tmp = sympy.zeros(dim)
+            for i in range(dim):
+                var = variables[i]
+                x   = diff(formulas[k,:],var)
+                tmp[i,:] = x
+            # print(k,self.getLatex(simplify(expand_trig(tmp))))
+            total += formulas[k,:]*tmp
+
+        print("------------- final results ------------")
+        x = expand_trig(total)
+        x = simplify(x)
+        print(x)
+        x = self.getLatex(x)
+        print(x)
+           
+        return
+
+    def getLatex(self,y):
+        """
+        docstring for getLatex
+        """
+        # y = trigsimp(y)
+        y = latex(y)
+        y = y.replace("{\\left("," ")
+        y = y.replace("\\right)}","")
+        return y
+
+    def testLaplacian(self):
+        """
+        docstring for testLaplacian
+        """
+        print("test begins")
+        t1 = time.time()
+        for i in range(2,5):
+            self.laplacianAnyD(i)
+            t2 = time.time()
+            print(i,t2 - t1)
+            t1 = t2
+
+
+        data = [[2, 0.415179967880249],
+                [3, 1.5404701232910156],
+                [4, 4.624369859695435],
+                [5,11.405637979507446],
+                [6,30.010880947113037],
+                [7,86.04127788543701]]
+        data = np.array(data)
+        # data = data[:,1]
+        # print(data,data[1:]/data[:-1]) 
+        # plt.plot(data[:,0],np.log(data[:,1]))
+        # plt.plot(data[:,0]**4,data[:,1],"o-")
+        # plt.show()
+        return
+    
+    def intersection(self):
+        """
+        docstring for intersection
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        n = Symbol("n")
+        i = Symbol("i")
+
+        y1 = n*(x/(i)+y/(n+1-i))-1
+        y2 = y1.subs(i,i+1)
+        z = solve([y1,y2],[x,y])
+        x1 = z[x]
+        y1 = factor(z[y])
+        x2 = x1.subs(i,i+1)
+        y2 = y1.subs(i,i+1)
+        area = -factor(x1*y2 - x2*y1)/2
+        print(area)
+        y = sympy.summation(area,(i,0,n-1))
+        y = factor(y)
+        print(y)
+
+        for i in range(1,10):
+            print(i,y.subs(n,i))
+
+        z = sympify("x**2 + y**2 - sin(z)")
+        z = expand(z**2)
+        print(z)
+
+        return
+
+    def testMatrices(self):
+        """
+        docstring for testMatrices
+        """
+        x = self.xyz[0]
+        y = self.xyz[1]
+        A = Matrix([[sin(x),-cos(y)],
+                      [-cos(x),sin(y)]])
+        B = Matrix([x**2,y**3])
+        print(B.transpose()*B)
+        print(A)
+        a = A.det()
+        a = trigsimp(a)
+
+        print(A.diff(x))
+        print(a)
+
+        print(A*B)
+
+        print(A.transpose())
+        print(A[:,1])
+        print(A*A)
+        print(trigsimp(A**2))
+        s = []
+        s.append(latex(A))
+        print(s)
+
+        print(latex(A))
+
+
+        x = sympy.symbols("theta1:3")
+        y = Matrix([[sin(x[0])*cos(x[1])],
+                    [sin(x[0])*sin(x[1])],
+                    [cos(x[0])*sin(x[1])],
+                    [cos(x[0])*sin(x[1])]])
+        z1 = diff(y,x[0])
+        z2 = diff(y,x[1])
+        z  = sympy.zeros(4)
+        for i in range(2):
+            z[i,:]   = z1.transpose()
+            z[i+2,:] = z2.transpose()
+        print(z)
+
+
+        return
+
+    def testSeries(self):
+        """
+        docstring for testSeries
+        """
+        x = self.xyz[0]
+        y = x/(exp(x) - 1)
+        for i in range(20):
+            s = limit(y,x,0)
+            print(y,s)
+            y = y.diff(x)
+            
+        return
+    
+    def tangentSeries(self):
+        """
+        docstring for tangentSeries
+        """
+        x = self.xyz[0]
+        y = tan(x)
+        # y = y.series(x,0,20)
+        # for i in range(10):
+        #     y = y.diff(x)
+        #     y = expand(y)
+        #     print(self.getLatex(y) + "\\\\")
+        # initialized by tan(x)
+        coef = [0,1]
+
+        bernoulli_index = []
+        for i in range(2000):
+            # get new coef
+            for j in range(len(coef)):
+                coef[j] = coef[j]*j 
+            # expand the coef
+            coef.append(coef[-1])
+            n = len(coef)
+            for j in range(-1,-n,-2):
+                coef[j] = coef[j-1] + coef[j+1]
+                coef[j+1] = 0
+            # print(j,coef)
+            if n%2 == 1:
+                coef[0] = coef[1]
+                coef[1] = 0
+                s = 2**(n-1)
+                bernoulli = Integer(coef[0])*(n-1)/s/(s-1)
+                # get the numerator and the denominator
+                num,denom = sympy.fraction(bernoulli)
+                # print(n-1,denom)
+                # print(n-2,coef[0],n,d)
+                if denom == 66:
+                    # print("B%d"%(n-1),num,denom)
+                    print("B%d"%(n-1),(n-1)%12,num%denom,denom)
+                    bernoulli_index.append(n-1)
+
+            # self.printInverseOdd(coef)
+            # print(coef)
+
+        print(bernoulli_index)
+        print(len(bernoulli_index))
+
+        return
+    def printInverseOdd(self,array):
+        """
+        docstring for printInverseOdd
+        array:
+            input array, [1,2,3,4,5] --> 5,3,1
+            [1,2,3,4] -> 4,2
+        """
+        n = len(array)
+        if n%2 == 1:
+            n = n+1 
+        res = []
+        for i in range(-1,-n,-2):
+            # print(array,i)
+            res.append(array[i])
+        # print(res)
+        return res[-1]
+
+
+    def testBernoulli6(self):
+        """
+        docstring for testBernoulli6
+        """
+        data = np.loadtxt("bernoulli6.json",delimiter=" ",dtype="int")
+        # print(data)
+        data = data[:,1]
+        print(sum(data==2),len(data))
+
+        ii = data[0]
+        counts = []
+        count  = 1
+        for jj in data[1:]:
+            if jj == ii:
+                count += 1 
+            else:
+                counts.append(count)
+                count = 1
+            ii = jj
+        counts = np.array(counts)
+        counts = counts.reshape((-1,2))
+        print(counts)
+        stati = np.zeros(10)
+        for i in counts[:,0]:
+            stati[i] += 1 
+        print(stati)
+        return
     def test(self):
         """
         docstring for test
         """
-        # self.testFermat()
-        # self.diophantine(98765432123456789,12345678987654321)
-        # print(self.getFactors(98765432123456789))
-        print(self.getFactors(12345678987654321))
-        # self.isPrime
-        print(self.fermatPrimeTest(987654321234567834349))
-        # self.testCubic()
-        # self.hardyWeinberg()
-        # self.testAllMod()
-        # self.selectNum70()
-        # self.polygon17()
-        # self.polygon257()
-
-        # self.idCardCheck()
-        # self.fermatAndGroup(56)
         
+        # self.polyhedronTrun()
+        # self.getAllPolyhedra()
+        # self.laplacian()
+        # self.laplacian4D()
+        self.testLaplacian()
+        # self.intersection()
+        # self.testMatrices()
+        # self.getCubicSol([1,1,0,-1])
+        # self.testSeries()
+        # self.tangentSeries()
+        # self.testBernoulli6()
+
+
         return
 
-  
-
 formula = Formulas()
-
 formula.test() 
-  
