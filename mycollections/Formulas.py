@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
  
 """
@@ -29,17 +29,17 @@ import json
 import time
 
 
-class EllepticCurve():
+class EllipticCurve():
     """
-    formula deriation for the elleptic curve 
+    formula deriation for the elliptic curve 
     with sympy
     """
     def __init__(self):
-        super(EllepticCurve, self).__init__()
+        super(EllipticCurve, self).__init__()
     def formula(self):
         """
         docstring for formula
-        elleptic curve l:
+        elliptic curve l:
             y^{2}&=&ax^{3}+bx^{2}+cx+d
         A,B:
             A,B&=&\left(x_{1},y_{1}\right),\left(x_{2},y_{2}\right)
@@ -94,7 +94,7 @@ class EllepticCurve():
             y = y*x+p[i]
         y = sympy.sqrt(y)
         return y
-    def getThirdX(self,x1,x2):
+    def getThirdX(self,x1,x2=None,p=None):
         """
         docstring for getThirdX
         input:
@@ -104,25 +104,191 @@ class EllepticCurve():
             (x3,y3), coordinate of the 
             third intersection point
         """
-        p  = [1,0,-2,2]
         a,b,c,d = p 
 
-        y1 = self.func(p,x1)
-        y2 = self.func(p,x2)
+        # y1 = self.func(p,x1)
         # k  = a*(x1**2+x1*x2+x2**2)+b*(x1+y2)+c
         # k  = k/(y1+y2)
+        if x2 == None:
+            x2 = x1
+            k  = (3*a*x1[0]**2+2*b*x1[0]+c)/(2*x1[1])
+            # k  = (3*a*x1*x1+2*b*x1+c)/(2*y1)
+        else:
+            # y2 = self.func(p,x2)
+            # k  = (y2 - y1)/(x2 - x1)
+            k  = (x2[1] - x1[1])/(x2[0] - x1[0])
         k  = sympy.simplify(k)
-        x3 = (k**2 - b)/a - x2 - x1
+        x3 = (k*k - b)/a - x2[0] - x1[0]
         x3 = sympy.simplify(x3)
-        y3 = - k*(x3 - x1) - y1
+        # y3 = - k*(x3 - x1) - y1
+        y3 = - k*(x3 - x1[0]) - x1[1]
         y3 = sympy.simplify(y3)
-        print("k : ",k)
-        print("x3: ",x3)
-        print("y3: ",y3)
+        # print("k : ",k)
+        # print("x3: ",x3)
+        # print("y3: ",y3)
         return x3,y3
+    def ellipticSol(self):
+        """
+        docstring for ellipticSol
+        """
+        a = Symbol("a")
+        b = Symbol("b")
+        c = Symbol("c")
+        # k = Symbol("k")
+        k = 4
+        s = a+b+c 
+        y = (a/(s-a)+b/(s-b)+c/(s-c)-k)*(s-a)*(s-b)*(s-c)
+        y = simplify(y)
+        y = expand(y)
+        y = sympy.collect(y,k)
+        target = y
+        print(latex(y))
+
+        x = self.xyz[0]
+        y = self.xyz[1]
+        target = target.subs(a,x-y-56)
+        target = target.subs(b,x+y-56)
+        target = target.subs(c,4*(3*x+14))
+        target = expand(target)
+        target  = factor(target)
+        print(latex(target))
+
+        
+        # self.getTargetForm()
+        
+        t  = sympy.symbols("t1:3")
+        s1 = -28*(1+t[0]+2*t[1]) - x*(6+6*t[0] - t[1])
+        s2 = 364*(1-t[0]) - y*(6+6*t[0] - t[1])
+        sol = solve([s1,s2],t)
+        print(latex(sol[t[0]]))
+        print(latex(sol[t[1]]))
+
+        a = x-y-56
+        b = x+y-56
+        c = 4*(3*x+14)
+        s1 = expand(a+b+c)
+        s2 = expand(a**2+b**2+c**2)
+        s3 = expand(a**3+b**3+c**3)
+        s12 = expand(s1*s2)
+        print(latex(s1))
+        print(latex(s2))
+        print(latex(s12))
+        print(latex(s3))
+
+       
+
+
+        return
+    def getTargetForm(self):
+        """
+        docstring for getTargetForm
+        """
+        k = Symbol("k")
+        t = sympy.symbols("t1:3")
+        s = 1 + t[1] + t[0]
+        y = (1/(s-1)+1/(s-t[0])+1/(s-t[1])-k)*(s-1)*(s-t[0])*(s-t[1])
+        y = simplify(y)
+        y = expand(y)
+        y = sympy.collect(y,k)
+        target = y
+        print(latex(y))
+
+        # replace t1 and t2 with x and y 
+        x = self.xyz[0]
+        y = self.xyz[1]
+        c = sympy.symbols("c1:10")
+        print(c)
+        s1 = c[3]*x+c[4]*y+c[5] - t[0]*(c[0]*x+c[1]*y+c[2])
+        s2 = c[6]*x+c[7]*y+c[8] - t[1]*(c[0]*x+c[1]*y+c[2])
+        sol = solve([s1,s2],[x,y])
+
+        x = expand(sol[x])
+        y = expand(sol[y])
+        x = simplify(x)
+        y = simplify(y)
+        print(latex(x),latex(y))
+        
+        x = self.xyz[0]
+        y = self.xyz[1]
+        # s1 = (c[3]*x+c[4]*y+c[5])/(c[0]*x+c[1]*y+c[2])
+        # s2 = (c[6]*x+c[7]*y+c[8])/(c[0]*x+c[1]*y+c[2])
+        # target = target.subs(t[0],s1)
+        # target = target.subs(t[1],s2)
+
+        a = c[0]*x+c[1]*y+c[2]
+        b = c[3]*x+c[4]*y+c[5]
+        c = c[6]*x+c[7]*y+c[8]
+        s1 = a+b+c 
+        s2 = a**2+b**2+c**2 
+        s3 = a**3+b**3+c**3 
+        # s1 = expand(s1).collect([x,y])
+        # s2 = expand(s2).collect([x,y])
+        # s3 = expand(s3).collect([x,y])
+        # abc = expand(a*b*c).collect([x,y])
+        # print("s1",latex(s1),"\\\\")
+        # print("s2",latex(s2),"\\\\")
+        # print("s3",latex(s3),"\\\\")
+        # print("abc",latex(abc),"\\\\")
+        # target = (a/(s-a)+b/(s-b)+c/(s-c)-k)*(s-a)*(s-b)*(s-c)
+        # target = (a)*(s-b)*(s-c)+(s-a)*(b)*(s-c)+(s-a)*(s-b)*(c)
+        # target += -k*(s-a)*(s-b)*(s-c)
+        # target = simplify(target)
+        # target = expand(target)
+        print(target)
+        # print("target",latex(target))
+        x = self.xyz[0]
+        # x = solve(x**4-12*x**3+16*x+24)
+        # print(latex(x))
+        y = sympy.symbols("y1:3")
+        x  = [3+y[0]+y[1]]
+        x.append(3+y[0]-y[1])
+        x.append(3-y[0]+y[1])
+        x.append(3-y[0]-y[1])
+        s = 0
+        for i in range(4):
+            for j in range(i+1,4):
+                s += x[i]*x[j]
+        s = expand(s)
+        print(s)
+        s = expand(x[0]*x[1]*(x[2]+x[3])+x[2]*x[3]*(x[0]+x[1]))
+        print(s)
+        s = expand(x[0]*x[1]*(x[2]*x[3]))
+        print(s)
+
+        x = Integer(4)**(Integer(1)/3) 
+        x += 3*Integer(2)**(Integer(1)/3)
+        x += 9
+        # print(x)
+        x = self.xyz[0]
+        y = expand(2*x**3-(3*x-25)**3)
+        y = factor(y)
+        print(y)
+        
+        
+
+
+        return
+
+    def testelliptic(self):
+        """
+        docstring for testelliptic
+        """
+        # p  = [1,0,-2,2]
+        # x1 = [0,sqrt(2)]
+        # x3 = self.getThirdX(x1,p=p)
+        # print(x3)
+        # print(p)
+        # print(self.func(p,Integer(1)/2))
+        # for i in range(3):
+        #     x3 = self.getThirdX(x1,x2=x3,p=p)
+        #     print(i,x3)
+        # print(self.func(p,x3[0]))
+
+        self.ellipticSol()
+        return
     
 
-class Formulas(MyCommon):
+class Formulas(MyCommon,EllipticCurve):
     """
     Formulas Deriations with sympy
     self.one:
@@ -1830,7 +1996,7 @@ class Formulas(MyCommon):
         delta = sqrt(q**2+p**3)
         x = (-b+(q+delta)**(self.one/3)+(q-delta)**(self.one/3))/(3*a)
         x = simplify(x)
-        print(latex(x))
+        print(p,q,latex(x))
         return x
 
     def polyhedron468(self):
@@ -2370,13 +2536,14 @@ class Formulas(MyCommon):
         # self.getAllPolyhedra()
         # self.laplacian()
         # self.laplacian4D()
-        self.testLaplacian()
+        # self.testLaplacian()
         # self.intersection()
         # self.testMatrices()
-        # self.getCubicSol([1,1,0,-1])
+        # print("solution",self.getCubicSol([1,-27,225,-625]))
         # self.testSeries()
         # self.tangentSeries()
         # self.testBernoulli6()
+        self.testelliptic()
 
 
         return
