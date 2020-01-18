@@ -269,9 +269,9 @@ class EllipticCurve():
 
         return
 
-    def testelliptic(self):
+    def testElliptic(self):
         """
-        docstring for testelliptic
+        docstring for testElliptic
         """
         # p  = [1,0,-2,2]
         # x1 = [0,sqrt(2)]
@@ -2543,7 +2543,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSeries()
         # self.tangentSeries()
         # self.testBernoulli6()
-        self.testelliptic()
+        self.testElliptic()
 
 
         return
