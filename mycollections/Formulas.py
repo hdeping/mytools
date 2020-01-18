@@ -123,11 +123,40 @@ class EllipticCurve():
         # y3 = - k*(x3 - x1) - y1
         y3 = - k*(x3 - x1[0]) - x1[1]
         y3 = sympy.simplify(y3)
+        print("k",k,x3,y3)
         # print("k : ",k)
         # print("x3: ",x3)
         # print("y3: ",y3)
         return x3,y3
+
     def ellipticSol(self):
+        """
+        docstring for ellipticSol
+        """
+        k = 4
+        p = [1,4*k*k+12*k-3,32*(k+3),0]
+        print(self.func(p,4))
+        x1 = [Integer(-9),Integer(78)]
+        x3 = self.getThirdX(x1,x2=None,p=p)
+        print(x3)
+        num = 10
+        # for i in range(-num,num+1):
+        #     y = self.func(p,i)
+        #     print(i,y)
+            # x3 = self.getThirdX(x1,x2=x3,p=p)
+            # print(i,x3,x3[0]-x3[1]-8*(k+3),x3[0]+x3[1]-8*(k+3))
+        for i in range(10):
+            # print(i)
+            x3 = self.getThirdX(x1,x2=x3,p=p)
+            s1 = x3[0]
+            a  = x3[0]-x3[1]-8*(k+3)
+            b  = x3[0]+x3[1]-8*(k+3)
+            c  = (2*k+4)*x3[0] + 8*(k+3)
+            if s1.is_nonnegative and a.is_nonnegative and b.is_nonnegative:
+                print(i,x3,a,b,c)
+            
+        return
+    def ellipticSol2(self):
         """
         docstring for ellipticSol
         """
@@ -163,17 +192,63 @@ class EllipticCurve():
         print(latex(sol[t[0]]))
         print(latex(sol[t[1]]))
 
-        a = x-y-56
-        b = x+y-56
-        c = 4*(3*x+14)
+        # a = x-y-56
+        # b = x+y-56
+        # c = 4*(3*x+14)
+        # coef = sympy.symbols("c0:5")
+        b = sympy.symbols("b0:2")
+        k = Symbol("k")
+        # k = 4
+        coef = [0,1,b[0],2*k+4,-b[0]]
+        a = x-coef[1]*y+coef[2]
+        b = x+coef[1]*y+coef[2]
+        c = coef[3]*x+coef[4]
         s1 = expand(a+b+c)
         s2 = expand(a**2+b**2+c**2)
         s3 = expand(a**3+b**3+c**3)
         s12 = expand(s1*s2)
-        print(latex(s1))
-        print(latex(s2))
-        print(latex(s12))
-        print(latex(s3))
+        abc = expand(a*b*c)
+        print(latex(s1) + "\\\\")
+        print(latex(s2) + "\\\\")
+        print(latex(s12) + "\\\\")
+        print(latex(s3) + "\\\\")
+        print(latex(abc)+ "\\\\")
+
+        
+        total = expand(k*s3-(k-1)*s12-(2*k-3)*abc)
+        total = simplify(total)
+        total = total.collect([x,y])
+        print(latex(total))
+
+        print(total)
+
+        p = [1,109,224,0]
+        print(self.func(p,4))
+        x1 = [Integer(4),Integer(52)]
+        x3 = self.getThirdX(x1,x2=None,p=p)
+        print(x3)
+        for i in range(1):
+            x3 = self.getThirdX(x1,x2=x3,p=p)
+            print(i,x3,x3[0]-x3[1]-56,x3[0]+x3[1]-56)
+        print(factor(16*k*k+88*k+120))
+        b = sympy.symbols("b0:2")
+        b0 = b[0]
+        b1 = -b[0]
+        s  = -2*b0**3*k + 4*b0**3 - 4*b0**2*b1*k
+        s += 5*b0**2*b1 - 2*b0*b1**2*k + 2*b0*b1**2 + b1**3
+        s = factor(s)
+        print(latex(s))
+        s   = -8*b0*k**3 - 40*b0*k**2 - 18*b0*k + 84*b0
+        s  += 4*b1*k**2 + 36*b1*k + 69*b1
+        s  = factor(s)
+        # s = s.collect(k)
+        print(latex(s))
+        s  = -8*b0**2*k**2 - 12*b0**2*k + 32*b0**2 
+        s += 4*b1**2*k + 14*b1**2
+        s += - 8*b0*b1*k**2 - 16*b0*b1*k + 26*b0*b1 
+        s = factor(s)
+        # s = s.collect(k)
+        print(latex(s))
 
        
 
@@ -2544,6 +2619,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.tangentSeries()
         # self.testBernoulli6()
         self.testElliptic()
+        print(self.getFactors(27937))
 
 
         return
