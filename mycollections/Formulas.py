@@ -29,6 +29,99 @@ import json
 import time
 
 
+class EllepticCurve():
+    """
+    formula deriation for the elleptic curve 
+    with sympy
+    """
+    def __init__(self):
+        super(EllepticCurve, self).__init__()
+    def formula(self):
+        """
+        docstring for formula
+        elleptic curve l:
+            y^{2}&=&ax^{3}+bx^{2}+cx+d
+        A,B:
+            A,B&=&\left(x_{1},y_{1}\right),\left(x_{2},y_{2}\right)
+        C is counterpart of the third intersection point of line AB and l
+        """
+        # point A and B
+        x1 = sympy.Symbol("x1")
+        x2 = sympy.Symbol("x2")
+        y1 = sympy.Symbol("y1")
+        y2 = sympy.Symbol("y2")
+        a  = sympy.Symbol("a")
+        b  = sympy.Symbol("b")
+        c  = sympy.Symbol("c")
+        d  = sympy.Symbol("d")
+        x  = sympy.Symbol("x")
+        k  = sympy.Symbol("k")
+        # line AB
+        # k  = a*(x1**2+x1*x2+x2**2)+b*(x1+y2)+c
+        # k  = k/(y1+y2)
+        y  = k*(x-x1)+y1
+        print("k: ",k)
+        print("y: ",y)
+        print(sympy.factor(y))
+        s = a*x**3+b*x**2+c*x+d - y**2 
+        s = sympy.expand(s)
+        s = sympy.collect(s,x)
+        print(s)
+        s = sympy.latex(s)
+        print(s)
+        x3 = (k**2 - b)/a - x2 - x1
+        y3 = - k*(x3 - x1) - y1
+        print("C: (x3,y3)")
+        print(x3,y3)
+
+        x = sympy.sqrt(3)
+        y = sympy.sqrt(2)
+        x = (x-y)**3
+        x = sympy.expand(x)
+        print(x)
+        
+        
+        return
+    def func(self,p,x):
+        """
+        docstring for func
+        input:
+            p, [a,b,c,d], array with length 4
+            x, input number
+        """
+        y = 0 
+        for i in range(4):
+            y = y*x+p[i]
+        y = sympy.sqrt(y)
+        return y
+    def getThirdX(self,x1,x2):
+        """
+        docstring for getThirdX
+        input:
+            x1, input 1
+            x2, input 2
+        return:
+            (x3,y3), coordinate of the 
+            third intersection point
+        """
+        p  = [1,0,-2,2]
+        a,b,c,d = p 
+
+        y1 = self.func(p,x1)
+        y2 = self.func(p,x2)
+        # k  = a*(x1**2+x1*x2+x2**2)+b*(x1+y2)+c
+        # k  = k/(y1+y2)
+        k  = sympy.simplify(k)
+        x3 = (k**2 - b)/a - x2 - x1
+        x3 = sympy.simplify(x3)
+        y3 = - k*(x3 - x1) - y1
+        y3 = sympy.simplify(y3)
+        print("k : ",k)
+        print("x3: ",x3)
+        print("y3: ",y3)
+        return x3,y3
+    
+
 class Formulas(MyCommon):
     """
     Formulas Deriations with sympy
