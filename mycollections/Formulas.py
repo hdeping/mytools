@@ -123,7 +123,7 @@ class EllipticCurve():
         # y3 = - k*(x3 - x1) - y1
         y3 = - k*(x3 - x1[0]) - x1[1]
         y3 = sympy.simplify(y3)
-        print("k",k,x3,y3)
+        # print("k",k,x3,y3)
         # print("k : ",k)
         # print("x3: ",x3)
         # print("y3: ",y3)
@@ -133,28 +133,86 @@ class EllipticCurve():
         """
         docstring for ellipticSol
         """
-        k = 4
+        k = 1
         p = [1,4*k*k+12*k-3,32*(k+3),0]
-        print(self.func(p,4))
-        x1 = [Integer(-9),Integer(78)]
+        print("p = ",p)
+        # print(self.func(p,4))
+        x1 = [Integer(32),Integer(224)]
         x3 = self.getThirdX(x1,x2=None,p=p)
-        print(x3)
-        num = 10
-        # for i in range(-num,num+1):
-        #     y = self.func(p,i)
-        #     print(i,y)
+        print("2P",x3)
+        num = 1000
+        for i in range(-num,num+1):
+            y = self.func(p,i)
+            if y.is_rational:
+                print(i,y)
             # x3 = self.getThirdX(x1,x2=x3,p=p)
             # print(i,x3,x3[0]-x3[1]-8*(k+3),x3[0]+x3[1]-8*(k+3))
-        for i in range(10):
-            # print(i)
+        for i in range(100):
+            print(i)
             x3 = self.getThirdX(x1,x2=x3,p=p)
             s1 = x3[0]
             a  = x3[0]-x3[1]-8*(k+3)
             b  = x3[0]+x3[1]-8*(k+3)
             c  = (2*k+4)*x3[0] + 8*(k+3)
-            if s1.is_nonnegative and a.is_nonnegative and b.is_nonnegative:
-                print(i,x3,a,b,c)
+            p1 = (s1.is_nonnegative and a.is_nonnegative and b.is_nonnegative)
+            p1 = (p1 and c.is_nonnegative)
+            p2 = (s1.is_negative and a.is_negative and b.is_negative)
+            p2 = (p2 and c.is_negative)
+
+            # if p1 or p2:
+            if i < 3:
+                print("solution")
+                m,n = sympy.fraction(a)
+                a = -a*n
+                b = -b*n
+                c = -c*n
+                print("a = ",a,np.log10(float(a)))
+                print("b = ",b)
+                print("c = ",c)
+                break
+        # print(a,b,c)
+        # a = 375326521
+        # b = -679733219
+        # c = -8106964*109
+        # x3 = [4,28]
+        # a  = x3[0]-x3[1]-8*(k+3)
+        # b  = x3[0]+x3[1]-8*(k+3)
+        # c  = (2*k+4)*x3[0] + 8*(k+3)
+        # print(a,b,c,a/(b+c)+b/(a+c)+c/(a+b))
+
+       
+
             
+        return
+
+    def getInverseTran(self):
+        """
+        docstring for getInverseTran
+        """
+         k = Symbol("k")
+        b = 4*k*k+12*k-3
+        c = 32*(k+3)
+        s = expand(b*b-4*c)
+        print(s,factor(s))
+        print(solve(s,k))
+        print(factor(64+b*16+c*4))
+
+        M = Matrix([[1,-1,-8*(k+3)],
+                    [1,1,-8*(k+3)],
+                    [2*k+4,0,8*(k+3)]])
+        X = sympy.symbols("x y z")
+        A = sympy.symbols("a b c")
+        X = Matrix(X)
+        A = Matrix(A)
+        sol = M*X-A
+        sol = solve(sol,X)
+        print()
+        x = factor(sol[X[0]])
+        y = factor(sol[X[1]])
+        z = factor(sol[X[2]])
+        print(latex(x))
+        print(latex(y))
+        print(latex(z))
         return
     def ellipticSol2(self):
         """
@@ -2619,7 +2677,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.tangentSeries()
         # self.testBernoulli6()
         self.testElliptic()
-        print(self.getFactors(27937))
+        # print(self.getFactors(27937))
 
 
         return
