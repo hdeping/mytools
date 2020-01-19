@@ -129,26 +129,45 @@ class EllipticCurve():
         # print("y3: ",y3)
         return x3,y3
 
-    def ellipticSol(self):
+    def ellipticSol(self,k=4):
         """
         docstring for ellipticSol
         """
-        k = 1
+        # if k in [8]:
+        #     return
+        print("--------------- %d ---------------"%(k))
         p = [1,4*k*k+12*k-3,32*(k+3),0]
+        # print(self.getThirdX([4,4*(2*k+5)],
+        #                      x2=[8*(k+3),8*(k+3)*(2*k+5)],
+        #                      p=p))
         print("p = ",p)
         # print(self.func(p,4))
-        x1 = [Integer(32),Integer(224)]
-        x3 = self.getThirdX(x1,x2=None,p=p)
-        print("2P",x3)
-        num = 1000
-        for i in range(-num,num+1):
+        
+        num = 10000
+        solutions = []
+        for i in range(-num,0):
+            if i%2000 == 0:
+                print(i)
             y = self.func(p,i)
             if y.is_rational:
-                print(i,y)
+                print("(%d,%d),"%(i,y))
+                solutions.append([i,y])
             # x3 = self.getThirdX(x1,x2=x3,p=p)
             # print(i,x3,x3[0]-x3[1]-8*(k+3),x3[0]+x3[1]-8*(k+3))
-        for i in range(100):
-            print(i)
+
+        if len(solutions) == 0:
+            print("no points within %d"%(num))
+            return
+        else:
+            print("there are %d solutions to equation"%(len(solutions)))
+            return
+            
+        x1 = [Integer(solutions[0][0]),Integer(solutions[0][1])]
+        x3 = self.getThirdX(x1,x2=None,p=p)
+        print("2P",x3)
+        for i in range(1000):
+            # print(i,x3)
+            # print(i)
             x3 = self.getThirdX(x1,x2=x3,p=p)
             s1 = x3[0]
             a  = x3[0]-x3[1]-8*(k+3)
@@ -158,17 +177,19 @@ class EllipticCurve():
             p1 = (p1 and c.is_nonnegative)
             p2 = (s1.is_negative and a.is_negative and b.is_negative)
             p2 = (p2 and c.is_negative)
+            # print(x3)
 
-            # if p1 or p2:
-            if i < 3:
+            if p1 or p2:
+            # if i < 3:
                 print("solution")
                 m,n = sympy.fraction(a)
                 a = -a*n
                 b = -b*n
                 c = -c*n
-                print("a = ",a,np.log10(float(a)))
-                print("b = ",b)
-                print("c = ",c)
+                print("k = ",k,i,"length: ",len(str(a)))
+                # print("a = ",a)
+                # print("b = ",b)
+                # print("c = ",c)
                 break
         # print(a,b,c)
         # a = 375326521
@@ -178,9 +199,12 @@ class EllipticCurve():
         # a  = x3[0]-x3[1]-8*(k+3)
         # b  = x3[0]+x3[1]-8*(k+3)
         # c  = (2*k+4)*x3[0] + 8*(k+3)
-        # print(a,b,c,a/(b+c)+b/(a+c)+c/(a+b))
+
+
+        print("check: ",a/(b+c)+b/(a+c)+c/(a+b))
 
        
+        # self.getInverseTran()
 
             
         return
@@ -189,13 +213,19 @@ class EllipticCurve():
         """
         docstring for getInverseTran
         """
-         k = Symbol("k")
+        k = Symbol("k")
         b = 4*k*k+12*k-3
         c = 32*(k+3)
         s = expand(b*b-4*c)
-        print(s,factor(s))
+        s = factor(s)
+        print(latex(s))
         print(solve(s,k))
-        print(factor(64+b*16+c*4))
+        x = 8*(k+3)
+        s = sqrt(factor(x**3+b*x**2+c*x))
+        s = sympy.powsimp(s)
+        print(s)
+
+        print(factor(3*x**2+2*b*x+c))
 
         M = Matrix([[1,-1,-8*(k+3)],
                     [1,1,-8*(k+3)],
@@ -214,6 +244,7 @@ class EllipticCurve():
         print(latex(y))
         print(latex(z))
         return
+
     def ellipticSol2(self):
         """
         docstring for ellipticSol
@@ -416,8 +447,9 @@ class EllipticCurve():
         #     x3 = self.getThirdX(x1,x2=x3,p=p)
         #     print(i,x3)
         # print(self.func(p,x3[0]))
-
-        self.ellipticSol()
+        # for k in range(8,9,2):
+        #     self.ellipticSol(k=k)
+        self.getInverseTran()
         return
     
 
