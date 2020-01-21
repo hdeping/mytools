@@ -161,8 +161,23 @@ class EllipticCurve():
         else:
             print("there are %d solutions to equation"%(len(solutions)))
             return
-            
+
+
         x1 = [Integer(solutions[0][0]),Integer(solutions[0][1])]
+        self.checkSolution()
+            
+        
+
+       
+        # self.getInverseTran()
+
+            
+        return
+
+    def checkSolution(self,x1,p):
+        """
+        docstring for checkSolution
+        """
         x3 = self.getThirdX(x1,x2=None,p=p)
         print("2P",x3)
         for i in range(1000):
@@ -202,13 +217,7 @@ class EllipticCurve():
 
 
         print("check: ",a/(b+c)+b/(a+c)+c/(a+b))
-
-       
-        # self.getInverseTran()
-
-            
         return
-
     def getInverseTran(self):
         """
         docstring for getInverseTran
@@ -447,9 +456,9 @@ class EllipticCurve():
         #     x3 = self.getThirdX(x1,x2=x3,p=p)
         #     print(i,x3)
         # print(self.func(p,x3[0]))
-        # for k in range(8,9,2):
-        #     self.ellipticSol(k=k)
-        self.getInverseTran()
+        for k in range(8,9,2):
+            self.ellipticSol(k=k)
+        # self.getInverseTran()
         return
     
 
@@ -2736,10 +2745,10 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSeries()
         # self.tangentSeries()
         # self.testBernoulli6()
-        # self.testElliptic()
+        self.testElliptic()
         # print(self.getFactors(27937))
 
-        self.testSinNX()
+        # self.testSinNX()
 
 
         return
