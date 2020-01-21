@@ -143,7 +143,7 @@ class EllipticCurve():
         print("p = ",p)
         # print(self.func(p,4))
         
-        num = 10000
+        num = p[1]
         solutions = []
         for i in range(-num,0):
             if i%2000 == 0:
@@ -152,21 +152,14 @@ class EllipticCurve():
             if y.is_rational:
                 print("(%d,%d),"%(i,y))
                 solutions.append([i,y])
-            # x3 = self.getThirdX(x1,x2=x3,p=p)
-            # print(i,x3,x3[0]-x3[1]-8*(k+3),x3[0]+x3[1]-8*(k+3))
 
-        if len(solutions) == 0:
-            print("no points within %d"%(num))
-            return
-        else:
-            print("there are %d solutions to equation"%(len(solutions)))
-            return
+        # if len(solutions) == 0:
+        #     print("no points within %d"%(num))
+        #     return
+        # else:
+        #     print("there are %d solutions to equation"%(len(solutions)))
+        #     return
 
-
-        x1 = [Integer(solutions[0][0]),Integer(solutions[0][1])]
-        self.checkSolution()
-            
-        
 
        
         # self.getInverseTran()
@@ -174,6 +167,38 @@ class EllipticCurve():
             
         return
 
+    def testEllipticPoints(self):
+        """
+        docstring for testEllipticPoints
+        """
+        
+        # x1 = [Integer(solutions[0][0]),Integer(solutions[0][1])]
+        # self.checkSolution(x1,p)
+        # x1 = [Integer(2),Integer(3)]
+        # x1 = [Integer(1),Integer(0)]
+        x2 = [Integer(1152),Integer(111744)]
+        x1 = [Integer(-6912),Integer(6912)]
+        # p  = [1,0,0,1]
+        p  = [1,7105,1327104,0]
+        self.getEllipticPoints(x1,p)
+        x3 = self.getThirdX(x1,x2=x2,p=p)
+        print(x3)
+        print(self.func(p,-1176))
+        for i in range(4):
+            x3 = self.getThirdX(x1,x2=x3,p=p)
+            print(i,x3)
+        return
+    def getEllipticPoints(self,x1,p):
+        """
+        docstring for getEllipticPoints
+        """
+        print(0,x1)
+        x3 = self.getThirdX(x1,p=p)
+        print(1,x3)
+        for i in range(6):
+            x3 = self.getThirdX(x1,x2=x3,p=p)
+            print(i+2,x3)
+        return
     def checkSolution(self,x1,p):
         """
         docstring for checkSolution
