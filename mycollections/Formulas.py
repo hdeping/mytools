@@ -128,7 +128,28 @@ class EllipticCurve():
         # print("x3: ",x3)
         # print("y3: ",y3)
         return x3,y3
-
+    def getCoPrimeList(self,n):
+        """
+        docstring for getCoPrimeList
+        n:
+            positive integer
+        return:
+            4 -> [1,3], number list which is less than n
+            and coprime with n
+            10 -> [1,3,7,9]
+        """
+        res = []
+        divisors = sympy.factorint(n)
+        for i in range(2,n):
+            count = 0
+            for j in divisors:
+                if i%j == 0:
+                    count = 1
+                    break
+            if count == 0:  
+                res.append(i)
+        
+        return res
     def ellipticSol(self,k=4):
         """
         docstring for ellipticSol
@@ -145,20 +166,26 @@ class EllipticCurve():
         
         num = p[1]
         solutions = []
-        for i in range(-num,0):
-            if i%2000 == 0:
-                print(i)
-            y = self.func(p,i)
-            if y.is_rational:
-                print("(%d,%d),"%(i,y))
-                solutions.append([i,y])
+        for k in range(2,1000):
+            if k%10 == 0:
+                print(k)
+            k = k*k
+            primeList = self.getCoPrimeList(k)
+            for i in range(-num,0):
+                for coprime in primeList:
+                    x = i + Integer(coprime)/k
+                    y = self.func(p,x)
+                    if y.is_rational:
+                        print("(%d,%d/%d),"%(i,i*k+coprime,k))
+                        solutions.append([i,i*k+coprime,k])
+            print(k,x,y)
 
-        # if len(solutions) == 0:
-        #     print("no points within %d"%(num))
-        #     return
-        # else:
-        #     print("there are %d solutions to equation"%(len(solutions)))
-        #     return
+        if len(solutions) == 0:
+            print("no points within %d"%(num))
+            return
+        else:
+            print("there are %d solutions to equation"%(len(solutions)))
+            return
 
 
        
@@ -467,6 +494,68 @@ class EllipticCurve():
 
         return
 
+    def testNagellLutz(self):
+        """
+        docstring for testNagellLutz
+        Nagell-Lutz's theorem for the torsion subgroup 
+        of the elliptic curve
+        """
+        k = Symbol("k")
+        k = 3
+        p = [1,4*k*k+12*k-3,32*(k+3),0]
+        print(p)
+        x = self.xyz[0]
+        y = self.func(p,x-p[1]/Integer(3))
+        y = expand(y).collect(x)
+        print(y)
+        A = -1395
+        B0 = 19918
+        
+
+
+        # k = 3, delta = 2^12 * 3^3 * 11^3
+        num = np.array([12,3,3]) // 2  + 1
+        primes = [2,3,11]
+        # print(num)
+        for i in range(num[0]):
+            for j in range(num[1]):
+                for k in range(num[2]):
+                    y = 1 
+                    y *= primes[0]**i
+                    y *= primes[1]**j
+                    y *= primes[2]**k
+                    B  = B0 - y**2
+                    exp = x**3 + A*x + B 
+                    exp = factor(exp)
+                    print(y,exp)
+
+        p = [1,0,A,B0]
+        print(self.func(p,27))
+        print(self.func(p,71))
+        k = 3
+        p = [1,4*k*k+12*k-3,32*(k+3),0]
+        print(self.func(p,4))
+        print(self.func(p,48))
+        return
+    def getDelta(self):
+        """
+        docstring for getSolDelta
+        """
+        B = 128*k**6/27 + 128*k**5/3 + 352*k**4/3 + 64*k**3/3 - 344*k**2 - 328*k + 94 
+        A = -16*k**4/3 - 32*k**3 - 40*k**2 + 56*k + 93
+        # B = B*27
+        # A = A*3 
+        print("B",latex(B))
+        print("A",latex(A))
+        # B = factor(B)
+        # A = factor(A)
+        print("B",latex(B))
+        print("A",latex(A))
+        delta = 4*A**3 + 27*B**2
+        delta = factor(expand(delta))
+        print("delta",latex(delta))
+
+        return
     def testElliptic(self):
         """
         docstring for testElliptic
@@ -481,9 +570,18 @@ class EllipticCurve():
         #     x3 = self.getThirdX(x1,x2=x3,p=p)
         #     print(i,x3)
         # print(self.func(p,x3[0]))
+        print(self.getCoPrimeList(30))
         for k in range(8,9,2):
             self.ellipticSol(k=k)
         # self.getInverseTran()
+        # self.testNagellLutz()
+
+        # for k in range(1,1000):
+        #     p = [1,4*k*(k+3)-3,32*(k+3)]
+        #     a = sympy.factorint(p[1])
+        #     b = sympy.factorint(p[1]**2-4*p[0]*p[2])
+        #     rank = len(a) + len(b) - 1 
+        #     print(k,rank,a,b)
         return
     
 
@@ -2771,7 +2869,6 @@ class Formulas(MyCommon,EllipticCurve):
         # self.tangentSeries()
         # self.testBernoulli6()
         self.testElliptic()
-        # print(self.getFactors(27937))
 
         # self.testSinNX()
 
