@@ -2692,6 +2692,34 @@ class Formulas(MyCommon,EllipticCurve):
             stati[i] += 1 
         print(stati)
         return
+
+    def getSinNX(self,n):
+        """
+        docstring for getSinNX
+        expand sin(n*x)
+        """
+        x = self.xyz[0]
+        a = cos(x) + sympy.I*sin(x)
+        b = cos(x) - sympy.I*sin(x)
+        res = expand((a**n - b**n)/2/sympy.I)
+        if n%2 == 0:
+            res = expand(res/cos(x))
+        res = res.subs(sin(x),x)
+        res = res.subs(cos(x)**2,1-x**2)
+        res = expand(res)
+        if n%2 == 0:
+            res = res*cos(x)
+        print("\\sin(%dx) & = & %s \\\\"%(n,latex(res)))
+        return
+
+    def testSinNX(self):
+        """
+        docstring for testSinNX
+        """
+        for n in range(3,8):
+            self.getSinNX(n)
+
+        return
     def test(self):
         """
         docstring for test
@@ -2708,8 +2736,10 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSeries()
         # self.tangentSeries()
         # self.testBernoulli6()
-        self.testElliptic()
+        # self.testElliptic()
         # print(self.getFactors(27937))
+
+        self.testSinNX()
 
 
         return
