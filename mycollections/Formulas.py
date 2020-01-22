@@ -2852,6 +2852,89 @@ class Formulas(MyCommon,EllipticCurve):
             self.getSinNX(n)
 
         return
+
+    def quinticEqn(self):
+        """
+        docstring for quinticEqn
+        """
+        a = sympy.symbols("a0:6")
+        print(a)
+        x = self.xyz[0]
+        s = 1 
+        for i in range(5):
+            s = s*x + a[i+1]
+        s = expand(s).collect(x)
+        s = s.subs(x,x-a[1]/5)
+        s = expand(s).collect(x)
+        s = sympy.Poly(s,x).as_dict()
+        coef = 15625
+        for key in s:
+            coef  = coef//5
+            value = s[key]
+            value = sympy.cancel(value*coef)
+            value = latex(value)
+            # print(key,value)
+        print(s)
+
+        p,q,y,z = sympy.symbols("p q y z")
+        y2 = z - p*y - q 
+        y3 = expand(y2*y).subs(y**2,y2)
+        y3 = expand(y3).collect(y)
+        y5 = expand(y2*y3).subs(y**2,y2)
+        y5 = expand(y5).collect(y)
+        print(y2)
+        print(y3)
+        print("y5",latex(y5))
+        a,b,c,d = sympy.symbols("a b c d")
+        s = expand(y5+a*y3+b*y2+c*y+d).collect(y)
+        y = solve(s,y)[0]
+        print("y",latex(y))
+        f1,f2 = sympy.fraction(y)
+        print("f1:",latex(f1.collect(z)))
+        print("f2:",latex(f2.collect(z)))
+        s = f1**2+p*f1*f2+(q-z)*f2**2
+        s = expand(-s).collect(z)
+        # s = expand(s*f2**2)
+        # print(f1,"f1:f2",f2)
+        print("s:",latex(s))
+        s = sympy.Poly(s,z).as_dict()
+        for key in s:
+            value = factor(s[key])
+            print(key,latex(value))
+        # get p and q
+        P = s[(4,)]
+        Q = s[(3,)]
+        q1 = solve(P,q)[0]
+        Q = Q.subs(q,q1)
+        p = solve(Q,p)[0]
+
+        print(latex(p))
+        print(latex(Q.collect(p*(-25))))
+
+        # get X
+        print("-----------------------")
+        print("get X")
+        z,X = sympy.symbols("z X")
+        A,B,C = sympy.symbols("A B C")
+        b = sympy.symbols("b0:5")
+        z4 = X - (z*(z*(z*b[1]+b[2])+b[3])+b[4])
+        z4 = expand(z4)
+        z5 = expand(z4*z).subs(z**4,z4)
+        z5 = expand(z5).collect(z)
+        s  = z5+z*(z*A+B)+C
+        z3 = Symbol("z3")
+        s = s.collect(z).subs(z**3,z3)
+        z3 = solve(s,z3)[0]
+        z3 = z3.collect(z)
+        z4 = z4.subs(z**3,z3)
+        z4 = expand(z4).collect(z)
+        print("z4",latex(z4))
+        print("z5",latex(z5))
+        print("s",latex(s))
+        print("z3",latex(z3))
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -2868,9 +2951,10 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSeries()
         # self.tangentSeries()
         # self.testBernoulli6()
-        self.testElliptic()
+        # self.testElliptic()
 
         # self.testSinNX()
+        self.quinticEqn()
 
 
         return
