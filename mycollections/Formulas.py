@@ -2927,11 +2927,23 @@ class Formulas(MyCommon,EllipticCurve):
         z3 = solve(s,z3)[0]
         z3 = z3.collect(z)
         z4 = z4.subs(z**3,z3)
-        z4 = expand(z4).collect(z)
+        z4 = simplify(expand(z4)).collect(z)
+        z5 = -A*z**2-B*z-C
         print("z4",latex(z4))
         print("z5",latex(z5))
         print("s",latex(s))
         print("z3",latex(z3))
+        z8 = expand(z3*z5).subs(z**3,z3)
+        z8 = z8.subs(z**4,z4)
+        z8 = simplify(expand(z8)).collect(z)
+        print("z8:",latex(z8))
+        # z10 = expand(z8*z**2).subs(z**3,z3)
+        # z10 = z10.subs(z**4,z4)
+        # z10 = expand(z10).collect(z)
+        # print("z10:",latex(z10))
+        # s  = expand(z10 + 2*C*z5+C*C - A**2*z4 - B*B*z**2 - 2*A*B*z3)
+        # s  = expand(s).collect(z)
+        # print("z**2,s: ",latex(s))
 
         return
 
