@@ -2982,8 +2982,26 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i,len(res),res)
             print(i,len(res),res)
         
-            
+        res = self.getCombinatorEqnRecursive(5,5)
+        print(res)
+        res = self.getAnotherCombinator(res)
+        print(res)
         return
+
+    def getAnotherCombinator(self,res):
+        """
+        docstring for getAnotherCombinator
+        """
+        output = []
+        for line in res:
+            arr = []
+            for i,item in enumerate(line):
+                if item > 0:
+                    arr += [i+1]*item
+            output.append(arr)
+
+
+        return output 
     def getCombinatorForm(self,res):
         """
         docstring for getCombinatorForm
@@ -3049,6 +3067,7 @@ class Formulas(MyCommon,EllipticCurve):
         integer solutions for
         a1 + a2+...+ a_n = s
         a1 <= a2 <= ... a_n
+        In fact, it is equivalent to a1 + 2a2+...+ na_n = s
         """
         if n == 2:
             res = []
