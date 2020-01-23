@@ -2971,11 +2971,16 @@ class Formulas(MyCommon,EllipticCurve):
         print("s3: ",latex(s4))
         print(self.getBinomial(5))
         
-        for n in range(2,8):
-            res = self.getCombinatorEqnRecursive(n,n)
-            sn  = self.getCombinatorForm(res)
-            print(n,latex(sn))
-            # print(res)
+        # for n in range(2,8):
+        #     res = self.getCombinatorEqnRecursive(n,n)
+        #     sn  = self.getCombinatorForm(res)
+        #     print(n,latex(sn))
+        # print(res)
+        for i in range(2,5):
+            # res = self.getCombinatorEqnRecursive2(i,i)
+            res = self.getCombinatorEqnRecursive(i,i)
+            # print(i,len(res),res)
+            print(i,len(res),res)
         
             
         return
@@ -3038,6 +3043,31 @@ class Formulas(MyCommon,EllipticCurve):
         print(res)
         return
 
+    def getCombinatorEqnRecursive2(self,n,s):
+        """
+        docstring for getCombinatorEqnRecursive
+        integer solutions for
+        a1 + a2+...+ a_n = s
+        a1 <= a2 <= ... a_n
+        """
+        if n == 2:
+            res = []
+            num = s // 2 + 1 
+            for x in range(num):
+                y = s - x
+                res.append([x,y])
+            return res
+        else:
+            total = []
+            for y in range(s+1):
+                res = self.getCombinatorEqnRecursive2(n-1,y)
+                for line in res:
+                    if line[-1] <= s - y:    
+                        line.append(s - y)
+                        total.append(line)
+
+            return total
+            
     def getCombinatorEqnRecursive(self,n,s):
         """
         docstring for getCombinatorEqnRecursive
