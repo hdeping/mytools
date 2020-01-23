@@ -2975,20 +2975,9 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(1,n+1):
             sn += i*a[i]
         print(sn)
-        # print(diophantine(sn-n))
-        num = [n+1,n//2+1,n//3+1,n//4+1]
-        for i1 in range(num[0]):
-            for i2 in range(num[1]):
-                for i3 in range(num[2]):
-                    for i4 in range(num[3]):
-                        s = i1+2*i2+3*i3+4*i4
-                        p = (s in [0,5])
-                        if p:
-                            print(i1,i2,i3,i4,1-s//5)
         arr = []
         for i in range(1,n+1):
             arr.append(np.arange(n//i+1))
-        print(arr)
         combinator = self.getAllCombinator(arr)
         for i,line in enumerate(combinator):
             
