@@ -2970,21 +2970,49 @@ class Formulas(MyCommon,EllipticCurve):
         print("s3: ",latex(s3))
         print("s3: ",latex(s4))
         print(self.getBinomial(5))
-        n = 5 
-        sn = 0 
-        for i in range(1,n+1):
-            sn += i*a[i]
-        print(sn)
-        arr = []
-        for i in range(1,n+1):
-            arr.append(np.arange(n//i+1))
-        combinator = self.getAllCombinator(arr)
-        for i,line in enumerate(combinator):
-            
-            print(i,line)
+        
+        res = []
+        for n in range(2,12):
+            count,sn = self.getCombinatorEqn(n)
+            res.append(count)
+            print(n,count)
+        for i in range(1,len(res)):
+            print(i,res[i]-res[i-1]-1)
+        
             
         return
 
+    def getCombinatorEqn(self,n):
+        """
+        docstring for getCombinatorEqn
+        """
+        a = sympy.symbols("a0:30")
+        sn = 0 
+        for i in range(1,n+1):
+            sn += i*a[i]
+        # print(sn)
+        arr = []
+        for i in range(1,n):
+            arr.append(np.arange(n//i+1))
+        combinator = self.getAllCombinator(arr)
+
+        sn = 0
+
+        count = 0 
+        for i,line in enumerate(combinator):
+            res = 0 
+            A = 1
+            for j,item in enumerate(line):
+                res += (j+1)*item
+                A   *= a[j+1]**item
+            if res in [0,n]:
+                j   = 1 - res // n
+                # print(i,line)
+                sn += A*a[n]**j
+                count += 1 
+        # print(sn)
+        # print("n,count:",n,count)
+        return count,sn
     def testGetAllCombinator(self):
         """
         docstring for testGetAllCombinator
