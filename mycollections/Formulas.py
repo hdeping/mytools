@@ -2989,8 +2989,24 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(1,n+1):
             arr.append(np.arange(n//i+1))
         print(arr)
+        combinator = self.getAllCombinator(arr)
+        for i,line in enumerate(combinator):
+            
+            print(i,line)
             
         return
+
+    def testGetAllCombinator(self):
+        """
+        docstring for testGetAllCombinator
+        """
+        arr = [[0,1],[0,1],[0,1]]
+        # arr = [[0,1],[0,1]]
+        # arr = [[0,1]]
+        res = self.getAllCombinator(arr)
+        print(res)
+        return
+
     def getAllCombinator(self,arr):
         """
         docstring for getAllCombinator
@@ -3002,15 +3018,25 @@ class Formulas(MyCommon,EllipticCurve):
             res = []
             for i in arr[0]:
                 res.append([i])
+            # print("res:",res)
             return res 
         else:
             res = self.getAllCombinator(arr[:-1])
             total = []
+            # print("res: ",res)
             for line in res:
+                a = line.copy()
+                a.append(0)
+                # print(line)
                 for item in arr[-1]:
-                    line.append(item)
-                    res.append(line)
-            return res
+                    b = a.copy()
+                    b[-1] = item
+                    # print(line,"b:",b)
+                    total.append(b)
+            # print("length:",len(arr))
+            # print("total:",total)
+
+            return total
         
     def test(self):
         """
@@ -3032,6 +3058,7 @@ class Formulas(MyCommon,EllipticCurve):
 
         # self.testSinNX()
         # self.quinticEqn()
+        # self.testGetAllCombinator()
         self.polyRootsPow()
 
 
