@@ -2985,9 +2985,33 @@ class Formulas(MyCommon,EllipticCurve):
                         p = (s in [0,5])
                         if p:
                             print(i1,i2,i3,i4,1-s//5)
+        arr = []
+        for i in range(1,n+1):
+            arr.append(np.arange(n//i+1))
+        print(arr)
             
         return
-    
+    def getAllCombinator(self,arr):
+        """
+        docstring for getAllCombinator
+        arr:
+            2D-array
+            [[0,1],[0,1]] => [[0,0],[0,1],[1,0],[1,1]]
+        """
+        if len(arr) == 1:
+            res = []
+            for i in arr[0]:
+                res.append([i])
+            return res 
+        else:
+            res = self.getAllCombinator(arr[:-1])
+            total = []
+            for line in res:
+                for item in arr[-1]:
+                    line.append(item)
+                    res.append(line)
+            return res
+        
     def test(self):
         """
         docstring for test
