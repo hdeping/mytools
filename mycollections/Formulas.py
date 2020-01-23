@@ -2971,14 +2971,31 @@ class Formulas(MyCommon,EllipticCurve):
         print("s3: ",latex(s4))
         print(self.getBinomial(5))
         
-        for n in range(2,20):
+        for n in range(2,8):
             res = self.getCombinatorEqnRecursive(n,n)
-            print(n,len(res))
+            sn  = self.getCombinatorForm(res)
+            print(n,latex(sn))
             # print(res)
         
             
         return
+    def getCombinatorForm(self,res):
+        """
+        docstring for getCombinatorForm
+        res:
+            2D array
+            [[0,1],[1,0]] => a_2 + a_1
+        """
+        a = sympy.symbols("a0:30")
+        sn = 0
+        for line in res:
+            A = 1
+            for j,item in enumerate(line):
+                A   *= a[j+1]**item
+            print(latex(A) + "\\\\")
+            sn += A
 
+        return sn 
     def getCombinatorEqn(self,n):
         """
         docstring for getCombinatorEqn
