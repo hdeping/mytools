@@ -20,6 +20,7 @@ from sympy import expand,simplify,cos,sin,exp,sqrt
 from sympy import latex,Symbol,diff,solve,factor
 from sympy import sympify,trigsimp,expand_trig
 from sympy import Matrix,limit,tan,Integer
+from sympy.solvers import diophantine
 import numpy as np
 from mytools import MyCommon
 import matplotlib
@@ -2947,6 +2948,46 @@ class Formulas(MyCommon,EllipticCurve):
 
         return
 
+    def polyRootsPow(self):
+        """
+        docstring for polyRootsPow
+        polynomial (1,a_1,a_2,...)
+        roots x1,x2,...
+        s1 = sum(x_i)
+        sk = sum(x_i^k)
+        """
+        # a = sympy.symbols("a a b c d")
+        a = sympy.symbols("a0:10")
+        # print(a)
+        s1 = -a[1]
+        s2 = s1**2 - 2*a[2]
+        s2 = expand(s2)
+        s3 = (3*s1*s2-6*a[3]-s1**3)/2
+        s3 = expand(s3)
+        s4 = 2*(-s1*a[3]-2*a[4]) + (4*s1*s3+3*s2**2-s1**4)/6
+        s4 = expand(s4)
+        print("s2: ",latex(s2))
+        print("s3: ",latex(s3))
+        print("s3: ",latex(s4))
+        print(self.getBinomial(5))
+        n = 5 
+        sn = 0 
+        for i in range(1,n+1):
+            sn += i*a[i]
+        print(sn)
+        # print(diophantine(sn-n))
+        num = [n+1,n//2+1,n//3+1,n//4+1]
+        for i1 in range(num[0]):
+            for i2 in range(num[1]):
+                for i3 in range(num[2]):
+                    for i4 in range(num[3]):
+                        s = i1+2*i2+3*i3+4*i4
+                        p = (s in [0,5])
+                        if p:
+                            print(i1,i2,i3,i4,1-s//5)
+            
+        return
+    
     def test(self):
         """
         docstring for test
@@ -2966,7 +3007,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testElliptic()
 
         # self.testSinNX()
-        self.quinticEqn()
+        # self.quinticEqn()
+        self.polyRootsPow()
 
 
         return
