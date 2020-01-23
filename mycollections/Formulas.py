@@ -2987,7 +2987,16 @@ class Formulas(MyCommon,EllipticCurve):
         res = self.getAnotherCombinator(res)
         print(res)
         return
-
+    def getGeneralCombinator(self,arr):
+        """
+        docstring for getGeneral
+        [n1,n2,...] = (N!)/(prod n_i!)
+        """
+        total = sum(arr)
+        total = np.math.factorial(total)
+        for i in arr:
+            total = total // np.math.factorial(i)
+        return total
     def getAnotherCombinator(self,res):
         """
         docstring for getAnotherCombinator
@@ -3164,6 +3173,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.quinticEqn()
         # self.testGetAllCombinator()
         self.polyRootsPow()
+        # print(self.getGeneralCombinator([1,2,2,2]))
 
 
         return
