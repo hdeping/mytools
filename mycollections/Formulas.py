@@ -2982,7 +2982,7 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i,len(res),res)
             print(i,len(res),res)
         
-        n = 4
+        n = 6
         res = self.getCombinatorEqnRecursive(n,n)
         print(res)
         res,sn = self.getAnotherCombinator(res)
@@ -3325,6 +3325,46 @@ class Formulas(MyCommon,EllipticCurve):
         # if m%2 == 1:
         #     B = - B
         return B
+
+    def getSnByMat(self):
+        """
+        docstring for getSnByMat
+        """
+        n = 6
+        a = sympy.symbols("a0:%d"%(n+1))
+        res = self.getCombinatorEqnRecursive(n,n)
+        print(res)
+        res,sn = self.getAnotherCombinator(res)
+        print(res)
+        # print(self.getGeneralCombinator([4,3]))
+
+        # get the matrix of polynomials 
+        # A = XB ==> X = AB^{-1}
+        polyA = []
+        tmp   = []
+        polyB = []
+        N     = Symbol("n")
+        for line in res:
+            coef = {}
+            for i in line:
+                if i not in coef:
+                    coef[i] = 1 
+                else:
+                    coef[i] += 1 
+            num  = self.getGeneralCombinator(list(coef.keys()))
+            item = num*self.getCombinator(N,len(line))
+            polyA.append(item)
+            item = 1
+            for i in coef:
+                num  = self.getCombinator(N,i)
+                item = item*num**coef[i]
+            tmp.append(item)
+            print(coef)
+        while len(tmp) > 0:
+            polyB.append(tmp.pop())
+        print(polyB)
+
+        return
     def test(self):
         """
         docstring for test
@@ -3349,7 +3389,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.polyRootsPow()
         # print(self.getGeneralCombinator([1,2,3,4]))
         # self.rootTermsNumber()
-        self.getSn()
+        # self.getSn()
+        self.getSnByMat()
 
 
 
