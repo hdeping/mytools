@@ -2982,9 +2982,10 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i,len(res),res)
             print(i,len(res),res)
         
-        res = self.getCombinatorEqnRecursive(5,5)
+        n = 3
+        res = self.getCombinatorEqnRecursive(n,n)
         print(res)
-        res = self.getAnotherCombinator(res)
+        res,sn = self.getAnotherCombinator(res)
         print(res)
         return
     def getGeneralCombinator(self,arr):
@@ -3000,17 +3001,32 @@ class Formulas(MyCommon,EllipticCurve):
     def getAnotherCombinator(self,res):
         """
         docstring for getAnotherCombinator
+        res:
+            2D array
+            [[2,0],[0,1]] => [[1,1],[2]]
+            2 ones and 1 two
         """
         output = []
+        sn = ""
         for line in res:
             arr = []
             for i,item in enumerate(line):
                 if item > 0:
                     arr += [i+1]*item
+            item = "%d S_{%s}"
+            ch   = ""
+            for i in arr:
+                ch += str(i)
+            k = self.getGeneralCombinator(arr)
+            item = item%(k,ch)
+            print(item)
             output.append(arr)
+            sn = "%s %s +"%(sn,item)
+
+        print(sn)
 
 
-        return output 
+        return output,sn 
     def getCombinatorForm(self,res):
         """
         docstring for getCombinatorForm
@@ -3150,7 +3166,73 @@ class Formulas(MyCommon,EllipticCurve):
             # print("total:",total)
 
             return total
+    def getCombinator(self,n,m):
+        """
+        docstring for getCombinator
+        """
+        s = 1 
+        for i in range(m):
+            s = s*(n-i)/(i+1)
+        return s 
+    def rootTermsNumber(self):
+        """
+        docstring for rootTermsNumber
+        """
+        n = Symbol("n")
+        s = self.getCombinator(n,5)
+        print(s)
+
+        cn5 = self.getCombinator(n,5)
+        cn4 = self.getCombinator(n,4)
+        cn3 = self.getCombinator(n,3)
+        cn2 = self.getCombinator(n,2)
+        s = expand(10*cn5+16*cn4+9*cn3)
+        s = factor(s)
+        print(s)
+        s = s - cn2*cn3 
+        s = factor(s)
+        print(s)
+
+        x,y,z = self.xyz 
+        # s1 = x*cn5+4*y*cn4+3*z*cn3
+        # s2 = cn2*cn3
+        s1 = 4*x*cn4 + 3*y*cn3 + 2*cn2*z
+        s2 = 2*cn2*cn2 
+        s1 = expand(s1).collect(n)
+        print("s1",latex(s1))
+        s1 = sympy.Poly(s1,n).as_dict()
+        print(s1)
+        s2 = expand(s2).collect(n)
+        print("s2",latex(s2))
+        s2 = sympy.Poly(s2,n).as_dict()
+        print(s2)
+
+        eqn = []
+        for i in range(2,5):
+            eqn.append(s1[(i,)] - s2[(i,)])
+        print(solve(eqn,[x,y,z]))
+        print(factor(3*cn3+2*cn2))
+
+        s = 120*cn5 + 60*4*cn4 + 50*3*cn3 + 15*2*cn2 + n 
+        s = expand(s)
+        print(s)
+
+
+        return
+
+    def getPolyExpansions(self,arr,n):
+        """
+        docstring for getPolyExpansions
+        arr:
+            array, [1,1]
+        n:
+            integer, say 3
+        return:
+            [1,1],3 => x1x2+x1x3+x2x3
+        """
         
+        return
+
     def test(self):
         """
         docstring for test
@@ -3172,8 +3254,10 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSinNX()
         # self.quinticEqn()
         # self.testGetAllCombinator()
-        self.polyRootsPow()
+        # self.polyRootsPow()
         # print(self.getGeneralCombinator([1,2,2,2]))
+        self.rootTermsNumber()
+
 
 
         return
