@@ -3364,28 +3364,30 @@ class Formulas(MyCommon,EllipticCurve):
             polyB.append(tmp.pop())
         print("B",polyB)
 
-        A = 
+        A = self.getCoefMatrix(polyA,n)
+        print(A)
+        B = self.getCoefMatrix(polyB,n)
+        print(B)
         return
 
-    def getCoefMatrix(self,polynomials):
+    def getCoefMatrix(self,polynomials,n):
         """
         docstring for getCoefMatrix
         """
-
+        m  = n
         N  = Symbol("n")
-        n  = len(polynomial)
+        n  = len(polynomials)
         # get a null matrix
-        matrix = []
-        for i in range(n):
-            line = []
-            for j in range(n):
-                line.append(0)
-            matrix.append(line)
+        matrix = sympy.zeros(n)
         
-
+        i = 0
         for line in polynomials:
             line = sympy.Poly(line,N).as_dict()
-            print(line)
+            for key in line:
+                j = key[0]
+                matrix[i,j-1] = line[key]
+            i = i + 1           
+        matrix = matrix[:,:m]    
         return matrix
     def test(self):
         """
