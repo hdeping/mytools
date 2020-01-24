@@ -3281,7 +3281,8 @@ class Formulas(MyCommon,EllipticCurve):
                       [ 60,27,12, 7, 3,1,0],
                       [120,60,30,20,10,5,1]])
         print(A)
-        
+        B = self.getInverseMatrix(A)
+        print(B)
 
         A = np.array([[ 1, 0,0,0,0],
                       [ 4, 1,0,0,0],
@@ -3289,12 +3290,34 @@ class Formulas(MyCommon,EllipticCurve):
                       [12, 5,2,1,0],
                       [24,12,6,4,1]])
         print(A)
-        
-                     
+        B = self.getInverseMatrix(A)
+        print(B)            
         
         
 
-        return
+        return 
+
+    def getInverseMatrix(self,A):
+        """
+        docstring for getInverseMatrix
+        get the inverse of matrix A with the form
+        [[1,...],
+         [a1,1,...],
+         [a2,a3,1,...],
+         [...]]
+        """
+        n = len(A)
+        B = np.zeros((n,2*n),int)
+        B[:n,:n] = A 
+        B[:n,n:] = np.identity(n)
+        for i in range(n-1):
+            for j in range(i+1,n):
+                B[j] = B[j] - B[j,i]*B[i]
+
+        B = B[:n,n:]
+        if n%2 == 1:
+            B = - B
+        return B
     def test(self):
         """
         docstring for test
