@@ -3227,6 +3227,8 @@ class Formulas(MyCommon,EllipticCurve):
         s = factor(s)
         print(s)
         print(factor(2*cn2+3*cn3))
+        print("S4",factor(cn2+6*cn3+6*cn4))
+        print("cn3+cn4",factor(cn3+cn4))
 
         # print(factor())
 
@@ -3279,8 +3281,17 @@ class Formulas(MyCommon,EllipticCurve):
                       [ 60,27,12, 7, 3,1,0],
                       [120,60,30,20,10,5,1]])
         print(A)
-        B = np.linalg.inv(A)
-        print(-B.astype(int))
+        
+
+        A = np.array([[ 1, 0,0,0,0],
+                      [ 4, 1,0,0,0],
+                      [ 6, 2,1,0,0],
+                      [12, 5,2,1,0],
+                      [24,12,6,4,1]])
+        print(A)
+        
+                     
+        
         
 
         return
@@ -3305,7 +3316,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSinNX()
         # self.quinticEqn()
         # self.testGetAllCombinator()
-        self.polyRootsPow()
+        # self.polyRootsPow()
         # print(self.getGeneralCombinator([1,2,3,4]))
         # self.rootTermsNumber()
         self.getSn()
