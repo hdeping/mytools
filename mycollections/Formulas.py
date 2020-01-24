@@ -2982,7 +2982,7 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i,len(res),res)
             print(i,len(res),res)
         
-        n = 3
+        n = 4
         res = self.getCombinatorEqnRecursive(n,n)
         print(res)
         res,sn = self.getAnotherCombinator(res)
@@ -3008,22 +3008,26 @@ class Formulas(MyCommon,EllipticCurve):
         """
         output = []
         sn = ""
+        number = ""
         for line in res:
             arr = []
             for i,item in enumerate(line):
                 if item > 0:
                     arr += [i+1]*item
-            item = "%d S_{%s}"
+            item = "%d S_{%s} \\\\"
             ch   = ""
             for i in arr:
                 ch += str(i)
             k = self.getGeneralCombinator(arr)
             item = item%(k,ch)
+            number = "%s&%d"%(number,k)
             print(item)
             output.append(arr)
             sn = "%s %s +"%(sn,item)
 
         print(sn)
+        number = number[1:]
+        print("coefficients: ",number)
 
 
         return output,sn 
@@ -3224,6 +3228,8 @@ class Formulas(MyCommon,EllipticCurve):
         print(s)
         print(factor(2*cn2+3*cn3))
 
+        # print(factor())
+
         return
 
     def getPolyExpansions(self,arr,n):
@@ -3256,13 +3262,27 @@ class Formulas(MyCommon,EllipticCurve):
         s14    = -60*s11111-27*s1112-12*s122 - 7*s113 -3*s23 -a[1]**3*a[2] 
         s5     = -120*s11111-60*s1112-30*s122 - 20*s113 -10*s23 -5*s14 - a[1]**5
 
-        print(latex(s11111))
-        print(latex(s1112))
-        print(latex(s122))
-        print(latex(s113))
-        print(latex(s23))
-        print(latex(s14))
-        print(latex(s5))
+        a = "\\\\"
+        # print(latex(s11111) + a)
+        # print(latex(s1112) + a)
+        # print(latex(s122) + a)
+        # print(latex(s113) + a)
+        # print(latex(s23) + a)
+        # print(latex(s14) + a)
+        # print(latex(s5))
+
+        A = np.array([[  1, 0, 0, 0, 0,0,0],
+                      [  5, 1, 0, 0, 0,0,0],
+                      [ 10, 3, 1, 0, 0,0,0],
+                      [ 20, 7, 2, 1, 0,0,0],
+                      [ 30,12, 3, 2, 1,0,0],
+                      [ 60,27,12, 7, 3,1,0],
+                      [120,60,30,20,10,5,1]])
+        print(A)
+        B = np.linalg.inv(A)
+        print(-B.astype(int))
+        
+
         return
     def test(self):
         """
@@ -3285,7 +3305,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testSinNX()
         # self.quinticEqn()
         # self.testGetAllCombinator()
-        # self.polyRootsPow()
+        self.polyRootsPow()
         # print(self.getGeneralCombinator([1,2,3,4]))
         # self.rootTermsNumber()
         self.getSn()
