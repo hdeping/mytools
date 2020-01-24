@@ -3291,7 +3291,14 @@ class Formulas(MyCommon,EllipticCurve):
                       [24,12,6,4,1]])
         print(A)
         B = self.getInverseMatrix(A)
-        print(B)            
+        print(B)   
+
+        A = np.array([[ 1, 0,0],
+                      [ 3, 1,0],
+                      [ 6, 3,1]])
+        print(A)
+        B = self.getInverseMatrix(A)
+        print(B)               
         
         
 
@@ -3315,8 +3322,8 @@ class Formulas(MyCommon,EllipticCurve):
                 B[j] = B[j] - B[j,i]*B[i]
 
         B = B[:n,n:]
-        if n%2 == 1:
-            B = - B
+        # if m%2 == 1:
+        #     B = - B
         return B
     def test(self):
         """
