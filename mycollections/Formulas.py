@@ -3337,8 +3337,8 @@ class Formulas(MyCommon,EllipticCurve):
         seq = self.getCombinatorEqnRecursive(n,n)
         # print(res)
         res,sn = self.getAnotherCombinator(seq)
-        print(res)
-        print(sn)
+        # print(res)
+        # print(sn)
         # print(self.getGeneralCombinator([4,3]))
 
         # get the matrix of polynomials 
@@ -3355,14 +3355,17 @@ class Formulas(MyCommon,EllipticCurve):
                     coef[i] = 1 
                 else:
                     coef[i] += 1 
-            num  = self.getGeneralCombinator(list(coef.keys()))
+
+            arr  = list(coef.values())
+            num  = self.getGeneralCombinator(arr)
+            print(arr,num)
             polyA.append([len(line),num])
             tmp.append(line)
             
         while len(tmp) > 0:
             polyB.append(tmp.pop())
         
-        return polyA,polyB
+        return polyA,polyB,sn
 
     def getCoefMatrix(self,polynomials,n):
         """
@@ -3451,10 +3454,58 @@ class Formulas(MyCommon,EllipticCurve):
         get Sn by the combinator coefficients 
         """
         n = 5
-        A,B = self.getSnByMat(n)
+        a = symbols("a0:%d"%(n+1))
+        A,B,sn = self.getSnByMat(n)
+
+        bn = []
+        for line in B:
+            s = 1 
+            for i in line:
+                s *= a[i]
+            bn.append(latex(s))
+
         print(A)
         print(B)
+        print(sn)
+        print(bn)
+
+        res = self.getCombinatorMulti(2,3)
+        print(res)
+        a = {1:20,5:29}
+
         return
+
+    def addCoefDicts(self,dict1,dict2):
+        """
+        docstring for addCoefDicts
+        """
+        if len(dict1) < len(dict2):
+            dict1,dict2 = dict2,dict1
+        print(dict1,dict2) 
+
+        return
+    def getCombinatorMulti(self,k,m):
+        """
+        docstring for getCombinatorMulti
+        k,m:
+            Integer values, 
+            k,m => (n,k)*(n,m)
+            (n,m) is a combinator number
+            C_{n}^{k}C_{n}^{m}
+            &=&\sum_{i=0}^{k}C_{m}^{k-i}C_{m+i}^{i}C_{n}^{m+i}
+        """
+        if k > m:
+            k,m = m,k 
+
+        res = {}
+        m   = Integer(m)
+        k   = Integer(k)
+        for i in range(k+1):
+            num = self.getCombinator(m,k-i)
+            num *= self.getCombinator(m+i,i)
+            res[m+i] = num 
+        
+        return res
     def test(self):
         """
         docstring for test
