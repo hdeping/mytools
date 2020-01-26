@@ -3472,6 +3472,11 @@ class Formulas(MyCommon,EllipticCurve):
         res = self.getCombinatorMultiDict({3:3,4:4},1)
         print(res)
 
+        res = self.getCombinatorMultiArr([1,1,3])
+        res = self.getCombinatorMultiArr([1,3,1])
+        print(res)
+
+
         
         return
 
@@ -3522,10 +3527,12 @@ class Formulas(MyCommon,EllipticCurve):
             k,m = arr
             return self.getCombinatorMulti(k,m)
         else:
-            pass
+            k,m = arr[:2]
+            res = self.getCombinatorMulti(k,m)
+            for k in arr[2:]:
+                res = self.getCombinatorMultiDict(res,k)
+            return res 
 
-
-        return
     def getCombinatorMultiDict(self,dict,k):
         """
         dict:
