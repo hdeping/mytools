@@ -3358,7 +3358,7 @@ class Formulas(MyCommon,EllipticCurve):
 
             arr  = list(coef.values())
             num  = self.getGeneralCombinator(arr)
-            print(arr,num)
+            # print(arr,num)
             polyA.append([len(line),num])
             tmp.append(line)
             
@@ -3453,9 +3453,10 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for getSnByComCoef
         get Sn by the combinator coefficients 
         """
-        n = 5
+        n = 6
         a = symbols("a0:%d"%(n+1))
         A,B,sn = self.getSnByMat(n)
+        print("length:",len(A))
 
         bn = []
         for line in B:
@@ -3464,17 +3465,17 @@ class Formulas(MyCommon,EllipticCurve):
                 s *= a[i]
             bn.append(latex(s))
 
+        for bn,an in zip(bn,sn):
+            print("%s & %s \\\\"%(bn,an))
+
         print(A)
         print(B)
         print(sn)
         print(bn)
 
-        res = self.getCombinatorMultiDict({3:3,4:4},1)
-        print(res)
-
-        res = self.getCombinatorMultiArr([1,1,3])
-        res = self.getCombinatorMultiArr([1,3,1])
-        print(res)
+        for line in B:
+            res = self.getCombinatorMultiArr(line)
+            print(res)
 
 
         
