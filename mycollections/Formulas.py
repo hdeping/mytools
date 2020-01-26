@@ -3477,6 +3477,23 @@ class Formulas(MyCommon,EllipticCurve):
         print(res)
         return
 
+    def sortNumKeyDicts(self,dict):
+        """
+        docstring for sortNumKeyDicts
+        """
+        keys = dict.keys()
+        keys = list(keys)
+        keys.sort()
+        item = []
+        while len(keys) > 0:
+            item.append(keys.pop())
+        keys = item
+        total = {}
+
+        for key in keys:
+            total[key] = dict[key]
+
+        return total
     def addCoefDicts(self,dict1,dict2):
         """
         docstring for addCoefDicts
@@ -3491,8 +3508,9 @@ class Formulas(MyCommon,EllipticCurve):
             if key not in total:
                 total[key] = dict2[key]
                 
-
+        total = self.sortNumKeyDicts(total)
         return total
+
     def getCombinatorMulti(self,k,m):
         """
         docstring for getCombinatorMulti
@@ -3513,8 +3531,9 @@ class Formulas(MyCommon,EllipticCurve):
             num = self.getCombinator(m,k-i)
             num *= self.getCombinator(m+i,i)
             res[m+i] = num 
-        
+        res = self.sortNumKeyDicts(res)
         return res
+
     def test(self):
         """
         docstring for test
