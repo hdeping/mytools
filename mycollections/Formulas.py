@@ -3469,6 +3469,9 @@ class Formulas(MyCommon,EllipticCurve):
         print(sn)
         print(bn)
 
+        res = self.getCombinatorMultiDict({3:3,4:4},1)
+        print(res)
+
         
         return
 
@@ -3519,6 +3522,7 @@ class Formulas(MyCommon,EllipticCurve):
             k,m = arr
             return self.getCombinatorMulti(k,m)
         else:
+            pass
 
 
         return
@@ -3529,11 +3533,14 @@ class Formulas(MyCommon,EllipticCurve):
         k: 
             integer 
         """
+        total = {}
         for key in dict:
             value = dict[key]
+            res   = self.getCombinatorMulti(key,k)
+            res   = self.dictMulti(res,value)
+            total = self.addCoefDicts(total,res)
 
-
-        return
+        return total
     def dictMulti(self,dict,value):
         """
         docstring for dictMulti
