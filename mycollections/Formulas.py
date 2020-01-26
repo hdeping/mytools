@@ -3471,19 +3471,28 @@ class Formulas(MyCommon,EllipticCurve):
 
         res = self.getCombinatorMulti(2,3)
         print(res)
-        a = {1:20,5:29}
+        a = {1:20,5:29,7:34}
 
+        res = self.addCoefDicts(a,res)
+        print(res)
         return
 
     def addCoefDicts(self,dict1,dict2):
         """
         docstring for addCoefDicts
         """
-        if len(dict1) < len(dict2):
-            dict1,dict2 = dict2,dict1
-        print(dict1,dict2) 
+        total = {}
+        for key in dict1:
+            if key in dict2:
+                total[key] = dict1[key] + dict2[key]
+            else:
+                total[key] = dict1[key]
+        for key in dict2:
+            if key not in total:
+                total[key] = dict2[key]
+                
 
-        return
+        return total
     def getCombinatorMulti(self,k,m):
         """
         docstring for getCombinatorMulti
