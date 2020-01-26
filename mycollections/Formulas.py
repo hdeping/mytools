@@ -3007,25 +3007,26 @@ class Formulas(MyCommon,EllipticCurve):
             2 ones and 1 two
         """
         output = []
-        sn = ""
+        sn = []
         number = ""
         for line in res:
             arr = []
             for i,item in enumerate(line):
                 if item > 0:
                     arr += [i+1]*item
-            item = "%d S_{%s} \\\\"
+            # item = "%d S_{%s} \\\\"
+            item = "S_{%s}"
             ch   = ""
             for i in arr:
                 ch += str(i)
             k = self.getGeneralCombinator(arr)
-            item = item%(k,ch)
+            item = item%(ch)
             number = "%s&%d"%(number,k)
-            print(item)
+            # print(item)
             output.append(arr)
-            sn = "%s %s +"%(sn,item)
+            sn.append(item)
 
-        print(sn)
+        # print(sn)
         number = number[1:]
         print("coefficients: ",number)
 
@@ -3326,16 +3327,18 @@ class Formulas(MyCommon,EllipticCurve):
         #     B = - B
         return B
 
-    def getSnByMat(self):
+    def getSnByMat(self,n):
         """
         docstring for getSnByMat
+        return the combinator sequence
         """
-        n = 6
+        # get all the sequences
         a = sympy.symbols("a0:%d"%(n+1))
-        res = self.getCombinatorEqnRecursive(n,n)
+        seq = self.getCombinatorEqnRecursive(n,n)
+        # print(res)
+        res,sn = self.getAnotherCombinator(seq)
         print(res)
-        res,sn = self.getAnotherCombinator(res)
-        print(res)
+        print(sn)
         # print(self.getGeneralCombinator([4,3]))
 
         # get the matrix of polynomials 
@@ -3344,7 +3347,8 @@ class Formulas(MyCommon,EllipticCurve):
         tmp   = []
         polyB = []
         N     = Symbol("n")
-        for line in res:
+        for ii,line in enumerate(res):
+            # print(ii,line)
             coef = {}
             for i in line:
                 if i not in coef:
@@ -3352,46 +3356,13 @@ class Formulas(MyCommon,EllipticCurve):
                 else:
                     coef[i] += 1 
             num  = self.getGeneralCombinator(list(coef.keys()))
-            item = num*self.getCombinator(N,len(line))
-            polyA.append(item)
-            item = 1
-
-            for i in coef:
-                num  = self.getCombinator(N,i)
-                item = item*num**coef[i]
-            tmp.append(item)
-            print(coef)
+            polyA.append([len(line),num])
+            tmp.append(line)
+            
         while len(tmp) > 0:
             polyB.append(tmp.pop())
-        print("B",polyB)
-
-        # A = self.getCoefMatrix(polyA,n)
-        # print(A)
-        # B = self.getCoefMatrix(polyB,n)
-        # print(B)
-        # print("A",latex(A))
-        # print("B",latex(B))
-        # print(A)
-        # print(B)
-
-        n,m = sympy.symbols("n m")
-        a = self.getCombinator(n,2)
-        b = self.getCombinator(n-m,2)
-        print(expand(a-b))
-        # X = A*B.inv()
-        # print(X)
-        # X = np.array([[ 1, 0,0],
-        #              [ -3, 1,0],
-        #              [ 3, -3,1]])
-        # X = - X
-        # X = np.array([[ 1, 0,0,0,0],
-        #               [ 4, 1,0,0,0],
-        #               [ 6, 2,1,0,0],
-        #               [12, 5,2,1,0],
-        #               [24,12,6,4,1]])
-        # print(X)
-        # print(X*A-B)
-        return
+        
+        return polyA,polyB
 
     def getCoefMatrix(self,polynomials,n):
         """
@@ -3416,12 +3387,6 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getSnByCombinator
         """
-        n = 6
-        a = sympy.symbols("a0:%d"%(n+1))
-        res = self.getCombinatorEqnRecursive(n,n)
-        print(res)
-        res,sn = self.getAnotherCombinator(res)
-        print(res)
 
         b     = symbols("b0:5")
         A,B,C = symbols("A B C")
@@ -3443,7 +3408,7 @@ class Formulas(MyCommon,EllipticCurve):
         s = expand(s**3)
         print(latex(s))
         n  = 100 
-        print(self.getCombinator(100,3))
+        # print(self.getCombinator(100,3))
         s = ""
         for i in range(5):
             for j in range(i,5):
@@ -3479,6 +3444,17 @@ class Formulas(MyCommon,EllipticCurve):
                 
         
         return res 
+
+    def getSnByComCoef(self):
+        """
+        docstring for getSnByComCoef
+        get Sn by the combinator coefficients 
+        """
+        n = 5
+        A,B = self.getSnByMat(n)
+        print(A)
+        print(B)
+        return
     def test(self):
         """
         docstring for test
@@ -3505,7 +3481,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.rootTermsNumber()
         # self.getSn()
         # self.getSnByMat()
-        self.getSnByCombinator()
+        # self.getSnByCombinator()
+        self.getSnByComCoef()
 
 
 
