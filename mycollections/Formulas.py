@@ -3438,9 +3438,47 @@ class Formulas(MyCommon,EllipticCurve):
         # s2 = s1.subs(z[1],z[2])
         print(s1)
         print(s2)
-        s = expand(s1*s2)
+        # s = expand(s1*s2)
+        s = sum(b)
+        s = expand(s**3)
         print(latex(s))
+        n  = 100 
+        print(self.getCombinator(100,3))
+        s = ""
+        for i in range(5):
+            for j in range(i,5):
+                for k in range(j,5):
+                    s += self.exponentTerm(i,j,k) + "+"
+        s = s[:-1]
+        
+        print(s)
+
         return
+    def exponentTerm(self,i,j,k):
+        """
+        docstring for exponentTerm
+        [0,0,0] => S_{444}
+        """
+        a = symbols("b0:5")
+        b = [1] + list(a[1:])
+        # print(b)
+        s = b[i]*b[j]*b[k]
+        arr = [i,j,k]
+        num = 0
+        for i in arr:
+            i = 4 - i
+            if i > 0:
+                num = 10*num + i 
+        if num > 0:
+            num = self.inverseNum(num)
+            res = "%s S_{%d}"%(latex(s),num)
+            if num < 10:
+                res = "4 " + res
+        else:
+            res = "10 %s"%(latex(s))
+                
+        
+        return res 
     def test(self):
         """
         docstring for test
