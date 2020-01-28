@@ -3794,7 +3794,7 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getSnDirect
         """
-        n = 6
+        n = 5
         a = symbols("a0:%d"%(n+1))
         A,B,sn = self.getSnByMat(n)
         print("length:",len(A))
@@ -3817,9 +3817,44 @@ class Formulas(MyCommon,EllipticCurve):
         # k = 5
         # res = self.getSArrSnMulti(arr,k)
         # print(res)
-        print(self.getSmSnMulti(1,1))
-        res = self.getSArr([2,2])
+        # print(self.getSmSnMulti(1,1))
+        res = self.getSArr([1,1,2])
         print(res)
+        # print(B)
+
+        coef_dict = {}
+        for i,key in enumerate(sn):
+            coef_dict[key] = i
+        coef_mat = Matrix.zeros(len(A))
+        for i,line in enumerate(B):
+            res = self.getSArr(line)
+            for key in res:
+                index = coef_dict[key]
+                coef_mat[i,index] = res[key]
+        x  = coef_mat.inv()
+        if n % 2 == 1:
+            x = -x
+        print(latex(x))
+        bn = []
+        for line in B:
+            s = 1 
+            for i in line:
+                s *= a[i]
+            bn.append(latex(s))
+        # y = [[-1  , 0  , 0 , 0 , 0 , 0 , 0],
+        #      [5   , -1 , 0 , 0 , 0 , 0 , 0],
+        #      [-5  , 3  , -1, 0 , 0 , 0 , 0],
+        #      [-5  , 1  , 2 , -1, 0 , 0 , 0],
+        #      [-5  , 1  , -1, 2 , -1, 0 , 0],
+        #      [35  , 19 , 1 , 1 , 3 , -1, 0],
+        #      [-55 , 35 , -5, -5, -5, 5 ,-1]]
+        # y = np.array(y)
+        # print("y",y)
+        # print(np.dot(a,x))
+
+
+
+
 
         # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
 
