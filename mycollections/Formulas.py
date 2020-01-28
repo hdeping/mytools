@@ -3364,6 +3364,14 @@ class Formulas(MyCommon,EllipticCurve):
             
         while len(tmp) > 0:
             polyB.append(tmp.pop())
+
+        # sort the polyA and sn by the length
+        num = len(polyA)
+        for i in range(num):
+            for j in range(i+1,num):
+                if polyA[i][0] < polyA[j][0]:
+                    polyA[i],polyA[j] = polyA[j],polyA[i]
+                    sn[i],sn[j]       = sn[j],sn[i]
         
         return polyA,polyB,sn
 
@@ -3465,22 +3473,83 @@ class Formulas(MyCommon,EllipticCurve):
                 s *= a[i]
             bn.append(latex(s))
 
-        for bn,an in zip(bn,sn):
-            print("%s & %s \\\\"%(bn,an))
+        for b,an in zip(bn,sn):
+            print("%s & %s \\\\"%(b,an))
 
-        print(A)
-        print(B)
-        print(sn)
-        print(bn)
+        print(" A",A)
+        print(" B",B)
+        print("sn",sn)
+        print("bn",bn)
 
-        for line in B:
+        An = []
+        for i,line in enumerate(B):
             res = self.getCombinatorMultiArr(line)
-            print(res)
+            print(i+1,res)
+            An.append(res)
 
+        # get the coefficients matrix
+        n   = len(A)
+        num = n*(n-1)//2 
+        num = (num + n // 2) // 2
+        X = symbols("x0:%d"%(num+1))
+        res = self.getConstantMatrix(n,X)
+        # get the equations 
+        eqn = []
+        all_keys = []
+        for i in range(n):
+            line = {}
+            for j,(key,value) in enumerate(A):
+                # print(key,value)
+                if key not in line:
+                    line[key] = value*res[i][j]
+                else:
+                    line[key] += value*res[i][j]
+            # print(line)
+            for key in An[i]:
+                expr = line[key] - An[i][key]
+                if expr != 0:
+                    print(expr)
+                    all_keys.append(key)
+                    eqn.append(expr)
+        # print(eqn)
+        # print(len(eqn))
+        eqn = np.array(eqn)
+        all_keys = np.array(all_keys)
+        indeces  = np.argsort(all_keys)
+        indeces  = np.flip(indeces)
+        eqn = eqn[indeces].tolist()
+        all_keys = all_keys[indeces]
+        print(indeces)
+        print(all_keys)
+        print(len(eqn),eqn)
+        sol = solve(eqn[:30],X[:20])
+        print(sol)
 
         
         return
 
+    def getConstantMatrix(self,n,arr):
+        """
+        docstring for getConstantMatrix
+        """
+        res = []
+        for i in range(n):
+            line = []
+            for j in range(n):
+                line.append(0)
+            res.append(line)
+        for i in range(n):
+            res[i][i] = 1 
+        num = n // 2 
+        count = 0 
+        for i in range(n):
+            for j in range(i+1,n-i):
+                count += 1 
+                res[j][i] = arr[count]
+                res[-i-1][-j-1] = arr[count]
+        # res = Matrix(res)
+        # print(latex(res))
+        return res
     def sortNumKeyDicts(self,dict):
         """
         docstring for sortNumKeyDicts
