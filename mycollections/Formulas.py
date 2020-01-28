@@ -3430,7 +3430,7 @@ class Formulas(MyCommon,EllipticCurve):
         s = sympy.sympify(s)
         s = s.collect(b[4])
         
-        print(s)
+        print(latex(s))
 
         return
     def exponentTerm(self,i,j,k):
@@ -3656,6 +3656,52 @@ class Formulas(MyCommon,EllipticCurve):
         res = self.sortNumKeyDicts(res)
         return res
 
+    def getSmSnMulti(self,m,n):
+        """
+        docstring for getSmSnMulti
+        """
+        arr = [1]*m 
+        res = self.getSArrSnMulti(arr,n)
+        return res
+    def getSArrSnMulti(self,arr,n):
+        """
+        docstring for getSSnMulti
+        arr:
+            array, such as [1,2,2]
+        n:
+            integer, denotes n ones such as [1,1,1...]
+        return:
+            2D array
+            first row: S sequence
+            second row: number
+            such as [[[1,1,1,1,1,1],[1,1,4]],[15,2]]
+        """
+        num = min(len(arr),n)
+        res = [[],[]]
+        a   = np.arange(len(arr))
+        for i in range(num+1):
+            if i == 0:
+                res[0].append([1]*n+arr)
+                k = arr.count(1)
+                k = self.getGeneralCombinator([k,n])
+                res[1].append(k)
+            else:
+                indeces = itertools.combinations(a,i)
+                # print(i,arr)
+                for line in indeces:
+                    b  = arr.copy()
+                    for j in line:
+                        b[j] += 1 
+                    # whether is a new array
+                    b.sort()
+                    c = [1]*(n-i) + b
+                    if c not in res[0]:
+                        res[0].append(c)
+                        k = b.count(1)
+                        k = self.getGeneralCombinator([k,n-i])
+                        res[1].append(k)            
+        
+        return res
     def getSnDirect(self):
         """
         docstring for getSnDirect
@@ -3679,7 +3725,13 @@ class Formulas(MyCommon,EllipticCurve):
         print(" B",B)
         print("sn",sn)
         print("bn",bn)
+        arr = [1,2,2]
+        k = 5
+        res = self.getSArrSnMulti(arr,k)
+        print(res)
+        print(self.getSmSnMulti(4,10))
 
+        # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
 
         return
     def test(self):
@@ -3708,7 +3760,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.rootTermsNumber()
         # self.getSn()
         # self.getSnByMat()
-        self.getSnByCombinator()
+        # self.getSnByCombinator()
         # self.getSnByComCoef()
         self.getSnDirect()
 
