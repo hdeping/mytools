@@ -3017,9 +3017,7 @@ class Formulas(MyCommon,EllipticCurve):
                     arr += [i+1]*item
             # item = "%d S_{%s} \\\\"
             item = "S_{%s}"
-            ch   = ""
-            for i in arr:
-                ch += str(i)
+            ch   = str(arr)
             k = self.getGeneralCombinator(arr)
             item = item%(ch)
             number = "%s&%d"%(number,k)
@@ -3663,6 +3661,13 @@ class Formulas(MyCommon,EllipticCurve):
         arr = [1]*m 
         res = self.getSArrSnMulti(arr,n)
         return res
+
+    def getSArr(self,arr):
+        """
+        docstring for getSArr
+        """
+        
+        return
     def getSArrSnMulti(self,arr,n):
         """
         docstring for getSSnMulti
@@ -3699,9 +3704,18 @@ class Formulas(MyCommon,EllipticCurve):
                         res[0].append(c)
                         k = b.count(1)
                         k = self.getGeneralCombinator([k,n-i])
-                        res[1].append(k)            
+                        res[1].append(k)  
+        # 2d array => dict
+
+        total = {}
+        for i in range(len(res[0])):
+            key   = res[0][i]
+            key   = str(key)
+            value = res[1][i]
+            total[key] = value
         
-        return res
+        return total
+
     def getSnDirect(self):
         """
         docstring for getSnDirect
