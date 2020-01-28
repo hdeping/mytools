@@ -3666,6 +3666,20 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getSArr
         """
+        if len(arr) == 1:
+            res = {}
+            key = [1]*arr[0]
+            key = "S_{%s}"%(str(key))
+            res[key] = 1 
+        elif len(arr) == 2:
+            m,n = arr
+            res = self.getSmSnMulti(m,n)
+        else:
+            m,n = arr[:2]
+            res = self.getSmSnMulti(m,n)
+            for k in arr[2:]:
+                pass
+
         
         return
     def getSArrSnMulti(self,arr,n):
@@ -3711,6 +3725,7 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(len(res[0])):
             key   = res[0][i]
             key   = str(key)
+            key   = "S_{%s}"%(key)
             value = res[1][i]
             total[key] = value
         
@@ -3739,11 +3754,11 @@ class Formulas(MyCommon,EllipticCurve):
         print(" B",B)
         print("sn",sn)
         print("bn",bn)
-        arr = [1,2,2]
-        k = 5
-        res = self.getSArrSnMulti(arr,k)
-        print(res)
-        print(self.getSmSnMulti(4,10))
+        # arr = [1,2,2]
+        # k = 5
+        # res = self.getSArrSnMulti(arr,k)
+        # print(res)
+        print(self.getSmSnMulti(1,1))
 
         # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
 
