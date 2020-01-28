@@ -28,6 +28,7 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import json
 import time
+import itertools
 
 
 class EllipticCurve():
@@ -3426,6 +3427,8 @@ class Formulas(MyCommon,EllipticCurve):
                 for k in range(j,5):
                     s += self.exponentTerm(i,j,k) + "+"
         s = s[:-1]
+        s = sympy.sympify(s)
+        s = s.collect(b[4])
         
         print(s)
 
@@ -3447,11 +3450,13 @@ class Formulas(MyCommon,EllipticCurve):
                 num = 10*num + i 
         if num > 0:
             num = self.inverseNum(num)
-            res = "%s S_{%d}"%(latex(s),num)
+            res = "%s*S%d"%(str(s),num)
             if num < 10:
-                res = "4 " + res
+                res = "6*" + res
+            elif num < 100:
+                res = "3*" + res
         else:
-            res = "10 %s"%(latex(s))
+            res = "10*%s"%(str(s))
                 
         
         return res 
@@ -3651,6 +3656,32 @@ class Formulas(MyCommon,EllipticCurve):
         res = self.sortNumKeyDicts(res)
         return res
 
+    def getSnDirect(self):
+        """
+        docstring for getSnDirect
+        """
+        n = 6
+        a = symbols("a0:%d"%(n+1))
+        A,B,sn = self.getSnByMat(n)
+        print("length:",len(A))
+
+        bn = []
+        for line in B:
+            s = 1 
+            for i in line:
+                s *= a[i]
+            bn.append(latex(s))
+
+        for b,an in zip(bn,sn):
+            print("%s & %s \\\\"%(b,an))
+        print("length: ",len(A))
+        print(" A",A)
+        print(" B",B)
+        print("sn",sn)
+        print("bn",bn)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3677,8 +3708,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.rootTermsNumber()
         # self.getSn()
         # self.getSnByMat()
-        # self.getSnByCombinator()
-        self.getSnByComCoef()
+        self.getSnByCombinator()
+        # self.getSnByComCoef()
+        self.getSnDirect()
 
 
 
