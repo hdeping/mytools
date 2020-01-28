@@ -3790,11 +3790,11 @@ class Formulas(MyCommon,EllipticCurve):
             # print(n,m,k)
 
         return k
-    def getSnDirect(self):
+    def getSnDirect(self,n):
         """
         docstring for getSnDirect
         """
-        n = 6
+        # n = 6
         a = symbols("a0:%d"%(n+1))
         A,B,sn = self.getSnByMat(n)
         B1 = B
@@ -3807,38 +3807,30 @@ class Formulas(MyCommon,EllipticCurve):
                 s *= a[i]
             bn.append(latex(s))
 
-        for b,an in zip(bn,sn):
-            print("%s & %s \\\\"%(b,an))
-        print("length: ",len(A))
-        print(" A",A)
-        print(" B",B)
-        print("sn",sn)
-        print("bn",bn)
-        # arr = [1,2,2]
-        # k = 5
-        # res = self.getSArrSnMulti(arr,k)
-        # print(res)
-        # print(self.getSmSnMulti(1,1))
-        res = self.getSArr([1,1,2])
-        print(res)
-        # print(B)
+        # for b,an in zip(bn,sn):
+        #     print("%s & %s \\\\"%(b,an))
 
         coef_dict = {}
         for i,key in enumerate(sn):
             coef_dict[key] = i
         coef_mat = Matrix.zeros(len(A))
+        t1 = time.time()
         for i,line in enumerate(B):
             res = self.getSArr(line)
+            # t2 = time.time()
+            # print(i,"%fs"%(t2 - t1))
+            # t1 = t2
             for key in res:
                 index = coef_dict[key]
                 coef_mat[i,index] = res[key]
-        x  = coef_mat.inv()
+        x  = self.getInverseMatrix(np.array(coef_mat))
+        x  = Matrix(x)
         if n % 2 == 1:
             x = -x
-        print(latex(x))
+        # print(latex(x))
         A,B,C = symbols("A B C")
         a = []
-        for i in range(n+1):
+        for i in range(n+5):
             a.append(0)
         a[3] = A
         a[4] = B
@@ -3854,7 +3846,10 @@ class Formulas(MyCommon,EllipticCurve):
         # print(sn)
         y = x*An
         for i,j in zip(sn,y):
-            print(i,latex(j))
+            arr = self.key2Array(i)
+            # print(arr)
+            if len(arr) < 6 and max(arr) < 5:
+                print(i,latex(j))
 
         return
     def test(self):
@@ -3885,7 +3880,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getSnByMat()
         # self.getSnByCombinator()
         # self.getSnByComCoef()
-        self.getSnDirect()
+        for n in range(3,21):
+            self.getSnDirect(n)
 
 
 
