@@ -3678,10 +3678,25 @@ class Formulas(MyCommon,EllipticCurve):
             m,n = arr[:2]
             res = self.getSmSnMulti(m,n)
             for k in arr[2:]:
-                pass
+                for key in res:
+                    array = self.key2Array(key)
+                    print(key,array)
 
         
         return
+    def key2Array(self,key_string):
+        """
+        docstring for key2Array
+        'S_{[1, 2, 3]}' => [1, 2, 3]
+        """
+        key = key_string.split("_")[1]
+        key = key[2:-2]
+        key = key.split(", ")
+        arr = []
+        for i in key:
+            arr.append(int(i))
+
+        return arr
     def getSArrSnMulti(self,arr,n):
         """
         docstring for getSSnMulti
@@ -3759,6 +3774,7 @@ class Formulas(MyCommon,EllipticCurve):
         # res = self.getSArrSnMulti(arr,k)
         # print(res)
         print(self.getSmSnMulti(1,1))
+        self.getSArr([1,1,1])
 
         # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
 
