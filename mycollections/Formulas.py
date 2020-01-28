@@ -3675,15 +3675,21 @@ class Formulas(MyCommon,EllipticCurve):
             m,n = arr
             res = self.getSmSnMulti(m,n)
         else:
-            m,n = arr[:2]
-            res = self.getSmSnMulti(m,n)
+            m,n   = arr[:2]
+            res   = self.getSmSnMulti(m,n)
             for k in arr[2:]:
+                total = {}
                 for key in res:
                     array = self.key2Array(key)
-                    print(key,array)
+                    # print(key,array)
+                    line  = self.getSArrSnMulti(array,k)
+                    line  = self.dictMulti(line,res[key])
+                    total = self.addCoefDicts(total,line)
+                res = total
+                # print(k,total)
 
         
-        return
+        return res
     def key2Array(self,key_string):
         """
         docstring for key2Array
@@ -3724,16 +3730,27 @@ class Formulas(MyCommon,EllipticCurve):
                 # print(i,arr)
                 for line in indeces:
                     b  = arr.copy()
+                    new_array = []
+                    # b after addition
+                    append_b = []
                     for j in line:
                         b[j] += 1 
+                        append_b.append(b[j])
+
                     # whether is a new array
                     b.sort()
                     c = [1]*(n-i) + b
+
                     if c not in res[0]:
                         res[0].append(c)
-                        k = b.count(1)
-                        k = self.getGeneralCombinator([k,n-i])
+                        k  = self.getNewCoef(append_b,b)
+                        # not arr.count
+                        k1 = b.count(1)
+                        k1 = self.getGeneralCombinator([k1,n-i])
+                        # print(append_b,b,k1,k)
+                        k  = k*k1
                         res[1].append(k)  
+                        # print(k1,k,n,i)
         # 2d array => dict
 
         total = {}
@@ -3746,6 +3763,33 @@ class Formulas(MyCommon,EllipticCurve):
         
         return total
 
+    def getNewCoef(self,append_b,b):
+        """
+        docstring for getNewCoef
+        append_b,b:
+            1D array
+        return:
+            integer
+
+        [2,2], [1,2,2,2] => 3
+        """
+        
+        # list to dict
+        counts = {}
+        for i in append_b:
+            if i in counts:
+                counts[i] += 1 
+            else:
+                counts[i]  = 1 
+        k = 1 
+        for i in counts:
+            n = b.count(i)
+            m = counts[i]
+
+            k = k*self.getGeneralCombinator([m,n-m])
+            # print(n,m,k)
+
+        return k
     def getSnDirect(self):
         """
         docstring for getSnDirect
@@ -3774,7 +3818,8 @@ class Formulas(MyCommon,EllipticCurve):
         # res = self.getSArrSnMulti(arr,k)
         # print(res)
         print(self.getSmSnMulti(1,1))
-        self.getSArr([1,1,1])
+        res = self.getSArr([2,2])
+        print(res)
 
         # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
 
