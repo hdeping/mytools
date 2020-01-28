@@ -3794,9 +3794,10 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getSnDirect
         """
-        n = 5
+        n = 6
         a = symbols("a0:%d"%(n+1))
         A,B,sn = self.getSnByMat(n)
+        B1 = B
         print("length:",len(A))
 
         bn = []
@@ -3835,28 +3836,25 @@ class Formulas(MyCommon,EllipticCurve):
         if n % 2 == 1:
             x = -x
         print(latex(x))
-        bn = []
-        for line in B:
+        A,B,C = symbols("A B C")
+        a = []
+        for i in range(n+1):
+            a.append(0)
+        a[3] = A
+        a[4] = B
+        a[5] = C
+        An = []
+        for line in B1:
             s = 1 
             for i in line:
                 s *= a[i]
-            bn.append(latex(s))
-        # y = [[-1  , 0  , 0 , 0 , 0 , 0 , 0],
-        #      [5   , -1 , 0 , 0 , 0 , 0 , 0],
-        #      [-5  , 3  , -1, 0 , 0 , 0 , 0],
-        #      [-5  , 1  , 2 , -1, 0 , 0 , 0],
-        #      [-5  , 1  , -1, 2 , -1, 0 , 0],
-        #      [35  , 19 , 1 , 1 , 3 , -1, 0],
-        #      [-55 , 35 , -5, -5, -5, 5 ,-1]]
-        # y = np.array(y)
-        # print("y",y)
-        # print(np.dot(a,x))
-
-
-
-
-
-        # print(self.getGeneralCombinator([0,0,0,1,10,1,2]))
+            An.append(s)
+        An = Matrix(An)
+        # print(An)
+        # print(sn)
+        y = x*An
+        for i,j in zip(sn,y):
+            print(i,latex(j))
 
         return
     def test(self):
