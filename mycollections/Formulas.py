@@ -3852,6 +3852,38 @@ class Formulas(MyCommon,EllipticCurve):
                 print(i,latex(j))
 
         return
+
+    def getQuinticTransform(self):
+        """
+        docstring for getQuinticTransform
+        """
+        b     = symbols("b0:5")
+        A,B,C = symbols("A B C")
+
+        S11 =  0
+        S21 =  3*A
+        S22 =  2*B
+        S31 =  4*B
+        S32 =  5*C
+        S33 =  3*A**2
+        S41 =  5*C
+        S42 =  -3*A**2
+        S43 =  -20*A*B
+        S44 =  506*A*C-52*B**2
+        
+
+        T2  = S44+b[1]*S43+b[2]*S42+b[3]*S41
+        T2 += b[1]**2*S33+b[1]*b[2]*S32+b[1]*b[3]*S31
+        T2 += b[2]**2*S22+b[2]*b[3]*S21+b[3]**2*S11
+        T2 += (-10*b[4]**2)
+        b4 = (4*B + 3*A*b[1])/5
+        T2  = expand(T2.subs(b[4],b4)*5)
+        T2 = -T2.collect(b[1])
+        print(T2)
+        print(latex(T2))
+
+
+        return  
     def test(self):
         """
         docstring for test
@@ -3880,8 +3912,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getSnByMat()
         # self.getSnByCombinator()
         # self.getSnByComCoef()
-        for n in range(3,21):
-            self.getSnDirect(n)
+        # for n in range(3,21):
+        #     self.getSnDirect(n)
+        self.getQuinticTransform()
 
 
 
