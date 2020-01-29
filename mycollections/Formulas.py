@@ -3945,11 +3945,11 @@ class Formulas(MyCommon,EllipticCurve):
         # if m%2 == 1:
         #     B = - B
         return B
-    def getSnByNewton(self):
+    def getSnByNewton(self,n):
         """
         docstring for getSnByNewton
         """
-        n = 20
+        # n = 20
         # a = symbols("a0:%d"%(n+1))
         a = []
         for i in range(n+1):
@@ -3975,11 +3975,45 @@ class Formulas(MyCommon,EllipticCurve):
         S = A_inv*M
         S = S.expand()
         S = [0] + list(S)
-        # print(latex(S))
-        # for i in range(1,n+1):
-        #     print("S_{%d} & = & %s\\\\"%(i,latex(S[i-1])))
+       
+       
+        
+        return S 
+    def dealQuinticBySn(self,):
+        """
+        docstring for dealQuinticBySn
+        """
+        S = self.getSnByNewton(20)
         b = symbols("b0:5")
+        A = [0,b[1],b[2],b[3],b[4]]
+        b = A
+        # print(S[20])
+        z = self.xyz[2]
+        X = z**4+b[1]*z**3+b[2]*z**2+b[3]*z+b[4]
+        # print(X)
+        X2 = X
+        n  = 3
+        for i in range(2,n+1):    
+            X2 = expand(X2*X).collect(z)
+        #     print("S%dX"%(i),latex(X2))
+        s1 = X2
+        s1 = s1.subs(b[4]**i,5*b[4]**i)
+        for i in range(4*i,0,-1):
+            s1 = s1.subs(z**i,S[i])
+        # print(latex(s1))
+        A,B,C = symbols("A B C")
+        b4 = (3*A*b[1] + 4*B)/5
+        s1 = s1.subs(b[4],b4)*5
+        b2 = -(4*B*b[1]+5*C)/(3*A)
+        s1 = s1.subs(b[2],b2)*9*A**2
+        s1 = expand(-s1*5).collect(b[3])
+        print(latex(s1))
+
+        
+
+
         return
+
     def test(self):
         """
         docstring for test
@@ -4011,7 +4045,8 @@ class Formulas(MyCommon,EllipticCurve):
         # for n in range(3,21):
         #     self.getSnDirect(n)
         # self.getQuinticTransform()
-        self.getSnByNewton()
+        # self.getSnByNewton()
+        self.dealQuinticBySn()
 
         return
 
