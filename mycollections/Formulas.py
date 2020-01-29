@@ -3911,17 +3911,17 @@ class Formulas(MyCommon,EllipticCurve):
         T3 += b[1]**2*b[3]*S331+b[1]*b[2]**2*S322+b[1]*b[2]*b[3]*S321
         T3 += b[1]*b[3]**2*S311+b[2]**3*S222+b[2]**2*b[3]*S221
         T3 += b[2]*b[3]**2*S211+b[3]**3*S111 + 10*b4**3
-        print(latex(T3))
-
-
-
-
-
-
-
-
+        T3  = expand(T3*25).collect(b[1])
+        print("T3",latex(T3))
 
         return  
+
+    def getSnByNewton(self):
+        """
+        docstring for getSnByNewton
+        """
+        
+        return
     def test(self):
         """
         docstring for test
@@ -3952,9 +3952,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getSnByComCoef()
         # for n in range(3,21):
         #     self.getSnDirect(n)
-        self.getQuinticTransform()
-
-
+        # self.getQuinticTransform()
+        self.getSnByNewton()
 
         return
 
