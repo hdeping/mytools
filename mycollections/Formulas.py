@@ -3916,11 +3916,69 @@ class Formulas(MyCommon,EllipticCurve):
 
         return  
 
+    def getInverseSymbolMatrix(self,A):
+        """
+        docstring for getInverseMatrix
+        get the inverse of matrix A with the form
+        [[1,...],
+         [a1,1,...],
+         [a2,a3,1,...],
+         [...]]
+        """
+        n = A.shape[0]
+        # print("n = ",n)
+        B = sympy.zeros(2*n)
+        B = B[:n,:]
+        B[:n,:n] = A 
+        B[:n,n:] = sympy.eye(n)
+        # print(B)
+        for i in range(n-1):
+            for j in range(i+1,n):
+                for k in range(i+1,2*n):
+                    # print(B[j,k],B[j,i])
+                    B[j,k] = expand(B[j,k] - B[j,i]*B[i,k])
+                B[j,i] = 0
+        # print("try to expand")
+        # B = B.expand()
+        # print(np.array(B))
+        B = B[:n,n:]
+        # if m%2 == 1:
+        #     B = - B
+        return B
     def getSnByNewton(self):
         """
         docstring for getSnByNewton
         """
-        
+        n = 20
+        # a = symbols("a0:%d"%(n+1))
+        a = []
+        for i in range(n+1):
+            a.append(0)
+        A,B,C = symbols("A B C")
+        a[3] = A
+        a[4] = B
+        a[5] = C
+        # print(a)
+        M = []
+        for i in range(n):
+            M.append((i+1)*a[i+1])
+        M = -Matrix(M)
+
+        A = sympy.eye(n)
+        for i in range(1,n):
+            for j in range(n-i):
+                A[i+j,j] = a[i]
+       
+        A_inv = self.getInverseSymbolMatrix(A)
+        # print(A_inv)
+        # print("inverse:",latex(A_inv))
+        S = A_inv*M
+        S = S.expand()
+        S = [0] + list(S)
+        # print(latex(S))
+        # for i in range(1,n+1):
+        #     print("S_{%d} & = & %s\\\\"%(i,latex(S[i-1])))
+        b = symbols("b0:5")
         return
     def test(self):
         """
