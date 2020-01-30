@@ -3992,7 +3992,7 @@ class Formulas(MyCommon,EllipticCurve):
         X = z**4+b[1]*z**3+b[2]*z**2+b[3]*z+b[4]
         # print(X)
         X2 = X
-        n  = 3
+        n  = 4
         for i in range(2,n+1):    
             X2 = expand(X2*X).collect(z)
         #     print("S%dX"%(i),latex(X2))
@@ -4002,18 +4002,24 @@ class Formulas(MyCommon,EllipticCurve):
             s1 = s1.subs(z**i,S[i])
         # print(latex(s1))
         A,B,C = symbols("A B C")
-        b4 = (3*A*b[1] + 4*B)/5
-        s1 = s1.subs(b[4],b4)*5
-        b2 = -(4*B*b[1]+5*C)/(3*A)
-        s1 = s1.subs(b[2],b2)*9*A**2
-        s1 = expand(-s1*5).collect(b[3])
+        # b4 = (3*A*b[1] + 4*B)/5
+        # s1 = s1.subs(b[4],b4)*5
+        # b2 = -(4*B*b[1]+5*C)/(3*A)
+        # s1 = s1.subs(b[2],b2)*9*A**2
+        # s1 = expand(-s1*5).collect(b[3])
         print(latex(s1))
 
         
 
 
         return
-
+    def getSnExponent(self):
+        """
+        X = z**4+b[1]*z**3+b[2]*z**2+b[3]*z+b[4]
+        """
+        i = 4 
+        
+        return
     def test(self):
         """
         docstring for test
@@ -4046,7 +4052,8 @@ class Formulas(MyCommon,EllipticCurve):
         #     self.getSnDirect(n)
         # self.getQuinticTransform()
         # self.getSnByNewton()
-        self.dealQuinticBySn()
+        # self.dealQuinticBySn()
+        self.getSnExponent()
 
         return
 
