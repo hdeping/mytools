@@ -4042,7 +4042,51 @@ class Formulas(MyCommon,EllipticCurve):
         s  = expand(s)
         print(latex(s))
         return
-        
+    
+    def weierstrassForm(self):
+        """
+        docstring for weierstrassForm
+        """
+        x,y = self.xyz[:2]
+        s = x**3 + y**3 - x*y 
+        print(s)
+        # s = s.subs(y,4-x).expand()
+        # print(s,factor(s))
+
+        t  = Symbol("t")
+        s = s.subs(x,t/(1+t**3))
+        s = s.subs(y,t**2/(1+t**3)).simplify()
+        x0 = Integer(2)/9
+        y0 = Integer(4)/9
+        l = (3*x0**2 - y0)*(x-x0) + (3*y0**2 - x0)*(y-y0)
+        k = -(3*x0**2 - y0)/(3*y0**2 - x0)
+        print(l*81/2)
+        s = x**3 + y**3 - x*y
+        # s = s.subs(y,(12*x+4)/15).expand()
+        x0,y0,k = symbols("x0 y0 k")
+        s = s.subs(y,k*(x-x0)+y0).expand().collect(x)
+        print(s)
+        # t  = Integer(4)
+        t = symbols("t0:3")
+        x0 = t[1]/(1+t[1]**3)
+        y0 = t[1]**2/(1+t[1]**3)
+        x1 = t[2]/(1+t[2]**3)
+        y1 = t[2]**2/(1+t[2]**3)
+        # k = -(3*x0**2 - y0)/(3*y0**2 - x0)
+        k  = (y1-y0)/(x1-x0)
+        k = k.simplify()
+        print("k",k,latex(k))
+        sx = (3*k**3*x0-3*k**2*y0+k)/(k**3+1)
+        sx = sx.simplify()
+        print("sx",latex(sx))
+        print(sx.factor())
+        x3 = sx - x0 - x1
+        x3 = x3.simplify()
+        y3 = -(k*(x3-x0)+y0).simplify()
+        print("x3",x3)
+        print("y3",y3)
+        # print(s)
+        return
     def test(self):
         """
         docstring for test
@@ -4077,7 +4121,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getSnByNewton()
         # self.dealQuinticBySn()
         # self.getSnExponent()
-        self.modularEquation()
+        # self.modularEquation()
+        self.weierstrassForm()
 
         return
 
