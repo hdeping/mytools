@@ -4018,8 +4018,31 @@ class Formulas(MyCommon,EllipticCurve):
         X = z**4+b[1]*z**3+b[2]*z**2+b[3]*z+b[4]
         """
         i = 4 
-        
+        res = self.getCombinatorEqnRecursive(4,2)
+        # res,sn = self.getAnotherCombinator(res)
+        print(res)
         return
+
+    def modularEquation(self):
+        """
+        docstring for modularEquation
+        """
+        u,v = symbols("u v")
+        print(u,v)
+
+        s =  u**6 - v**6 + 5*u**2*v**2*(u**2 - v**2)
+        s += 4*u*v*(1-u**4*v**4) 
+        print(s)
+        # print(solve(u**5-u+1))
+
+        x,y,z,a,k = symbols("x y z a k")
+        s  = x**3 + y**3 - x*y
+        s  = s.subs(x,k*(u+v))
+        s  = s.subs(y,k*(u-v))
+        s  = expand(s)
+        print(latex(s))
+        return
+        
     def test(self):
         """
         docstring for test
@@ -4053,7 +4076,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getQuinticTransform()
         # self.getSnByNewton()
         # self.dealQuinticBySn()
-        self.getSnExponent()
+        # self.getSnExponent()
+        self.modularEquation()
 
         return
 
