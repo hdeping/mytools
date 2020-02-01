@@ -4048,11 +4048,35 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for weierstrassForm
         """
         x,y = self.xyz[:2]
+        u,v,k = symbols("u v k")
         s = x**3 + y**3 - x*y 
+        # s = s.subs(x,u+v)
+        # s = s.subs(y,u-v).expand()
+        x = (1/u - 1)/6 + v/u
+        y = (1/u - 1)/6 - v/u
+        s = x**3 + y**3 - x*y 
+        s = (s*108*u**3).simplify()
+        x = x.simplify()
+        y = y.simplify()
+        print(latex(x))
+        print(latex(y))
+        
         print(s)
+
+        s = (2*u**3 - u**2)/(6*u + 1)
+        s = s.subs(u,(u-1)/6)
+        s = (s*108*u).expand()
+        print("s: ",latex(s))
+
         # s = s.subs(y,4-x).expand()
         # print(s,factor(s))
 
+        
+        return
+    def getThirdXY(self):
+        """
+        docstring for getThirdXY
+        """
         t  = Symbol("t")
         s = s.subs(x,t/(1+t**3))
         s = s.subs(y,t**2/(1+t**3)).simplify()
@@ -4065,7 +4089,7 @@ class Formulas(MyCommon,EllipticCurve):
         # s = s.subs(y,(12*x+4)/15).expand()
         x0,y0,k = symbols("x0 y0 k")
         s = s.subs(y,k*(x-x0)+y0).expand().collect(x)
-        print(s)
+        # print(s)
         # t  = Integer(4)
         t = symbols("t0:3")
         x0 = t[1]/(1+t[1]**3)
@@ -4075,11 +4099,11 @@ class Formulas(MyCommon,EllipticCurve):
         # k = -(3*x0**2 - y0)/(3*y0**2 - x0)
         k  = (y1-y0)/(x1-x0)
         k = k.simplify()
-        print("k",k,latex(k))
+        # print("k",k,latex(k))
         sx = (3*k**3*x0-3*k**2*y0+k)/(k**3+1)
         sx = sx.simplify()
-        print("sx",latex(sx))
-        print(sx.factor())
+        # print("sx",latex(sx))
+        # print(sx.factor())
         x3 = sx - x0 - x1
         x3 = x3.simplify()
         y3 = -(k*(x3-x0)+y0).simplify()
