@@ -4052,25 +4052,32 @@ class Formulas(MyCommon,EllipticCurve):
         s = x**3 + y**3 - x*y 
         # s = s.subs(x,u+v)
         # s = s.subs(y,u-v).expand()
-        x = (1/u - 1)/6 + v/u
-        y = (1/u - 1)/6 - v/u
+        u = u/3/4+Integer(3)/4
+        x = (1/u - 1)/6 + v/u/27/8
+        y = (1/u - 1)/6 - v/u/27/8
         s = x**3 + y**3 - x*y 
-        s = (s*108*u**3).simplify()
+        s = (s*108*432*u**3).simplify()
         x = x.simplify()
         y = y.simplify()
         print(latex(x))
         print(latex(y))
         
-        print(s)
+        print(s,latex(-s))
+        u = Symbol("u")
+        s = -u**3 + 27*u - 54
+        print(s,factor(s))
 
-        s = (2*u**3 - u**2)/(6*u + 1)
-        s = s.subs(u,(u-1)/6)
-        s = (s*108*u).expand()
-        print("s: ",latex(s))
 
-        # s = s.subs(y,4-x).expand()
-        # print(s,factor(s))
+        # s = -4*u**3 + 9*u**2 - 6*u + 1
+        # s = s.subs(u,u+Integer(3)/4).expand()
+        # print(s)
 
+        # s = (2*u**3 - u**2)/(6*u + 1)
+        # s = s.subs(u,(u-1)/6)
+        # s = (s*108*u).expand()
+        # print("s: ",latex(s))
+
+      
         
         return
     def getThirdXY(self):
