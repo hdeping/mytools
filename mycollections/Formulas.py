@@ -4077,7 +4077,129 @@ class Formulas(MyCommon,EllipticCurve):
         # s = (s*108*u).expand()
         # print("s: ",latex(s))
 
-      
+        x,y = self.xyz[:2]
+        p = symbols("a b c d e f g h i j")
+        print(p)
+        exponents = [[3,0],[0,3],[2,1],[1,2],[1,1],
+                     [2,0],[0,2],[1,0],[0,1],[0,0]]
+        s = 0 
+        for i,(ii,jj) in enumerate(exponents):
+            s += p[i]*x**ii*y**jj
+            # print(i,ii,jj)
+        print(s)
+        # print(u,v)
+        theta = Symbol("theta")
+        u0,v0 = symbols("u0 v0")
+        x1 = u+u0
+        y1 = v+v0
+        x1 = u*cos(theta) - v*sin(theta)
+        y1 = u*sin(theta) + v*cos(theta)
+        # print(x1,y1)
+        s = s.subs(x,x1)
+        s = s.subs(y,y1).expand().collect([u,v])
+        s0 = Poly(s,[u,v]).as_dict()
+        print(s)
+        s = latex(s)
+        s = s.replace("\\left(\\theta \\right)","\\theta")
+        # print(latex(s))
+        s0 = s0[(3,0)]
+        print(s0)
+        s0 = s0.subs(cos(theta),1)
+        s0 = s0.subs(sin(theta),x).collect(x)
+        print(s0)
+
+        # k = 1/Integer(2)
+        # A = 1/sqrt(k**2+1)
+        # B = k/sqrt(k**2+1)
+        A = 2
+        B = 1
+        x1 = u*A - v*B
+        y1 = u*B + v*A
+        s  =  x**3 + 2*y**3 - 1
+        s  = s.subs(x,x1)
+        s  = s.subs(y,y1).expand()
+        print(s)
+        print(latex(s))
+        
+        s = x**3 - 27*x+54
+        print(factor(s))
+        for i in range(4):
+            for j in range(2):
+                a = (3**(i)*2**(j))
+                print(a,factor(s-a**2))
+        x = [Integer(0),Integer(54)]
+
+        # for i in range(2):
+        #     k = (3*x[0]**2 - 27)/(2*x[1])
+        #     a = k**2 - 2*x[0]
+        #     x[1] = -(k*(a - x[0]) + x[1])
+        #     x[0] = a 
+        #     print(x,sqrt(x[0]**3-27*x[0]+54))
+        t = Symbol("t")
+        x = t/(1+t**3)
+        y = t**2/(1+t**3)
+        print(x,y)
+        s1 = (-3*u+v+9)/(18*u+162)-x
+        s2 = (-3*u-v+9)/(18*u+162)-y
+        sol = solve([s1,s2],[u,v])
+        # print(latex(sol))
+        # print(latex(sol[v].factor()))
+        u = sol[u].factor()
+        v = sol[v].factor()
+        print("u,v",u,v)
+        print(latex(u),latex(v))
+        s = factor(u**3-27*u+54)
+        print(s)
+        points = []
+        for i in range(-100,100):
+            if i == -1:
+                continue
+            i = Integer(2)/(2*i+1)
+            u1 = u.subs(t,i)
+            v1 = v.subs(t,i)
+            if u1.is_integer and v1.is_integer:
+                print("-------",i)
+                print(u1,v1)
+                points.append([u1,v1])
+        print(points)
+        # for x in points:
+        #     print("=============",x)
+        #     for i in range(2):
+        #         k = (3*x[0]**2 - 27)/(2*x[1])
+        #         a = k**2 - 2*x[0]
+        #         x[1] = -(k*(a - x[0]) + x[1])
+        #         x[0] = a 
+        #         print(x,sqrt(x[0]**3-27*x[0]+54))
+        m = Symbol("m")
+        s = 3*(t**2-10*t+1)-m*(1+t)**2 
+        s = s.expand().collect(t)
+        print(s)
+        delta = (-2*m - 30)**2 - 4*(3 - m)**2 
+        delta = delta.factor()
+        print(delta)
+
+        s = 3*(t**2-10*t+1)-(m**2-6)*(1+t)**2 
+        print(s.factor())
+        s = solve(s,t)
+        print(latex(s))
+        # t = s[1]
+        print(v)
+        v = v.subs(t,s[1]).factor()
+        print(v)
+        u = m**2 - 6 
+        v = m*(m - 3)*(m + 3)
+        print(u,v)
+        x = (-3*u+v+9)/(18*u+162)
+        y = (-3*u-v+9)/(18*u+162)
+        t = -(m+3)/(m-3)
+        x = t/(1+t**3)
+        y = t**2/(1+t**3)
+        x = x.factor()
+        y = y.factor()
+        print(x)
+        print(y)
+
+            
         
         return
     def getThirdXY(self):
@@ -4153,7 +4275,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.dealQuinticBySn()
         # self.getSnExponent()
         # self.modularEquation()
-        self.weierstrassForm()
+        # self.weierstrassForm()
+        # print(self.getFactors(1459))
+        self.getWeierstrassForm()
 
         return
 
