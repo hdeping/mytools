@@ -808,10 +808,10 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(10):
             x0 = 2*a*x[-1][0] - x[-2][0]
             x1 = 2*a*x[-1][1] - x[-2][1]
-            print("|%d|%d|%d|%d|"%(i+2,x0,x1,x0**2 - D*x1**2))
+            # print("|%d|%d|%d|%d|"%(i+2,x0,x1,x0**2 - D*x1**2))
             x.append([x0,x1])
         
-        return
+        return x
     def getInitPell1(self,D):
         """
         docstring for getInitPell
@@ -4417,16 +4417,39 @@ class Formulas(MyCommon,EllipticCurve):
                 [-1400,1406,3718,620],
                 [-2581,2587,3465,580],
                 [-533,540,2099,300],
+                [-901,905,1321,332],
+                [-1411,1421,3476,348],
+                [-2327,2331,3755,940],
                 [-224,235,359,34],
                 [-992,1003,1043,114],
                 [-1292,1315,1307,144],
                 [-1455,1456,2521,2522],
                 [-2583,2585,5779,2890],
-                [-6929,6931,9800,4902]
+                [-6929,6931,9800,4902],
+                [-1,4,11,4],
+                [-5,7,8,6],
+                [-7,9,19,10],
+                [-14,16,26,14]
                 ]
         for line in arr:
             res = self.getPQElliptic(line)
             print(res)
+
+        a,c,m,n = symbols("a c m n")
+
+        s = ((a+m)/(c-a)-a/(a+m+c)-n/m)*(c-a)*(c+a+m)*m
+        s = s.expand().simplify().collect(a)
+        print(latex(s))
+
+        x = self.pellSol(3)
+        # print(x)
+        for line in x:
+            a = line[1]
+            if a%2 == 1:
+                a = a // 2 
+                c = line[0] // 2 
+                b = a+1 
+                print(-a,b,c)
 
 
                 
@@ -4480,7 +4503,7 @@ class Formulas(MyCommon,EllipticCurve):
         y = 4*(k+3)*(2*k+5)*(a-b)/z 
         p = 4*k*(k+3) - 3
         q = 32*(k+3)
-        print(y**2,x**3+p*x*x+q*x)
+        # print(y**2,x**3+p*x*x+q*x)
         return [k,x,y,p,q]
 
     def test(self):
