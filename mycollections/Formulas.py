@@ -4326,11 +4326,30 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for testABCElliptic
         """
         n = 6
-        arr = np.arange(-10,10)
-        combinators = itertools(arr,3)
+        arr = np.arange(1,100)
+        combinators = itertools.combinations(arr,3)
+        count = 0
+        arr = []
         for line in combinators:
-            print(line)
+            count += 1
+            for j in range(3):
+                s = list(line).copy()
+                s[j] = -s[j]
+                
+                # print(s,res)
+                if res.is_integer:
+                    print(s,res)
+
+        print(count)
         return
+    def getResABC(self,s):
+        """
+        docstring for getResABC
+        """
+        res  = Integer(s[0])/(s[1]+s[2])
+        res += Integer(s[1])/(s[0]+s[2])
+        res += Integer(s[2])/(s[0]+s[1])
+        return res
     def test(self):
         """
         docstring for test
@@ -4369,7 +4388,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.weierstrassForm()
         # print(self.getFactors(1459))
         # self.getWeierstrassForm()
-        self.conicSection()
+        # self.conicSection()
+        self.testABCElliptic()
 
         return
 
