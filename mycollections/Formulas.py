@@ -4286,6 +4286,51 @@ class Formulas(MyCommon,EllipticCurve):
 
         return
 
+    def conicSection(self):
+        """
+        docstring for conicSection
+        ellipse:
+            x**2/a**2 + y**2/b**2 = 1 
+        hyperbola:
+            x**2/a**2 - y**2/b**2 = 1 
+        parabola:
+            y**2 = 2*p*x
+        """
+        
+        k,m    = symbols("k m")
+        x0,y0 = symbols("x0 y0")
+        x,y   = symbols("x y")
+        a,b,p = symbols("a b p")
+
+        y = k*x + m
+        # s = x**2/a**2 + y**2/b**2 - 1
+        # s = s*a**2*b**2
+        s = y**2 - 2*p*x
+        s = s.expand().collect(x)
+        print(latex(s))
+        print(s)
+        # ax = -2*a**2*k*m/(a**2*k**2 + b**2)
+        # bx = (a**2*m**2-a**2*b**2)/(a**2*k**2 + b**2) 
+        ax = (2*p - 2*k*m)/k**2
+        bx = m**2/k**2
+        ay = k*ax + 2*m 
+        by = k**2*bx + k*m*ax + m**2 
+        s  = by - y0*ay + y0**2+x0**2 
+        s += bx - x0*ax
+        s  = s.simplify().factor().collect([m])
+        print("final",latex(s))
+
+        return
+    def testABCElliptic(self):
+        """
+        docstring for testABCElliptic
+        """
+        n = 6
+        arr = np.arange(-10,10)
+        combinators = itertools(arr,3)
+        for line in combinators:
+            print(line)
+        return
     def test(self):
         """
         docstring for test
@@ -4323,7 +4368,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.modularEquation()
         # self.weierstrassForm()
         # print(self.getFactors(1459))
-        self.getWeierstrassForm()
+        # self.getWeierstrassForm()
+        self.conicSection()
 
         return
 
