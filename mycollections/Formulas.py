@@ -4354,23 +4354,38 @@ class Formulas(MyCommon,EllipticCurve):
     def testABCElliptic(self):
         """
         docstring for testABCElliptic
+        [-104  105  181] 182
+        [-39  49 116] 12
+        
         """
         n = 6
-        arr = np.arange(1,100)
+        arr = np.arange(1,200)
         combinators = itertools.combinations(arr,3)
         count = 0
         arr = []
         for line in combinators:
             count += 1
-            for j in range(3):
-                s = list(line).copy()
-                s[j] = -s[j]
-                
-                # print(s,res)
-                if res.is_integer:
-                    print(s,res)
+            line   = list(line)
+            line[0] = -line[0]
+            arr.append(line)
 
         print(count)
+        arr = np.array(arr)
+        print(arr[:10])
+        print(arr.shape)
+        S01 = arr[:,0] + arr[:,1]
+        S02 = arr[:,0] + arr[:,2]
+        S12 = arr[:,1] + arr[:,2]
+        S   = S01*S02*arr[:,0] + S01*S12*arr[:,1] 
+        S  += S12*S02*arr[:,2]
+        k   = S01*S02*S12
+        res = S%k
+        indeces = np.nonzero(res == 0)[0]
+        # print(indeces,type(indeces),indeces[0])
+        for i in indeces:
+            s = S[i]//k[i]
+            if s > 0:
+                print(i,arr[i],s)
         return
     def getResABC(self,s):
         """
