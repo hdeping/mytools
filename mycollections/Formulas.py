@@ -4351,23 +4351,22 @@ class Formulas(MyCommon,EllipticCurve):
         print("final",latex(s))
 
         return
-    def testABCElliptic(self):
+    def testABCElliptic(self,m):
         """
         docstring for testABCElliptic
-        [-104  105  181] 182
-        [-39  49 116] 12
         
         """
         n = 6
-        arr = np.arange(1,200)
-        combinators = itertools.combinations(arr,3)
+        arr = np.arange(1,2000)
+        combinators = itertools.combinations(arr,2)
         count = 0
         arr = []
+        # m = 4
         for line in combinators:
             count += 1
             line   = list(line)
-            line[0] = -line[0]
-            arr.append(line)
+            # line[0] = -line[0]
+            arr.append([-line[0],line[0]+m,line[1]])
 
         print(count)
         arr = np.array(arr)
@@ -4395,6 +4394,85 @@ class Formulas(MyCommon,EllipticCurve):
         res += Integer(s[1])/(s[0]+s[2])
         res += Integer(s[2])/(s[0]+s[1])
         return res
+
+    def testABC(self):
+        """
+        docstring for testABC
+        [-104  105  181] 182
+        [-143  145  323] 162
+        [-203  205  288] 146
+        [-65  68 179] 60
+        [-217  220  263] 92
+        [-39  49 116] 12
+        [-513  517  623] 160
+        """
+        
+        arr =  [[-104, 105, 181,182],
+                [-143, 145, 323,162],
+                [-203, 205, 288,146],
+                [-65, 68,179,60],
+                [-217, 220, 263,92],
+                [-39, 49,116,12],
+                [-513, 517, 623,160]
+                ]
+        for line in arr:
+            res = self.getPQElliptic(line)
+            print(res)
+
+
+                
+        return
+    def checkElliptic(self):
+        """
+        docstring for checkElliptic
+        """
+        x,y,k = symbols("x y k")
+        a,b,c = symbols("a b c")
+        z = (k+2)*(a+b)-c
+        x = -4*(k+3)*(a+b+2*c)/z 
+        y = 4*(k+3)*(2*k+5)*(a-b)/z 
+        p = 4*k*(k+3) - 3
+        q = 32*(k+3)
+        s = x**3+p*x*x+q*x - y**2
+        s = s.expand().factor()
+        print(s)
+
+        x,y,k = symbols("x y k")
+        a,b,c = symbols("a b c")
+        
+        a = x-y-8*(k+3)
+        b = x+y-8*(k+3)
+        c = (2*k+4)*x+8*(k+3)
+        s1 = a+b+c 
+        s2 = a**2+b**2+c**2 
+        s3 = a**3+b**3+c**3
+        s  = k*s3 - (k-1)*s1*s2 + (3-2*k)*a*b*c 
+        s  = s/(8*(k + 3)*(2*k + 5))
+        s  = s.simplify().collect(x)
+        print(s)
+        a,b,c = symbols("a b c")
+        A = x-y-8*(k+3)
+        B = x+y-8*(k+3)
+        C = (2*k+4)*x+8*(k+3)
+        eqn = [A/C-a/c,B/C-b/c]
+        sol = solve(eqn,[x,y])
+        x   = sol[x].factor()
+        y   = sol[y].factor()
+        print(latex(x))
+        print(latex(y))
+        return
+    def getPQElliptic(self,arr):
+        """
+        docstring for getPQElliptic
+        """
+        a,b,c,k = arr
+        z = Integer((k+2)*(a+b)-c) 
+        x = -4*(k+3)*(a+b+2*c)/z 
+        y = 4*(k+3)*(2*k+5)*(a-b)/z 
+        p = 4*k*(k+3) - 3
+        q = 32*(k+3)
+        print(y**2,x**3+p*x*x+q*x)
+        return [k,x,y,p,q]
     def test(self):
         """
         docstring for test
@@ -4405,7 +4483,8 @@ class Formulas(MyCommon,EllipticCurve):
         # print(self.getFactors(1459))
         # self.getWeierstrassForm()
         # self.conicSection()
-        self.testABCElliptic()
+        # self.testABCElliptic(5)
+        self.testABC()
 
         return
 
