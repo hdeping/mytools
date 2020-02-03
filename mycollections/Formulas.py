@@ -4351,13 +4351,13 @@ class Formulas(MyCommon,EllipticCurve):
         print("final",latex(s))
 
         return
-    def testABCElliptic(self,m):
+    def testABCElliptic(self,n,m):
         """
         docstring for testABCElliptic
         
         """
-        n = 6
-        arr = np.arange(1,2000)
+        # n = 6
+        arr = np.arange(1,n)
         combinators = itertools.combinations(arr,2)
         count = 0
         arr = []
@@ -4368,10 +4368,10 @@ class Formulas(MyCommon,EllipticCurve):
             # line[0] = -line[0]
             arr.append([-line[0],line[0]+m,line[1]])
 
-        print(count)
+        print("m = ",m,count)
         arr = np.array(arr)
-        print(arr[:10])
-        print(arr.shape)
+        # print(arr[:10])
+        # print(arr.shape)
         S01 = arr[:,0] + arr[:,1]
         S02 = arr[:,0] + arr[:,2]
         S12 = arr[:,1] + arr[:,2]
@@ -4384,7 +4384,7 @@ class Formulas(MyCommon,EllipticCurve):
         for i in indeces:
             s = S[i]//k[i]
             if s > 0:
-                print(i,arr[i],s)
+                print("[%d,%d,%d,%d]"%(*(arr[i]),s))
         return
     def getResABC(self,s):
         """
@@ -4413,7 +4413,16 @@ class Formulas(MyCommon,EllipticCurve):
                 [-65, 68,179,60],
                 [-217, 220, 263,92],
                 [-39, 49,116,12],
-                [-513, 517, 623,160]
+                [-513, 517, 623,160],
+                [-1400,1406,3718,620],
+                [-2581,2587,3465,580],
+                [-533,540,2099,300],
+                [-224,235,359,34],
+                [-992,1003,1043,114],
+                [-1292,1315,1307,144],
+                [-1455,1456,2521,2522],
+                [-2583,2585,5779,2890],
+                [-6929,6931,9800,4902]
                 ]
         for line in arr:
             res = self.getPQElliptic(line)
@@ -4473,6 +4482,7 @@ class Formulas(MyCommon,EllipticCurve):
         q = 32*(k+3)
         print(y**2,x**3+p*x*x+q*x)
         return [k,x,y,p,q]
+
     def test(self):
         """
         docstring for test
@@ -4483,7 +4493,15 @@ class Formulas(MyCommon,EllipticCurve):
         # print(self.getFactors(1459))
         # self.getWeierstrassForm()
         # self.conicSection()
-        # self.testABCElliptic(5)
+        # t1 = time.time()
+        # for i in range(1,11):
+            
+        #     # m = sympy.prime(i)
+        #     # print("prime",m)
+        #     self.testABCElliptic(10000,i)
+        #     t2 = time.time()
+        #     print("time:",t2 - t1)
+        #     t1 = t1
         self.testABC()
 
         return
