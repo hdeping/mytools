@@ -1357,6 +1357,36 @@ class Formulas(MyCommon,EllipticCurve):
         # print(time.time() - t1)
         # self.polyhedron33335()
         # self.polyhedron3454()
+
+        # self.polyhedronTrun()
+        # self.getAllPolyhedra()
+        # self.laplacian()
+        # self.laplacian4D()
+        # self.testLaplacian()
+        # self.intersection()
+        # self.testMatrices()
+        # print("solution",self.getCubicSol([1,-27,225,-625]))
+        # self.testSeries()
+        # self.tangentSeries()
+        # self.testBernoulli6()
+        # self.testElliptic()
+
+        # self.testSinNX()
+        # self.quinticEqn()
+        # self.testGetAllCombinator()
+        # self.polyRootsPow()
+        # print(self.getGeneralCombinator([1,2,3,4]))
+        # self.rootTermsNumber()
+        # self.getSn()
+        # self.getSnByMat()
+        # self.getSnByCombinator()
+        # self.getSnByComCoef()
+        # for n in range(3,21):
+        #     self.getSnDirect(n)
+        # self.getQuinticTransform()
+        # self.getSnByNewton()
+        # self.dealQuinticBySn()
+        # self.getSnExponent()
         
         return
 
@@ -4353,37 +4383,8 @@ class Formulas(MyCommon,EllipticCurve):
     def test(self):
         """
         docstring for test
-        """
+        """    
         
-        # self.polyhedronTrun()
-        # self.getAllPolyhedra()
-        # self.laplacian()
-        # self.laplacian4D()
-        # self.testLaplacian()
-        # self.intersection()
-        # self.testMatrices()
-        # print("solution",self.getCubicSol([1,-27,225,-625]))
-        # self.testSeries()
-        # self.tangentSeries()
-        # self.testBernoulli6()
-        # self.testElliptic()
-
-        # self.testSinNX()
-        # self.quinticEqn()
-        # self.testGetAllCombinator()
-        # self.polyRootsPow()
-        # print(self.getGeneralCombinator([1,2,3,4]))
-        # self.rootTermsNumber()
-        # self.getSn()
-        # self.getSnByMat()
-        # self.getSnByCombinator()
-        # self.getSnByComCoef()
-        # for n in range(3,21):
-        #     self.getSnDirect(n)
-        # self.getQuinticTransform()
-        # self.getSnByNewton()
-        # self.dealQuinticBySn()
-        # self.getSnExponent()
         # self.modularEquation()
         # self.weierstrassForm()
         # print(self.getFactors(1459))
