@@ -4240,6 +4240,52 @@ class Formulas(MyCommon,EllipticCurve):
         print("y3",y3)
         # print(s)
         return
+
+    def getWeierstrassForm(self):
+        """
+        docstring for getWeierstrassForm
+        """
+        u,v = symbols("u v")
+        x,y = symbols("x y")
+        s1 = 12/(u+v) - x
+        s2 = 36*(u-v)/(u+v) - y
+        print(solve([s1,s2],[u,v]))
+        x = (u + 36)/(6*v)
+        y = (36 - u)/(6*v)
+        s = x**3 + y**3 - 1 
+        s = s.expand().simplify()
+        print(s)
+
+        points = np.array([[1,1,2],
+                           [2,4,9],
+                           [3,9,28]])
+        x = symbols("x y z")
+        u = symbols("u v w")
+        tangents = sympy.zeros(3)
+        tangents[:,0] = 3*points[:,0]**2 - points[:,1]*points[:,2]
+        tangents[:,1] = 3*points[:,1]**2 - points[:,0]*points[:,2]
+        tangents[:,2] = - points[:,0]*points[:,1]
+
+        print(tangents)
+        sn = []
+        for i in range(3):
+            s = 0 
+            for j in range(3):
+                s += tangents[i,j]*(x[j] - points[i,j])
+            sn.append(s - u[i])
+        print(sn)
+        sol = solve(sn,list(x))
+        print(sol)
+        u = [0,0,0]
+        for i in range(3):
+            u[i] = sol[x[i]]
+        s = u[0]**3 + u[1]**3 - u[0]*u[1]*u[2]
+        s = s.expand().simplify()
+        print(s)
+
+
+        return
+
     def test(self):
         """
         docstring for test
