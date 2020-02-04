@@ -4684,11 +4684,32 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for conicProp
         """
-        a,b,c,x,y,k = symbols("a b c x y k")
+        a,b,c,x,y,k,m = symbols("a b c x y k m")
         x = k*y - c
         s = (x/a)**2 + (y/b)**2 - 1 
-        s = (s*a**2*b**2).expand()
+        s = (s*a**2*b**2).expand().collect(y)
         print(latex(s))
+        x1,x2,y1,y2 = symbols("x1 x2 y1 y2")
+        x,y = self.xyz[:2]
+        s1 = x1*x/a**2 + y1*y/b**2 - 1
+        s2 = x2*x/a**2 + y2*y/b**2 - 1
+        sol = solve([s1,s2],[x,y])
+        print(latex(sol[x]))
+        print(latex(sol[y]))
+
+        x = k*y 
+        s = (x/a)**2 + (y/b)**2 - 1 
+        s = (s*a**2*b**2).expand().collect(y)
+        print(latex(s))
+        x0,y0 = symbols("x0 y0")
+        y1 = (m-c)*y0/(x0-c-k*y0)
+        y2 = (m+c)*y0/(x0+c-k*y0)
+        s1 = y1*y2 - b**2*(m**2 - a**2)/(a*a+(b*k)**2)
+        s1 = (s1*(x0-c-k*y0)*(x0+c-k*y0)*(a*a+(b*k)**2))
+        s1 = s1.expand().collect([m,k])
+        print(latex(s1))
+
+
 
         return
     def test(self):
