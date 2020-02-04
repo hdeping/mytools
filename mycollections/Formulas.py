@@ -794,18 +794,22 @@ class Formulas(MyCommon,EllipticCurve):
         
 
         return
-    def pellSol(self,D):
+    def pellSol(self,D,n):
         """
         docstring for pellSol
         x_{2}   &=& x_{1}^{2}+Dy_{1}^{2}\\
         x_{n+1} &=& 2x_{1}x_{n}-x_{n-1}\\
         y_{2}   &=& 2x_{1}y_{1}\\
         y_{n+1} &=& 2x_{1}y_{n}-y_{n-1}
+        D:
+            positive integer
+        n: 
+            positive integer
         """
         a,b = self.getInitPell(D)
         x = [[1,0],[a,b]] # D = 2
         
-        for i in range(10):
+        for i in range(n):
             x0 = 2*a*x[-1][0] - x[-2][0]
             x1 = 2*a*x[-1][1] - x[-2][1]
             # print("|%d|%d|%d|%d|"%(i+2,x0,x1,x0**2 - D*x1**2))
@@ -861,19 +865,19 @@ class Formulas(MyCommon,EllipticCurve):
                 break 
 
         return result
-    def getInitPell(self,D):
+    def getInitPell(self,D,num=1):
         """
         docstring for getInitPell
         D:
             x^2 - Dy^2 = 1,
         """
         result = self.getContinueSeq(D)
-        print("result",result)
+        # print("result",result)
         m      = result[0]
         sequence = result[1:]
         A = [1,0]
         B = [0,1]
-        for i in range(60):
+        for i in range(100):
             item = sequence[i % len(sequence)]
             a = item*A[-1] + A[-2]
             b = item*B[-1] + B[-2]
@@ -882,9 +886,9 @@ class Formulas(MyCommon,EllipticCurve):
             judge = x**2 - D*y**2
             A.append(a)
             B.append(b)
-            print(i+1,x,y,judge)
-            if judge == 1:
-                print(i+1,x,y,judge)
+            # print(i+1,x,y,judge)
+            if judge == num:
+                # print(i+1,x,y,judge)
                 break
         return x,y
 
@@ -4441,18 +4445,70 @@ class Formulas(MyCommon,EllipticCurve):
         s = s.expand().simplify().collect(a)
         print(latex(s))
 
-        x = self.pellSol(3)
-        # print(x)
-        for line in x:
-            a = line[1]
-            if a%2 == 1:
-                a = a // 2 
-                c = line[0] // 2 
-                b = a+1 
-                print(-a,b,c)
+        x = (2*n*c + m*n-m**2)/m**2 
+        y = (2*a+m)/m**2
+        s = x**2 - n*(2*m+n)*y**2 
+        s = (s*m**4*(-Integer(1)/4/n)).expand().simplify().collect(a)
+        print(latex(s))
+        s = m**3 + (m*n-m**2)**2/4/n - m**2*(2*m+n)/4
+        s = s.expand()
+        print(s)
+
+        n = 1
+        m = 3
+        self.getABCByNM(n,m)
+
+        x,y = symbols("x y")
+        eqn = [16*x+352*y-3712,5*x+133*y-1403]
+        print(solve(eqn,[x,y]))
+        # print(self.pellSol(2,20))
+        
+
+        sol = diophantine(x**2-n*(2*m+n)*y**2-m**4)
+        sol = diophantine(x**2-2*y**2-2)
+        # print(sol)
+        count = 0
+        for key in sol:
+            count += 1
+            print(latex(key[0]) + "\\\\")
+        # print(type(sol))
+        # print(sol[0])
+        arr = [[1,11],[65,179],[700,1859]]
+        for a,c in arr:
+            # print(a,c)
+            x = 2*c - 6 
+            y = 2*a + 3 
+            print(x,y,x**2 - 7*y**2)
 
 
                 
+        return
+
+    def getABCByNM(self,n,m):
+        """
+        docstring for getABCByNM
+        n,m:
+            two positive integers
+        """
+        D = n*(2*m+n)
+        print(n,m,sympy.factorint(D))
+        sol = self.pellSol(D,20)
+        print(sol)
+        # print(x)
+        for line in sol:
+            c = m*m*line[0] - m*n + m**2 
+            a = m*m*line[1] - m
+            # k = c + n
+            # print(c,a)
+            if a%2 == 0 and c%(2*n) == 0:
+                a = -a // 2 
+                c = c // (2*n)
+                b = -a + m
+                k = c + n 
+                if k%m == 0:
+                    k = k // m
+                    print("%d & %d & %d & %d \\\\"%(a,b,c,k))
+                    # print(self.getResABC([a,b,c]))
         return
     def checkElliptic(self):
         """
