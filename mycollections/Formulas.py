@@ -869,7 +869,7 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getInitPell
         D:
-            x^2 - Dy^2 = 1,
+            x^2 - Dy^2 = num,
         """
         result = self.getContinueSeq(D)
         # print("result",result)
@@ -877,7 +877,8 @@ class Formulas(MyCommon,EllipticCurve):
         sequence = result[1:]
         A = [1,0]
         B = [0,1]
-        for i in range(100):
+        n = 100
+        for i in range(n):
             item = sequence[i % len(sequence)]
             a = item*A[-1] + A[-2]
             b = item*B[-1] + B[-2]
@@ -887,10 +888,12 @@ class Formulas(MyCommon,EllipticCurve):
             A.append(a)
             B.append(b)
             # print(i+1,x,y,judge)
+            # print(i,x,y,judge)
             if judge == num:
                 # print(i+1,x,y,judge)
-                break
-        return x,y
+                return x,y
+        print("there is no integer solutions within %d iterations"%(n))
+        return None
 
 
     def testPell(self):
@@ -4438,7 +4441,7 @@ class Formulas(MyCommon,EllipticCurve):
         for line in arr:
             res = self.getPQElliptic(line)
             print(res)
-
+  
         a,c,m,n = symbols("a c m n")
 
         s = ((a+m)/(c-a)-a/(a+m+c)-n/m)*(c-a)*(c+a+m)*m
@@ -4480,10 +4483,37 @@ class Formulas(MyCommon,EllipticCurve):
             y = 2*a + 3 
             print(x,y,x**2 - 7*y**2)
 
-
                 
         return
 
+    def getGeneralPellSol(self):
+        """
+        docstring for getGeneralPellSol
+        """
+        n = 1 
+        m = 3
+        D = 2*m+n
+        x = self.getInitPell(D,num=m**4)
+        if x:
+            print(x[0]**2 - D*x[1]**2)
+        print(self.naivePellSol(D,num=m**4))
+        return
+
+    def naivePellSol(self,D,num=1):
+        """
+        docstring for naivePellSol
+        """
+        n = 10000
+        res = []
+        for y in range(1,n+1):
+            x = sqrt(num+D*y*y)
+            if x.is_integer:
+                res.append([x,y])
+                # return [x,y]
+        if len(res) == 0:
+            print("There is no integer solutions within %d"%(n))
+        
+        return res
     def getABCByNM(self,n,m):
         """
         docstring for getABCByNM
@@ -4581,7 +4611,8 @@ class Formulas(MyCommon,EllipticCurve):
         #     t2 = time.time()
         #     print("time:",t2 - t1)
         #     t1 = t1
-        self.testABC()
+        # self.testABC()
+        self.getGeneralPellSol()
 
         return
 
