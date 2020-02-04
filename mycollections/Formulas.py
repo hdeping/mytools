@@ -4505,11 +4505,18 @@ class Formulas(MyCommon,EllipticCurve):
         """
         n = 10000
         res = []
-        for y in range(1,n+1):
-            x = sqrt(num+D*y*y)
-            if x.is_integer:
-                res.append([x,y])
-                # return [x,y]
+        # for y in range(0,n+1):
+        #     x = sqrt(num+D*y*y)
+        #     if x.is_integer:
+        #         res.append([x,y])
+        #         # return [x,y]
+        arr = np.arange(n+1)
+        X2  = D*arr**2 + num 
+        X   = X2**0.5 
+        X   = X.astype(int)
+        indeces = np.nonzero(X2 == X**2)[0]
+        for i in indeces:
+            res.append([X[i],arr[i]])
         if len(res) == 0:
             print("There is no integer solutions within %d"%(n))
         
