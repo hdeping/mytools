@@ -4493,10 +4493,11 @@ class Formulas(MyCommon,EllipticCurve):
         n = 1 
         m = 3
         D = 2*m+n
-        x = self.getInitPell(D,num=m**4)
-        if x:
-            print(x[0]**2 - D*x[1]**2)
-        print(self.naivePellSol(D,num=m**4))
+        x = self.pellSol(D,20)
+        # if x:
+        #     print(x[0]**2 - D*x[1]**2)
+        xm = self.naivePellSol(D,num=m**4)
+        print(x)
         return
 
     def naivePellSol(self,D,num=1):
