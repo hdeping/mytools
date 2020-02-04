@@ -4483,6 +4483,13 @@ class Formulas(MyCommon,EllipticCurve):
             y = 2*a + 3 
             print(x,y,x**2 - 7*y**2)
 
+
+        a,c,m,n,k = symbols("a c m n k")
+
+        s = ((a+m)/(c-a)-a/(a+m+c)+c/m-k)*(c-a)*(c+a+m)*m
+        s = s.expand().simplify().collect(a)
+        print(latex(s))
+
                 
         return
 
@@ -4494,12 +4501,62 @@ class Formulas(MyCommon,EllipticCurve):
         m = 3
         D = 2*m+n
         x = self.pellSol(D,20)
+        # print(x)
         # if x:
         #     print(x[0]**2 - D*x[1]**2)
         xm = self.naivePellSol(D,num=m**4)
-        print(x)
+        # print(x)
+        a = Integer(8)/3
+        b = Integer(5)/3
+        res = [[a,b],[b,a]]
+        # for line in xm:
+        #     l = self.getPellLambda(line,x[1])
+        #     res.append(l)
+        #     print(line,l)
+        for line in res:
+            sol = self.getNewPellSol(x[:10],line)
+            for u,v in sol:
+                if u%3 == 1:
+                    c = u//2 + 3 
+                    a = -(v-3)//2
+                    b = -a+3
+                    k = (c+1)//3
+                    print("%d,%d,%d,%d"%(a,b,c,k))
+                    print(self.getResABC([a,b,c]))
+
+        n = 3 
+        m = 1
+        D = n*(2*m+n)
+        print(self.pellSol(D,20))
+
         return
 
+    def getNewPellSol(self,arr,l):
+        """
+        docstring for getNewPellSol
+        """
+        res = []
+        length = len(arr)
+        for i in range(1,length):
+            line = []
+            for j in range(2):
+                line.append(l[0]*arr[i][j] + l[1]*arr[i-1][j])
+            res.append(line)
+                
+        return res
+    def getPellLambda(self,arr1,x1):
+        """
+        docstring for getPellLambda
+        arr1:
+            1D array with two elements [u,v]
+        x1:
+            1D array with two elements [x1,y1]
+
+        arr1 = [l1 + x1*l2,y1*l2]
+        """
+        l2 = arr1[1]/Integer(x1[1])
+        l1 = arr1[0] - l2*x1[0]
+        return [l1,l2]
     def naivePellSol(self,D,num=1):
         """
         docstring for naivePellSol
@@ -4600,6 +4657,40 @@ class Formulas(MyCommon,EllipticCurve):
         # print(y**2,x**3+p*x*x+q*x)
         return [k,x,y,p,q]
 
+    def generalConic(self):
+        """
+        docstring for generalConic
+        """
+        a,c,r,theta = symbols("a c r theta")
+        s = 1024*a**4*((r**2+c**2)**2 - 4*c**2*r**2*(cos(theta))**2)
+        s -= ((32*a**2*(r**2+c**2) - (4*a**2+2*c**2+r**2)**2)**2)
+        s = s.expand().collect(r)
+        print(s)
+        s = sympy.Poly(s,r).as_dict()
+        for i in range(0,10,2):
+            print(i,"formulas",latex(s[(i,)].factor()))
+
+        l2 = (4*a**2+2*c**2+r**2)**2
+        l1 = 64*a**2*(c**2+r**2)
+        s  = (64*a**2*c*r*cos(theta))**2 
+        s  -= (l1 - l2)*l2 
+        s  = s.subs(a,2)
+        s  = s.subs(c,1)
+        print(latex(s))
+
+        return
+
+    def conicProp(self):
+        """
+        docstring for conicProp
+        """
+        a,b,c,x,y,k = symbols("a b c x y k")
+        x = k*y - c
+        s = (x/a)**2 + (y/b)**2 - 1 
+        s = (s*a**2*b**2).expand()
+        print(latex(s))
+
+        return
     def test(self):
         """
         docstring for test
@@ -4620,7 +4711,10 @@ class Formulas(MyCommon,EllipticCurve):
         #     print("time:",t2 - t1)
         #     t1 = t1
         # self.testABC()
-        self.getGeneralPellSol()
+        # self.getGeneralPellSol()
+        # self.getABCByNM(2,4)
+        # self.generalConic()
+        self.conicProp()
 
         return
 
