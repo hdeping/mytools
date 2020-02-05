@@ -4702,13 +4702,37 @@ class Formulas(MyCommon,EllipticCurve):
         s = (s*a**2*b**2).expand().collect(y)
         print(latex(s))
         x0,y0 = symbols("x0 y0")
-        y1 = (m-c)*y0/(x0-c-k*y0)
-        y2 = (m+c)*y0/(x0+c-k*y0)
-        s1 = y1*y2 - b**2*(m**2 - a**2)/(a*a+(b*k)**2)
-        s1 = (s1*(x0-c-k*y0)*(x0+c-k*y0)*(a*a+(b*k)**2))
-        s1 = s1.expand().collect([m,k])
-        print(latex(s1))
+        # y1 = (m-c)*y0/(x0-c-k*y0)
+        # y2 = (m+c)*y0/(x0+c-k*y0)
+        # s1 = y1*y2 - b**2*(m**2 - a**2)/(a*a+(b*k)**2)
+        # s1 = (s1*(x0-c-k*y0)*(x0+c-k*y0)*(a*a+(b*k)**2))
+        # s1 = s1.expand().collect([m,k])
+        # print(latex(s1))
 
+        y1 = -b**2*y0/(a**2+c**2+2*c*x0)
+        y2 = -b**2*y0/(a**2+c**2-2*c*x0)
+        k1 = (x0+c)/y0
+        k2 = (x0-c)/y0
+        x1 = k1*y1 - c
+        x2 = k2*y2 + c
+        m  = x1 - (x2 - x1)*y0/(y2-y1)
+        m  = (m*b**2*x0*(a**2+c**2+2*c*x0)).expand().simplify()
+        m  = m.subs(b**2,a**2-c**2).expand()
+        m  = m.collect(x0)
+        print("+++++++++++++++++++++++++++++++++++++++++++++++")
+        m  = m.subs(x0,c).subs(b**2,a**2-c**2).expand()
+        print(latex(m.factor()))
+        y0 = b**2/a
+        x1 = c 
+        y1 = -y0 
+        y2 = -b**4/a/(a**2+3*c**2)
+        x2 = -3*c*(3*a**2+c**2)/(a**2+3*c**2)
+
+        m  = x1 - (x2 - x1)*y0/(y2-y1)
+        m  = m.subs(b**2,a**2-c**2)
+        m  = m.simplify()
+        print("    ")
+        print(latex(m))
 
 
         return
