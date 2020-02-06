@@ -4761,7 +4761,21 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(1,p):
             t = (i**8)%p 
             print(i,t)
+
+        print(self.getQradraticRes(5,17))    
+        print(self.getQradraticRes(17,5))    
+        print(self.getQradraticRes(2,5))    
         return
+    def getQradraticRes(self,a,p):
+        """
+        docstring for getQradraticRes
+        """
+        k = (p - 1) // 2 
+        res = (a**k)  % p 
+        if res == (p-1):
+            res = res - p 
+        return  res
+
     def test(self):
         """
         docstring for test
