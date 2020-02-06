@@ -743,6 +743,25 @@ class Formulas(MyCommon,EllipticCurve):
         divisor = np.array(divisor)
         divisor = np.flip(divisor)
         return divisor
+
+    def getModuloSeq(self,m,n):
+        """
+        docstring for getModuloSeq
+        m,n:
+            two positive integers
+        return:
+            divisor, a inversed array
+        for example, (19,11) => [19,11,8,3,2]
+        """
+        assert(m > 0 and n > 0)
+        divisor = []
+        while n != 1:
+            divisor.append(m)
+            k = n 
+            n = m%n
+            m = k
+        divisor.append(m)
+        return divisor
     def diophantine(self,m,n):
         """
         solution to diophantine equation
@@ -4764,7 +4783,8 @@ class Formulas(MyCommon,EllipticCurve):
 
         print(self.getQradraticRes(5,17))    
         print(self.getQradraticRes(17,5))    
-        print(self.getQradraticRes(2,5))    
+        print(self.getQradraticRes(2,5)) 
+        print(self.getFactors(2017))   
         return
     def getQradraticRes(self,a,p):
         """
@@ -4775,7 +4795,15 @@ class Formulas(MyCommon,EllipticCurve):
         if res == (p-1):
             res = res - p 
         return  res
-
+    def getQradraticResByReci(self,a,p):
+        """
+        docstring for getQradraticResByReci
+        get the quadraticResidue by 
+        the quadratic reciprocity law
+        """
+        divisors = self.getModuloSeq(a,p)
+        print(divisors)
+        return
     def test(self):
         """
         docstring for test
@@ -4800,7 +4828,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getABCByNM(2,4)
         # self.generalConic()
         # self.conicProp()
-        self.quadraticResidue()
+        # self.quadraticResidue()
+        self.getQradraticResByReci(2017,5003)
        
 
         return
