@@ -4734,7 +4734,33 @@ class Formulas(MyCommon,EllipticCurve):
         print("    ")
         print(latex(m))
 
+        x,y = self.xyz[:2]
+        print(diophantine(x**2-3*y**2-2))
+        # print(self.getInitPell(3,num=2))
+        print(solve(a**3+a**2-392))
 
+
+        return
+
+
+    def quadraticResidue(self):
+        """
+        docstring for quadraticResidue
+        """
+        for i in range(20,30):
+            p = sympy.prime(i)
+            k = (p - 1) // 2 
+            # print(i,"test t")
+            t = (2**k)%p
+            if t != 1:
+                t = t - p
+            print(i,p,t)
+
+        print("when p is 17")
+        p = 17 
+        for i in range(1,p):
+            t = (i**8)%p 
+            print(i,t)
         return
     def test(self):
         """
@@ -4759,7 +4785,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getGeneralPellSol()
         # self.getABCByNM(2,4)
         # self.generalConic()
-        self.conicProp()
+        # self.conicProp()
+        self.quadraticResidue()
+       
 
         return
 
