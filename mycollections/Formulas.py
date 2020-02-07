@@ -4835,9 +4835,36 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i,k)
             if k > 100:
                 print(i,k)
-        n = 394
+        n = 689
         print("test %d"%(n))
         print(self.huiwenCheck(n,iternum=10000))
+        return
+
+    def gilbreathCheck(self):
+        """
+        docstring for gilbreathCheck
+        check Gilbreath's conjecture
+        2,3,5,7,11,13...
+        1,2,2,4,2...
+        1,0,2,2...
+        1,2,0...
+        1,2...
+        1...
+        difference sequence (absolute difference) always starts 
+        with 1
+        """
+        arr = []
+        n   = 201
+        for i in range(1,n):
+            k = sympy.prime(i)
+            print(i,k)
+            arr.append(k)
+
+        arr = np.array(arr)
+        for i in range(n//2):
+            arr = np.abs(arr[1:] - arr[:-1])
+            print(i,arr[:10])
+
         return
     def test(self):
         """
@@ -4865,7 +4892,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.conicProp()
         # self.quadraticResidue()
         # self.getQradraticResByReci(2017,5003)
-        self.huiwenTest()
+        # self.huiwenTest()
+        self.gilbreathCheck()
        
 
         return
