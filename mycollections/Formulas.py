@@ -4866,6 +4866,89 @@ class Formulas(MyCommon,EllipticCurve):
             print(i,arr[:10])
 
         return
+
+    def getEulerPhi(self,n):
+        """
+        docstring for getEulerPhi
+        get the Euler's phi function
+        n = \prod pi^ai
+        return:
+            res = n*\prod(1-1/pi)
+        """
+        factors = sympy.factorint(n)
+        res = n 
+        for i in factors:
+            res = (res // i)*(i-1)
+        return res
+
+    def getAllFactors(self,n):
+        """
+        docstring for getAllFactors
+        18 => [1,2,3,6,9,18]
+        n:
+            integer
+        return:
+            factor array
+        """
+        factors = sympy.factorint(n)
+        indeces = []
+        keys    = []
+        res     = []
+        for key in factors:
+            value = factors[key]
+            indeces.append(np.arange(value+1))
+            # print(value)
+            keys.append(key)
+
+        combinations = self.getAllCombinator(indeces)
+        # print(combinations)
+        for line in combinations:
+            num = 1 
+            for i in range(len(line)):
+                num *= (keys[i]**line[i])
+            res.append(num)
+        res.sort()
+
+        return res
+
+    def getRidTwoFive(self,n):
+        """
+        docstring for getRidTwoFive
+        get rid of all twos and fives
+        210 => 21
+        """
+        while n%2 == 0:
+            n = n//2 
+        while n%5 == 0:
+            n = n//5
+        return n
+    def getDecimalLength(self,n):
+        """
+        docstring for getDecimalLength
+        n:
+            integer
+        return:
+            n is prime, return n - 1
+            n is not prime, return the smallest factor k
+            where 10^k = 1 mod n
+        """
+        if sympy.isprime(n):
+            res = n - 1 
+        else:
+            n   = self.getRidTwoFive(n)
+            phi = self.getEulerPhi(n)
+            # print(phi)
+            factors = self.getAllFactors(phi)
+            # print(factors)
+            res = 1
+            for i in factors:
+                k = self.getModN(10,i,n)
+                if k == 1:
+                    res = i
+                    break
+
+
+        return res 
     def test(self):
         """
         docstring for test
@@ -4893,7 +4976,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.quadraticResidue()
         # self.getQradraticResByReci(2017,5003)
         # self.huiwenTest()
-        self.gilbreathCheck()
+        # self.gilbreathCheck()
+        # print(self.getDecimalLength(7*7*7))
+        # print((10**588 -1 )//343)
        
 
         return
