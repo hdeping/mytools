@@ -4803,6 +4803,41 @@ class Formulas(MyCommon,EllipticCurve):
         """
         divisors = self.getModuloSeq(a,p)
         print(divisors)
+        # waiting to be done
+        # how to do when even numbers occured?
+        
+        return
+
+    def huiwenCheck(self,n,iternum = 1000):
+        """
+        docstring for huiwenCheck
+        palindromic number 
+        1331,55533555 are palindromic numbers 
+        """
+        # n = 1961
+
+        for i in range(iternum):
+            m = self.inverseNum(n)
+            if m == n:
+                # print(i,m)
+                break
+            else:
+                # print(i,n)
+                n += m
+        return i 
+
+    def huiwenTest(self):
+        """
+        docstring for huiwenTest
+        """
+        for i in range(11,20):
+            k = self.huiwenCheck(i)
+            # print(i,k)
+            if k > 100:
+                print(i,k)
+        n = 394
+        print("test %d"%(n))
+        print(self.huiwenCheck(n,iternum=10000))
         return
     def test(self):
         """
@@ -4829,7 +4864,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.generalConic()
         # self.conicProp()
         # self.quadraticResidue()
-        self.getQradraticResByReci(2017,5003)
+        # self.getQradraticResByReci(2017,5003)
+        self.huiwenTest()
        
 
         return
