@@ -4974,7 +4974,9 @@ class Formulas(MyCommon,EllipticCurve):
         # statistics 
         print("statistis begins")
         stati = {}
-        for i in res:
+        for j,i in enumerate(res):
+            if i == 3003:
+                print((j*2)**0.5,j,i)
             if i in stati:
                 stati[i] += 1 
             else:
@@ -4987,6 +4989,27 @@ class Formulas(MyCommon,EllipticCurve):
         keys.sort()
         print(keys[-10:])
         return res
+
+    def testSummation(self):
+        """
+        docstring for testSummation
+        """
+        i,n,p = symbols("i n p")
+        s = sympy.summation(i*p**(n-i),(i,1,n))
+        # print(s)
+        # print(s[1])
+        s = -(n*p - n - p*p**n + p)/(p - 1)**2
+        print(latex(s))
+
+        s = (p**(n+1) - p)/(p-1)
+        s = s.diff(p)*p 
+        s = s.expand().simplify()
+        print(latex(s))
+        s = sympy.summation(i*p**i,(i,1,n))
+        print(s)
+        s = p*(n*p*p**n - n*p**n - p**n + 1)/(p - 1)**2 
+        print(latex(s))
+        return
     def test(self):
         """
         docstring for test
@@ -5017,7 +5040,10 @@ class Formulas(MyCommon,EllipticCurve):
         # self.gilbreathCheck()
         # print(self.getDecimalLength(998001))
         # print((10**588 -1 )//343)
-        # self.getPascalTriangle(2000)
+        # self.getPascalTriangle(100)
+        # print(self.getCombinator(15,5))
+        # self.testSummation()
+
 
         return
 
