@@ -4949,6 +4949,44 @@ class Formulas(MyCommon,EllipticCurve):
 
 
         return res 
+
+    def getPascalTriangle(self,n):
+        """
+        docstring for getPascalTriangle
+        n:
+            integer
+        return:
+            array, 3 => [1,1,1,1,2,1]
+        """
+        assert n > 2 
+        res = [1]
+        for i in range(2,n+1):
+            res.append(1)
+            arr = []
+            for j in range(1,i-1):
+                # print(res[-i],res[1-i],res)
+                k = res[-i-1+j] + res[-i+j]
+                arr.append(k)
+            res = res + arr
+            res.append(1) 
+            # print(res[-i:])
+
+        # statistics 
+        print("statistis begins")
+        stati = {}
+        for i in res:
+            if i in stati:
+                stati[i] += 1 
+            else:
+                stati[i] = 1
+        keys = []
+        for i in stati:
+            value = stati[i]
+            # print(i,value)
+            keys.append([value,i])
+        keys.sort()
+        print(keys[-10:])
+        return res
     def test(self):
         """
         docstring for test
@@ -4977,9 +5015,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getQradraticResByReci(2017,5003)
         # self.huiwenTest()
         # self.gilbreathCheck()
-        # print(self.getDecimalLength(7*7*7))
+        # print(self.getDecimalLength(998001))
         # print((10**588 -1 )//343)
-       
+        # self.getPascalTriangle(2000)
 
         return
 
