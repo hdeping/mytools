@@ -5010,6 +5010,150 @@ class Formulas(MyCommon,EllipticCurve):
         s = p*(n*p*p**n - n*p**n - p**n + 1)/(p - 1)**2 
         print(latex(s))
         return
+
+    def getTupleNum(self,arr,d):
+        """
+        docstring for getTupleNum
+        when d = 4
+        abcd - dcba = (a-d)*999 + 90*(b-c)
+        a > b > c > d
+        """
+        num = 0
+        for i in range(len(arr)):
+            k    = 10**(d-1-i)-10**(i)
+            num += k*arr[i]
+        return num
+
+    def getDigitBlackHole(self,arr,d=4):
+        """
+        docstring for get4DigitBlackHole
+        arr:
+            1D array, [m,n]
+            d = 4, num = 999m+90n
+            d = 5, num = 9999m+990n
+        """
+        res = [arr]
+        for k in range(100):
+            num = self.getTupleNum(arr,d)
+            digits = self.num2Digits(num)
+            # print(k,num,digits,arr)
+            digits.sort()
+            arr = [0]*len(arr)
+            if len(digits) == (d-1):
+                arr[0] = digits[-1]
+                for i in range(1,len(arr)):
+                    arr[i] = digits[-i-2] - digits[i]
+            else:
+                for i in range(len(arr)):
+                    arr[i] = digits[-i-1] - digits[i]
+            # print(arr)
+            if arr in res:
+                res.append(arr)
+                # print("res ",res)
+                break 
+            res.append(arr)
+                
+        return res 
+
+    def getRidRepeat2D(self,arr):
+        """
+        docstring for getRidRepeat2D
+        arr:
+            2D array,
+            [[2,3],[3,2],[10]] => [[2,3],[10]]
+        """
+        res = []
+        for line in arr:
+            count = 1
+            for item in res:
+                if line[0] in item:
+                    count = 0
+            if count == 1:
+                res.append(line)
+                    
+        return res
+        
+    def numberBlackHole(self,d=5):
+        """
+        docstring for numberBlackHole
+        """
+        # d = 5
+        n = d // 2
+        arr = np.arange(9+n)
+        combinations = itertools.combinations(arr,n)
+
+        total = []
+        recordCycle = []
+        cycles = []
+        for line in combinations:
+            arr = []
+            for i in range(n):
+                j = line[-i-1] + i - n + 1 
+                arr.append(j)
+            
+            if sum(arr) == 0:
+                continue 
+            if arr not in total:
+                res = self.getDigitBlackHole(arr,d=d)
+                final = res[-1]
+                if final not in recordCycle:
+                    recordCycle.append(final)
+                    k = res.index(final)
+                    cycles.append(res[k:-1])
+            total += res
+        # print(recordCycle)
+        cycles = self.getRidRepeat2D(cycles)
+        # print(cycles)
+        for line in cycles:
+            # print(line)
+            res  = []
+            Line = []
+            for arr in line:
+                num = self.getTupleNum(arr,d)
+                res.append(num)
+                Line.append(tuple(arr))
+            print(res,Line)
+            # print()
+                
+
+        print("----")
+        # print(total)
+            
+        return
+
+    def quadraticCurve(self):
+        """
+        docstring for quadraticCurve
+        """
+        theta,a,b,c = symbols("theta a b c")
+        R = Matrix([[cos(theta),-sin(theta)],[sin(theta),cos(theta)]])
+        S = Matrix([[a,b/2],[b/2,c]])
+
+        s = R.transpose()*S*R 
+        s = s.expand()
+        for i in range(2):
+            for j in range(2):
+                res = s[i,j].trigsimp()
+                type1 = "{\\left(\\theta \\right)}"
+                res = latex(res).replace(type1,"\\theta")
+                
+                print(res + "\\\\")
+        return
+
+    def testCombinations(self):
+        """
+        docstring for testCombinations
+        """
+        n = 3
+        arr = np.arange(n+10-1)
+        combinations = itertools.combinations(arr,n)
+        for line in combinations:
+            arr = []
+            for i in range(n):
+                j = line[-i-1] + i - n + 1 
+                arr.append(j)
+            print(arr)
+        return
     def test(self):
         """
         docstring for test
@@ -5043,6 +5187,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getPascalTriangle(100)
         # print(self.getCombinator(15,5))
         # self.testSummation()
+        self.numberBlackHole(d=5)
+        # self.quadraticCurve()
+        # self.testCombinations()
 
 
         return
