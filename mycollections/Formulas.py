@@ -5140,19 +5140,45 @@ class Formulas(MyCommon,EllipticCurve):
                 print(res + "\\\\")
         return
 
-    def testCombinations(self):
+    def testCombinations(self,n=5):
         """
         docstring for testCombinations
         """
-        n = 3
         arr = np.arange(n+10-1)
         combinations = itertools.combinations(arr,n)
+
+        count = 0
         for line in combinations:
+            count += 1
             arr = []
             for i in range(n):
                 j = line[-i-1] + i - n + 1 
                 arr.append(j)
-            print(arr)
+            # print(arr)
+
+        print(count)
+        return
+
+    def testNumberBlackHole(self,n):
+        """
+        docstring for testNumberBlackHole
+        """
+        res = [n]
+        for i in range(100):
+            digits = self.num2Digits(res[-1])
+            digits.sort()
+            num1 = 0
+            num2 = 0
+            for j in range(len(digits)):
+                num1 = 10*num1 + digits[-j-1]
+                num2 = 10*num2 + digits[j]
+            num = num1-num2
+            if num in res:
+                res.append(num)
+                break 
+            res.append(num)
+        print(res)
+        print(len(res))
         return
     def test(self):
         """
@@ -5187,9 +5213,12 @@ class Formulas(MyCommon,EllipticCurve):
         # self.getPascalTriangle(100)
         # print(self.getCombinator(15,5))
         # self.testSummation()
-        self.numberBlackHole(d=5)
+        # for d in range(3,6):
+        #     print("d = ",d)
+        #     self.numberBlackHole(d=d)
         # self.quadraticCurve()
-        # self.testCombinations()
+        self.testCombinations(n=10)
+        # self.testNumberBlackHole(865296432)
 
 
         return
