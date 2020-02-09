@@ -5245,6 +5245,59 @@ class Formulas(MyCommon,EllipticCurve):
         print(arr1,arr2)
         print(arr3)
         return
+
+    def get9DigitNum(self):
+        """
+        docstring for get9DigitNum
+        """
+        
+        A = np.arange(1,10)
+        multiTable = []
+        A1 = itertools.product(A,repeat=2)
+        for line in A1:
+            a = line[0]*line[1]
+            multiTable.append(a)
+        print(multiTable)
+                
+
+        A1 = itertools.permutations(A,9)
+        count1 = 0 
+        for line in A1:
+            count1 += 1 
+            if count1 == 1:
+                print(line)
+            num = 0 
+            count = 0
+            for i in range(9):
+                num = 10*num + line[i]
+                if num%(i+1) == 0:
+                    count += 1 
+            if count == 9:
+                print(num)
+
+            count = 0 
+            for i in range(8):
+                a = 10*line[i]+line[i+1]
+                if a in multiTable:
+                    count += 1
+            if count == 8:
+                print(num) 
+
+            count = 0
+            a = line[0]*line[1]*line[2]
+            for i in range(3):
+                j = 3*i 
+                b = line[j]*line[j+1]*line[j+2]
+                c = line[i]*line[i+3]*line[i+6]
+                if b == a and c == a:
+                    count += 1 
+            if count == 3:
+                print(num,line) 
+
+        print(count1)
+
+            
+        return
     def test(self):
         """
         docstring for test
@@ -5286,7 +5339,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testNumberBlackHole(865296432)
         # self.testNumberCycle()
         # self.testNumberCount()
-        self.get9DigitNum()
+        # self.get9DigitNum()
 
 
         return
