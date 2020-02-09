@@ -5199,6 +5199,52 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(1,10):
             print(i*num, "\\\\")
         return
+
+    def getNumberCountCycle(self,arr):
+        """
+        docstring for getNumberCountCycle
+        [2,0,3]:
+            [1,2,3] => [2,1,3]
+        [2,0,4]
+            [1,2,3,4] => [2,4,3,1]
+        """
+        m, k, n = arr
+        input_arr = arr
+        arr = np.arange(1,n+1)
+        output = []
+
+        count = 0 
+        while len(arr) > 0:
+            res = []
+            for i in arr:
+                count += 1 
+                if count % m == k:
+                    output.append(i)
+                else:
+                    res.append(i)
+            arr = res
+        print(input_arr,"output",output[-1])
+                
+        return output[-1]
+
+    def testNumberCount(self):
+        """
+        docstring for testNumberCount
+        """
+        arr1 = []
+        arr2 = []
+        arr3 = []
+        for i in range(1,10):
+            res = self.getNumberCountCycle([2,0,i])
+            if res == i:
+                arr1.append(i)
+            elif res == i - 1:
+                arr2.append(i)
+            elif res == 1:
+                arr3.append(i)
+        print(arr1,arr2)
+        print(arr3)
+        return
     def test(self):
         """
         docstring for test
@@ -5238,7 +5284,9 @@ class Formulas(MyCommon,EllipticCurve):
         # self.quadraticCurve()
         # self.testCombinations(n=10)
         # self.testNumberBlackHole(865296432)
-        self.testNumberCycle()
+        # self.testNumberCycle()
+        # self.testNumberCount()
+        self.get9DigitNum()
 
 
         return
