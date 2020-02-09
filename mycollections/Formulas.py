@@ -5157,6 +5157,11 @@ class Formulas(MyCommon,EllipticCurve):
             # print(arr)
 
         print(count)
+
+        x = self.xyz[0]
+        a = Symbol("a")
+        y = x**3-a*x**2+2*x-2*a
+        print(y.factor())
         return
 
     def testNumberBlackHole(self,n):
@@ -5179,6 +5184,20 @@ class Formulas(MyCommon,EllipticCurve):
             res.append(num)
         print(res)
         print(len(res))
+        return
+
+    def testNumberCycle(self):
+        """
+        docstring for testNumberCycle
+        """
+        m = 1
+        n = 10**m - 1 
+        num = 0 
+        for i in range(1,n):
+            num = (n+1)*num + i 
+        num += 1 
+        for i in range(1,10):
+            print(i*num, "\\\\")
         return
     def test(self):
         """
@@ -5217,8 +5236,9 @@ class Formulas(MyCommon,EllipticCurve):
         #     print("d = ",d)
         #     self.numberBlackHole(d=d)
         # self.quadraticCurve()
-        self.testCombinations(n=10)
+        # self.testCombinations(n=10)
         # self.testNumberBlackHole(865296432)
+        self.testNumberCycle()
 
 
         return
