@@ -5298,6 +5298,190 @@ class Formulas(MyCommon,EllipticCurve):
 
             
         return
+
+    def getNumTwoInteger(self,arr):
+        """
+        docstring for getNumTwoInteger
+        arr:
+            1D array with length 2
+            [a,b] => a+b,a*b,a-b,b-a,a/b,b/a
+        """
+        # a,b = Integer(arr[0]),Integer(arr[1]) 
+        a,b = arr
+        res = []
+        res.append(a+b)
+        res.append(a*b)
+        res.append(a-b)
+        res.append(b-a)
+        symbols = ["+","*","-","--"]
+        if b != 0:
+            res.append(a/b)
+            symbols.append("/")
+        if a != 0:
+            res.append(b/a)
+            symbols.append("//")
+        
+        dicts = {}
+        for key,value in zip(symbols,res):
+            dicts[key] = value
+        
+        return dicts
+    def getNumber24(self,arr):
+        """
+        docstring for getNumber24
+        arr:
+            1D array, four integers
+        """
+        # print(arr)
+        result = False
+
+        answers = []
+        operations = []
+        for i in range(4):
+            for j in range(i+1,4):
+                # get the answers
+                line = arr.copy()
+                a,b = arr[i],arr[j]
+                line.remove(a)
+                line.remove(b)
+                line1 = [] 
+                line1.append(Integer(line[0]))
+                line1.append(Integer(line[1]))
+                line = line1
+                res = [Integer(a),Integer(b)]
+                res = self.getNumTwoInteger(res)
+                # print(res)
+                # print(res,line)
+                # condition 2 and 2 
+                line2 = self.getNumTwoInteger(line)
+                for key1 in res:
+                    for key2 in line2:
+                        ii = res[key1]
+                        jj = line2[key2]
+                        output = self.getNumTwoInteger([ii,jj])
+                        for key in output:
+                            # answers.append(output[key])
+                            if output[key] == 24:
+                                answers.append(24)                     
+                                format_type = "(%s %s %s)%s(%s %s %s)"
+                                data = (latex(a),key1,latex(b),key,latex(line[0]),key2,latex(line[1]))
+                                if key1 in ["//","--"]:
+                                    data = (latex(b),key1[0],latex(a),key,latex(line[0]),key2,latex(line[1]))
+                                if key in ["//","--"]:
+                                    data = (latex(line[0]),key2,latex(line[1]),key[0],latex(a),key1,latex(b))
+                                if key2 in ["//","--"]:
+                                    data = (latex(a),key1,latex(b),key,latex(line[1]),key2,latex(line[0]))
+                                operation = format_type % data
+                                if operation not in operations:
+                                    operations.append(operation)
+                # condition 2,1,1
+                for key1 in res:
+                    for k in range(2):     
+                        ii = res[key1]
+                        jj = line[k]
+                        kk = line[1-k]
+                        output = self.getNumTwoInteger([ii,jj])
+                        for key2 in output:
+                            ii = output[key2]
+                            output2 = self.getNumTwoInteger([ii,kk])
+                            for key in output2:
+                                if output2[key] == 24:
+                                    answers.append(24)                     
+                                    format_type = "((%s %s %s)%s %s) %s %s"
+                                    data = (latex(a),key1,latex(b),key2,latex(jj),key,latex(kk))
+                                    if key1 in ["//","--"]:
+                                        data = (latex(b),key1[0],latex(a),key2,latex(jj),key,latex(kk))
+                                        
+                                     
+                                    if key2 in ["//","--"]:
+                                        format_type = "(%s %s (%s %s %s)) %s %s"
+                                        data = (latex(jj),key2[0],latex(a),key1,latex(b),key,latex(kk))
+                                    if key in ["//","--"]:
+                                        format_type = "%s %s ((%s %s %s) %s %s)"
+                                        data = (latex(kk),key[0],latex(b),key1,latex(a),key2,latex(jj))
+                                    operation = format_type % data
+                                    if operation not in operations:
+                                        operations.append(operation)
+                                        # print(ii,jj,kk)
+                                
+                if 24 in answers:
+                    # print("yes")
+                    result = True
+                    index = answers.index(24)
+                    # print(operations[index])
+                # print(answers)
+                    
+
+        # print(answers)
+
+        return result,operations
+    def game24(self):
+        """
+        docstring for game24
+        24 game, a kind of number's game
+        try to get 24 with five operations when 4 integers 
+        were given
+        """
+
+        for i in range(22,28):
+            # print(i)
+            arr = [i]*4 
+            res,operations = self.getNumber24(arr)
+            if res:
+                print(arr,operations)
+                # print(arr)
+            # print(arr,res)
+
+        n = 2
+        arr = np.arange(1,22+n)
+        combinations = itertools.combinations(arr,n)
+
+        """
+        count = 0
+        for line in combinations:
+            count += 1
+            # arr = []
+            # for i in range(n):
+            #     j = line[-i-1] + i - n + 1 
+            #     arr.append(j)
+            # item = [arr[0]]*3+[arr[1]]
+            arr = line 
+            item = [arr[0]]*3+[arr[1]]
+            res,operations = self.getNumber24(item)
+            if res:
+                # print(res,item,operations[0])
+                print(item,operations[0])
+            item = [arr[1]]*3+[arr[0]]
+            res,operations = self.getNumber24(item)
+            if res:
+                # print(res,item,operations[0])
+                print(item,operations[0])
+
+            item = [arr[1]]*2+[arr[0]]*2
+            res,operations = self.getNumber24(item)
+            if res:
+                print(item,operations[0])
+        """
+
+        n = 4
+        arr = np.arange(1,24+n)
+        combinations = itertools.combinations(arr,n)
+
+        count = 0
+        for line in combinations:
+            count += 1 
+            arr = []
+            for i in range(n):
+                j = line[-i-1] + i - n + 1 
+                arr.append(j)
+            item = arr
+            res,operations = self.getNumber24(item)
+            if res and len(operations) < 3 and max(item) > 13:
+                # print(res,item,operations[0])
+                if operations[0].count("/") > 2:
+                    print(item,operations)
+        print(count)
+        return
     def test(self):
         """
         docstring for test
@@ -5340,6 +5524,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testNumberCycle()
         # self.testNumberCount()
         # self.get9DigitNum()
+        self.game24()
 
 
         return
