@@ -5482,6 +5482,75 @@ class Formulas(MyCommon,EllipticCurve):
                     print(item,operations)
         print(count)
         return
+
+
+    def divisibility(self):
+        """
+        docstring for divisibility
+        """
+        arr = []
+        for i in range(-500,1000):
+            if i == 3:
+                continue 
+
+            a = i - 3 
+            b = i**3 - 3 
+            if b%a == 0:
+                print(i,a,b)
+                arr.append(i)
+        print(arr)
+        for i in range(1,13):
+            print((i*i)%13)
+
+
+        for i in range(1,10):
+            p = sympy.prime(i)
+            print(i,p)
+            n = sqrt((p**5-1)/(p-1))
+            if n.is_integer:
+                print(p,n,n**2,p**4)
+                break
+        n = 2**(2**2)+1 
+        print(n)
+        print(self.getModN(2,n-1,p))
+        # print(sympy.factorint(n))
+
+
+        x,y = self.xyz[:2]
+        # n = Integer(3) 
+        n = Symbol("n")
+        a = n
+        b = 3*n*(n+1)/2 
+        c = b*(2*n+1)/3
+        d = (b/3)**2 
+        s = (a*x**3+b*x**2+c*x+d)
+        print(factor(s))
+        print(latex(factor(s)))
+        s = s.subs(x,-1-n/2).expand()
+        print("after substitution",s)
+
+        s = (a*x**3+b*x**2+c*x+d) - (x+n+1)**3 
+        print(factor(s))
+        
+        S1 = n*(n**2 + 2*n*x + n + 2*x**2 + 2*x)/2
+        S2 = (n + 2*x + 1)/2 
+        s = S1 - S2**2 
+        print("S1 = S2**2")
+        s1 = factor(s)
+        print(latex(s1))
+
+        s = s.expand().collect(x)
+        print(latex(s))
+
+
+        # for i in range(10000):
+        #     v = Integer(i**3-16*i+16)
+        #     u = sqrt(v)
+        #     if u.is_integer:
+        #         print(i,u,v)
+        x = np.arange(1,100000)
+        u = x**3-16*x+16 
+        return
     def test(self):
         """
         docstring for test
@@ -5524,7 +5593,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testNumberCycle()
         # self.testNumberCount()
         # self.get9DigitNum()
-        self.game24()
+        # self.game24()
+        self.divisibility()
 
 
         return
