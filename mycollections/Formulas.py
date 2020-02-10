@@ -5564,7 +5564,6 @@ class Formulas(MyCommon,EllipticCurve):
         print(factor(res))
         res   = D - (s*(2*m+1)+2*n-k)**2
         # res   = D - (s*(2*m)-k)**2
-        print(m,n,k,D,self.getContinueSeq(D))
         print(factor(res))
 
         m,n = 3,3
