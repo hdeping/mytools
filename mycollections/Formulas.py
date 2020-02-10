@@ -5551,6 +5551,29 @@ class Formulas(MyCommon,EllipticCurve):
         x = np.arange(1,100000)
         u = x**3-16*x+16 
         return
+
+    def continuedFraction(self):
+        """
+        docstring for continuedFraction
+        """
+        m,n = symbols("m n")
+        s   = 4*m*n+1
+        k   = n + m*s  
+        D   = k**2 + 4*m*n+1
+        res   = D - (k-4*n)**2  
+        print(factor(res))
+        res   = D - (s*(2*m+1)+2*n-k)**2
+        # res   = D - (s*(2*m)-k)**2
+        print(m,n,k,D,self.getContinueSeq(D))
+        print(factor(res))
+
+        m,n = 3,3
+        s   = 4*m*n+1
+        k   = n + m*s  
+        D   = k**2 + 4*m*n+1
+        print(m,n,k,D,self.getContinueSeq(D))
+        return
+        
     def test(self):
         """
         docstring for test
@@ -5594,7 +5617,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testNumberCount()
         # self.get9DigitNum()
         # self.game24()
-        self.divisibility()
+        # self.divisibility()
+        self.continuedFraction()
 
 
         return
