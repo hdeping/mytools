@@ -906,14 +906,17 @@ class Formulas(MyCommon,EllipticCurve):
         p = [0,1]
         q = [1,0]
         for i in range(100):
-            x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
-            x = int(x)
+            # x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
+            x = p[-1]**3 + D*q[-1]**3
+            b = q[-1]*a
+            y = (p[-2]+q[-2]*a)*(p[-1]**2 - b*p[-1] + b**2)
+            x = int(y/x)
             result.append(x)
             num = -x*p[-1] + p[-2]
             p.append(num)
             num = -x*q[-1] + q[-2]
             q.append(num)
-            print(p[-1],q[-1])          
+            print(i,x,p[-1],q[-1])          
 
         return result 
 
