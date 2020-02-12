@@ -864,7 +864,7 @@ class Formulas(MyCommon,EllipticCurve):
         
         return  
 
-    def getContinueSeq(self,D):
+    def getContinueSeq(self,D,n=2,target=1):
         """
         docstring for getInitPell
         D:
@@ -872,11 +872,19 @@ class Formulas(MyCommon,EllipticCurve):
             positive integer and not square one and  D > 1
             x_n = a_n + 1/(a_{n+1} + x_{n-1})
         """
-        x = sympy.sqrt(D)
+        if n == 2:
+            x = sympy.sqrt(D)
+        else:
+            x = D**(Integer(1)/n)
         # print(x)
         result = []
-        target = 2*(x//1)
+        if target == 1:
+            target = 2*(x//1)
+        else:
+            target = 0
+
         for i in range(100):
+            print(i,latex(x))
             a = x // 1 
             x = sympy.simplify(1/(x - a))
             result.append(a)
@@ -884,6 +892,31 @@ class Formulas(MyCommon,EllipticCurve):
                 break 
 
         return result
+
+    def getCubicContinueSeq(self,D,n=3):
+        """
+        docstring for getInitPell
+        continued fraction of \sqrt[3]{D}
+        """
+        if n == 3:
+            a = D**(1/3)
+        else:
+            a = D**(1/n)
+        result = [int(a)]
+        p = [0,1]
+        q = [1,0]
+        for i in range(100):
+            x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
+            x = int(x)
+            result.append(x)
+            num = -x*p[-1] + p[-2]
+            p.append(num)
+            num = -x*q[-1] + q[-2]
+            q.append(num)
+            print(p[-1],q[-1])          
+
+        return result 
+
     def getInitPell(self,D,num=1):
         """
         docstring for getInitPell
@@ -5618,10 +5651,11 @@ class Formulas(MyCommon,EllipticCurve):
         29 31 
         30 31 32 32 32 33 33 
         31 34
+
         """
         arr = [1,2,3]
         p   = [1,Integer(1)/2,Integer(1)/6]
-        for i in range(100):
+        for i in range(5):
             num = 0 
             for j in range(3):
                 num += p[j]*arr[-j-1]
@@ -5637,9 +5671,18 @@ class Formulas(MyCommon,EllipticCurve):
             # print(i+4,values)
             a = values[1] 
             print("%2d"%(a))
-            
 
         return 
+
+    def testCubicContinuedFrac(self):
+        """
+        docstring for testCubicContinuedFrac
+        """
+        # x = self.getContinueSeq(2 , n=3, target=0)
+        # print(x)
+        x = self.getCubicContinueSeq(2)
+        print(x)
+        return
     def test(self):
         """
         docstring for test
@@ -5686,7 +5729,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.divisibility()
         # self.continuedFraction()
         # self.solvePuzzles()
-        self.progression()
+        # self.progression()
+        self.testCubicContinuedFrac()
 
 
         return
