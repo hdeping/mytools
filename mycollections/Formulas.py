@@ -5698,7 +5698,7 @@ class Formulas(MyCommon,EllipticCurve):
         # x = self.getContinueSeq(2 , n=3, target=0)
         # print(x)
         t1 = time.time()
-        x = self.getCubicContinueSeq(2,n=3,count=8000)
+        x = self.getCubicContinueSeq(4,count=8000)
         # print(x)
         t2 = time.time()
         print("time",t2 - t1)
@@ -5713,6 +5713,24 @@ class Formulas(MyCommon,EllipticCurve):
         x = np.exp(x)
         print("Khinchin's constant:",x)
        
+        return
+
+    def khinchin(self):
+        """
+        docstring for khinchin
+        """
+        r = np.arange(1,100000)
+        x = np.log((1+1/r/(r+2)))*(np.log(r)/np.log(2))
+        x = np.exp(np.sum(x))
+        print(x)
+
+        res = Decimal(1)
+        for i in r:
+            a = Decimal(1+1/i/(i+2))
+            # a = np.log(a)
+            b = Decimal(np.log(i)/np.log(2))
+            res = res*(a**b)
+        print("khinchin's constant",res)
         return
     def test(self):
         """
@@ -5761,7 +5779,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.continuedFraction()
         # self.solvePuzzles()
         # self.progression()
-        self.testCubicContinuedFrac()
+        # self.testCubicContinuedFrac()
+        self.khinchin()
 
 
         return
