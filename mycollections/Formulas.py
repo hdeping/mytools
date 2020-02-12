@@ -864,7 +864,7 @@ class Formulas(MyCommon,EllipticCurve):
         
         return  
 
-    def getContinueSeq(self,D,n=2,target=1):
+    def getContinueSeq(self,D,n=2,target=1,count=100):
         """
         docstring for getInitPell
         D:
@@ -883,7 +883,7 @@ class Formulas(MyCommon,EllipticCurve):
         else:
             target = 0
 
-        for i in range(100):
+        for i in range(count):
             print(i,latex(x))
             a = x // 1 
             x = sympy.simplify(1/(x - a))
@@ -893,30 +893,41 @@ class Formulas(MyCommon,EllipticCurve):
 
         return result
 
-    def getCubicContinueSeq(self,D,n=3):
+    def getCubicContinueSeq(self,D,n=3,count = 100):
         """
         docstring for getInitPell
         continued fraction of \sqrt[3]{D}
         """
-        if n == 3:
-            a = D**(1/3)
-        else:
-            a = D**(1/n)
+    
+        a = D**(1/n)
         result = [int(a)]
         p = [0,1]
         q = [1,0]
-        for i in range(100):
+        for i in range(count):
             # x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
             x = p[-1]**3 + D*q[-1]**3
-            b = q[-1]*a
-            y = (p[-2]+q[-2]*a)*(p[-1]**2 - b*p[-1] + b**2)
+            y1 = p[-2]**3 + D*q[-2]**3
+            if q[-1] < 0:
+                b = - ((-q[-1])**n*D)**(1/n)
+            else:
+                b = ((q[-1])**n*D)**(1/n)
+
+            if q[-2] < 0:
+                c = - ((-q[-2])**n*D)**(1/n)
+            else:
+                c = ((q[-2])**n*D)**(1/n)
+            y = y1*(p[-1]**2 - b*p[-1] + b**2)
+            y = y/(p[-2]**2 - c*p[-2] + c**2)
+            # print(i,x,y,p[-1],q[-1])
             x = int(y/x)
+            # if x < 0:
+            #     print("something is wrong here")
+            #     break
             result.append(x)
             num = -x*p[-1] + p[-2]
             p.append(num)
             num = -x*q[-1] + q[-2]
-            q.append(num)
-            print(i,x,p[-1],q[-1])          
+            q.append(num)          
 
         return result 
 
@@ -5683,7 +5694,7 @@ class Formulas(MyCommon,EllipticCurve):
         """
         # x = self.getContinueSeq(2 , n=3, target=0)
         # print(x)
-        x = self.getCubicContinueSeq(2)
+        x = self.getCubicContinueSeq(2,count=200)
         print(x)
         return
     def test(self):
