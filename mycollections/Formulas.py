@@ -5588,7 +5588,58 @@ class Formulas(MyCommon,EllipticCurve):
             y = x*(x*(x*3+3)+3)
             print(y.expand())
 
-            return   
+            return  
+
+    def progression(self):
+        """
+        docstring for progression
+        S_{n+1}&=&S_{n}+\frac{1}{2}S_{n-1}+\frac{1}{6}S_{n-2}
+
+         1  
+         0  1  2  2  2  3  3  
+         2  4  
+         3  4  5  5  5  6  6  
+         4  7  
+         6  7  8  8  8  9  9  
+         8 10  
+         4 10 11 11 11 12 12 
+        11 13 
+        12 13 14 14 14 15 15 
+        13 16 
+        15 16 17 17 17 18 18 
+        17 19 
+        17 19 20 20 20 21 21 
+        20 22 
+        21 22 23 23 23 24 24 
+        20 25 
+        24 25 26 26 26 27 27 
+        26 28 
+        26 28 29 29 29 30 30 
+        29 31 
+        30 31 32 32 32 33 33 
+        31 34
+        """
+        arr = [1,2,3]
+        p   = [1,Integer(1)/2,Integer(1)/6]
+        for i in range(100):
+            num = 0 
+            for j in range(3):
+                num += p[j]*arr[-j-1]
+            arr.append(num)
+            if i == 1:
+                continue
+            a,b = sympy.fraction(num)
+            factors = sympy.factorint(b)
+            values = []
+            for key in factors:
+                values.append(factors[key])
+            # print(values)
+            # print(i+4,values)
+            a = values[1] 
+            print("%2d"%(a))
+            
+
+        return 
     def test(self):
         """
         docstring for test
@@ -5634,7 +5685,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.game24()
         # self.divisibility()
         # self.continuedFraction()
-        self.solvePuzzles()
+        # self.solvePuzzles()
+        self.progression()
 
 
         return
