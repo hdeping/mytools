@@ -5572,7 +5572,23 @@ class Formulas(MyCommon,EllipticCurve):
         D   = k**2 + 4*m*n+1
         print(m,n,k,D,self.getContinueSeq(D))
         return
-        
+    
+    def solvePuzzles(self):
+            """
+            docstring for solvePuzzles
+            """
+            a = sqrt(3)
+            p = self.getCubicSol([1,a,3,a])
+            print(latex(p))
+
+            x = self.getCubicSol([3,3,3,1])
+            print(x)
+
+            x = -Integer(1)/3 + 2**(1/3)/3 - 4**(1/3)/3
+            y = x*(x*(x*3+3)+3)
+            print(y.expand())
+
+            return   
     def test(self):
         """
         docstring for test
@@ -5617,7 +5633,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.get9DigitNum()
         # self.game24()
         # self.divisibility()
-        self.continuedFraction()
+        # self.continuedFraction()
+        self.solvePuzzles()
 
 
         return
