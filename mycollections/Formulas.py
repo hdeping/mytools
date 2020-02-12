@@ -5677,6 +5677,20 @@ class Formulas(MyCommon,EllipticCurve):
 
         return 
 
+    def getCountDict(self,arr):
+        """
+        docstring for getCountDict
+        arr:
+            1d array
+            [1,1,1,2,2,3] => {1:3,2:2,3:1}
+        """
+        res = {}
+        for i in arr:
+            if i in res:
+                res[i] += 1 
+            else:
+                res[i] = 1 
+        return res 
     def testCubicContinuedFrac(self):
         """
         docstring for testCubicContinuedFrac
@@ -5684,10 +5698,20 @@ class Formulas(MyCommon,EllipticCurve):
         # x = self.getContinueSeq(2 , n=3, target=0)
         # print(x)
         t1 = time.time()
-        x = self.getCubicContinueSeq(2,count=3000)
-        print(x)
+        x = self.getCubicContinueSeq(2,n=3,count=8000)
+        # print(x)
         t2 = time.time()
         print("time",t2 - t1)
+
+        res = self.getCountDict(x)
+        print(res)
+        x = np.array(x)
+        indeces = np.arange(len(x))
+        plt.plot(indeces,x)
+        plt.show()
+        x = sum(np.log(x))/len(x)
+        x = np.exp(x)
+        print("Khinchin's constant:",x)
        
         return
     def test(self):
