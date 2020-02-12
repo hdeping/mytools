@@ -906,29 +906,12 @@ class Formulas(MyCommon,EllipticCurve):
             # x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
             x  = Decimal(p[-1]**3 + D*q[-1]**3)
             y1 = Decimal(p[-2]**3 + D*q[-2]**3)
-            # if q[-1] < 0:
-            #     b = - ((-q[-1])**n*D)**(1/n)
-            # else:
-            #     b = ((q[-1])**n*D)**(1/n)
-
-            # if q[-2] < 0:
-            #     c = - ((-q[-2])**n*D)**(1/n)
-            # else:
-            #     c = ((q[-2])**n*D)**(1/n)
             b  = q[-1]*a
             c  = q[-2]*a
             y2 = Decimal(p[-1]**2 - b*p[-1] + b**2)
             y3 = Decimal(p[-2]**2 - c*p[-2] + c**2)
             x = y1*y2/y3/x 
             x = int(x)
-            # print(i,x,p[-1],q[-1])
-            # print("y1",y1)
-            # print("y2",y2)
-            # print("y3",y3)
-            # x = int(y/x)
-            # if x < 0:
-            #     print("something is wrong here")
-            #     break
             result.append(x)
             num = -x*p[-1] + p[-2]
             p.append(num)
@@ -5705,12 +5688,7 @@ class Formulas(MyCommon,EllipticCurve):
         print(x)
         t2 = time.time()
         print("time",t2 - t1)
-        t1 = t2 
-        print("symbolic method")
-        x = self.getContinueSeq(2 , n=3, target=-100,count=500)
-        print(x)
-        t2 = time.time()
-        print(t2 - t1)
+       
         return
     def test(self):
         """
