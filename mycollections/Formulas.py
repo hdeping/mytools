@@ -5956,16 +5956,11 @@ class Formulas(MyCommon,EllipticCurve):
             res = res*x + i
         
         return res
-    def conwayConstant(self):
-        """
-        docstring for conwayConstant
-        look-and-say sequence and Conway Constant
 
+    def checkConwayData(self,data,strings):
         """
-        
-        data = self.getConwayData()
-        strings = self.getConwayStrings() 
-        # check the data and strings
+        docstring for checkConwayData
+        """
         count = 0 
         for i,line in enumerate(data):
             # print(i+1,line[0],len(strings[i]),strings[i])
@@ -5981,6 +5976,26 @@ class Formulas(MyCommon,EllipticCurve):
                 print(i+1,line,strings[i],nextIterCh,arr)
 
         print("equal numbers: ",count)
+
+        arr = "1"
+        for i in range(100):
+            a   = len(arr)
+            arr = self.lookSay(arr)
+            print(i,len(arr)/a)
+
+        return
+    def conwayConstant(self):
+        """
+        docstring for conwayConstant
+        look-and-say sequence and Conway Constant
+
+        """
+        
+        data = self.getConwayData()
+        strings = self.getConwayStrings() 
+        # check the data and strings
+        # self.checkConwayData(data,strings)
+        
         conwayAtoms = sympy.zeros(92)
         count = 0 
         for i,line in enumerate(data):
@@ -5991,7 +6006,7 @@ class Formulas(MyCommon,EllipticCurve):
                 j = j - 1 
                 b = data[j][0]
                 a = data[i][0]
-                conwayAtoms[i,j] = Integer(b)/a
+                conwayAtoms[j,i] = Integer(b)/a
         print("equal length numbers: ",count)
 
         # 1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
@@ -6003,19 +6018,23 @@ class Formulas(MyCommon,EllipticCurve):
         # print(vector)
         a = 1 
         b = 1
-        for i in range(10):
+        for i in range(100):
             vector = conwayAtoms*vector 
             b = sum(vector)
-            print(i,float(b/a))
+            print(i,b)
+            if i%10 == 0:
+                print(i,float(b/a),vector)
             a = b
         x = self.xyz[0]
         for i in range(92):
             conwayAtoms[i,i] = -x 
-
-        s = conwayAtoms.det()
-        s = s.factor()
-        print(s)
-        print(latex(s))
+        # t1 = time.time()
+        # s = conwayAtoms.det()
+        # t2 = time.time()
+        # print("time:",t2 - t1)
+        # s = s.factor()
+        # print(s)
+        # print(latex(s))
 
         """
         
@@ -6047,8 +6066,45 @@ class Formulas(MyCommon,EllipticCurve):
         print(self.getPolymonialValues(p,x))
 
 
+        # p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
+        #      3,-2,-10,-3,-2,6,6,1,9,-3,-7,-8,-8,10,
+        #      6,8,-5,-12,7,-7,7,-1,-3,10,1,-6,-2,-10,
+        #      -3,2,9,-3,14,-8,0,-7,9,3,-4,-10,-7,12,7,
+        #      2,-12,-4,-2,5,0,1,-7,7,-4,12,-6,3,-6]
+
+        p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
+             3,-2,-10,-3,-2,6,6,1,9,-3,-7,-8,-8,10,
+             6,8,-5,-12,7,-7,7,1,-3,10,1,-6,-2,-10,
+             -3,2,9,-3,14,-8,0,-7,9,3,-4,-10,-7,12,7,
+             2,-12,-4,-2,5,0,1,-7,7,-4,12,-6,3,-6]
+
+        # x = Decimal(1.3035772690342963912570991121525518907307025046594)
+        x = Decimal(1.303577269034296391257099)
+        print(self.getPolymonialValues(p,x))
+
+
     
         return
+
+
+    def generalFibonacci(self):
+        """
+        docstring for generalFibonacci
+        """
+        n = 6
+        arr = [1]*n 
+        for i in range(n-1):
+            num = sum(arr[-n:])
+            arr.append(num)
+        print(arr)
+
+        A = sympy.zeros(n)
+        for i in range(n):
+            for j in range(n):
+                A[i,j] = arr[n-1-i+j]
+        print(A,A.det())
+        # 1,1,...,1,m,2m-1,4m-3,8m-7,...,2^{m-1}\times(m-1)+1
+        return  
     def test(self):
         """
         docstring for test
@@ -6098,7 +6154,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.progression()
         # self.testCubicContinuedFrac()
         # self.khinchin()
-        self.conwayConstant()
+        # self.conwayConstant()
+        self.generalFibonacci()
 
 
         return
