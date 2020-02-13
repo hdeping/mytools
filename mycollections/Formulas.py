@@ -30,6 +30,7 @@ import json
 import time
 import itertools
 from decimal import Decimal
+import re
 
 
 class EllipticCurve():
@@ -5926,10 +5927,20 @@ class Formulas(MyCommon,EllipticCurve):
                     "3113322113",
                     "312",
                     "312211322212221121123222113",
-                    "312211322212221121123222122",
+                    "312211322212221121123222112",
                     "32112"]
 
         return strings
+
+    def lookSay(self,look_s):
+        """
+        '111222112' => '31322112'
+        """
+        st = ''
+        for s in re.finditer(r"(\d)\1*",look_s):
+            # print(s,s.group(0),s.group(1))
+            st = st + str(len(s.group(0)))+s.group(1)
+        return st
     def getPolymonialValues(self,p,x):
         """
         docstring for getPolymonialValues
@@ -5953,16 +5964,35 @@ class Formulas(MyCommon,EllipticCurve):
         """
         
         data = self.getConwayData()
-        strings = self.getConwayStrings()        
-
-        conwayAtoms = sympy.zeros(92)
+        strings = self.getConwayStrings() 
+        # check the data and strings
+        count = 0 
         for i,line in enumerate(data):
-            print(i+1,line[0],len(strings[i]),strings[i])
+            # print(i+1,line[0],len(strings[i]),strings[i])
+            nextIterCh = self.lookSay(strings[i])
+            arr = ""
+            for j in line[1]:
+                j = j - 1 
+                arr += strings[j]
+            # print(i+1,strings[i],nextIterCh,arr)
+            if nextIterCh == arr:
+                count += 1 
+            else:
+                print(i+1,line,strings[i],nextIterCh,arr)
+
+        print("equal numbers: ",count)
+        conwayAtoms = sympy.zeros(92)
+        count = 0 
+        for i,line in enumerate(data):
+            # print(i+1,line[0],len(strings[i]),strings[i])
+            if line[0] == len(strings[i]):
+                count += 1 
             for j in line[1]:
                 j = j - 1 
                 b = data[j][0]
                 a = data[i][0]
                 conwayAtoms[i,j] = Integer(b)/a
+        print("equal length numbers: ",count)
 
         # 1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
         vector = [0]*92 
@@ -5982,9 +6012,10 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(92):
             conwayAtoms[i,i] = -x 
 
-        # s = conwayAtoms.det()
-        # s = s.factor()
-        # print(latex(s))
+        s = conwayAtoms.det()
+        s = s.factor()
+        print(s)
+        print(latex(s))
 
         """
         
