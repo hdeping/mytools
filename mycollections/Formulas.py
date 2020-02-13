@@ -5831,14 +5831,11 @@ class Formulas(MyCommon,EllipticCurve):
                 [5 ,   [37]]]
 
         return data 
-    def conwayConstant(self):
-        """
-        docstring for conwayConstant
-        look-and-say sequence and Conway Constant
 
+    def getConwayStrings(self):
         """
-        
-        data = self.getConwayData()
+        docstring for getConwayStrings
+        """
         strings = [ "1112",
                     "1112133",
                     "111213322112",
@@ -5932,6 +5929,16 @@ class Formulas(MyCommon,EllipticCurve):
                     "312211322212221121123222122",
                     "32112"]
 
+        return strings
+    def conwayConstant(self):
+        """
+        docstring for conwayConstant
+        look-and-say sequence and Conway Constant
+
+        """
+        
+        data = self.getConwayData()
+        strings = self.getConwayStrings()        
 
         conwayAtoms = sympy.zeros(92)
         for i,line in enumerate(data):
