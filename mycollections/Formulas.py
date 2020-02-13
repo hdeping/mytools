@@ -5733,11 +5733,9 @@ class Formulas(MyCommon,EllipticCurve):
         print("khinchin's constant",res)
         return
 
-    def conwayConstant(self):
+    def getConwayData(self):
         """
-        docstring for conwayConstant
-        look-and-say sequence and Conway Constant
-
+        docstring for getConwayData
         """
         data = [[4 ,   [63]],
                 [7 ,   [64,62]],
@@ -5832,6 +5830,15 @@ class Formulas(MyCommon,EllipticCurve):
                 [27 ,  [35]],
                 [5 ,   [37]]]
 
+        return data 
+    def conwayConstant(self):
+        """
+        docstring for conwayConstant
+        look-and-say sequence and Conway Constant
+
+        """
+        
+        data = self.getConwayData()
         strings = [ "1112",
                     "1112133",
                     "111213322112",
