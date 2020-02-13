@@ -5930,6 +5930,21 @@ class Formulas(MyCommon,EllipticCurve):
                     "32112"]
 
         return strings
+    def getPolymonialValues(self,p,x):
+        """
+        docstring for getPolymonialValues
+        p:
+            1d array, coefficients of the polynomial 
+            length n+1, n is the order 
+            of the polynomial
+        x:
+            numerial value or symbolic value
+        """
+        res = 0 
+        for i in p:
+            res = res*x + i
+        
+        return res
     def conwayConstant(self):
         """
         docstring for conwayConstant
@@ -5998,6 +6013,7 @@ class Formulas(MyCommon,EllipticCurve):
              -59,54,-45,54,-53,39,-42,43,-38,37,
              -39,33,-25,23,-13,8,-6]
         print(len(p),p)
+        print(self.getPolymonialValues(p,x))
 
 
     
