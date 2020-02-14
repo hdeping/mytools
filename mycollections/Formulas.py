@@ -6105,6 +6105,21 @@ class Formulas(MyCommon,EllipticCurve):
         print(A,A.det())
         # 1,1,...,1,m,2m-1,4m-3,8m-7,...,2^{m-1}\times(m-1)+1
         return  
+
+    def testCubicSum(self):
+        """
+        docstring for testCubicSum
+        1 - 1/3^3 + 5^3 + ...
+        """
+        
+        res = 0 
+        pos = 1
+        for i in range(10000):
+            res += pos/((2*i+1)**3)
+            pos  = -pos
+        print(res)
+        print(np.pi**3/32)
+        return
     def test(self):
         """
         docstring for test
@@ -6155,7 +6170,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testCubicContinuedFrac()
         # self.khinchin()
         # self.conwayConstant()
-        self.generalFibonacci()
+        # self.generalFibonacci()
+        self.testCubicSum()
 
 
         return
