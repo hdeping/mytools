@@ -6187,18 +6187,17 @@ class Formulas(MyCommon,EllipticCurve):
 
         return
 
-    def testPrimeBernoulli(self):
+    def getPrimeReciSum(self,n):
         """
-        docstring for testPrimeBernoulli
+        docstring for getPrimeReciSum
+        n:
+            even positive integer
+        return:
+            sum(1/p),k|n, p = k+1 is prime
         """
-         # test for Bernoulli's number
-        B6 = 1/42 
-        B12 = -691/2730
-        # 2,3,5,7
         one = self.one
         res = 0 
 
-        n = 10
         factors = self.getAllFactors(n)
         for i in factors:
             p = Integer(i+1)
@@ -6208,7 +6207,24 @@ class Formulas(MyCommon,EllipticCurve):
                 res += one/p 
 
         res = res.simplify()
-        print(res)
+        res = res%1
+        if (n//2)%2 == 1:
+            res = 1 - res
+        return res 
+    def testPrimeBernoulli(self):
+        """
+        docstring for testPrimeBernoulli
+        test for Bernoulli's number
+        """
+        
+        for n in range(2,20,2):
+            res = self.getPrimeReciSum(n)
+            num,denom = sympy.fraction(res)
+            # print(num,denom)
+            if denom == 6:
+                print(n,sympy.factorint(n))
+
+        self.diophantine(7,60)
         
         return
     def test(self):
@@ -6264,8 +6280,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.generalFibonacci()
         # self.testCubicSum()
         # self.mersennePrimes()
-        self.testGeneralWilsonTheorem()
-
+        # self.testGeneralWilsonTheorem()
+        self.testPrimeBernoulli()
 
         return
 
