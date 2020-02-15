@@ -6146,6 +6146,13 @@ class Formulas(MyCommon,EllipticCurve):
 
         print(Mprime)
         return
+
+    def testGeneralWilsonTheorem(self):
+        """
+        docstring for testGeneralWilsonTheorem
+        """
+        
+        return
     def test(self):
         """
         docstring for test
@@ -6199,6 +6206,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.generalFibonacci()
         # self.testCubicSum()
         # self.mersennePrimes()
+        self.testGeneralWilsonTheorem()
 
 
         return
