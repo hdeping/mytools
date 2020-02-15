@@ -6120,6 +6120,32 @@ class Formulas(MyCommon,EllipticCurve):
         print(res)
         print(np.pi**3/32)
         return
+
+    def mersennePrimes(self):
+        """
+        docstring for mersennePrimes
+        [2, 3, 5, 7, 13, 17, 19, 31, 61, 
+         89, 107, 127, 521, 607, 1279, 
+         2203, 2281, 3217, 4253, 4423]
+        """
+        
+        Mprime = []
+        for i in range(1,1000):
+            if i % 10 == 0:
+                print(i)
+            p = sympy.prime(i)
+            Mp = 2**p - 1 
+            if sympy.isprime(Mp):
+                print(i,p)
+            # L = 4 
+            # for j in range(p-2):
+            #     L = (L**2 - 2) % Mp
+            # if L%Mp == 0:
+            #     Mprime.append(p)
+            #     print("M_%d is a prime"%(p))
+
+        print(Mprime)
+        return
     def test(self):
         """
         docstring for test
@@ -6171,7 +6197,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.khinchin()
         # self.conwayConstant()
         # self.generalFibonacci()
-        self.testCubicSum()
+        # self.testCubicSum()
+        # self.mersennePrimes()
 
 
         return
