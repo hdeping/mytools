@@ -6151,7 +6151,32 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for testGeneralWilsonTheorem
         """
-        
+        for i in range(1,2):
+            p = sympy.prime(i)
+            s = 1 
+            for j in range(1,p):
+                s = (s*j)%p 
+            s = s+1 
+            s = s%p
+            if s == 0:
+                print(i,p,s)
+            # print(s,s%p)
+
+        print(self.getCoPrimeList(10))
+
+        for i in range(3,100):
+            if sympy.isprime(i):
+                continue
+            s = 1 
+            arr = self.getCoPrimeList(i)
+            for j in arr:
+                s = (s*j)%i 
+            if s == (i-1):
+                s = -1
+            num = (len(arr)+1)//2 
+            print(i,s,(-1)**num)
+            
+
         return
     def test(self):
         """
