@@ -142,7 +142,7 @@ class EllipticCurve():
             and coprime with n
             10 -> [1,3,7,9]
         """
-        res = []
+        res = [1]
         divisors = sympy.factorint(n)
         for i in range(2,n):
             count = 0
@@ -6224,8 +6224,35 @@ class Formulas(MyCommon,EllipticCurve):
             if denom == 6:
                 print(n,sympy.factorint(n))
 
-        self.diophantine(7,60)
+        # self.diophantine(7,60)
         
+        return
+
+    def fareySeries(self):
+        """
+        docstring for fareySeries
+        """
+        arr = []
+        values = []
+        n = 20
+        for i in range(2,n+1):
+            # print(i,sympy.isprime(Integer(i)))
+            if sympy.isprime(Integer(i)):
+                res = np.arange(1,i)
+            else:
+                res = self.getCoPrimeList(i)
+
+            # print(res)
+            for j in res:
+                arr.append([j,i])
+                values.append(j/i)
+        indeces = np.argsort(values)
+        arr = np.array(arr)
+        arr = arr[indeces]
+        # print(arr)
+        num = len(arr)
+        for i in range(num):
+            print(arr[i],arr[-i-1])
         return
     def test(self):
         """
@@ -6281,7 +6308,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testCubicSum()
         # self.mersennePrimes()
         # self.testGeneralWilsonTheorem()
-        self.testPrimeBernoulli()
+        # self.testPrimeBernoulli()
+        self.fareySeries()
 
         return
 
