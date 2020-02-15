@@ -6164,7 +6164,7 @@ class Formulas(MyCommon,EllipticCurve):
 
         print(self.getCoPrimeList(10))
 
-        for i in range(3,100):
+        for i in range(3,10):
             if sympy.isprime(i):
                 continue
             s = 1 
@@ -6175,8 +6175,41 @@ class Formulas(MyCommon,EllipticCurve):
                 s = -1
             num = (len(arr)+1)//2 
             print(i,s,(-1)**num)
-            
 
+        for i in range(1,10):
+            if i%20 == 0:
+                print(i)
+            p = sympy.prime(i)
+            s = 2**(p-1)-1 
+            if s%(p**2) == 0:
+                print(i,p)
+
+
+        return
+
+    def testPrimeBernoulli(self):
+        """
+        docstring for testPrimeBernoulli
+        """
+         # test for Bernoulli's number
+        B6 = 1/42 
+        B12 = -691/2730
+        # 2,3,5,7
+        one = self.one
+        res = 0 
+
+        n = 10
+        factors = self.getAllFactors(n)
+        for i in factors:
+            p = Integer(i+1)
+            # print(i,p,sympy.isprime(p))
+            if sympy.isprime(p):
+                # print(p)
+                res += one/p 
+
+        res = res.simplify()
+        print(res)
+        
         return
     def test(self):
         """
