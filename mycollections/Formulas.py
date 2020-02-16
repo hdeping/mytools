@@ -6372,6 +6372,20 @@ class Formulas(MyCommon,EllipticCurve):
         \sqrt[6]{8 n^{3}+4 n^{2}+n+\frac{1}{30}}
         """
         
+        p = [8,4,1,1/30]
+        for n in range(2,30):
+            # print(n)
+            # print(a)
+            a = np.math.factorial(n)
+            s = (np.pi)**0.5*(n/np.exp(1))**n 
+            # s = s*(self.getPolymonialValues(p,n))**(1/6)
+            k = (a/s)**8 - (2*n)**4
+            k = k - 10*n**3
+            k = k/(n**2)/n
+            # k = k - n
+            # k = k
+            print(n,k)
+
         return
     def test(self):
         """
