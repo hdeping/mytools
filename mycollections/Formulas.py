@@ -6254,6 +6254,58 @@ class Formulas(MyCommon,EllipticCurve):
         for i in range(num):
             print(arr[i],arr[-i-1])
         return
+
+    def approxBernoulli(self):
+        """
+        docstring for approxBernoulli
+        get the bernoulli number by the approximation formula
+        and Staudt Theorem
+        \left|B_{n}\right|&\ge&4\left(\frac{2n}{4e\pi}\cdot\frac{120n^{2}+9}
+        {120n^{2}-1}\right)^{n}\sqrt{\frac{\pi n}{2}}\\
+        \left|B_{n}\right|&\leq&4\pi\left(\frac{2n+1}{4e\pi}\cdot
+        \frac{240n(n+1)+69}{240n(n+1)+79}\right)^{n+1/2}
+        """
+        n = 40
+        res = self.getPrimeReciSum(n)
+        k = n//2
+
+        
+        Bn = 4*(k/np.pi/np.exp(1))**(2*k)*np.sqrt(np.pi*k)
+        pi = np.pi 
+        e  = np.exp(1)
+        epi = 4*e*pi 
+        n120 = 120*n*n 
+        fa = (n120 + 9)/(n120 - 1)
+        an = Decimal(4*(2*n*fa/epi)**n*(pi*n/2)**0.5)
+        n240 = 240*n*(n+1)
+        fb = (n240 + 69)/(n240 + 79)
+        bn = Decimal(4*pi*((2*n+1)*fb/epi)**(n+1/2))
+
+        print("n = ",n)
+        print(an,bn)
+        # print(Bn,res,float(res))
+        a,b = sympy.fraction(res)
+        print(res)
+        if k%2 == 0:
+            Bn = int(an) + 1 
+            Bn = -(Bn*b + a)
+        else:
+            Bn = int(an) 
+            Bn = Bn*b + a 
+
+        print(Bn,b)
+
+        # Riemann Zeta function
+        # a = Decimal(1+(1/2)**n+(1/3)**n+(1/4)**n+(1/5)**n)
+        x = 1+(1/2)**n+(1/3)**n+(1/4)**n+(1/5)**n
+        Bn = Decimal(2*np.math.factorial(n)*x/((2*np.pi)**n))
+        # print(Bn,b,a)
+        Bn = Integer(int(Bn)*b + a)
+        if k%2 == 0:
+            Bn = - Bn
+        print(Bn,b)
+
+        return
     def test(self):
         """
         docstring for test
@@ -6309,7 +6361,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.mersennePrimes()
         # self.testGeneralWilsonTheorem()
         # self.testPrimeBernoulli()
-        self.fareySeries()
+        # self.fareySeries()
+        self.approxBernoulli()
 
         return
 
