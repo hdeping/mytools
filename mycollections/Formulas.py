@@ -6306,11 +6306,11 @@ class Formulas(MyCommon,EllipticCurve):
         print(Bn,b)
 
         return
-    def test(self):
+    def testBefore2(self):
         """
-        docstring for test
-        """    
-        
+        docstring for testBefore2
+        """
+          
         # self.modularEquation()
         # self.weierstrassForm()
         # print(self.getFactors(1459))
@@ -6362,7 +6362,22 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testGeneralWilsonTheorem()
         # self.testPrimeBernoulli()
         # self.fareySeries()
-        self.approxBernoulli()
+        # self.approxBernoulli()
+        
+        return
+    def testRamanujanFactorial(self):
+        """
+        docstring for testRamanujanFactorial
+        n ! \sim \sqrt{\pi}\left(\frac{n}{e}\right)^{n} 
+        \sqrt[6]{8 n^{3}+4 n^{2}+n+\frac{1}{30}}
+        """
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """    
+        self.testRamanujanFactorial()
 
         return
 
