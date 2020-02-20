@@ -6393,28 +6393,21 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for ramanujanCubic
         a^3 + b^3 = c^3 + d^3
         """
-        n = 30
+        n = 200
         arr = np.arange(1,n+1)
-        print(arr)
+        # print(arr)
         combinations = itertools.combinations(arr,3)
         for line in combinations:
-            s = np.array(list(line))
-            s = sum(s**3)
-            # print(s,line)
-            for i in range(3):
-                tmp = list(line) 
-                c = line[i]
-                k = s - 2*c**3
-                if k < 0:
-                    break
-                kk = int(k**(1/3))
-                if k == kk**3:
-                    tmp.remove(c)
-                    a,b = tmp
-                    print(a,b,c,kk)
+            a,b,c = line 
+            k = a**3 + b**3 - c**3
+            if k < 0:
+                continue
+            kk = int(k**(1/3))
+            if k == kk**3:
+                print(a,b,c,kk)
         
-
         return
+        
     def test(self):
         """
         docstring for test
