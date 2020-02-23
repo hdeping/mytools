@@ -32,6 +32,7 @@ import itertools
 from decimal import Decimal
 import re
 from  tqdm import tqdm
+import multiprocessing
 
 
 class EllipticCurve():
@@ -6594,6 +6595,29 @@ class Formulas(MyCommon,EllipticCurve):
                 print(line,s)
         return
 
+    def dealNarcissistic(self,totalArr,i):
+        """
+        docstring for dealNarcissistic
+        i = 0,1,2,3
+        """
+        num = len(totalArr) // 4 
+        begin = num*i 
+        if i == 3:
+            end = len(totalArr)
+        else:
+            end = begin  + num
+
+        for i in range(begin,end)
+            # print(arr)
+            arr = totalArr[i]
+            num = sum(arr**D)
+            digits = self.num2Digits(num)
+            arr.sort()
+            digits.sort()
+            if list(arr) == list(digits):
+                print(num)
+        return
+
     def narcissisticNumber(self,m = 2):
         """
         docstring for narcissisticNumber
@@ -6608,29 +6632,21 @@ class Formulas(MyCommon,EllipticCurve):
         print("there are %d items"%(num))
         count = 0
 
-        res = []
+        totalArr = []
         for line in tqdm(combinations):
             count += 1
             arr = []
             for i in range(m):
                 j = line[-i-1] + i - m + 1 
                 arr.append(j)
-            arr = np.array(arr)
-            # print(arr)
-            num = sum(arr**D)
-            digits = self.num2Digits(num)
-            arr.sort()
-            digits.sort()
-            if list(arr) == list(digits):
-                # print(arr,num)
-                res.append(num)
-            # print(arr,digits)
+
+            
 
 
         # print(count)
 
         
-        return res
+        return
     def test(self):
         """
         docstring for test
@@ -6641,11 +6657,11 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testCubicXYSol()
         # self.friendlyNumberPair()
         # self.funnyNumbers()
-        for i in range(18,40):
+        for i in range(18,19):
             m = i
-            num = self.getCombinator(10+m-1,m)
-            print(i,num/30000/60)
-            # res = self.narcissisticNumber(m=i)
+            # num = self.getCombinator(10+m-1,m)
+            # print(i,num/30000/60)
+            self.narcissisticNumber(m=i)
             # print("i = ",i)
             # for j in res:
             #     print(j)
