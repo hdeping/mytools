@@ -6594,6 +6594,43 @@ class Formulas(MyCommon,EllipticCurve):
                 print(line,s)
         return
 
+    def narcissisticNumber(self,m = 2):
+        """
+        docstring for narcissisticNumber
+        Narcissistic number is a kind of interesting
+        number
+        371 = 3^3+7^3+1^3
+        """
+        D = m
+        arr = np.arange(10+m-1)
+        combinations = itertools.combinations(arr,m)
+        num = self.getCombinator(10+m-1,m)
+        print("there are %d items"%(num))
+        count = 0
+
+        res = []
+        for line in tqdm(combinations):
+            count += 1
+            arr = []
+            for i in range(m):
+                j = line[-i-1] + i - m + 1 
+                arr.append(j)
+            arr = np.array(arr)
+            # print(arr)
+            num = sum(arr**D)
+            digits = self.num2Digits(num)
+            arr.sort()
+            digits.sort()
+            if list(arr) == list(digits):
+                # print(arr,num)
+                res.append(num)
+            # print(arr,digits)
+
+
+        # print(count)
+
+        
+        return res
     def test(self):
         """
         docstring for test
@@ -6603,7 +6640,15 @@ class Formulas(MyCommon,EllipticCurve):
         # self.exponentPuzzle()
         # self.testCubicXYSol()
         # self.friendlyNumberPair()
-        self.funnyNumbers()
+        # self.funnyNumbers()
+        for i in range(18,40):
+            m = i
+            num = self.getCombinator(10+m-1,m)
+            print(i,num/30000/60)
+            # res = self.narcissisticNumber(m=i)
+            # print("i = ",i)
+            # for j in res:
+            #     print(j)
 
         return
 
