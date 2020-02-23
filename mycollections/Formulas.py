@@ -3270,7 +3270,7 @@ class Formulas(MyCommon,EllipticCurve):
         """
         s = 1 
         for i in range(m):
-            s = s*(n-i)/(i+1)
+            s = s*(n-i)//(i+1)
         return s 
     def rootTermsNumber(self):
         """
@@ -6547,6 +6547,21 @@ class Formulas(MyCommon,EllipticCurve):
             return res
         return
 
+    def joinNumber2(self,arr):
+        """
+        docstring for joinNumber2
+        [2,3] => ["23","32"]
+        """
+        total = itertools.permutations(arr,len(arr))
+
+        output = []
+        for arr in total:
+            res = ""
+            for i in arr:
+                res = res + str(i)
+            output.append(res)
+
+        return output
     def getPermNum(self,n,m):
         """
         docstring for getPermNum
@@ -6559,20 +6574,26 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for funnyNumbers
         """
-        arr = np.arange(1,50)
+        arr = np.arange(1,20)
 
-        m = 5
-        total = itertools.permutations(arr,m)
+        m = 6
+        total = itertools.combinations(arr,m)
+        num = self.getCombinator(len(arr),m)
         print("there are %d items"%(num))
-        D = 5
+        D = m
 
+        count = 0
         for line in tqdm(total):
-            num = self.joinNumber(line)
+            count += 1 
+            if count % 100000 == 0:
+                print("%d out of %d"%(count,num))
+            joinStrings = self.joinNumber2(line)
             line = np.array(list(line))
             s = sum(line**D)
-            if num == s:
-                print(num,line)
+            if str(s) in joinStrings:
+                print(line,s)
         return
+
     def test(self):
         """
         docstring for test
