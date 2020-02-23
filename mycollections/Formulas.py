@@ -31,6 +31,7 @@ import time
 import itertools
 from decimal import Decimal
 import re
+from  tqdm import tqdm
 
 
 class EllipticCurve():
@@ -6545,6 +6546,33 @@ class Formulas(MyCommon,EllipticCurve):
             res = self.joinNumber([res,arr[-1]])
             return res
         return
+
+    def getPermNum(self,n,m):
+        """
+        docstring for getPermNum
+        """
+        res = 1 
+        for i in range(m):
+            res = res*(n-i)
+        return res
+    def funnyNumbers(self):
+        """
+        docstring for funnyNumbers
+        """
+        arr = np.arange(1,50)
+
+        m = 5
+        total = itertools.permutations(arr,m)
+        print("there are %d items"%(num))
+        D = 5
+
+        for line in tqdm(total):
+            num = self.joinNumber(line)
+            line = np.array(list(line))
+            s = sum(line**D)
+            if num == s:
+                print(num,line)
+        return
     def test(self):
         """
         docstring for test
@@ -6554,6 +6582,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.exponentPuzzle()
         # self.testCubicXYSol()
         # self.friendlyNumberPair()
+        self.funnyNumbers()
 
         return
 
