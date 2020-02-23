@@ -6489,30 +6489,35 @@ class Formulas(MyCommon,EllipticCurve):
                 self.cubicXYSol(D = i,m = j)
         return
 
+    def getFactorsSum(self,m):
+        """
+        docstring for getFactorsSum
+        """
+        if m == 1:
+            n = 1 
+        else:
+            n = sum(self.getAllFactors(m)[:-1])
+        return n
     def friendlyNumberPair(self):
         """
         docstring for friendlyNumberPair
         """
         res1 = []
         res2 = []
-        for i in range(3,1000000):
+        for i in range(3,10000):
             if i % 10000 == 0:
                 print(i)
-            m = sum(self.getAllFactors(i)[:-1])
-            if m == 1:
-                n = 1 
-            else:
-                n = sum(self.getAllFactors(m)[:-1])
-            if i == n:
-                if m == n:
-                    res1.append(m)
+            m = i 
+            arr = []
+            for j in range(2):
+                m = self.getFactorsSum(m)
+                arr.append(m)
+            if i == arr[-1]:
+                if arr[0] == arr[1]:
+                    res1.append(arr)
                 else:
-                    if m > n:
-                        m,n = n,m
-                    arr = [m,n]
-                    if arr not in res2:
-                        res2.append(arr)
-                        print(arr)
+                    res2.append(arr)
+                    print(arr)
 
         print(res1)
         print(res2)
