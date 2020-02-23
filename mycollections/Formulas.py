@@ -6498,23 +6498,26 @@ class Formulas(MyCommon,EllipticCurve):
         else:
             n = sum(self.getAllFactors(m)[:-1])
         return n
+
     def friendlyNumberPair(self):
         """
         docstring for friendlyNumberPair
         """
         res1 = []
         res2 = []
-        for i in range(3,10000):
+        for i in range(3,1000000):
             if i % 10000 == 0:
                 print(i)
             m = i 
             arr = []
-            for j in range(2):
+            for j in range(6):
                 m = self.getFactorsSum(m)
                 arr.append(m)
             if i == arr[-1]:
                 if arr[0] == arr[1]:
                     res1.append(arr)
+                elif arr[0] == arr[2]:
+                    continue
                 else:
                     res2.append(arr)
                     print(arr)
@@ -6522,6 +6525,25 @@ class Formulas(MyCommon,EllipticCurve):
         print(res1)
         print(res2)
 
+        return
+
+    def joinNumber(self,arr):
+        """
+        docstring for joinNumber
+        """
+        if len(arr) < 2:
+            print("len(arr) is less than 2")
+            return -1 
+        elif len(arr) == 2:
+            res = arr[0]
+            digits = self.num2Digits(arr[-1])
+            for i in digits:
+                res = 10*res + i 
+            return res
+        else:
+            res = self.joinNumber(arr[:-1])
+            res = self.joinNumber([res,arr[-1]])
+            return res
         return
     def test(self):
         """
@@ -6531,7 +6553,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.ramanujanCubic()
         # self.exponentPuzzle()
         # self.testCubicXYSol()
-        self.friendlyNumberPair()
+        # self.friendlyNumberPair()
 
         return
 
