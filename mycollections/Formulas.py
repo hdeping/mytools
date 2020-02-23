@@ -6456,13 +6456,37 @@ class Formulas(MyCommon,EllipticCurve):
         s = x + y
         print("(x+y)^(x+y)",s**s)
         return
+
+    def cubicXYSol(self,D=2,m=2):
+        """
+        docstring for cubicXYSol
+        x^3 + Dy^3 = m
+        """
+        # D = 4
+        # m = 3
+        # print("D = ",D)
+        format_type = "%d^3 - %d \\times %d^3 & = & %d"
+        for y in range(1,100000):
+            # if y % 5000000 == 0:
+            #     print(y)
+            x = m + D*y**3 
+            a = (x+0.1)**(1/3) 
+            a = int(a)
+            if x == a**3:
+                print(format_type%(a,D,y,a**3-D*y**3))
+        return
     def test(self):
         """
         docstring for test
         """    
         # self.testRamanujanFactorial()
         # self.ramanujanCubic()
-        self.exponentPuzzle()
+        # self.exponentPuzzle()
+        for j in range(1,100):
+            for i in range(2,100):
+                if i in [8,27,64]:
+                    continue 
+                self.cubicXYSol(D = i,m = j)
 
         return
 
