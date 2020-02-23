@@ -6428,13 +6428,41 @@ class Formulas(MyCommon,EllipticCurve):
         print("count = ",count)
         
         return
+    
+    def exponentPuzzle(self):
+        """
+        docstring for exponentPuzzle
+        2^{x}+3^{y}&=&12 \\
+        2^{y}+3^{x}&=&18 \\
+        what is \left(x+y\right)^{x+y} ?
+        """
         
+        x = 1.0
+
+        for i in range(30):
+            y = 12 - 2**x 
+            if y < 0:
+                print(i,"x = ",x,"y < 0")
+                break
+            y = np.log(y)/np.log(3)
+            x = 18 - 2**y
+            if x < 0:
+                print(i,"y = ",y,"x < 0")
+                break
+            x = np.log(x)/np.log(3)
+        print("x,y = ",x,y)
+        print(2**x + 3**y)
+        print(2**y + 3**x)
+        s = x + y
+        print("(x+y)^(x+y)",s**s)
+        return
     def test(self):
         """
         docstring for test
         """    
         # self.testRamanujanFactorial()
-        self.ramanujanCubic()
+        # self.ramanujanCubic()
+        self.exponentPuzzle()
 
         return
 
