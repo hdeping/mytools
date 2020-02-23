@@ -6496,7 +6496,7 @@ class Formulas(MyCommon,EllipticCurve):
         res1 = []
         res2 = []
         for i in range(3,1000000):
-            if i % 10000:
+            if i % 10000 == 0:
                 print(i)
             m = sum(self.getAllFactors(i)[:-1])
             if m == 1:
@@ -6512,6 +6512,7 @@ class Formulas(MyCommon,EllipticCurve):
                     arr = [m,n]
                     if arr not in res2:
                         res2.append(arr)
+                        print(arr)
 
         print(res1)
         print(res2)
