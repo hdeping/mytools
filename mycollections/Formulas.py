@@ -6466,7 +6466,7 @@ class Formulas(MyCommon,EllipticCurve):
         # m = 3
         # print("D = ",D)
         format_type = "%d^3 - %d \\times %d^3 & = & %d"
-        for y in range(1,100000):
+        for y in range(1,1000):
             # if y % 5000000 == 0:
             #     print(y)
             x = m + D*y**3 
@@ -6475,6 +6475,18 @@ class Formulas(MyCommon,EllipticCurve):
             if x == a**3:
                 print(format_type%(a,D,y,a**3-D*y**3))
         return
+
+    def testCubicXYSol(self):
+        """
+        docstring for testCubicXYSol
+        """
+        for j in range(1,100):
+            print("m = ",j)
+            for i in range(2,100):
+                if i in [8,27,64]:
+                    continue 
+                self.cubicXYSol(D = i,m = j)
+        return
     def test(self):
         """
         docstring for test
@@ -6482,11 +6494,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testRamanujanFactorial()
         # self.ramanujanCubic()
         # self.exponentPuzzle()
-        for j in range(1,100):
-            for i in range(2,100):
-                if i in [8,27,64]:
-                    continue 
-                self.cubicXYSol(D = i,m = j)
+        self.testCubicXYSol()
 
         return
 
