@@ -6607,12 +6607,13 @@ class Formulas(MyCommon,EllipticCurve):
         else:
             end = begin  + num
 
-        for i in range(begin,end)
+        D = len(totalArr[0])
+        for i in range(begin,end):
             # print(arr)
             arr = totalArr[i]
             num = sum(arr**D)
             digits = self.num2Digits(num)
-            arr.sort()
+            # arr.sort()
             digits.sort()
             if list(arr) == list(digits):
                 print(num)
@@ -6627,8 +6628,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         D = m
         arr = np.arange(10+m-1)
-        combinations = itertools.combinations(arr,m)
         num = self.getCombinator(10+m-1,m)
+        combinations = itertools.combinations(arr,m)
         print("there are %d items"%(num))
         count = 0
 
@@ -6639,6 +6640,12 @@ class Formulas(MyCommon,EllipticCurve):
             for i in range(m):
                 j = line[-i-1] + i - m + 1 
                 arr.append(j)
+            totalArr.append(arr)
+
+        totalArr = np.array(totalArr)
+
+        for i in range(4):
+            self.dealNarcissistic(totalArr,i)
 
             
 
@@ -6646,6 +6653,37 @@ class Formulas(MyCommon,EllipticCurve):
         # print(count)
 
         
+        return
+
+    def testNarcissistic(self):
+        """
+        docstring for testNarcissistic
+        """
+        a = 63105425988599693916 
+        digits = self.num2Digits(a)
+        m = len(digits)
+
+        # print(sum(digits**m))
+        total = 0 
+        for i in list(digits):
+            print(i,m,i**m)
+            total += i**m 
+        print(total)
+
+
+        return
+
+        costTime = 0 
+        for i in range(20,21):
+            m = i
+            num = self.getCombinator(10+m-1,m)
+            cost = num/60000/60
+            costTime += cost
+            print(i,cost,costTime)
+            self.narcissisticNumber(m=i)
+            # print("i = ",i)
+            # for j in res:
+            #     print(j)
         return
     def test(self):
         """
@@ -6657,14 +6695,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testCubicXYSol()
         # self.friendlyNumberPair()
         # self.funnyNumbers()
-        for i in range(18,19):
-            m = i
-            # num = self.getCombinator(10+m-1,m)
-            # print(i,num/30000/60)
-            self.narcissisticNumber(m=i)
-            # print("i = ",i)
-            # for j in res:
-            #     print(j)
+        self.testNarcissistic()
 
         return
 
