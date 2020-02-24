@@ -1212,8 +1212,6 @@ class Formulas(MyCommon,EllipticCurve):
             return True
         else:
             return False
-            
-
     def getFactors(self,m):
         """
         docstring for getFactors
@@ -1279,6 +1277,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getMod
         check if a^{p-1} = 1 (mod p)
+        a^{2^n} = (a^{2^{n-1}})^2
+        a^{m+n} = a^m \times a^n
         """
         binary = bin(p - 1)[2:]
         length = len(binary)
@@ -1300,6 +1300,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getMod
         return a^{n} (mod p)
+        a^{2^n} = (a^{2^{n-1}})^2
+        a^{m+n} = a^m \times a^n
         """
         binary = bin(n)[2:]
         length = len(binary)
@@ -1322,6 +1324,8 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for fermatPrimeTest
         p:
             a positive integer
+        judge whether an integer is prime
+        with Fermat's little theorem
         """
         result = 0
         for i in range(2,1002):
@@ -1495,6 +1499,8 @@ class Formulas(MyCommon,EllipticCurve):
         r_{n+1} = q^{2} 
         p=p_{n}+q_{n},
         q=r_{n}+q_{n}
+
+        Hardy-Weinberg's Law in Genetic Biology
         """
         p0 = [0.9,0.1,0]
         for i in range(10):
@@ -1556,6 +1562,8 @@ class Formulas(MyCommon,EllipticCurve):
     def testAllMod(self):
         """
         docstring for testAllMod
+
+        test for self.getAllMod and self.getModAdd
         """
         a = 3
         p = 65537
@@ -1648,6 +1656,8 @@ class Formulas(MyCommon,EllipticCurve):
     def selectNum70(self):
         """
         docstring for selectNum70
+        
+        solve a math puzzle
 
         select 25 out of 70 (1 to 70)
         which should satisfy
@@ -1795,6 +1805,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for idCardCheck
         mod 12-2 method
+
+        check for Chinese Indentity Card
         """
         idCard = 350121191206231210
         weight = [2]
@@ -1890,6 +1902,9 @@ class Formulas(MyCommon,EllipticCurve):
     def getMultiGroup(self,a1,a2,n):
         """
         docstring for getMultiGroup
+
+        Abellian group based on multiplication residue 
+        of n
         """
         a1 = np.array(a1)
         a2 = np.array(a2)
@@ -2204,6 +2219,9 @@ class Formulas(MyCommon,EllipticCurve):
     def divideNumber(self,num):
         """
         docstring for divideNumber
+        num:
+            integer
+
         """
         if num%2 == 0:
             return
