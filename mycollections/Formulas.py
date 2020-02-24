@@ -1049,7 +1049,7 @@ class Formulas(MyCommon,EllipticCurve):
         x = 5*y + 1638
         return
 
-    def num2Digits(self,num):
+    def num2Digits(self,num,base=10):
         """
         docstring for num2Digits
         num:
@@ -1060,8 +1060,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         digits = []
         while num:
-            digits.append(num%10)
-            num = num // 10
+            digits.append(num % base)
+            num = num // base
         digits = np.flip(digits)
         return digits
 
@@ -3229,27 +3229,46 @@ class Formulas(MyCommon,EllipticCurve):
 
             return total
             
-    def getCombinatorEqnRecursive(self,n,s):
+    def getCombinatorEqnRecursive(self,n,s,type_in=1):
         """
         docstring for getCombinatorEqnRecursive
         integer solutions for
-        a1 + 2a2+...+ na_n = s
+        a1 + 2a2+...+ na_n = s,type = 1
+        0a0 + a1 + 2a2+...+ na_n = s,type = 0
         """
-        if n == 2:
+        if n == type_in + 1:
             res = []
             num = s // n + 1 
             for y in range(num):
-                x = s - 2*y 
+                x = s - n*y 
                 res.append([x,y])
             return res
         else:
             num = s // n + 1
             total = []
             for y in range(num):
-                res = self.getCombinatorEqnRecursive(n-1,s-n*y)
+                res = self.getCombinatorEqnRecursive(n-1,s-n*y,type_in)
                 for line in res:
                     line.append(y)
                     total.append(line)
+            return total 
+
+    def getCombinatorEqnSolNum(self,n,s,type_in=1):
+        """
+        docstring for getCombinatorEqnRecursive
+        integer solutions for
+        a1 + 2a2+...+ na_n = s,type = 1
+        0a0 + a1 + 2a2+...+ na_n = s,type = 0
+        """
+        if n == type_in + 1:
+            num = s // n + 1
+            return num
+        else:
+            num = s // n + 1
+            total = 0
+            for y in range(num):
+                res = self.getCombinatorEqnSolNum(n-1,s-n*y,type_in)
+                total += res
             return total 
         
         
@@ -6794,6 +6813,237 @@ class Formulas(MyCommon,EllipticCurve):
             s = s*np.exp(np.pi*(2*n/3)**0.5)
             print(n,s)
         return
+
+    def combinatorEqnTimeScale(self,n=1000):
+        """
+        a1+2a2+...+nan = S
+        time complexity analysis
+        \sum_i \sum_j (j/i+1) 
+        i = 1~n, j = 0~n
+        n*(n+1) + n*(n-1)*ln(n)/2
+        O(n) ~ n^2\log n
+        """
+        res = 0
+        for i in range(1,n+1):
+            for j in range(n+1):
+                res += (j // i + 1)
+
+        val = n*(n+1)*(1 + np.log(n)/2)
+        print(n,res)
+
+    def testComEqnTime(self):
+        """
+        docstring for testComEqnTime
+        """
+        for n in range(10000,4001,1000):
+            self.combinatorEqnTimeScale(n=n)
+        cost = [3  , 19, 53,117]
+        cycles = [4289415,18528676,43501815,79626619]
+        for index,(i,j) in enumerate(zip(cost,cycles)):
+            index = 1000*(index+1)
+            val  = (index**2*np.log(index))
+            val1 = j/val
+            val2 = i/val
+            print(i,j,j/i,val1,val2)
+        return
+
+    def combinatorSeqByString(self,string1,string2):
+        """
+        docstring for combinatorSeqByString
+        "00","11": => ["0011","0101","1100","1010","1001","0110"]
+        """
+
+        res = []
+        n = len(string1)
+        m = len(string2)
+        arr = np.arange(m+n)
+        combinations = itertools.combinations(arr,m)
+        for line in combinations:
+            ch = []
+            count1 = 0
+            count2 = 0
+            for i in range(0,n+m):
+                if i in line:
+                    ch.append(string2[count2])
+                    count2 += 1
+                else:
+                    ch.append(string1[count1])
+                    count1 += 1
+            res.append("".join(ch))
+
+        return res
+    def combinatorSeqByNum(self,n,m):
+        """
+        docstring for combinatorSeqByString
+        n,m: integers
+        2,2: => ["0011","0101","1100","1010","1001","0110"]
+        """
+        string1 = "0"*n
+        string2 = "1"*m
+        return self.combinatorSeqByString(string1,string2)
+
+    def combinatorSeqByArray(self,arr):
+        """
+        arr:
+            sequence of integers, such as [1,1,1]
+        return:
+            string array, such as ['']
+        """
+        if len(arr) == 1:
+            # print("there should be more than 1 elements")
+            return ["0"*arr[0]]
+
+        elif len(arr) == 2:
+            n,m  = arr
+            return self.combinatorSeqByNum(n,m)
+        else:
+            length = len(arr)
+            start  = ord("0")
+            res = self.combinatorSeqByNum(arr[0],arr[1])
+            for i in range(2,length):
+                total = []
+                string = chr(start + i)*arr[i]
+                for line in res:
+                    total += self.combinatorSeqByString(line,string)
+                res = total
+            return res
+
+    def getNumSeq(self,arr, base=10):
+        """
+        docstring for getNumSeq
+        arr:
+            [0,1,1,3] => 1*2 + 1*3 + 3*4
+        """
+        numbers = []
+        res = []
+        output = []
+
+        for index,i in enumerate(arr):
+            if i > 0:
+                res.append(i)
+                numbers.append(index+1)
+        if sum(res) < base:
+            res.append(base - sum(res))
+            numbers.append(0)
+        # print(numbers,res)
+        total = self.combinatorSeqByArray(res)
+
+        for i,line in enumerate(total):
+            tmp = []
+            for j in line:
+                k = int(j)
+                tmp.append(numbers[k])
+            output.append(tmp)
+        
+        return output
+
+    def getCalTable(self,m):
+        """
+        docstring for getCalTable
+        """
+        self.calTable = [0,1]
+        for i in range(2,10):
+            self.calTable.append(i**m)
+            # self.calTable.append(Integer(i)**m)
+        return
+
+    def judgeNumEqual(self,arr,num,base = 10):
+        """
+        docstring for judgeNumEqual
+        """
+        digits = self.num2Digits(num)
+        stati = {}
+        for i in range(base):
+            stati[i] = 0 
+        for i in digits:
+            stati[i] += 1 
+        for i in range(base):
+            if stati[i] != arr[i]:
+                return False 
+
+        return True 
+
+    def narciTest3(self):
+        """
+        docstring for narciTest3
+        find all the narcissistic numbers 
+        with finding the number of each digit (0~9)
+        """
+        # arr = [2,2,3,4]
+        # res = self.combinatorSeqByArray(arr)
+        # for i,line in enumerate(res):
+        #     print(i,line)
+        # print(self.getGeneralCombinator(arr))
+
+        n = 20
+        base = 10
+        self.getCalTable(n)
+        results = self.getCombinatorEqnRecursive(base,n)
+        print(len(results))
+        output = []
+        # res = self.getNumSeq(results[6])
+        # print(res[:10])
+
+        # remove some elements with sum over 10
+        tmp = []
+        for line in results:
+            if sum(line) <= base:
+                tmp.append(line)
+        results = tmp
+        print(len(results))
+        totalNum = 0 
+        for i,line in enumerate(results):
+            print(i,line)
+            line.append(base - sum(line))
+            totalNum += self.getGeneralCombinator(line)
+            continue
+            if i % 1 == 0:
+                print("i = ",i,line)
+
+            # print(i,line)
+            res = self.getNumSeq(line)
+            totalNum += len(res)
+            for j,tmp in enumerate(res):
+                # print(j,tmp)
+                num = 0
+                for index,k in enumerate(tmp):
+                    # print(k,index,tmp)
+                    if k > 0:
+                        num += (k*self.calTable[index])
+                # judge if it the number I want
+                if self.judgeNumEqual(tmp,num,base = base):
+                    # print(tmp,num)
+                    if num not in output:
+                        print(tmp,num)
+                        output.append(num)
+            # if i == 1:
+            #     break
+        # print(len(results))
+        print(totalNum,self.getGeneralCombinator([n,9]))
+
+        return
+    def getCombinatorEqnSolNumByIter(self,n,s):
+        """
+        docstring for getCombinatorEqnSolNumByIter
+        matrix(n,s+1)
+        """
+        # res = np.ones((n,s+1),int)
+        res = []
+        for i in range(n):
+            res.append([1]*(s+1))
+        for i in range(1,n):
+            for j in range(1,s+1):
+                num = j//(i+1) + 1 
+                total = 0
+                for k in range(num):
+                    total += res[i-1][j-(i+1)*k]
+                res[i][j] = total
+
+        for i in range(s+1):
+            print(i,res[-1][i])
+
+        # print(res)
+        return
     def test(self):
         """
         docstring for test
@@ -6807,7 +7057,19 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testNarcissistic()
         # self.narciTest1()
         # self.ramanujanHardyFormula()
-        self.narciTest2()
+        # self.narciTest2()
+        # res = self.getCombinatorEqnRecursive(5,5,type_in=0)
+        # print(res)
+        # for i in range(2,100):
+        #     res = self.getCombinatorEqnSolNum(i,i)
+        #     print(i,res)
+        # self.testComEqnTime()
+        # res = self.combinatorSeqByString("0ac","a1e")
+        # res = self.combinatorSeqByNum(1,1)
+        # self.narciTest3()
+        # n = 2000
+        # self.getCombinatorEqnSolNumByIter(n,n)
+       
 
         return
 
