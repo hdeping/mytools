@@ -6659,31 +6659,38 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for testNarcissistic
         """
-        a = 63105425988599693916 
-        digits = self.num2Digits(a)
-        m = len(digits)
-
-        # print(sum(digits**m))
-        total = 0 
-        for i in list(digits):
-            print(i,m,i**m)
-            total += i**m 
-        print(total)
-
-
-        return
+       
 
         costTime = 0 
-        for i in range(20,21):
+        for i in range(21,39):
             m = i
             num = self.getCombinator(10+m-1,m)
-            cost = num/60000/60
+            cost = num/150000/60
             costTime += cost
             print(i,cost,costTime)
-            self.narcissisticNumber(m=i)
+            # self.narcissisticNumber(m=i)
             # print("i = ",i)
             # for j in res:
             #     print(j)
+        return
+
+    def narciTest1(self):
+        """
+        test for narcissisticNumber
+        """
+        a = 63105425988599693916 
+        # a = 28361281321319229463398
+        digits = self.num2Digits(a)
+        m = len(digits)
+        calTable = [0,1]
+        for i in range(2,10):
+            calTable.append((Integer(i))**m)
+        total = 0 
+        for i in digits:
+            total += calTable[i] 
+        print(total)
+
+
         return
     def test(self):
         """
@@ -6695,7 +6702,8 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testCubicXYSol()
         # self.friendlyNumberPair()
         # self.funnyNumbers()
-        self.testNarcissistic()
+        # self.testNarcissistic()
+        self.narciTest1()
 
         return
 
