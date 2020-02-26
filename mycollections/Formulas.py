@@ -29,6 +29,10 @@ import matplotlib.pyplot as plt
 import json
 import time
 import itertools
+from decimal import Decimal
+import re
+from  tqdm import tqdm
+import multiprocessing
 
 
 class EllipticCurve():
@@ -140,7 +144,7 @@ class EllipticCurve():
             and coprime with n
             10 -> [1,3,7,9]
         """
-        res = []
+        res = [1]
         divisors = sympy.factorint(n)
         for i in range(2,n):
             count = 0
@@ -864,7 +868,7 @@ class Formulas(MyCommon,EllipticCurve):
         
         return  
 
-    def getContinueSeq(self,D):
+    def getContinueSeq(self,D,n=2,target=1,count=100):
         """
         docstring for getInitPell
         D:
@@ -872,11 +876,17 @@ class Formulas(MyCommon,EllipticCurve):
             positive integer and not square one and  D > 1
             x_n = a_n + 1/(a_{n+1} + x_{n-1})
         """
-        x = sympy.sqrt(D)
+        if n == 2:
+            x = sympy.sqrt(D)
+        else:
+            x = D**(Integer(1)/n)
         # print(x)
         result = []
-        target = 2*(x//1)
-        for i in range(100):
+        if target == 1:
+            target = 2*(x//1)
+
+        for i in range(count):
+            # print(i,latex(x))
             a = x // 1 
             x = sympy.simplify(1/(x - a))
             result.append(a)
@@ -884,6 +894,35 @@ class Formulas(MyCommon,EllipticCurve):
                 break 
 
         return result
+
+    def getCubicContinueSeq(self,D,n=3,count = 100):
+        """
+        docstring for getInitPell
+        continued fraction of \sqrt[3]{D}
+        """
+    
+        a = Decimal(D**(1/n))
+        result = []
+        p = [0,1]
+        q = [1,0]
+        for i in range(count):
+            # x = (p[-2]+q[-2]*a)/(p[-1]+q[-1]*a)
+            x  = Decimal(p[-1]**3 + D*q[-1]**3)
+            y1 = Decimal(p[-2]**3 + D*q[-2]**3)
+            b  = q[-1]*a
+            c  = q[-2]*a
+            y2 = Decimal(p[-1]**2 - b*p[-1] + b**2)
+            y3 = Decimal(p[-2]**2 - c*p[-2] + c**2)
+            x = y1*y2/y3/x 
+            x = int(x)
+            result.append(x)
+            num = -x*p[-1] + p[-2]
+            p.append(num)
+            num = -x*q[-1] + q[-2]
+            q.append(num)          
+
+        return result 
+
     def getInitPell(self,D,num=1):
         """
         docstring for getInitPell
@@ -1010,7 +1049,7 @@ class Formulas(MyCommon,EllipticCurve):
         x = 5*y + 1638
         return
 
-    def num2Digits(self,num):
+    def num2Digits(self,num,base=10):
         """
         docstring for num2Digits
         num:
@@ -1021,8 +1060,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         digits = []
         while num:
-            digits.append(num%10)
-            num = num // 10
+            digits.append(num % base)
+            num = num // base
         digits = np.flip(digits)
         return digits
 
@@ -1173,8 +1212,6 @@ class Formulas(MyCommon,EllipticCurve):
             return True
         else:
             return False
-            
-
     def getFactors(self,m):
         """
         docstring for getFactors
@@ -1240,6 +1277,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getMod
         check if a^{p-1} = 1 (mod p)
+        a^{2^n} = (a^{2^{n-1}})^2
+        a^{m+n} = a^m \times a^n
         """
         binary = bin(p - 1)[2:]
         length = len(binary)
@@ -1261,6 +1300,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getMod
         return a^{n} (mod p)
+        a^{2^n} = (a^{2^{n-1}})^2
+        a^{m+n} = a^m \times a^n
         """
         binary = bin(n)[2:]
         length = len(binary)
@@ -1283,6 +1324,8 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for fermatPrimeTest
         p:
             a positive integer
+        judge whether an integer is prime
+        with Fermat's little theorem
         """
         result = 0
         for i in range(2,1002):
@@ -1456,6 +1499,8 @@ class Formulas(MyCommon,EllipticCurve):
         r_{n+1} = q^{2} 
         p=p_{n}+q_{n},
         q=r_{n}+q_{n}
+
+        Hardy-Weinberg's Law in Genetic Biology
         """
         p0 = [0.9,0.1,0]
         for i in range(10):
@@ -1517,6 +1562,8 @@ class Formulas(MyCommon,EllipticCurve):
     def testAllMod(self):
         """
         docstring for testAllMod
+
+        test for self.getAllMod and self.getModAdd
         """
         a = 3
         p = 65537
@@ -1609,6 +1656,8 @@ class Formulas(MyCommon,EllipticCurve):
     def selectNum70(self):
         """
         docstring for selectNum70
+        
+        solve a math puzzle
 
         select 25 out of 70 (1 to 70)
         which should satisfy
@@ -1756,6 +1805,8 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for idCardCheck
         mod 12-2 method
+
+        check for Chinese Indentity Card
         """
         idCard = 350121191206231210
         weight = [2]
@@ -1851,6 +1902,9 @@ class Formulas(MyCommon,EllipticCurve):
     def getMultiGroup(self,a1,a2,n):
         """
         docstring for getMultiGroup
+
+        Abellian group based on multiplication residue 
+        of n
         """
         a1 = np.array(a1)
         a2 = np.array(a2)
@@ -2165,6 +2219,9 @@ class Formulas(MyCommon,EllipticCurve):
     def divideNumber(self,num):
         """
         docstring for divideNumber
+        num:
+            integer
+
         """
         if num%2 == 0:
             return
@@ -3172,27 +3229,46 @@ class Formulas(MyCommon,EllipticCurve):
 
             return total
             
-    def getCombinatorEqnRecursive(self,n,s):
+    def getCombinatorEqnRecursive(self,n,s,type_in=1):
         """
         docstring for getCombinatorEqnRecursive
         integer solutions for
-        a1 + 2a2+...+ na_n = s
+        a1 + 2a2+...+ na_n = s,type = 1
+        0a0 + a1 + 2a2+...+ na_n = s,type = 0
         """
-        if n == 2:
+        if n == type_in + 1:
             res = []
             num = s // n + 1 
             for y in range(num):
-                x = s - 2*y 
+                x = s - n*y 
                 res.append([x,y])
             return res
         else:
             num = s // n + 1
             total = []
             for y in range(num):
-                res = self.getCombinatorEqnRecursive(n-1,s-n*y)
+                res = self.getCombinatorEqnRecursive(n-1,s-n*y,type_in)
                 for line in res:
                     line.append(y)
                     total.append(line)
+            return total 
+
+    def getCombinatorEqnSolNum(self,n,s,type_in=1):
+        """
+        docstring for getCombinatorEqnRecursive
+        integer solutions for
+        a1 + 2a2+...+ na_n = s,type = 1
+        0a0 + a1 + 2a2+...+ na_n = s,type = 0
+        """
+        if n == type_in + 1:
+            num = s // n + 1
+            return num
+        else:
+            num = s // n + 1
+            total = 0
+            for y in range(num):
+                res = self.getCombinatorEqnSolNum(n-1,s-n*y,type_in)
+                total += res
             return total 
         
         
@@ -3232,7 +3308,7 @@ class Formulas(MyCommon,EllipticCurve):
         """
         s = 1 
         for i in range(m):
-            s = s*(n-i)/(i+1)
+            s = s*(n-i)//(i+1)
         return s 
     def rootTermsNumber(self):
         """
@@ -4890,6 +4966,7 @@ class Formulas(MyCommon,EllipticCurve):
         return:
             factor array
         """
+        n = Integer(n)
         factors = sympy.factorint(n)
         indeces = []
         keys    = []
@@ -5588,12 +5665,692 @@ class Formulas(MyCommon,EllipticCurve):
             y = x*(x*(x*3+3)+3)
             print(y.expand())
 
-            return   
-    def test(self):
+            return  
+
+    def progression(self):
         """
-        docstring for test
-        """    
+        docstring for progression
+        S_{n+1}&=&S_{n}+\frac{1}{2}S_{n-1}+\frac{1}{6}S_{n-2}
+
+         1  
+         0  1  2  2  2  3  3  
+         2  4  
+         3  4  5  5  5  6  6  
+         4  7  
+         6  7  8  8  8  9  9  
+         8 10  
+         4 10 11 11 11 12 12 
+        11 13 
+        12 13 14 14 14 15 15 
+        13 16 
+        15 16 17 17 17 18 18 
+        17 19 
+        17 19 20 20 20 21 21 
+        20 22 
+        21 22 23 23 23 24 24 
+        20 25 
+        24 25 26 26 26 27 27 
+        26 28 
+        26 28 29 29 29 30 30 
+        29 31 
+        30 31 32 32 32 33 33 
+        31 34
+
+        """
+        arr = [1,2,3]
+        p   = [1,Integer(1)/2,Integer(1)/6]
+        for i in range(5):
+            num = 0 
+            for j in range(3):
+                num += p[j]*arr[-j-1]
+            arr.append(num)
+            if i == 1:
+                continue
+            a,b = sympy.fraction(num)
+            factors = sympy.factorint(b)
+            values = []
+            for key in factors:
+                values.append(factors[key])
+            # print(values)
+            # print(i+4,values)
+            a = values[1] 
+            print("%2d"%(a))
+
+        return 
+
+    def getCountDict(self,arr):
+        """
+        docstring for getCountDict
+        arr:
+            1d array
+            [1,1,1,2,2,3] => {1:3,2:2,3:1}
+        """
+        res = {}
+        for i in arr:
+            if i in res:
+                res[i] += 1 
+            else:
+                res[i] = 1 
+        return res 
+    def testCubicContinuedFrac(self):
+        """
+        docstring for testCubicContinuedFrac
+        """
+        # x = self.getContinueSeq(2 , n=3, target=0)
+        # print(x)
+        t1 = time.time()
+        x = self.getCubicContinueSeq(4,count=8000)
+        # print(x)
+        t2 = time.time()
+        print("time",t2 - t1)
+
+        res = self.getCountDict(x)
+        print(res)
+        x = np.array(x)
+        indeces = np.arange(len(x))
+        plt.plot(indeces,x)
+        plt.show()
+        x = sum(np.log(x))/len(x)
+        x = np.exp(x)
+        print("Khinchin's constant:",x)
+       
+        return
+
+    def khinchin(self):
+        """
+        docstring for khinchin
+        """
+        r = np.arange(1,100000)
+        x = np.log((1+1/r/(r+2)))*(np.log(r)/np.log(2))
+        x = np.exp(np.sum(x))
+        print(x)
+
+        res = Decimal(1)
+        for i in r:
+            a = Decimal(1+1/i/(i+2))
+            # a = np.log(a)
+            b = Decimal(np.log(i)/np.log(2))
+            res = res*(a**b)
+        print("khinchin's constant",res)
+        return
+
+    def getConwayData(self):
+        """
+        docstring for getConwayData
+        """
+        data = [[4 ,   [63]],
+                [7 ,   [64,62]],
+                [12 ,  [65]],
+                [12 ,  [66]],
+                [4 ,   [68]],
+                [5 ,   [69]],
+                [12 ,  [84,55]],
+                [6 ,   [70]],
+                [8 ,   [71]],
+                [10 ,  [76]],
+                [10 ,  [77]],
+                [14 ,  [82]],
+                [12 ,  [78]],
+                [14 ,  [79]],
+                [18 ,  [80]],
+                [42 ,  [81,29,91]],
+                [42 ,  [81,29,90]],
+                [26 ,  [81,30]],
+                [14 ,  [75,29,92]],
+                [28 ,  [75,32]],
+                [14 ,  [72]],
+                [24 ,  [73]],
+                [24 ,  [74]],
+                [5 ,   [83]],
+                [7 ,   [86]],
+                [10 ,  [87]],
+                [10 ,  [88]],
+                [8 ,   [89,92]],
+                [2 ,   [1]],
+                [9 ,   [3]],
+                [9 ,   [4]],
+                [23 ,  [2,61,29,85]],
+                [2 ,   [5]],
+                [6 ,   [28]],
+                [32 ,  [24,33,61,29,91]],
+                [32 ,  [24,33,61,29,90]],
+                [8 ,   [7]],
+                [3 ,   [8]],
+                [5 ,   [9]],
+                [6 ,   [10]],
+                [10 ,  [21]],
+                [18 ,  [22]],
+                [18 ,  [23]],
+                [6 ,   [11]],
+                [10 ,  [19]],
+                [8 ,   [12]],
+                [7 ,   [13]],
+                [8 ,   [14]],
+                [12 ,  [15]],
+                [20 ,  [18]],
+                [34 ,  [16]],
+                [34 ,  [17]],
+                [20 ,  [20]],
+                [10 ,  [6,61,29,92]],
+                [7 ,   [26]],
+                [7 ,   [27]],
+                [11 ,  [25,29,92]],
+                [13 ,  [25,29,67]],
+                [21 ,  [25,29,85]],
+                [17 ,  [25,29,68,61,29,89]],
+                [2 ,   [61]],
+                [1 ,   [33]],
+                [4 ,   [40]],
+                [7 ,   [41]],
+                [14 ,  [42]],
+                [14 ,  [43]],
+                [7 ,   [38,39]],
+                [4 ,   [44]],
+                [6 ,   [48]],
+                [8 ,   [54]],
+                [10 ,  [49]],
+                [16 ,  [50]],
+                [28 ,  [51]],
+                [28 ,  [52]],
+                [9 ,   [47,38]],
+                [12 ,  [47,55]],
+                [12 ,  [47,56]],
+                [16 ,  [47,57]],
+                [18 ,  [47,58]],
+                [24 ,  [47,59]],
+                [23 ,  [47,60]],
+                [16 ,  [47,33,61,29,92]],
+                [6 ,   [45]],
+                [5 ,   [46]],
+                [15 ,  [53]],
+                [6 ,   [38,29,89]],
+                [10 ,  [38,30]],
+                [10 ,  [38,31]],
+                [3 ,   [34]],
+                [27 ,  [36]],
+                [27 ,  [35]],
+                [5 ,   [37]]]
+
+        return data 
+
+    def getConwayStrings(self):
+        """
+        docstring for getConwayStrings
+        """
+        strings = [ "1112",
+                    "1112133",
+                    "111213322112",
+                    "111213322113",
+                    "1113",
+                    "11131",
+                    "111311222112",
+                    "111312",
+                    "11131221",
+                    "1113122112",
+                    "1113122113",
+                    "11131221131112",
+                    "111312211312",
+                    "11131221131211",
+                    "111312211312113211",
+                    "111312211312113221133211322112211213322112",
+                    "111312211312113221133211322112211213322113",
+                    "11131221131211322113322112",
+                    "11131221133112",
+                    "1113122113322113111221131221",
+                    "11131221222112",
+                    "111312212221121123222112",
+                    "111312212221121123222113",
+                    "11132",
+                    "1113222",
+                    "1113222112",
+                    "1113222113",
+                    "11133112",
+                    "12",
+                    "123222112",
+                    "123222113",
+                    "12322211331222113112211",
+                    "13",
+                    "131112",
+                    "13112221133211322112211213322112",
+                    "13112221133211322112211213322113",
+                    "13122112",
+                    "132",
+                    "13211",
+                    "132112",
+                    "1321122112",
+                    "132112211213322112",
+                    "132112211213322113",
+                    "132113",
+                    "1321131112",
+                    "13211312",
+                    "1321132",
+                    "13211321",
+                    "132113212221",
+                    "13211321222113222112",
+                    "1321132122211322212221121123222112",
+                    "1321132122211322212221121123222113",
+                    "13211322211312113211",
+                    "1321133112",
+                    "1322112",
+                    "1322113",
+                    "13221133112",
+                    "1322113312211",
+                    "132211331222113112211",
+                    "13221133122211332",
+                    "22",
+                    "3",
+                    "3112",
+                    "3112112",
+                    "31121123222112",
+                    "31121123222113",
+                    "3112221",
+                    "3113",
+                    "311311",
+                    "31131112",
+                    "3113112211",
+                    "3113112211322112",
+                    "3113112211322112211213322112",
+                    "3113112211322112211213322113",
+                    "311311222",
+                    "311311222112",
+                    "311311222113",
+                    "3113112221131112",
+                    "311311222113111221",
+                    "311311222113111221131221",
+                    "31131122211311122113222",
+                    "3113112221133112",
+                    "311312",
+                    "31132",
+                    "311322113212221",
+                    "311332",
+                    "3113322112",
+                    "3113322113",
+                    "312",
+                    "312211322212221121123222113",
+                    "312211322212221121123222112",
+                    "32112"]
+
+        return strings
+
+    def lookSay(self,look_s):
+        """
+        '111222112' => '31322112'
+        """
+        st = ''
+        for s in re.finditer(r"(\d)\1*",look_s):
+            # print(s,s.group(0),s.group(1))
+            st = st + str(len(s.group(0)))+s.group(1)
+        return st
+    def getPolymonialValues(self,p,x):
+        """
+        docstring for getPolymonialValues
+        p:
+            1d array, coefficients of the polynomial 
+            length n+1, n is the order 
+            of the polynomial
+        x:
+            numerial value or symbolic value
+        """
+        res = 0 
+        for i in p:
+            res = res*x + i
         
+        return res
+
+    def checkConwayData(self,data,strings):
+        """
+        docstring for checkConwayData
+        """
+        count = 0 
+        for i,line in enumerate(data):
+            # print(i+1,line[0],len(strings[i]),strings[i])
+            nextIterCh = self.lookSay(strings[i])
+            arr = ""
+            for j in line[1]:
+                j = j - 1 
+                arr += strings[j]
+            # print(i+1,strings[i],nextIterCh,arr)
+            if nextIterCh == arr:
+                count += 1 
+            else:
+                print(i+1,line,strings[i],nextIterCh,arr)
+
+        print("equal numbers: ",count)
+
+        arr = "1"
+        for i in range(100):
+            a   = len(arr)
+            arr = self.lookSay(arr)
+            print(i,len(arr)/a)
+
+        return
+    def conwayConstant(self):
+        """
+        docstring for conwayConstant
+        look-and-say sequence and Conway Constant
+
+        """
+        
+        data = self.getConwayData()
+        strings = self.getConwayStrings() 
+        # check the data and strings
+        # self.checkConwayData(data,strings)
+        
+        conwayAtoms = sympy.zeros(92)
+        count = 0 
+        for i,line in enumerate(data):
+            # print(i+1,line[0],len(strings[i]),strings[i])
+            if line[0] == len(strings[i]):
+                count += 1 
+            for j in line[1]:
+                j = j - 1 
+                b = data[j][0]
+                a = data[i][0]
+                conwayAtoms[j,i] = Integer(b)/a
+        print("equal length numbers: ",count)
+
+        # 1, 11, 21, 1211, 111221, 312211, 13112221, 1113213211
+        vector = [0]*92 
+        vector[23] = 5
+        vector[38] = 5
+        vector = Matrix(vector)
+        print(vector)
+        # print(vector)
+        a = 1 
+        b = 1
+        for i in range(100):
+            vector = conwayAtoms*vector 
+            b = sum(vector)
+            print(i,b)
+            if i%10 == 0:
+                print(i,float(b/a),vector)
+            a = b
+        x = self.xyz[0]
+        for i in range(92):
+            conwayAtoms[i,i] = -x 
+        # t1 = time.time()
+        # s = conwayAtoms.det()
+        # t2 = time.time()
+        # print("time:",t2 - t1)
+        # s = s.factor()
+        # print(s)
+        # print(latex(s))
+
+        """
+        
+        x^{19} \left(x - 1\right) \left(x + 1\right)^{2} \left(x^{70} - 
+        x^{69} - 2 x^{67} + x^{66} + x^{65} + x^{64} - x^{62} - x^{60} - 
+        x^{58} + 3 x^{57} + 2 x^{56} + x^{55} - 3 x^{54} - 7 x^{53} + 
+        4 x^{52} - 5 x^{51} + 11 x^{50} - 6 x^{49} + 5 x^{48} + 3 x^{47} - 
+        4 x^{46} - x^{45} - 5 x^{44} - 4 x^{43} + 12 x^{42} - 6 x^{41} + 
+        12 x^{40} - 17 x^{39} + 7 x^{38} + 2 x^{37} - 6 x^{36} + 9 x^{35} - 
+        13 x^{34} + 9 x^{33} + 2 x^{32} + 4 x^{31} - 7 x^{30} + 3 x^{29} - 
+        14 x^{28} + 11 x^{27} - 8 x^{26} + 15 x^{25} - 20 x^{24} + 
+        33 x^{23} - 39 x^{22} + 43 x^{21} - 51 x^{20} + 56 x^{19} - 
+        52 x^{18} + 49 x^{17} - 59 x^{16} + 54 x^{15} - 45 x^{14} + 
+        54 x^{13} - 53 x^{12} + 39 x^{11} - 42 x^{10} + 43 x^{9} - 
+        38 x^{8} + 37 x^{7} - 39 x^{6} + 33 x^{5} - 25 x^{4} + 
+        23 x^{3} - 13 x^{2} + 8 x - 6\right)
+        """
+
+        # x = 1.3029910351028386
+        # polynomial of 70 order
+        x = 1.3029910351028386
+        p = [1,-1,0,-2,1,1,1,0,-1,0,-1,0,-1,3,2,1,-3,-7,
+             4,-5,11,-6,5,3,-4,-1,-5,-4,12,-6,12,
+             -17,7,2,-6,9,-13,9,2,4,-7,3,-14,11,
+             -8,15,-20,33,-39,43,-51,56,-52,49,
+             -59,54,-45,54,-53,39,-42,43,-38,37,
+             -39,33,-25,23,-13,8,-6]
+        print(len(p),p)
+        print(self.getPolymonialValues(p,x))
+
+
+        # p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
+        #      3,-2,-10,-3,-2,6,6,1,9,-3,-7,-8,-8,10,
+        #      6,8,-5,-12,7,-7,7,-1,-3,10,1,-6,-2,-10,
+        #      -3,2,9,-3,14,-8,0,-7,9,3,-4,-10,-7,12,7,
+        #      2,-12,-4,-2,5,0,1,-7,7,-4,12,-6,3,-6]
+
+        p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
+             3,-2,-10,-3,-2,6,6,1,9,-3,-7,-8,-8,10,
+             6,8,-5,-12,7,-7,7,1,-3,10,1,-6,-2,-10,
+             -3,2,9,-3,14,-8,0,-7,9,3,-4,-10,-7,12,7,
+             2,-12,-4,-2,5,0,1,-7,7,-4,12,-6,3,-6]
+
+        # x = Decimal(1.3035772690342963912570991121525518907307025046594)
+        x = Decimal(1.303577269034296391257099)
+        print(self.getPolymonialValues(p,x))
+
+
+    
+        return
+
+
+    def generalFibonacci(self):
+        """
+        docstring for generalFibonacci
+        """
+        n = 6
+        arr = [1]*n 
+        for i in range(n-1):
+            num = sum(arr[-n:])
+            arr.append(num)
+        print(arr)
+
+        A = sympy.zeros(n)
+        for i in range(n):
+            for j in range(n):
+                A[i,j] = arr[n-1-i+j]
+        print(A,A.det())
+        # 1,1,...,1,m,2m-1,4m-3,8m-7,...,2^{m-1}\times(m-1)+1
+        return  
+
+    def testCubicSum(self):
+        """
+        docstring for testCubicSum
+        1 - 1/3^3 + 5^3 + ...
+        """
+        
+        res = 0 
+        pos = 1
+        for i in range(10000):
+            res += pos/((2*i+1)**3)
+            pos  = -pos
+        print(res)
+        print(np.pi**3/32)
+        return
+
+    def mersennePrimes(self):
+        """
+        docstring for mersennePrimes
+        [2, 3, 5, 7, 13, 17, 19, 31, 61, 
+         89, 107, 127, 521, 607, 1279, 
+         2203, 2281, 3217, 4253, 4423]
+        """
+        
+        Mprime = []
+        for i in range(1,1000):
+            if i % 10 == 0:
+                print(i)
+            p = sympy.prime(i)
+            Mp = 2**p - 1 
+            if sympy.isprime(Mp):
+                print(i,p)
+            # L = 4 
+            # for j in range(p-2):
+            #     L = (L**2 - 2) % Mp
+            # if L%Mp == 0:
+            #     Mprime.append(p)
+            #     print("M_%d is a prime"%(p))
+
+        print(Mprime)
+        return
+
+    def testGeneralWilsonTheorem(self):
+        """
+        docstring for testGeneralWilsonTheorem
+        """
+        for i in range(1,2):
+            p = sympy.prime(i)
+            s = 1 
+            for j in range(1,p):
+                s = (s*j)%p 
+            s = s+1 
+            s = s%p
+            if s == 0:
+                print(i,p,s)
+            # print(s,s%p)
+
+        print(self.getCoPrimeList(10))
+
+        for i in range(3,10):
+            if sympy.isprime(i):
+                continue
+            s = 1 
+            arr = self.getCoPrimeList(i)
+            for j in arr:
+                s = (s*j)%i 
+            if s == (i-1):
+                s = -1
+            num = (len(arr)+1)//2 
+            print(i,s,(-1)**num)
+
+        for i in range(1,10):
+            if i%20 == 0:
+                print(i)
+            p = sympy.prime(i)
+            s = 2**(p-1)-1 
+            if s%(p**2) == 0:
+                print(i,p)
+
+
+        return
+
+    def getPrimeReciSum(self,n):
+        """
+        docstring for getPrimeReciSum
+        n:
+            even positive integer
+        return:
+            sum(1/p),k|n, p = k+1 is prime
+        """
+        one = self.one
+        res = 0 
+
+        factors = self.getAllFactors(n)
+        for i in factors:
+            p = Integer(i+1)
+            # print(i,p,sympy.isprime(p))
+            if sympy.isprime(p):
+                # print(p)
+                res += one/p 
+
+        res = res.simplify()
+        res = res%1
+        if (n//2)%2 == 1:
+            res = 1 - res
+        return res 
+    def testPrimeBernoulli(self):
+        """
+        docstring for testPrimeBernoulli
+        test for Bernoulli's number
+        """
+        
+        for n in range(2,20,2):
+            res = self.getPrimeReciSum(n)
+            num,denom = sympy.fraction(res)
+            # print(num,denom)
+            if denom == 6:
+                print(n,sympy.factorint(n))
+
+        # self.diophantine(7,60)
+        
+        return
+
+    def fareySeries(self):
+        """
+        docstring for fareySeries
+        """
+        arr = []
+        values = []
+        n = 20
+        for i in range(2,n+1):
+            # print(i,sympy.isprime(Integer(i)))
+            if sympy.isprime(Integer(i)):
+                res = np.arange(1,i)
+            else:
+                res = self.getCoPrimeList(i)
+
+            # print(res)
+            for j in res:
+                arr.append([j,i])
+                values.append(j/i)
+        indeces = np.argsort(values)
+        arr = np.array(arr)
+        arr = arr[indeces]
+        # print(arr)
+        num = len(arr)
+        for i in range(num):
+            print(arr[i],arr[-i-1])
+        return
+
+    def approxBernoulli(self):
+        """
+        docstring for approxBernoulli
+        get the bernoulli number by the approximation formula
+        and Staudt Theorem
+        \left|B_{n}\right|&\ge&4\left(\frac{2n}{4e\pi}\cdot\frac{120n^{2}+9}
+        {120n^{2}-1}\right)^{n}\sqrt{\frac{\pi n}{2}}\\
+        \left|B_{n}\right|&\leq&4\pi\left(\frac{2n+1}{4e\pi}\cdot
+        \frac{240n(n+1)+69}{240n(n+1)+79}\right)^{n+1/2}
+        """
+        n = 40
+        res = self.getPrimeReciSum(n)
+        k = n//2
+
+        
+        Bn = 4*(k/np.pi/np.exp(1))**(2*k)*np.sqrt(np.pi*k)
+        pi = np.pi 
+        e  = np.exp(1)
+        epi = 4*e*pi 
+        n120 = 120*n*n 
+        fa = (n120 + 9)/(n120 - 1)
+        an = Decimal(4*(2*n*fa/epi)**n*(pi*n/2)**0.5)
+        n240 = 240*n*(n+1)
+        fb = (n240 + 69)/(n240 + 79)
+        bn = Decimal(4*pi*((2*n+1)*fb/epi)**(n+1/2))
+
+        print("n = ",n)
+        print(an,bn)
+        # print(Bn,res,float(res))
+        a,b = sympy.fraction(res)
+        print(res)
+        if k%2 == 0:
+            Bn = int(an) + 1 
+            Bn = -(Bn*b + a)
+        else:
+            Bn = int(an) 
+            Bn = Bn*b + a 
+
+        print(Bn,b)
+
+        # Riemann Zeta function
+        # a = Decimal(1+(1/2)**n+(1/3)**n+(1/4)**n+(1/5)**n)
+        x = 1+(1/2)**n+(1/3)**n+(1/4)**n+(1/5)**n
+        Bn = Decimal(2*np.math.factorial(n)*x/((2*np.pi)**n))
+        # print(Bn,b,a)
+        Bn = Integer(int(Bn)*b + a)
+        if k%2 == 0:
+            Bn = - Bn
+        print(Bn,b)
+
+        return
+    def testBefore2(self):
+        """
+        docstring for testBefore2
+        """
+          
         # self.modularEquation()
         # self.weierstrassForm()
         # print(self.getFactors(1459))
@@ -5634,8 +6391,754 @@ class Formulas(MyCommon,EllipticCurve):
         # self.game24()
         # self.divisibility()
         # self.continuedFraction()
-        self.solvePuzzles()
+        # self.solvePuzzles()
+        # self.progression()
+        # self.testCubicContinuedFrac()
+        # self.khinchin()
+        # self.conwayConstant()
+        # self.generalFibonacci()
+        # self.testCubicSum()
+        # self.mersennePrimes()
+        # self.testGeneralWilsonTheorem()
+        # self.testPrimeBernoulli()
+        # self.fareySeries()
+        # self.approxBernoulli()
+        
+        return
+    def testRamanujanFactorial(self):
+        """
+        docstring for testRamanujanFactorial
+        n ! \sim \sqrt{\pi}\left(\frac{n}{e}\right)^{n} 
+        \sqrt[6]{8 n^{3}+4 n^{2}+n+\frac{1}{30}}
+        """
+        
+        p = [8,4,1,1/30]
+        for n in range(2,30):
+            # print(n)
+            # print(a)
+            a = np.math.factorial(n)
+            s = (np.pi)**0.5*(n/np.exp(1))**n 
+            # s = s*(self.getPolymonialValues(p,n))**(1/6)
+            k = (a/s)**8 - (2*n)**4
+            k = k - 10*n**3
+            k = k/(n**2)/n
+            # k = k - n
+            # k = k
+            print(n,k)
 
+        return
+
+    def ramanujanCubic(self):
+        """
+        docstring for ramanujanCubic
+        a^3 + b^3 = c^3 + d^3
+        """
+        n = 500
+        arr = np.arange(1,n+1)
+        # print(arr)
+        combinations = itertools.combinations(arr,3)
+        count = 0
+
+        res = []
+
+        for line in combinations:
+            # if line == (90,100,120):
+            #     print(count,line)
+
+            count += 1
+            a,b,c = line 
+            k = a**3 + b**3 - c**3
+            if k < 0:
+                continue
+            kk = int((k+0.1)**(1/3))
+            if k == kk**3:
+                A = sympy.gcd(a,b)
+                B = sympy.gcd(c,kk)
+                C = sympy.gcd(A,B)
+                a  = a  // C 
+                b  = b  // C 
+                c  = c  // C 
+                kk = kk // C  
+                arr = [a,b,c,kk]
+                s = a**3+b**3
+                if arr not in res:
+                    res.append(arr)
+                    print(arr,s)
+
+        print("count = ",count)
+        
+        return
+    
+    def exponentPuzzle(self):
+        """
+        docstring for exponentPuzzle
+        2^{x}+3^{y}&=&12 \\
+        2^{y}+3^{x}&=&18 \\
+        what is \left(x+y\right)^{x+y} ?
+        """
+        
+        x = 1.0
+
+        for i in range(30):
+            y = 12 - 2**x 
+            if y < 0:
+                print(i,"x = ",x,"y < 0")
+                break
+            y = np.log(y)/np.log(3)
+            x = 18 - 2**y
+            if x < 0:
+                print(i,"y = ",y,"x < 0")
+                break
+            x = np.log(x)/np.log(3)
+        print("x,y = ",x,y)
+        print(2**x + 3**y)
+        print(2**y + 3**x)
+        s = x + y
+        print("(x+y)^(x+y)",s**s)
+        return
+
+    def cubicXYSol(self,D=2,m=2):
+        """
+        docstring for cubicXYSol
+        x^3 + Dy^3 = m
+        """
+        # D = 4
+        # m = 3
+        # print("D = ",D)
+        format_type = "%d^3 - %d \\times %d^3 & = & %d"
+        for y in range(1,1000):
+            # if y % 5000000 == 0:
+            #     print(y)
+            x = m + D*y**3 
+            a = (x+0.1)**(1/3) 
+            a = int(a)
+            if x == a**3:
+                print(format_type%(a,D,y,a**3-D*y**3))
+        return
+
+    def testCubicXYSol(self):
+        """
+        docstring for testCubicXYSol
+        """
+        for j in range(1,100):
+            print("m = ",j)
+            for i in range(2,100):
+                if i in [8,27,64]:
+                    continue 
+                self.cubicXYSol(D = i,m = j)
+        return
+
+    def getFactorsSum(self,m):
+        """
+        docstring for getFactorsSum
+        """
+        if m == 1:
+            n = 1 
+        else:
+            n = sum(self.getAllFactors(m)[:-1])
+        return n
+
+    def friendlyNumberPair(self):
+        """
+        docstring for friendlyNumberPair
+        """
+        res1 = []
+        res2 = []
+        for i in range(3,1000000):
+            if i % 10000 == 0:
+                print(i)
+            m = i 
+            arr = []
+            for j in range(6):
+                m = self.getFactorsSum(m)
+                arr.append(m)
+            if i == arr[-1]:
+                if arr[0] == arr[1]:
+                    res1.append(arr)
+                elif arr[0] == arr[2]:
+                    continue
+                else:
+                    res2.append(arr)
+                    print(arr)
+
+        print(res1)
+        print(res2)
+
+        return
+
+    def joinNumber(self,arr):
+        """
+        docstring for joinNumber
+        """
+        if len(arr) < 2:
+            print("len(arr) is less than 2")
+            return -1 
+        elif len(arr) == 2:
+            res = arr[0]
+            digits = self.num2Digits(arr[-1])
+            for i in digits:
+                res = 10*res + i 
+            return res
+        else:
+            res = self.joinNumber(arr[:-1])
+            res = self.joinNumber([res,arr[-1]])
+            return res
+        return
+
+    def joinNumber2(self,arr):
+        """
+        docstring for joinNumber2
+        [2,3] => ["23","32"]
+        """
+        total = itertools.permutations(arr,len(arr))
+
+        output = []
+        for arr in total:
+            res = ""
+            for i in arr:
+                res = res + str(i)
+            output.append(res)
+
+        return output
+    def getPermNum(self,n,m):
+        """
+        docstring for getPermNum
+        """
+        res = 1 
+        for i in range(m):
+            res = res*(n-i)
+        return res
+    def funnyNumbers(self):
+        """
+        docstring for funnyNumbers
+        """
+        arr = np.arange(1,20)
+
+        m = 6
+        total = itertools.combinations(arr,m)
+        num = self.getCombinator(len(arr),m)
+        print("there are %d items"%(num))
+        D = m
+
+        count = 0
+        for line in tqdm(total):
+            count += 1 
+            if count % 100000 == 0:
+                print("%d out of %d"%(count,num))
+            joinStrings = self.joinNumber2(line)
+            line = np.array(list(line))
+            s = sum(line**D)
+            if str(s) in joinStrings:
+                print(line,s)
+        return
+
+    def dealNarcissistic(self,totalArr,i):
+        """
+        docstring for dealNarcissistic
+        i = 0,1,2,3
+        """
+        num = len(totalArr) // 4 
+        begin = num*i 
+        if i == 3:
+            end = len(totalArr)
+        else:
+            end = begin  + num
+
+        D = len(totalArr[0])
+        for i in range(begin,end):
+            # print(arr)
+            arr = totalArr[i]
+            num = sum(arr**D)
+            digits = self.num2Digits(num)
+            # arr.sort()
+            digits.sort()
+            if list(arr) == list(digits):
+                print(num)
+        return
+
+    def dealNarci(self,arr):
+        """
+        docstring for dealNarci
+        """
+        num = 0 
+        for i in arr:
+            num += self.calTable[i]
+
+        digits = self.num2Digits(num)
+        digits.sort()
+        if list(arr) == list(digits):
+            print(num)
+        return
+    def narcissisticNumber(self,m = 2):
+        """
+        docstring for narcissisticNumber
+        Narcissistic number is a kind of interesting
+        number
+        371 = 3^3+7^3+1^3
+        """
+        D = m
+        arr = np.arange(10+m-1)
+        num = self.getCombinator(10+m-1,m)
+        combinations = itertools.combinations(arr,m)
+        print("there are %d items"%(num))
+        count = 0
+
+        self.calTable = [0,1]
+        for i in range(2,10):
+            self.calTable.append((Integer(i))**m)
+
+        for line in tqdm(combinations):
+            count += 1
+            arr = []
+            for i in range(m):
+                j = line[-i-1] + i - m + 1 
+                arr.append(j)
+            # self.dealNarci(arr)
+            
+
+
+        # print(count)
+
+        
+        return
+
+    def testNarcissistic(self):
+        """
+        docstring for testNarcissistic
+        """
+
+        costTime = 0 
+        for i in range(30,31):
+            m = i
+            num = self.getCombinator(10+m-1,m)
+            cost = num/150000/60
+            costTime += cost
+            print(i,cost,costTime)
+            self.narcissisticNumber(m=i)
+            # print("i = ",i)
+            # for j in res:
+            #     print(j)
+        return
+
+    def narciTest1(self,a):
+        """
+        test for narcissisticNumber
+        """
+        # a = 63105425988599693916 
+        digits = self.num2Digits(a)
+        m = len(digits)
+        self.calTable = [0,1]
+        for i in range(2,10):
+            self.calTable.append((Integer(i))**m)
+        total = 0 
+        for i in digits:
+            total += self.calTable[i] 
+
+        return m,total
+
+    def narciTest2(self):
+        """
+        docstring for narciTest2
+        """
+        narciNumbers = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 153, 
+                 370, 371, 407, 1634, 8208, 9474, 
+                 54748, 92727, 93084, 548834,1741725, 
+                 4210818, 9800817, 9926315, 24678050, 
+                 24678051, 88593477,146511208, 472335975, 
+                 534494836, 912985153,4679307774,
+                 32164049650, 32164049651, 40028394225, 
+                 42678290603, 44708635679, 49388550606, 
+                 82693916578, 94204591914, 28116440335967, 
+                 4338281769391370, 4338281769391371,
+                 21897142587612075, 35641594208964132, 
+                 35875699062250035,1517841543307505039, 
+                 3289582984443187032, 4498128791164624869, 
+                 4929273885928088826,63105425988599693916,
+                 128468643043731391252, 449177399146038697307,
+                 21887696841122916288858, 27879694893054074471405, 
+                 27907865009977052567814, 28361281321319229463398, 
+                 35452590104031691935943,
+                 174088005938065293023722, 
+                 188451485447897896036875, 
+                 239313664430041569350093,
+                 1550475334214501539088894, 
+                 1553242162893771850669378, 
+                 3706907995955475988644380, 
+                 3706907995955475988644381, 
+                 4422095118095899619457938,
+                 121204998563613372405438066, 
+                 121270696006801314328439376, 
+                 128851796696487777842012787, 
+                 174650464499531377631639254,
+                 177265453171792792366489765,
+                 14607640612971980372614873089,
+                 19008174136254279995012734740, 
+                 19008174136254279995012734741,
+                 23866716435523975980390369295,
+                 1145037275765491025924292050346, 
+                 1927890457142960697580636236639, 
+                 2309092682616190307509695338915,
+                 17333509997782249308725103962772,
+                 186709961001538790100634132976990,
+                 186709961001538790100634132976991,
+                 1122763285329372541592822900204593,
+                 12639369517103790328947807201478392,
+                 12679937780272278566303885594196922,
+                 1219167219625434121569735803609966019,
+                 12815792078366059955099770545296129367,
+                 115132219018763992565095597973971522400, 
+                 115132219018763992565095597973971522401]
+
+        stati = {}
+        for index,i in enumerate(narciNumbers):
+            m,res = self.narciTest1(i)
+            print("%d & %d & %d "%(index+1,m,i))
+            if m in stati:
+                stati[m] += 1 
+            else:
+                stati[m] = 1
+
+        count = 0
+        for key in stati:
+            count += 1
+            print("%d & %d & %d "%(count, key, stati[key]))
+        return
+
+    def ramanujanHardyFormula(self):
+        """
+        docstring for ramanujanHardyFormula
+        """
+        for n in range(10,51):
+            s = 1/(4*n*3**0.5)
+            s = s*np.exp(np.pi*(2*n/3)**0.5)
+            print(n,s)
+        return
+
+    def combinatorEqnTimeScale(self,n=1000):
+        """
+        a1+2a2+...+nan = S
+        time complexity analysis
+        \sum_i \sum_j (j/i+1) 
+        i = 1~n, j = 0~n
+        n*(n+1) + n*(n-1)*ln(n)/2
+        O(n) ~ n^2\log n
+        """
+        res = 0
+        for i in range(1,n+1):
+            for j in range(n+1):
+                res += (j // i + 1)
+
+        val = n*(n+1)*(1 + np.log(n)/2)
+        print(n,res)
+
+    def testComEqnTime(self):
+        """
+        docstring for testComEqnTime
+        """
+        for n in range(10000,4001,1000):
+            self.combinatorEqnTimeScale(n=n)
+        cost = [3  , 19, 53,117]
+        cycles = [4289415,18528676,43501815,79626619]
+        for index,(i,j) in enumerate(zip(cost,cycles)):
+            index = 1000*(index+1)
+            val  = (index**2*np.log(index))
+            val1 = j/val
+            val2 = i/val
+            print(i,j,j/i,val1,val2)
+        return
+
+    def combinatorSeqByString(self,string1,string2):
+        """
+        docstring for combinatorSeqByString
+        "00","11": => ["0011","0101","1100","1010","1001","0110"]
+        """
+
+        res = []
+        n = len(string1)
+        m = len(string2)
+        arr = np.arange(m+n)
+        combinations = itertools.combinations(arr,m)
+        for line in combinations:
+            ch = []
+            count1 = 0
+            count2 = 0
+            for i in range(0,n+m):
+                if i in line:
+                    ch.append(string2[count2])
+                    count2 += 1
+                else:
+                    ch.append(string1[count1])
+                    count1 += 1
+            res.append("".join(ch))
+
+        return res
+    def combinatorSeqByNum(self,n,m):
+        """
+        docstring for combinatorSeqByString
+        n,m: integers
+        2,2: => ["0011","0101","1100","1010","1001","0110"]
+        """
+        string1 = "0"*n
+        string2 = "1"*m
+        return self.combinatorSeqByString(string1,string2)
+
+    def combinatorSeqByArray(self,arr):
+        """
+        arr:
+            sequence of integers, such as [1,1,1]
+        return:
+            string array, such as ['']
+        """
+        if len(arr) == 1:
+            # print("there should be more than 1 elements")
+            return ["0"*arr[0]]
+
+        elif len(arr) == 2:
+            n,m  = arr
+            return self.combinatorSeqByNum(n,m)
+        else:
+            length = len(arr)
+            start  = ord("0")
+            res = self.combinatorSeqByNum(arr[0],arr[1])
+            for i in range(2,length):
+                total = []
+                string = chr(start + i)*arr[i]
+                for line in res:
+                    total += self.combinatorSeqByString(line,string)
+                res = total
+            return res
+
+    def getNumSeq(self,arr, base=10):
+        """
+        docstring for getNumSeq
+        arr:
+            [0,1,1,3] => 1*2 + 1*3 + 3*4
+        """
+        numbers = []
+        res = []
+        output = []
+
+        for index,i in enumerate(arr):
+            if i > 0:
+                res.append(i)
+                numbers.append(index+1)
+        if sum(res) < base:
+            res.append(base - sum(res))
+            numbers.append(0)
+        # print(numbers,res)
+        total = self.combinatorSeqByArray(res)
+
+        for i,line in enumerate(total):
+            tmp = []
+            for j in line:
+                k = int(j)
+                tmp.append(numbers[k])
+            output.append(tmp)
+        
+        return output
+
+    def getCalTable(self,m,base = 10):
+        """
+        docstring for getCalTable
+        """
+        self.calTable = [0,1]
+        for i in range(2,base):
+            self.calTable.append(i**m)
+            # self.calTable.append(Integer(i)**m)
+        return
+
+    def judgeNumEqual(self,arr,num,base = 10):
+        """
+        docstring for judgeNumEqual
+        """
+        digits = self.num2Digits(num)
+        stati = {}
+        for i in range(base):
+            stati[i] = 0 
+        for i in digits:
+            stati[i] += 1 
+        for i in range(base):
+            if stati[i] != arr[i]:
+                return False 
+
+        return True 
+
+    def narciTest3(self,n = 10,base = 10):
+        """
+        docstring for narciTest3
+        find all the narcissistic numbers 
+        with finding the number of each digit (0~9)
+        """
+        # arr = [2,2,3,4]
+        # res = self.combinatorSeqByArray(arr)
+        # for i,line in enumerate(res):
+        #     print(i,line)
+        # print(self.getGeneralCombinator(arr))
+
+        # n = 20
+        # base = 10
+        self.getCalTable(n,base = base)
+        results = self.getCombinatorEqnRecursive(base,n)
+        print(len(results))
+        output = []
+        # res = self.getNumSeq(results[6])
+        # print(res[:10])
+
+        # remove some elements with sum over 10
+        tmp = []
+        for line in results:
+            if sum(line) <= base:
+                tmp.append(line)
+        results = tmp
+        print(len(results))
+        totalNum = 0 
+        for i,line in enumerate(results):
+            # print(i,line)
+            line.append(base - sum(line))
+            totalNum += self.getGeneralCombinator(line)
+            # continue
+            if i % 1 == 0:
+                print("i = ",i,line)
+
+            # print(i,line)
+            res = self.getNumSeq(line)
+            totalNum += len(res)
+            for j,tmp in enumerate(res):
+                # print(j,tmp)
+                num = 0
+                for index,k in enumerate(tmp):
+                    # print(k,index,tmp)
+                    if k > 0:
+                        num += (k*self.calTable[index])
+                # judge if it the number I want
+                if self.judgeNumEqual(tmp,num,base = base):
+                    # print(tmp,num)
+                    if num not in output:
+                        print(tmp,num)
+                        output.append(num)
+            # if i == 1:
+            #     break
+        # print(len(results))
+        print(totalNum,self.getGeneralCombinator([n,base-1]))
+
+        return
+    def getCombinatorEqnSolNumByIter(self,n,s):
+        """
+        docstring for getCombinatorEqnSolNumByIter
+        matrix(n,s+1)
+        """
+        # res = np.ones((n,s+1),int)
+        res = []
+        for i in range(n):
+            res.append([1]*(s+1))
+        for i in range(1,n):
+            for j in range(1,s+1):
+                num = j//(i+1) + 1 
+                total = 0
+                for k in range(num):
+                    total += res[i-1][j-(i+1)*k]
+                res[i][j] = total
+
+        for i in range(s+1):
+            print(i,res[-1][i])
+
+        # print(res)
+        return
+
+    def getBaseLimit(self):
+        """
+        docstring for getBaseLimit
+        n\times\left(m-1\right)^{n}&<&m^{n-1}
+        """
+
+        n = 2 
+
+        bases = {}
+        for m in range(2,17):
+            for i in range(20):
+                n = np.log(m*n)/np.log(m/(m-1))
+            # print(m,int(n))
+            bases[m] = int(n) + 1
+
+        return bases
+
+    def digit2String(self,digits):
+        """
+        docstring for digit2String
+        """
+        string = ""
+        for kk in digits:
+            if kk > 9:
+                kk = chr(ord("a") + kk-10)
+            string += str(kk)
+        return string
+    def narciNumberBase(self,m = 2,base = 10):
+        """
+        docstring for narciNumberBase
+        Narcissistic number is a kind of interesting
+        number
+        371 = 3^3+7^3+1^3 for base 10
+        """
+        D = m
+        arr = np.arange(base + m-1)
+        num = self.getCombinator(base + m-1,m)
+        combinations = itertools.combinations(arr,m)
+        print("there are %d items"%(num))
+        count = 0
+
+        self.getCalTable(m,base = base)
+
+        # for line in tqdm(combinations):
+        for line in combinations:
+            count += 1
+            arr = []
+            for i in range(m):
+                j = line[-i-1] + i - m + 1 
+                arr.append(j)
+            num = 0 
+            for i in arr:
+                num += self.calTable[i]
+            # print(num,arr)
+            digits = self.num2Digits(num,base = base)
+            digitNum = digits.copy()
+            digits.sort()
+            arr.sort()
+            if list(arr) == list(digits):
+                string = self.digit2String(digitNum)
+                print(num,string)
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """    
+        # self.testRamanujanFactorial()
+        # self.ramanujanCubic()
+        # self.exponentPuzzle()
+        # self.testCubicXYSol()
+        # self.friendlyNumberPair()
+        # self.funnyNumbers()
+        # self.testNarcissistic()
+        # self.narciTest1()
+        # self.ramanujanHardyFormula()
+        # self.narciTest2()
+        # res = self.getCombinatorEqnRecursive(5,5,type_in=0)
+        # print(res)
+        # for i in range(2,100):
+        #     res = self.getCombinatorEqnSolNum(i,i)
+        #     print(i,res)
+        # self.testComEqnTime()
+        # res = self.combinatorSeqByString("0ac","a1e")
+        # res = self.combinatorSeqByNum(1,1)
+        # self.narciTest3(n=9,base=10)
+        # n = 2000
+        # self.getCombinatorEqnSolNumByIter(n,n)
+        bases = self.getBaseLimit()
+        base = 16
+        for i in range(3,bases[base]):
+            print("i = ",i)
+            self.narciNumberBase(m = i,base = base)
+       
 
         return
 
