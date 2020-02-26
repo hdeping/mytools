@@ -7111,19 +7111,50 @@ class Formulas(MyCommon,EllipticCurve):
         docstring for testNarciNumBase
         """
         # bases = self.getBaseLimit()
-        base = 16
-        for i in range(3,7):
-            print("i = ",i)
-            self.narciNumberBase(m = i,base = base)
-        m = 1
-        base = 16 
-        res = self.getCombinator(base + m-1,m)
-        print(res)
+        # base = 16
+        # for i in range(3,7):
+        #     print("i = ",i)
+        #     self.narciNumberBase(m = i,base = base)
 
-        arr = np.arange(base+m-1)
+        m = 16
+        base = 16 
+        length = base + m - 1
+        res = self.getCombinator(length,m)
+        print(res)
+        num1 = length // 2 
+        num2 = length - num1
+
+        count  = 0 
+        quarter = res // 4 
+        end = min(m,num1)
+        array = []
+        for i in range(end):
+            a = 0 
+            b = 0
+            if m - i <= num2:
+                a = self.getCombinator(num1,i)
+                b = self.getCombinator(num2,m - i)
+                count += a*b 
+                k = count // quarter 
+                print(i,k,count,a*b)
+            array.append(a*b)
+        begin = 0 
+        if m > num2:
+            begin = m - num2
+        middle = (begin + end) // 2
+        indeces = [begin,middle,middle+1] 
+        print("res = ",res)
+        print(indeces)
+        print(array)
+        print(sum(array[begin:middle]))
+        print(array[middle])
+        print(array[middle+1])
+        print(sum(array[middle+2:end]))
+
+        arr = np.arange(length)
         combinations = itertools.combinations(arr,m)
-        for line in combinations:
-            print(line)
+        # for line in combinations:
+        #     print(line)
         return
 
     def test(self):
