@@ -7116,7 +7116,7 @@ class Formulas(MyCommon,EllipticCurve):
         #     print("i = ",i)
         #     self.narciNumberBase(m = i,base = base)
 
-        m = 16
+        m = 11
         base = 16 
         length = base + m - 1
         res = self.getCombinator(length,m)
@@ -7157,6 +7157,22 @@ class Formulas(MyCommon,EllipticCurve):
         #     print(line)
         return
 
+    def narciNumBaseMulti(self):
+        """
+        docstring for narciNumBaseMulti
+        """
+        m = 16
+        base = 16 
+        length = base + m - 1 
+        num1 = length // 2 
+        num2 = length - num1
+        end = min(m,num1)
+
+        a = self.getCombinator(num1,i)
+        b = self.getCombinator(num2,m - i)
+        indeces = [np.arange(begin,middle),[middle],
+                  [middle+1],np.arange(middle+2,end)]
+        return
     def test(self):
         """
         docstring for test
