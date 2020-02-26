@@ -6937,12 +6937,12 @@ class Formulas(MyCommon,EllipticCurve):
         
         return output
 
-    def getCalTable(self,m):
+    def getCalTable(self,m,base = 10):
         """
         docstring for getCalTable
         """
         self.calTable = [0,1]
-        for i in range(2,10):
+        for i in range(2,base):
             self.calTable.append(i**m)
             # self.calTable.append(Integer(i)**m)
         return
@@ -6963,7 +6963,7 @@ class Formulas(MyCommon,EllipticCurve):
 
         return True 
 
-    def narciTest3(self):
+    def narciTest3(self,n = 10,base = 10):
         """
         docstring for narciTest3
         find all the narcissistic numbers 
@@ -6975,9 +6975,9 @@ class Formulas(MyCommon,EllipticCurve):
         #     print(i,line)
         # print(self.getGeneralCombinator(arr))
 
-        n = 20
-        base = 10
-        self.getCalTable(n)
+        # n = 20
+        # base = 10
+        self.getCalTable(n,base = base)
         results = self.getCombinatorEqnRecursive(base,n)
         print(len(results))
         output = []
@@ -6993,10 +6993,10 @@ class Formulas(MyCommon,EllipticCurve):
         print(len(results))
         totalNum = 0 
         for i,line in enumerate(results):
-            print(i,line)
+            # print(i,line)
             line.append(base - sum(line))
             totalNum += self.getGeneralCombinator(line)
-            continue
+            # continue
             if i % 1 == 0:
                 print("i = ",i,line)
 
@@ -7019,7 +7019,7 @@ class Formulas(MyCommon,EllipticCurve):
             # if i == 1:
             #     break
         # print(len(results))
-        print(totalNum,self.getGeneralCombinator([n,9]))
+        print(totalNum,self.getGeneralCombinator([n,base-1]))
 
         return
     def getCombinatorEqnSolNumByIter(self,n,s):
@@ -7044,6 +7044,70 @@ class Formulas(MyCommon,EllipticCurve):
 
         # print(res)
         return
+
+    def getBaseLimit(self):
+        """
+        docstring for getBaseLimit
+        n\times\left(m-1\right)^{n}&<&m^{n-1}
+        """
+
+        n = 2 
+
+        bases = {}
+        for m in range(2,17):
+            for i in range(20):
+                n = np.log(m*n)/np.log(m/(m-1))
+            # print(m,int(n))
+            bases[m] = int(n) + 1
+
+        return bases
+
+    def digit2String(self,digits):
+        """
+        docstring for digit2String
+        """
+        string = ""
+        for kk in digits:
+            if kk > 9:
+                kk = chr(ord("a") + kk-10)
+            string += str(kk)
+        return string
+    def narciNumberBase(self,m = 2,base = 10):
+        """
+        docstring for narciNumberBase
+        Narcissistic number is a kind of interesting
+        number
+        371 = 3^3+7^3+1^3 for base 10
+        """
+        D = m
+        arr = np.arange(base + m-1)
+        num = self.getCombinator(base + m-1,m)
+        combinations = itertools.combinations(arr,m)
+        print("there are %d items"%(num))
+        count = 0
+
+        self.getCalTable(m,base = base)
+
+        # for line in tqdm(combinations):
+        for line in combinations:
+            count += 1
+            arr = []
+            for i in range(m):
+                j = line[-i-1] + i - m + 1 
+                arr.append(j)
+            num = 0 
+            for i in arr:
+                num += self.calTable[i]
+            # print(num,arr)
+            digits = self.num2Digits(num,base = base)
+            digitNum = digits.copy()
+            digits.sort()
+            arr.sort()
+            if list(arr) == list(digits):
+                string = self.digit2String(digitNum)
+                print(num,string)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -7066,9 +7130,14 @@ class Formulas(MyCommon,EllipticCurve):
         # self.testComEqnTime()
         # res = self.combinatorSeqByString("0ac","a1e")
         # res = self.combinatorSeqByNum(1,1)
-        # self.narciTest3()
+        # self.narciTest3(n=9,base=10)
         # n = 2000
         # self.getCombinatorEqnSolNumByIter(n,n)
+        bases = self.getBaseLimit()
+        base = 16
+        for i in range(3,bases[base]):
+            print("i = ",i)
+            self.narciNumberBase(m = i,base = base)
        
 
         return
