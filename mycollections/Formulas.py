@@ -6656,19 +6656,30 @@ class Formulas(MyCommon,EllipticCurve):
                 print(num)
         return
 
-    def dealNarci(self,arr):
+    def dealNarci(self,line,m = 2,base = 10):
         """
         docstring for dealNarci
+        line:
+            tuple
         """
+        arr = []
+        for i in range(m):
+            j = line[-i-1] + i - m + 1 
+            arr.append(j)
         num = 0 
         for i in arr:
             num += self.calTable[i]
 
-        digits = self.num2Digits(num)
+        digits = self.num2Digits(num,base = base)
+        digitNum = digits.copy()
         digits.sort()
+        arr.sort()
         if list(arr) == list(digits):
-            print(num)
+            if list(arr) == list(digits):
+                string = self.digit2String(digitNum)
+                print(num,string)
         return
+
     def narcissisticNumber(self,m = 2):
         """
         docstring for narcissisticNumber
@@ -7079,7 +7090,6 @@ class Formulas(MyCommon,EllipticCurve):
         number
         371 = 3^3+7^3+1^3 for base 10
         """
-        D = m
         arr = np.arange(base + m-1)
         num = self.getCombinator(base + m-1,m)
         combinations = itertools.combinations(arr,m)
@@ -7089,25 +7099,33 @@ class Formulas(MyCommon,EllipticCurve):
         self.getCalTable(m,base = base)
 
         # for line in tqdm(combinations):
+        print("m = ",m,"base = ",base)
         for line in combinations:
             count += 1
-            arr = []
-            for i in range(m):
-                j = line[-i-1] + i - m + 1 
-                arr.append(j)
-            num = 0 
-            for i in arr:
-                num += self.calTable[i]
-            # print(num,arr)
-            digits = self.num2Digits(num,base = base)
-            digitNum = digits.copy()
-            digits.sort()
-            arr.sort()
-            if list(arr) == list(digits):
-                string = self.digit2String(digitNum)
-                print(num,string)
+            self.dealNarci(line,m = m, base = base)
         
         return
+
+    def testNarciNumBase(self):
+        """
+        docstring for testNarciNumBase
+        """
+        # bases = self.getBaseLimit()
+        base = 16
+        for i in range(3,7):
+            print("i = ",i)
+            self.narciNumberBase(m = i,base = base)
+        m = 1
+        base = 16 
+        res = self.getCombinator(base + m-1,m)
+        print(res)
+
+        arr = np.arange(base+m-1)
+        combinations = itertools.combinations(arr,m)
+        for line in combinations:
+            print(line)
+        return
+
     def test(self):
         """
         docstring for test
@@ -7133,11 +7151,7 @@ class Formulas(MyCommon,EllipticCurve):
         # self.narciTest3(n=9,base=10)
         # n = 2000
         # self.getCombinatorEqnSolNumByIter(n,n)
-        bases = self.getBaseLimit()
-        base = 16
-        for i in range(3,bases[base]):
-            print("i = ",i)
-            self.narciNumberBase(m = i,base = base)
+        self.testNarciNumBase()
        
 
         return
