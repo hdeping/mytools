@@ -16,6 +16,7 @@
 """
 
 import numpy as np
+import time
 
 class Algorithms():
     """docstring for Algorithms"""
@@ -58,23 +59,70 @@ class Algorithms():
 
         return total
 
+    def printQueens(self,line):
+        """
+        docstring for printQueens
+        """
+        n = len(line)
+        for i in line:
+            string = ["0"]*n 
+            string[i] = "1"
+            string = " ".join(string)
+            print(string)
+        return
+
     def eightQueens(self,n = 8):
         """
         docstring for eightQueens
         """
         res = [[]]
         for i in range(n):
+            print("i = ",i)
             res = self.getChains(res,n = n)
-        for i,line in enumerate(res):
-            print(i,line)
-        print("length: ",len(res))
+        # for i,line in enumerate(res):
+        #     print(i)
+        #     self.printQueens(line)
+        # print("length: ",len(res))
+
+        return res
+
+    def queens(self,arr,length):
+        """
+        docstring for queens
+        get the queens by recursion
+        """
+        if length == len(arr):
+            self.count += 1
+            # print(arr)
+            return
+        else:
+            for i in range(len(arr)):
+                arr[length] = i
+                judge = 1
+                for j in range(length):
+                    if arr[j] == i or abs(arr[j] - i) == length - j:
+                        judge = False 
+                        break
+                if judge:
+                    self.queens(arr,length+1)
 
         return
+
     def test(self):
         """
         docstring for test
         """
-        self.eightQueens(n = 5)
+        n = 12
+        t1 = time.time()
+        # res = self.eightQueens(n = n)
+        # t2 = time.time()
+        # print(len(res),"time = ",t2 - t1)
+        # t1 = t2 
+
+        self.count = 0
+        self.queens([0]*n,0)
+        t2 = time.time()
+        print(self.count,"time = ",t2 - t1)
         return
         
 algo = Algorithms()
