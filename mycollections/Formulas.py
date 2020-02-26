@@ -7205,6 +7205,28 @@ class Formulas(MyCommon,EllipticCurve):
             p.join()
 
         return
+
+    def testNarciMulti2(self):
+        """
+        docstring for testNarciMulti2
+        """
+        t1 = time.time()
+        base = 10
+        totalTime = 0
+        for m in range(29,40):
+            res = self.getCombinator(m+base-1,m)
+            res = res/60000/60
+            # print(m,res)
+
+            # self.narciNumBaseMulti(m = m, base = base)
+            t2 = time.time()
+            print(m,"time = ",t2 - t1)
+            t1 = t2
+        totalTime += res
+        print(res/60," hours")
+
+        return
+        
     def test(self):
         """
         docstring for test
@@ -7231,15 +7253,7 @@ class Formulas(MyCommon,EllipticCurve):
         # n = 2000
         # self.getCombinatorEqnSolNumByIter(n,n)
         # self.testNarciNumBase()
-        t1 = time.time()
-        for m in range(12,18):
-            res = self.getCombinator(m+15,m)
-            print(m,res/80000/60)
-
-            # self.narciNumBaseMulti(m = m)
-            t2 = time.time()
-            print(m,"time = ",t2 - t1)
-            t1 = t2
+        
        
 
         return
