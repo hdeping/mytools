@@ -7156,22 +7156,46 @@ class Formulas(MyCommon,EllipticCurve):
         # for line in combinations:
         #     print(line)
         return
-
+    def dealNarciMulti(self,indeces,para):
+        """
+        docstring for dealNarciMulti
+        para:
+            [length,m,base]
+        indeces:
+            [i1,i2,...]
+        """
+        length,m,base = para 
+        num1 = length // 2 
+        arr1 = np.arange(num1)
+        arr2 = np.arange(num1,length)
+        for index in indeces:
+            res1 = itertools.combinations(arr1,index)
+            for line1 in res1:
+                res2 = itertools.combinations(arr2,m - index)
+                for line2 in res2:
+                    line = line1 + line2 
+                    self.dealNarci(line,m = m,base = base)
+        return
     def narciNumBaseMulti(self):
         """
         docstring for narciNumBaseMulti
         """
-        m = 16
+        m = 11
         base = 16 
         length = base + m - 1 
         num1 = length // 2 
         num2 = length - num1
         end = min(m,num1)
 
-        a = self.getCombinator(num1,i)
-        b = self.getCombinator(num2,m - i)
+        # a = self.getCombinator(num1,i)
+        # b = self.getCombinator(num2,m - i)
         indeces = [np.arange(begin,middle),[middle],
                   [middle+1],np.arange(middle+2,end)]
+        for i in range(4):
+            p = multiprocessing.Process(target = self.dealNarciMulti,
+                            args = (indeces[i],[length,m],))
+            p.start()
+
         return
     def test(self):
         """
