@@ -7170,31 +7170,39 @@ class Formulas(MyCommon,EllipticCurve):
         arr2 = np.arange(num1,length)
         for index in indeces:
             res1 = itertools.combinations(arr1,index)
-            for line1 in res1:
+            for line1 in tqdm(res1):
                 res2 = itertools.combinations(arr2,m - index)
                 for line2 in res2:
                     line = line1 + line2 
                     self.dealNarci(line,m = m,base = base)
         return
-    def narciNumBaseMulti(self):
+    def narciNumBaseMulti(self,m = 11,base = 16):
         """
         docstring for narciNumBaseMulti
         """
-        m = 11
-        base = 16 
         length = base + m - 1 
         num1 = length // 2 
         num2 = length - num1
         end = min(m,num1)
+        begin = 0 
+        if m > num2:
+            begin = m - num2
+        middle = (begin + end) // 2
 
         # a = self.getCombinator(num1,i)
         # b = self.getCombinator(num2,m - i)
         indeces = [np.arange(begin,middle),[middle],
                   [middle+1],np.arange(middle+2,end)]
+
+        self.getCalTable(m,base = base)
+        subprocesses = []
         for i in range(4):
             p = multiprocessing.Process(target = self.dealNarciMulti,
-                            args = (indeces[i],[length,m],))
+                            args = (indeces[i],[length,m,base],))
             p.start()
+            subprocesses.append(p)
+        for p in subprocesses:
+            p.join()
 
         return
     def test(self):
@@ -7222,7 +7230,16 @@ class Formulas(MyCommon,EllipticCurve):
         # self.narciTest3(n=9,base=10)
         # n = 2000
         # self.getCombinatorEqnSolNumByIter(n,n)
-        self.testNarciNumBase()
+        # self.testNarciNumBase()
+        t1 = time.time()
+        for m in range(12,18):
+            res = self.getCombinator(m+15,m)
+            print(m,res/80000/60)
+
+            # self.narciNumBaseMulti(m = m)
+            t2 = time.time()
+            print(m,"time = ",t2 - t1)
+            t1 = t2
        
 
         return
