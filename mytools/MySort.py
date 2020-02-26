@@ -43,9 +43,11 @@ class MySort():
             arr1 = self.mergeSort(arr[:num])
             arr2 = self.mergeSort(arr[num:])
             count = 0
-            print(arr1,arr2)
+            # print(arr1,arr2)
             for index,i in enumerate(arr2):
                 tmp = arr1[count:].copy()
+                if count == num:
+                    break
                 for j in tmp:
                     if i < j:
                         res.append(i)
@@ -53,8 +55,10 @@ class MySort():
                     else:
                         res.append(j)
                         count += 1
-                if count == num:
-                    res.append(i)
+            if count == num:
+                res += arr2[index-1:]
+            else:
+                res += arr1[count:]
 
             return res
     def test(self):
@@ -62,7 +66,7 @@ class MySort():
         docstring for test
         """
         arr = [3,5,9,1,10,200,2000,-9,20,50,60,55,11]
-        arr = [200,2000,-9,20]
+        arr = [3,5,9,1,10,200,2000,-9,20,50,60]
         # arr = [3,9,7]
         print(arr)
         arr = self.mergeSort(arr)
