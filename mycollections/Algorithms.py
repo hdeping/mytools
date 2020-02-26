@@ -126,21 +126,36 @@ class Algorithms():
 
         return
 
-    def test(self):
+    def testQueens(self):
         """
-        docstring for test
+        docstring for testQueens
+        4 2     10 724
+        5 10    11 2680
+        6 4     12 14200
+        7 40    13 73712
+        8 92    14 365596
+        9 352 
         """
-        n = 5
+
         t1 = time.time()
         # res = self.eightQueens(n = n)
         # t2 = time.time()
         # print(len(res),"time = ",t2 - t1)
         # t1 = t2 
+        for n in range(4,15):
+            
+            self.count = 0
+            self.queens([0]*n,0)
+            t2 = time.time()
+            print(n,self.count,"time = ",t2 - t1)
+            t1 = t2
 
-        self.count = 0
-        self.queens([0]*n,0)
-        t2 = time.time()
-        print(self.count,"time = ",t2 - t1)
+        return  
+    def test(self):
+        """
+        docstring for test
+        """
+        self.testQueens()
         return
         
 algo = Algorithms()
