@@ -86,6 +86,24 @@ class Algorithms():
 
         return res
 
+    def printDiff(self,arr):
+        """
+        docstring for printDiff
+        """
+        # print(arr)
+        arr = np.array(arr)
+        line = [arr[0]]
+        length = len(arr)
+        for i in range(1,length):
+            k = arr[i] - arr[i-1]
+            if k < 0:
+                k = k + length 
+            line.append(k)
+        print(self.count,line)
+        # print(self.count)
+        # self.printQueens(arr)
+
+        return
     def queens(self,arr,length):
         """
         docstring for queens
@@ -93,7 +111,7 @@ class Algorithms():
         """
         if length == len(arr):
             self.count += 1
-            # print(arr)
+            # self.printDiff(arr)
             return
         else:
             for i in range(len(arr)):
@@ -112,7 +130,7 @@ class Algorithms():
         """
         docstring for test
         """
-        n = 12
+        n = 5
         t1 = time.time()
         # res = self.eightQueens(n = n)
         # t2 = time.time()
