@@ -17,8 +17,9 @@
 
 import numpy as np
 import time
+from Formulas import Formulas
 
-class Algorithms():
+class Algorithms(Formulas):
     """docstring for Algorithms"""
     def __init__(self):
         super(Algorithms, self).__init__()
@@ -166,12 +167,24 @@ class Algorithms():
             num1,num2 = num2,num1 
         arr1 = np.array(arr1)
         res = np.zeros(num1+num2-1,int)
-        print(arr1,arr2)
 
         for index,i in enumerate(arr2):
             res[index:index+num1] += arr1*i
 
         return res
+
+    def polynomialPow(self,arr,n):
+        """
+        docstring for polynomialPow
+        """
+        if n == 1:
+            return arr 
+        else:
+            res = arr 
+            for i in range(n-1):
+                res = self.polynomialMulti(res,arr)
+            return res
+        
     def generateFunc(self):
         """
         docstring for generateFunc
@@ -180,8 +193,15 @@ class Algorithms():
 
         for x1 + x2 + .. x5 = 100
         one can compute (ax+...x^96)^5
+        C(99,4) ==> 38225
+        permutation and combination
         """
-        arr1 = [1,1,1,1]
+        n = 100 
+        m = 5
+        arr = [1,1,1,1]*(n - m + 1)
+        arr[0] = 1
+        res = self.polynomialPow(arr,m)
+        print(res[100])
         
         return
     def test(self):
@@ -190,6 +210,7 @@ class Algorithms():
         """
         # self.testQueens()
         self.generateFunc()
+        # print(self.getCombinatorEqnSolNumByIter(5,95))
         return
         
 algo = Algorithms()
