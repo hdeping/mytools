@@ -7037,13 +7037,15 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getCombinatorEqnSolNumByIter
         matrix(n,s+1)
+        begin:
+            0 or 1, if 0 is valid
         """
         # res = np.ones((n,s+1),int)
         res = []
         for i in range(n):
             res.append([1]*(s+1))
         for i in range(1,n):
-            for j in range(1,s+1):
+            for j in range(s+1):
                 num = j//(i+1) + 1 
                 total = 0
                 for k in range(num):
@@ -7052,6 +7054,8 @@ class Formulas(MyCommon,EllipticCurve):
 
         for i in range(s+1):
             print(i,res[-1][i])
+        # res = np.array(res)
+        # print(res)
 
         # print(res)
         return
@@ -7251,12 +7255,12 @@ class Formulas(MyCommon,EllipticCurve):
         # res = self.combinatorSeqByNum(1,1)
         # self.narciTest3(n=9,base=10)
         # n = 2000
-        # self.getCombinatorEqnSolNumByIter(n,n)
+        self.getCombinatorEqnSolNumByIter(n,n)
         # self.testNarciNumBase()
         
        
 
         return
 
-formula = Formulas()
-formula.test() 
+# formula = Formulas()
+# formula.test() 
