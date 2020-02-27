@@ -151,7 +151,27 @@ class Algorithms():
             print(n,self.count,"time = ",t2 - t1)
             t1 = t2
 
-        return  
+        return 
+
+    def polynomialMulti(self,arr1,arr2):
+        """
+        docstring for polynomialMulti
+        arr1,arr2:
+            1d array, coefficients of the polynomial
+        """
+        num1 = len(arr1)
+        num2 = len(arr2)
+        if num1 > num2:
+            arr1,arr2 = arr2,arr1
+            num1,num2 = num2,num1 
+        arr1 = np.array(arr1)
+        res = np.zeros(num1+num2-1,int)
+        print(arr1,arr2)
+
+        for index,i in enumerate(arr2):
+            res[index:index+num1] += arr1*i
+
+        return res
     def generateFunc(self):
         """
         docstring for generateFunc
@@ -159,8 +179,9 @@ class Algorithms():
         (1+x+x^2+...)(1+x+x^2...)
 
         for x1 + x2 + .. x5 = 100
-        one can compute (x+...x^96)^5
+        one can compute (ax+...x^96)^5
         """
+        arr1 = [1,1,1,1]
         
         return
     def test(self):
@@ -168,6 +189,7 @@ class Algorithms():
         docstring for test
         """
         # self.testQueens()
+        self.generateFunc()
         return
         
 algo = Algorithms()
