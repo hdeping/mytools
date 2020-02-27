@@ -164,6 +164,21 @@ class MagicSquare():
             if i in arr2:
                 return True 
         return False
+
+    def getNonRepeatCombinations(self,arr):
+        """
+        docstring for getNonRepeatCombinations
+        arr:
+            2d array with the size (n,4)
+        """
+        combinations2 = itertools.combinations(arr,2)
+
+        total2 = []
+        for line in combinations2:
+            if not self.isListRepeated(line[0],line[1]):
+                total2.append(line[0]+line[1])
+
+        return total2
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
@@ -186,17 +201,8 @@ class MagicSquare():
                 count += 1 
                 totalSum.append(list(line))
 
-        combinations2 = itertools.combinations(totalSum,2)
-
-        total2 = []
-        for line in combinations2:
-            if not self.isListRepeated(line[0],line[1]):
-                total2.append(line[0]+line[1])
-        total3 = []
-        combinations3 = itertools.combinations(total2,2)
-        for line in combinations3:
-            if not self.isListRepeated(line[0],line[1]):
-                total3.append(line[0]+line[1]) 
+        total2 = self.getNonRepeatCombinations(totalSum)
+        total3 = self.getNonRepeatCombinations(total2)
 
         print("count = ",count)
         print(len(total3))
