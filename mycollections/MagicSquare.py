@@ -22,6 +22,7 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import itertools
 from multiprocessing import Process
+from tqdm import tqdm
 
 class MagicSquare():
     """docstring for MagicSquare"""
@@ -204,7 +205,6 @@ class MagicSquare():
         items:
             array of (n,n)
         """
-        
         num = [0,0]
         for i in range(self.n):
             num[0] += items[i,i]
@@ -223,7 +223,7 @@ class MagicSquare():
 
         results = []
 
-        for line in arr:
+        for line in tqdm(arr):
             items = self.getProductCombinations(line)
             items = self.getPossibleCombinations(items)
             res = []
