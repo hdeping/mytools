@@ -20,6 +20,7 @@ import pandas
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
+import itertools
 
 class MagicSquare():
     """docstring for MagicSquare"""
@@ -150,7 +151,30 @@ class MagicSquare():
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
+        1 2 3 4
+        5 6 7 8
+        9 10 11 12
+        13 14 15 16
+
+        the sum of the middle four
         """
+        n = 4 
+        Sum = n*(n*n+1)//2
+        arr = np.arange(n*n)
+        combinations = itertools.combinations(arr,n)
+
+        count = 0
+        totalSum = []
+        for line in combinations:
+            if sum(line) == Sum:
+                count += 1 
+                totalSum.append(list(line))
+
+
+
+        print("count = ",count)
+
+
         
         return
     def test(self):
