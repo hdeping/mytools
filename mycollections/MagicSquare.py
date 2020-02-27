@@ -147,6 +147,20 @@ class MagicSquare():
 
         return
 
+    def getAllSquareFour(self):
+        """
+        docstring for getAllSquareFour
+        """
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """
+        self.getAllSquareFour()
+        return
+
 magic = MagicSquare()
-magic.setOrder(7)
-magic.magicSquare1()
+# magic.setOrder(7)
+# magic.magicSquare1()
+magic.test()
