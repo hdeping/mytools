@@ -21,6 +21,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 import itertools
+from multiprocessing import Process
 
 class MagicSquare():
     """docstring for MagicSquare"""
@@ -169,7 +170,7 @@ class MagicSquare():
         """
         docstring for getNonRepeatCombinations
         arr:
-            2d array with the size (n,4)
+            2d array with the size (N,n)
         """
         combinations2 = itertools.combinations(arr,2)
 
@@ -179,6 +180,39 @@ class MagicSquare():
                 total2.append(line[0]+line[1])
 
         return total2
+    
+    def arrangeSquare(self,arr,n = 4):
+        """
+        docstring for arrangeSquare
+        arr:
+            2d array of (N,n*n)
+        """
+
+        indeces = itertools.product(np.arange(n),repeat=n)
+        results = []
+        for line in arr:
+            items = self.getProductCombinations(line,n = n)
+            results += self.getPossibleCombinations(items,n=n)
+
+        return results
+
+    def getPossibleCombinations(self,combinations,n = 4):
+        """
+        docstring for getPossibleCombinations
+        """
+        Sum = n*(n*n+1)//2
+        totalSum = []
+        for line in combinations:
+            if sum(line) == Sum:
+                count += 1 
+                totalSum.append(list(line))
+
+        # get all the non-repeated combinations
+        for i in range(2):
+            totalSum = self.getNonRepeatCombinations(totalSum)
+
+        return totalSum 
+
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
@@ -194,24 +228,17 @@ class MagicSquare():
         arr = np.arange(1,n*n+1)
         combinations = itertools.combinations(arr,n)
 
-        count = 0
-        totalSum = []
-        for line in combinations:
-            if sum(line) == Sum:
-                count += 1 
-                totalSum.append(list(line))
+        totalSum = self.getPossibleCombinations(combinations,n=n)
 
-        total2 = self.getNonRepeatCombinations(totalSum)
-        total3 = self.getNonRepeatCombinations(total2)
-
-        print("count = ",count)
-        print(len(total3))
-        print(total3[:2])
-
-
-
+        print(len(totalSum))
+        # print(totalSum[:2])
         
+        begin = 0 
+        end   = 1
+        self.arrangeSquare(totalSum[begin:end],n = n)
+
         return
+
     def test(self):
         """
         docstring for test
