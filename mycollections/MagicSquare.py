@@ -124,6 +124,7 @@ class MagicSquare():
         # print(magic_square)
 
         return magic_square
+
     def adjustMatrix(self,magic_square):
         n = self.order
         m = n // 2
@@ -180,31 +181,69 @@ class MagicSquare():
                 total2.append(line[0]+line[1])
 
         return total2
-    
-    def arrangeSquare(self,arr,n = 4):
+    def getProductCombinations(self,line,n = 4):
+        """
+        docstring for getProductCombinations
+        line:
+            1d array, n*n items
+        """
+        indeces = itertools.product(np.arange(n),repeat=n)
+        combinations = []
+        for index in indeces:
+            res = []
+            for i in range(n):
+                begin = n*i
+                res.append(line[begin+index[i]])
+            combinations.append(res)
+        return combinations
+
+
+    def checkDiagonal(self,items):
+        """
+        docstring for checkDiagonal
+        items:
+            array of (n,n)
+        """
+        
+        num = [0,0]
+        for i in range(self.n):
+            num[0] += items[i,i]
+            num[1] += items[i,self.n - i - 1]
+        if num == [self.Sum,self.Sum]:
+            return True 
+        else:
+            return False
+
+    def arrangeSquare(self,arr):
         """
         docstring for arrangeSquare
         arr:
             2d array of (N,n*n)
         """
 
-        indeces = itertools.product(np.arange(n),repeat=n)
         results = []
+
         for line in arr:
-            items = self.getProductCombinations(line,n = n)
-            results += self.getPossibleCombinations(items,n=n)
+            items = self.getProductCombinations(line)
+            items = self.getPossibleCombinations(items)
+            res = []
+            for item in items:
+                item = np.array(item).reshape((self.n,self.n))
+                if self.checkDiagonal(item):
+                    res.append(item)
+            results += res
+
 
         return results
 
-    def getPossibleCombinations(self,combinations,n = 4):
+    def getPossibleCombinations(self,combinations):
         """
         docstring for getPossibleCombinations
         """
-        Sum = n*(n*n+1)//2
+
         totalSum = []
         for line in combinations:
-            if sum(line) == Sum:
-                count += 1 
+            if sum(line) == self.Sum:
                 totalSum.append(list(line))
 
         # get all the non-repeated combinations
@@ -223,19 +262,23 @@ class MagicSquare():
 
         the sum of the middle four
         """
-        n = 4 
-        Sum = n*(n*n+1)//2
+        n      = 4
+        self.n = n
+        self.Sum = n*(n*n+1)//2
         arr = np.arange(1,n*n+1)
         combinations = itertools.combinations(arr,n)
 
-        totalSum = self.getPossibleCombinations(combinations,n=n)
+        totalSum = self.getPossibleCombinations(combinations)
 
         print(len(totalSum))
         # print(totalSum[:2])
         
         begin = 0 
-        end   = 1
-        self.arrangeSquare(totalSum[begin:end],n = n)
+        end   = len(totalSum)
+        results = self.arrangeSquare(totalSum[begin:end])
+        for i,line in enumerate(results):
+            print(i,line)
+        print(len(results))
 
         return
 
