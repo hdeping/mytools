@@ -134,7 +134,8 @@ class Algorithms():
         6 4     12 14200
         7 40    13 73712
         8 92    14 365596
-        9 352 
+        9 352   15 2279184
+                16 14772512 
         """
 
         t1 = time.time()
@@ -151,11 +152,22 @@ class Algorithms():
             t1 = t2
 
         return  
+    def generateFunc(self):
+        """
+        docstring for generateFunc
+        generating functions in combinatorics
+        (1+x+x^2+...)(1+x+x^2...)
+
+        for x1 + x2 + .. x5 = 100
+        one can compute (x+...x^96)^5
+        """
+        
+        return
     def test(self):
         """
         docstring for test
         """
-        self.testQueens()
+        # self.testQueens()
         return
         
 algo = Algorithms()
