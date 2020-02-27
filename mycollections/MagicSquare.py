@@ -61,7 +61,15 @@ class MagicSquare():
             
         return ii,jj
     def judgeMagic(self,magic_square):
+        """
+        magic_square:
+            2d array of n*n
+        return:
+            yes or no
+        """
+
         n = len(magic_square)
+        magic_square = np.array(magic_square)
         total = n*(n**2 + 1) // 2
 
         # n rows, n columns, tow diagonals
@@ -148,6 +156,14 @@ class MagicSquare():
 
         return
 
+    def isListRepeated(self,arr1,arr2):
+        """
+        docstring for isListRepeated
+        """
+        for i in arr1:
+            if i in arr2:
+                return True 
+        return False
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
@@ -160,7 +176,7 @@ class MagicSquare():
         """
         n = 4 
         Sum = n*(n*n+1)//2
-        arr = np.arange(n*n)
+        arr = np.arange(1,n*n+1)
         combinations = itertools.combinations(arr,n)
 
         count = 0
@@ -170,9 +186,22 @@ class MagicSquare():
                 count += 1 
                 totalSum.append(list(line))
 
+        combinations2 = itertools.combinations(totalSum,2)
 
+        total2 = []
+        for line in combinations2:
+            if not self.isListRepeated(line[0],line[1]):
+                total2.append(line[0]+line[1])
+        total3 = []
+        combinations3 = itertools.combinations(total2,2)
+        for line in combinations3:
+            if not self.isListRepeated(line[0],line[1]):
+                total3.append(line[0]+line[1]) 
 
         print("count = ",count)
+        print(len(total3))
+        print(total3[:2])
+
 
 
         
