@@ -82,17 +82,19 @@ class MagicSquare():
             arr_sum[2*n] += magic_square[i,i]
             arr_sum[2*n+1] += magic_square[i,n - 1 - i]
         judge = (arr_sum == total)
-        print(arr_sum)
+        # print(arr_sum)
+
+        # magic_square = pandas.DataFrame(magic_square)
+        # magic_square.plot.bar(stacked=True) 
+        # plt.show()
         if sum(judge) == 2*n+2:
             print("It is a %dth order magic square"%(n))
+            return True
         else:
             print("It is not a magic square")
+            return False
 
-        magic_square = pandas.DataFrame(magic_square)
-        magic_square.plot.bar(stacked=True) 
-        plt.show()
 
-        return 
     # get a magic square with horse-step method  
     def magicSquare(self):
         n = self.order
@@ -275,8 +277,7 @@ class MagicSquare():
         """
         docstring for testRotateMatrix
         """
-        a = np.array([[1,2,3,4],[1,12,3,4],
-                      [1,2,3,34],[1,2,23,4]])
+        a = np.arange(1,17).reshape((4,4))
         print(a)
         for i in range(3):
             a = self.rotateMatrix(a)
@@ -330,6 +331,38 @@ class MagicSquare():
                     res.append(item)
 
         return res
+
+    def getCenters(self,results):
+        """
+        docstring for getCenters
+        """
+        count = 0
+
+        centers = {}
+        for i,line in enumerate(results):
+            # print(i)
+            line = self.matrix2List(line,inv=True)
+            # count += self.judgeMagic(line)
+            line = self.matrix2List(line[1:3,1:3])
+            res = line.copy()
+            line.sort()
+            line = str(line)
+            if line in centers:
+                centers[line].append(res)
+            else:
+                centers[line] = [res]
+            # print(line)
+
+        print(len(results),count)
+
+
+        for key in centers:
+            values = centers[key]
+            print(key,len(values),values)
+        print(len(centers))
+        print(centers)
+
+        return
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
@@ -355,10 +388,12 @@ class MagicSquare():
         end   = len(totalSum)
         results = self.arrangeSquare(totalSum[begin:end])
 
-        results = self.rotationExpansion(results)
-        # print(len(results))
-        for i,line in enumerate(results):
-            print(i,line)
+        # results = self.rotationExpansion(results)
+        # self.getCenters(results)
+
+
+       
+
 
         return
 
@@ -366,8 +401,8 @@ class MagicSquare():
         """
         docstring for test
         """
-        self.getAllSquareFour()
-        # self.testRotateMatrix()
+        # self.getAllSquareFour()
+        self.testRotateMatrix()
 
         return
 
