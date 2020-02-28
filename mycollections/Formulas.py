@@ -7254,7 +7254,7 @@ class Formulas(MyCommon,EllipticCurve):
         # res = self.combinatorSeqByString("0ac","a1e")
         # res = self.combinatorSeqByNum(1,1)
         # self.narciTest3(n=9,base=10)
-        # n = 2000
+        n = 20
         self.getCombinatorEqnSolNumByIter(n,n)
         # self.testNarciNumBase()
         

@@ -23,6 +23,8 @@ import matplotlib.pyplot as plt
 import itertools
 from multiprocessing import Process
 from tqdm import tqdm
+from sympy import *
+from Formulas import Formulas
 
 class MagicSquare():
     """docstring for MagicSquare"""
@@ -279,6 +281,7 @@ class MagicSquare():
         """
         a = np.arange(1,17).reshape((4,4))
         print(a)
+
         for i in range(3):
             a = self.rotateMatrix(a)
             print(i)
@@ -392,17 +395,350 @@ class MagicSquare():
         # self.getCenters(results)
 
 
-       
+        return
 
+    def getHexaSegments(self,lengths):
+        """
+        docstring for getHexaSegments
+        lengths:
+            1d array, [m,m+1,...,2m-1,2m-2...,m]
+        """
+        segments = []
+        count = 0 
+        index = 0
+        res   = []
+        for i in range(self.n):
+            if count < lengths[index]:
+                res.append(i)
+                count += 1 
+            else:
+                segments.append(res)
+                count = 1
+                res = [i]
+                index += 1 
+        segments.append(res)
+        return segments
+
+    def getHexaEqn(self):
+        """
+        docstring for getHexaEqn
+        get all the equations to satify 
+        the magic definition
+        """
+
+        row = 2*self.m - 1
+
+        
+        lengths = []
+        for i in range(self.m - 1):
+            lengths.append(self.m+i)
+        lengths.append(row)
+        for i in range(self.m - 1):
+            lengths.append(lengths[self.m - 2 - i])
+
+        print(lengths)
+
+        # get the segments
+        segments = self.getHexaSegments(lengths)
+
+        matrix = - np.ones((2,row,row),int)
+        for i in range(self.m-1):
+            j = -i - 1
+            matrix[0,i,:lengths[i]] = segments[i]
+            matrix[0,j,-lengths[i]:] = segments[j]
+
+            matrix[1,i,-lengths[i]:] = segments[i]
+            matrix[1,j,:lengths[i]] = segments[j]
+        for i in range(2):
+            matrix[i,self.m-1,:] = segments[self.m-1]
+
+        print(matrix)
+        equations = []
+
+        x = symbols("x0:%d"%(self.n))
+        solNum = 0
+        y = symbols("y0:%d"%(solNum))
+        self.eqnIndeces = []
+        for i in range(row):
+            indeces = [[],[]]
+            for j in range(row):
+                k = matrix[0,i,j]
+                if k >= 0:
+                    indeces[0].append(k)
+                k = matrix[0,j,i]
+                if k >= 0:
+                    indeces[1].append(k)
+            self.eqnIndeces += indeces
+        for i in range(row):
+            indeces = []
+            for j in range(row):
+                k = matrix[1,j,i]
+                if k >= 0:
+                    indeces.append(k)
+            self.eqnIndeces.append(indeces)
+
+        for line in self.eqnIndeces:
+            res = 0
+            for i in line:
+                if i < solNum:
+                    res += y[i]
+                else:
+                    res += x[i]
+            res = res - self.Sum
+            equations.append(res)
+        equations.remove(equations[2])
+        equations.remove(equations[0])
+        # print(equations,len(equations))
+        
+        # answers = solve(equations[:-1],x)
+        # for i,key in enumerate(answers):
+        #     print(i,key,answers[key])
 
         return
 
+    def checkMagicHexa(self,x):
+        """
+        docstring for checkMagicHexa
+        x:
+            array of length self.n
+               
+        x[10] =  -x[13]  - x[14]  - x[15]  - x[17]  + x[4]  + 38
+        x[9]  = x[13]  + x[15]  + x[17]  + x[3]  - x[4]  - 38
+        x[8]  = -x[13]  - x[17]  - x[3]  + 38
+        x[11] =  -x[15]  - x[18]  + 38
+        x[16] =  -x[17]  - x[18]  + 38
+        x[12] =  -x[13]  - x[14]  - x[15]  + 38
+        x[7]  = x[13]  + x[14]  + x[15]  + x[17]  + x[18]  - 38
+        x[6]  = x[13]  + x[15]  - x[4] 
+        x[5]  = -x[13]  - x[15]  - x[3]  + 38
+        x[2]  = -x[13]  + x[18]  + x[4] 
+        x[1]  = 2*x[13]  + x[14]  + x[15]  + x[17]  + x[3]  - x[4]  - 38
+        x[0]  = -x[13]  - x[14]  - x[15]  - x[17]  - x[18]  - x[3]  + 76
+        """
+
+        for line in self.eqnIndeces:
+            res = 0
+            for i in line:
+                res += x[i]
+            if res != self.Sum:
+                print("It is not a magic hexagon")
+                return False 
+        print("YES! It is a magic hexagon",x)
+        return True
+
+    def testHexaPerm(self):
+        """
+        docstring for testHexaPerm
+        """
+        
+        total = []
+        for i in range(self.m):
+            total.append([])
+        for i in range(self.m-2):    
+            combinations = itertools.combinations(arr,self.m+i)
+            count = 0
+            for line in combinations:
+                count += 1
+                if sum(line) == self.Sum:
+                    total[i].append(list(line))
+            print(len(total[i]),count)
+
+        count = len(total[0])
+        print(total[0])
+        total = total[0]
+        matrix = np.zeros((count,count),int)
+        
+        for i in range(count):
+            for j in range(i+1,count):
+                print(i,j)
+                matrix[i,j] = self.isTupleAdjacent(total[i],total[j])
+                matrix[j,i] = matrix[i,j]
+
+        permutations = itertools.permutations(arr,2)
+        count = 0
+        total = []
+        for line in permutations:
+            count += 1
+            if sum(line) >= self.n:
+                total.append(list(line))
+        print(len(total),count)
+
+        permutations = itertools.permutations(total,3)
+        count = 0
+        total2 = []
+        for line in tqdm(permutations):
+            count += 1
+            p = 1
+            for i in range(3):
+                p1 = (line[i-1][1] + line[i][0] >= self.n)
+                p = p*p1
+            if p:
+                total2.append(list(line))
+                print(line)
+            if count == 100:
+                break
+        print(len(total2),count)
+
+        return
+
+    def isTupleAdjacent(self,arr1,arr2):
+        """
+        docstring for isTupleAdjacent
+        """
+        for i in arr1:
+            for j in arr2:
+                if i == j:
+                    return True
+        return False
+
+    def checkHexa(self,line):
+        """
+        docstring for checkHexa
+        line:
+            1d array with length 6
+        check if the input could produce a magic hexagon
+        """
+        x = [0]*self.n
+        indeces = [0,2,11,18,16,7]
+        for index,i in enumerate(indeces):
+            x[i] = line[index]
+
+        x[1]  = self.Sum - x[0]  - x[2] 
+        x[6]  = self.Sum - x[2]  - x[11]
+        x[15] = self.Sum - x[11] - x[18] 
+        x[17] = self.Sum - x[18] - x[16]
+        x[12] = self.Sum - x[16] - x[7] 
+        x[3]  = self.Sum - x[7]  - x[0]
+        c1    = self.Sum - x[3] - x[6]
+        c2    = self.Sum - x[1] - x[15]
+        c3    = self.Sum - x[6] - x[17]
+        c4    = self.Sum - x[12] - x[15]
+        c5    = self.Sum - x[3] - x[17]
+        c6    = self.Sum - x[1] - x[12]
+        X4 = []
+        for i in range(1,self.n+1):
+            if i not in x:
+                X4.append(i)
+
+        # print(x,X4)
+        for i in X4:
+            x[4]  = i
+            x[5]  = c1 - x[4]
+            x[10] = c2 - c1 + x[4]
+            x[14] = c3 - c2 + c1 - x[4]
+            x[13] = c4 - c3 + c2 - c1 + x[4]
+            x[8]  = c5 - c4 + c3 - c2 + c1 - x[4]
+            x[9]  = self.Sum - x[7] - x[8] - x[10] - x[11]
+            count = 0
+            for j in [5,10,14,13,8,9]:
+                if x[j] <= 0:
+                    count = 1
+                    break
+            if count == 1:
+                break
+            arr = x.copy()
+            arr.sort()
+            count = 0
+            for i in range(len(arr)-1):
+                if arr[i] == arr[i+1]:
+                    count += 1 
+                    break
+            # print(x)
+            if count == 0:
+                print(x)
+
+        return
+
+    def magicHexa(self):
+        """
+        docstring for magicHexa
+             0   1   2
+           3   4   5   6
+         7   8   9   10   11
+           12  13  14   15
+             16  17  18 
+        two wrong cases:
+           14, 19, 5
+          9, 7, 6, 16
+        15, 1, 2, 10, 17
+          11, 20, 4, 3
+            12, 8, 18
+
+            15, 11, 12
+          10,  1, 20, 7
+        13,  17, 4, 2, 19
+           9, 3,  21, 5
+             16, 8, 14
+        right cases
+            10,13,15
+          12, 4, 8, 14
+        16, 2, 5, 6,  9
+          19, 7, 1, 11
+            3, 17,18
+        6*38 = 2*(19*10 - x)
+        x = 
+
+        """
+        m = 3
+        self.m = m
+        if self.m == 1:
+            self.n = 1 
+        else:
+            self.n = 1+3*m*(m-1)
+        self.Sum = self.n*(self.n+1)//(4*m-2)
+        print(self.m,self.n,self.Sum)
+
+        arr = np.arange(1,self.n+1)
+        permutations = itertools.permutations(arr,6)
+
+        self.checkHexa([19,18,16,15,14,12])
+        count = 0
+        for line in tqdm(permutations):
+            p = 1 
+            for i in range(6):
+                p1 = (line[i-1] + line[i] >= 19)
+                p  = p*p1
+            if p:
+                # print(line)
+                self.checkHexa(line)
+            count += 1 
+            # if count % 1000000 == 0:
+            #     print(count)
+            #     break
+            break
+
+        print(count)
+
+
+
+        return
+    def testMagicHexa(self):
+        """
+        docstring for testMagicHexa
+        """
+
+        self.magicHexa()
+        self.getHexaEqn()
+        arr = [14, 19, 5, 9, 7, 6, 16,15, 1, 2, 10, 17,11, 20, 4, 3,12, 8, 18]
+        self.checkMagicHexa(arr)
+        arr = [15, 11, 12,10, 1, 20, 7,13, 17, 4, 2, 19,9, 3, 21, 5,16, 8, 14]
+        self.checkMagicHexa(arr)
+        arr = [[10, 13, 15, 12, 4, 8, 14, 16, 2, 5, 6, 9, 19, 7, 1, 11, 3, 17, 18],
+               [10, 12, 16, 13, 4, 2, 19, 15, 8, 5, 7, 3, 14, 6, 1, 17, 9, 11, 18],
+               [18, 17, 3, 11, 1, 7, 19, 9, 6, 5, 2, 16, 14, 8, 4, 12, 15, 13, 10],
+               [18, 11, 9, 17, 1, 6, 14, 3, 7, 5, 8, 15, 19, 2, 4, 13, 16, 12, 10]]
+        for line in arr:
+            self.checkMagicHexa(line)
+
+        return
     def test(self):
         """
         docstring for test
         """
         # self.getAllSquareFour()
-        self.testRotateMatrix()
+        # self.testRotateMatrix()
+        # self.testMagicHexa()
+        
 
         return
 
