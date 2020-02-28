@@ -252,6 +252,84 @@ class MagicSquare():
 
         return totalSum 
 
+    def rotateMatrix(self,matrix):
+        """
+
+        docstring for rotateMatrix
+        rotate the matrix with pi/2
+        00 01 ==> 10 00
+        10 11     11 01
+        00 01 02 03 ==> 30 20 10 00 
+        10 11 12 13     31 21 11 01
+        20 21 22 23     32 22 12 02
+        30 31 32 33     33 23 13 03 
+
+        """
+        res = np.ones(matrix.shape,int)
+        n = matrix.shape[0]
+        for i in range(n):
+            res[:,i] = matrix[n-1-i,:]
+        
+        return res
+    def testRotateMatrix(self):
+        """
+        docstring for testRotateMatrix
+        """
+        a = np.array([[1,2,3,4],[1,12,3,4],
+                      [1,2,3,34],[1,2,23,4]])
+        print(a)
+        for i in range(3):
+            a = self.rotateMatrix(a)
+            print(i)
+            print(a)
+            print(a.transpose())
+        return
+
+    def matrix2List(self,matrix,inv=False):
+        """
+        docstring for matrix2List
+        matrix:
+            n*n, 2d array when inv = False
+            list of length n when inv = True
+        """
+        if inv:
+            res = np.array(matrix)
+            res = res.reshape((self.n,-1))
+        else:
+            res = matrix.reshape(-1).tolist()
+            
+        return res 
+
+    def rotationExpansion(self,results):
+        """
+        docstring for rotationExpansion
+        arr:
+            3d array of (N,n,n)
+        rotate a matrix with pi/2, pi and 3pi/2
+        and their transpose
+
+        """
+
+        res = []
+
+        for i,line in enumerate(results):
+            items = [] 
+            arr = self.matrix2List(line)
+            items.append(arr)
+            arr = self.matrix2List(line.transpose())
+            items.append(arr)
+
+            for j in range(3):
+                line = self.rotateMatrix(line)
+                arr = self.matrix2List(line)
+                items.append(arr)
+                arr = self.matrix2List(line.transpose())
+                items.append(arr)
+            for item in items:
+                if item not in res:
+                    res.append(item)
+
+        return res
     def getAllSquareFour(self):
         """
         docstring for getAllSquareFour
@@ -276,9 +354,11 @@ class MagicSquare():
         begin = 0 
         end   = len(totalSum)
         results = self.arrangeSquare(totalSum[begin:end])
+
+        results = self.rotationExpansion(results)
+        # print(len(results))
         for i,line in enumerate(results):
             print(i,line)
-        print(len(results))
 
         return
 
@@ -287,6 +367,8 @@ class MagicSquare():
         docstring for test
         """
         self.getAllSquareFour()
+        # self.testRotateMatrix()
+
         return
 
 magic = MagicSquare()
