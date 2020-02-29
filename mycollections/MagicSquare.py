@@ -26,7 +26,7 @@ from tqdm import tqdm
 from sympy import *
 from Formulas import Formulas
 
-class MagicSquare():
+class MagicSquare(Formulas):
     """docstring for MagicSquare"""
     def __init__(self):
         super(MagicSquare, self).__init__()
@@ -731,6 +731,21 @@ class MagicSquare():
             self.checkMagicHexa(line)
 
         return
+
+    def testMagicSquareSum(self):
+        """
+        docstring for testMagicSquareSum
+        """
+        for n in ra∑nge(3,100):
+            total = n*n*(n*n+1)//2 
+            total = n*(n*n+1)//2 
+            total = n**4
+            res = total
+            while res >= 10:
+                res = sum(self.num2Digits(res))
+            print(n,total,res)
+
+        return
     def test(self):
         """
         docstring for test
@@ -738,6 +753,7 @@ class MagicSquare():
         # self.getAllSquareFour()
         # self.testRotateMatrix()
         # self.testMagicHexa()
+        self.testMagicSquareSum()
         
 
         return
