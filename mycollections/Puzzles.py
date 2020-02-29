@@ -47,11 +47,44 @@ class Puzzles():
 
         return
 
+    def abcDelta(self):
+        """
+        docstring for abcDelta
+        a,b,c are integers,
+        s2 = sqrt(2)
+        s3 = sqrt(3)
+        abs(a+b*s2+c*s3) < 10^{-11}
+
+        b^2 - 6c^2 = 3, b should be even
+        b,c = (3,1)
+        """
+
+        solutions = [[1,0],[5,2]]
+
+        for i in range(10):
+            arr = []
+            for j in range(2):
+                num = solutions[-1][j]*10 - solutions[-2][j]
+                arr.append(num)
+            print(i+3,arr,arr[0]**2 - 6*arr[1]**2)
+            solutions.append(arr)
+        for i in range(10):
+            a = (solutions[i][0] + solutions[i+1][0])//2
+            b = (solutions[i][1] + solutions[i+1][1])//2
+            print(a,b,a**2-6*b**2)
+        for i in range(1000):
+            b = 6*i**2 -1 
+            b = sqrt(Integer(b))
+            if b.is_integer:
+                print(b,i)
+        
+        return
     def test(self):
         """
         docstring for test
         """
-        self.abSeven()
+        # self.abSeven()
+        self.abcDelta()
         return
 
 puzzle = Puzzles()
