@@ -79,12 +79,33 @@ class Puzzles():
                 print(b,i)
         
         return
+
+
+    def nSquare(self):
+        """
+        docstring for nSquare
+        """
+        solutions = [[1,0],[2,1]]
+        lambda1 = 2*solutions[1][0]
+        for i in range(10):
+            arr = []
+            for j in range(2):
+                num = solutions[-1][j]*lambda1 - solutions[-2][j]
+                arr.append(num)
+            # print(i+2,arr,arr[0]**2 - 7*arr[1]**2)
+            solutions.append(arr)
+            if i%2 == 0:
+                n = 2*arr[0]+2
+                print(i,n,sqrt(n))
+            
+        return
     def test(self):
         """
         docstring for test
         """
         # self.abSeven()
-        self.abcDelta()
+        # self.abcDelta()
+        # self.nSquare()
         return
 
 puzzle = Puzzles()
