@@ -6656,19 +6656,30 @@ class Formulas(MyCommon,EllipticCurve):
                 print(num)
         return
 
-    def dealNarci(self,arr):
+    def dealNarci(self,line,m = 2,base = 10):
         """
         docstring for dealNarci
+        line:
+            tuple
         """
+        arr = []
+        for i in range(m):
+            j = line[-i-1] + i - m + 1 
+            arr.append(j)
         num = 0 
         for i in arr:
             num += self.calTable[i]
 
-        digits = self.num2Digits(num)
+        digits = self.num2Digits(num,base = base)
+        digitNum = digits.copy()
         digits.sort()
+        arr.sort()
         if list(arr) == list(digits):
-            print(num)
+            if list(arr) == list(digits):
+                string = self.digit2String(digitNum)
+                print(num,string)
         return
+
     def narcissisticNumber(self,m = 2):
         """
         docstring for narcissisticNumber
@@ -7026,13 +7037,15 @@ class Formulas(MyCommon,EllipticCurve):
         """
         docstring for getCombinatorEqnSolNumByIter
         matrix(n,s+1)
+        begin:
+            0 or 1, if 0 is valid
         """
         # res = np.ones((n,s+1),int)
         res = []
         for i in range(n):
             res.append([1]*(s+1))
         for i in range(1,n):
-            for j in range(1,s+1):
+            for j in range(s+1):
                 num = j//(i+1) + 1 
                 total = 0
                 for k in range(num):
@@ -7041,6 +7054,8 @@ class Formulas(MyCommon,EllipticCurve):
 
         for i in range(s+1):
             print(i,res[-1][i])
+        # res = np.array(res)
+        # print(res)
 
         # print(res)
         return
@@ -7079,7 +7094,6 @@ class Formulas(MyCommon,EllipticCurve):
         number
         371 = 3^3+7^3+1^3 for base 10
         """
-        D = m
         arr = np.arange(base + m-1)
         num = self.getCombinator(base + m-1,m)
         combinations = itertools.combinations(arr,m)
@@ -7089,25 +7103,134 @@ class Formulas(MyCommon,EllipticCurve):
         self.getCalTable(m,base = base)
 
         # for line in tqdm(combinations):
+        print("m = ",m,"base = ",base)
         for line in combinations:
             count += 1
-            arr = []
-            for i in range(m):
-                j = line[-i-1] + i - m + 1 
-                arr.append(j)
-            num = 0 
-            for i in arr:
-                num += self.calTable[i]
-            # print(num,arr)
-            digits = self.num2Digits(num,base = base)
-            digitNum = digits.copy()
-            digits.sort()
-            arr.sort()
-            if list(arr) == list(digits):
-                string = self.digit2String(digitNum)
-                print(num,string)
+            self.dealNarci(line,m = m, base = base)
         
         return
+
+    def testNarciNumBase(self):
+        """
+        docstring for testNarciNumBase
+        """
+        # bases = self.getBaseLimit()
+        # base = 16
+        # for i in range(3,7):
+        #     print("i = ",i)
+        #     self.narciNumberBase(m = i,base = base)
+
+        m = 11
+        base = 16 
+        length = base + m - 1
+        res = self.getCombinator(length,m)
+        print(res)
+        num1 = length // 2 
+        num2 = length - num1
+
+        count  = 0 
+        quarter = res // 4 
+        end = min(m,num1)
+        array = []
+        for i in range(end):
+            a = 0 
+            b = 0
+            if m - i <= num2:
+                a = self.getCombinator(num1,i)
+                b = self.getCombinator(num2,m - i)
+                count += a*b 
+                k = count // quarter 
+                print(i,k,count,a*b)
+            array.append(a*b)
+        begin = 0 
+        if m > num2:
+            begin = m - num2
+        middle = (begin + end) // 2
+        indeces = [begin,middle,middle+1] 
+        print("res = ",res)
+        print(indeces)
+        print(array)
+        print(sum(array[begin:middle]))
+        print(array[middle])
+        print(array[middle+1])
+        print(sum(array[middle+2:end]))
+
+        arr = np.arange(length)
+        combinations = itertools.combinations(arr,m)
+        # for line in combinations:
+        #     print(line)
+        return
+    def dealNarciMulti(self,indeces,para):
+        """
+        docstring for dealNarciMulti
+        para:
+            [length,m,base]
+        indeces:
+            [i1,i2,...]
+        """
+        length,m,base = para 
+        num1 = length // 2 
+        arr1 = np.arange(num1)
+        arr2 = np.arange(num1,length)
+        for index in indeces:
+            res1 = itertools.combinations(arr1,index)
+            for line1 in tqdm(res1):
+                res2 = itertools.combinations(arr2,m - index)
+                for line2 in res2:
+                    line = line1 + line2 
+                    self.dealNarci(line,m = m,base = base)
+        return
+    def narciNumBaseMulti(self,m = 11,base = 16):
+        """
+        docstring for narciNumBaseMulti
+        """
+        length = base + m - 1 
+        num1 = length // 2 
+        num2 = length - num1
+        end = min(m,num1)
+        begin = 0 
+        if m > num2:
+            begin = m - num2
+        middle = (begin + end) // 2
+
+        # a = self.getCombinator(num1,i)
+        # b = self.getCombinator(num2,m - i)
+        indeces = [np.arange(begin,middle),[middle],
+                  [middle+1],np.arange(middle+2,end)]
+
+        self.getCalTable(m,base = base)
+        subprocesses = []
+        for i in range(4):
+            p = multiprocessing.Process(target = self.dealNarciMulti,
+                            args = (indeces[i],[length,m,base],))
+            p.start()
+            subprocesses.append(p)
+        for p in subprocesses:
+            p.join()
+
+        return
+
+    def testNarciMulti2(self):
+        """
+        docstring for testNarciMulti2
+        """
+        t1 = time.time()
+        base = 10
+        totalTime = 0
+        for m in range(29,40):
+            res = self.getCombinator(m+base-1,m)
+            res = res/60000/60
+            # print(m,res)
+
+            # self.narciNumBaseMulti(m = m, base = base)
+            t2 = time.time()
+            print(m,"time = ",t2 - t1)
+            t1 = t2
+        totalTime += res
+        print(res/60," hours")
+
+        return
+        
     def test(self):
         """
         docstring for test
@@ -7131,16 +7254,13 @@ class Formulas(MyCommon,EllipticCurve):
         # res = self.combinatorSeqByString("0ac","a1e")
         # res = self.combinatorSeqByNum(1,1)
         # self.narciTest3(n=9,base=10)
-        # n = 2000
-        # self.getCombinatorEqnSolNumByIter(n,n)
-        bases = self.getBaseLimit()
-        base = 16
-        for i in range(3,bases[base]):
-            print("i = ",i)
-            self.narciNumberBase(m = i,base = base)
+        n = 20
+        self.getCombinatorEqnSolNumByIter(n,n)
+        # self.testNarciNumBase()
+        
        
 
         return
 
-formula = Formulas()
-formula.test() 
+# formula = Formulas()
+# formula.test() 
