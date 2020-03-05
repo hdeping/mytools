@@ -99,6 +99,113 @@ class Puzzles():
                 print(i,n,sqrt(n))
             
         return
+
+    def fixedPointConic(self):
+        """
+        docstring for fixedPointConic
+        """
+        a,b,k,m,l = symbols("a b k m,l")
+        x = symbols("x0:3")
+        y = symbols("y0:3")
+
+        s = (y[2] - y[0])*(y[1] - y[0])
+        s = s - l*((x[2] - x[0])*(x[1] - x[0]))
+        print(expand(s))
+
+        # x1*x2, x1 + x2 
+        # l = -1
+        x12  = ((a*m)**2 - (a*b)**2)/((a*k)**2+b*b)
+        x1x2 = -2*a*a*k*m/((a*k)**2+b*b)
+        y12  = k*k*x12 + k*m*x1x2 + m*m 
+        y1y2 = k*x1x2 + 2*m 
+        s = y12 - y[0]*y1y2 + y[0]**2 
+        s = s - l*(x12 - x[0]*x1x2 + x[0]**2 )
+        # s = s.subs(m,y[0] - k*x[0])
+        s = self.simEqn(s,m)
+
+        # print(latex(s))
+        
+        # xy12 = x1*y2 + x2*y1
+        xy12 = 2*k*x12 + m*x1x2
+
+        s = xy12 + 2*x[0]*y[0] - y[0]*x1x2 
+        s = s - x[0]*y1y2 
+        s = s - l*(x12 - x[0]*x1x2 + x[0]**2)
+        # s = s.subs(m,y[0] - k*x[0])
+        s = self.simEqn(s,m)
+        # s = s.factor()
+        s = -s
+        print(latex(s))
+        print(s)
+        x0,y0 = x[0],y[0]
+        m1 = -2*a**2*k*l*x0 + 2*a**2*k*y0 - 2*b**2*x0
+        m1 = m1/(a**2*l) - (y[0] - k*x[0])
+        m1 = m1.expand().simplify()
+        # print(latex(m1))
+
+        m1 = m1*(y[0] - k*x[0])*a*a*l
+        m1 = m1.expand()
+        # print(latex(m1))   
+
+        alpha,beta = symbols("alpha beta")
+        s = (xy12 + 2*x[0]*y[0])*alpha
+        s = s - alpha*(x[0]*y1y2 + y[0]*x1x2)
+        s = s + beta*(y12 - y[0]*y1y2 + y[0]**2)
+        s = s - l*(x12 - x[0]*x1x2 + x[0]**2 )  
+        # s = s.subs(m,y[0] - k*x[0])
+        s = self.simEqn(s,m) 
+        print(latex(s)) 
+
+        print(s) 
+
+        m1 = 2*a**2*alpha*k*y0 - 2*a**2*k*l*x0
+        m1 = m1 - 2*alpha*b**2*x0 - 2*b**2*beta*y0
+        m1 = -m1/(-a**2*l + b**2*beta) - (y[0] - k*x[0])
+        m1 = m1.expand().simplify()
+        m1 = m1.collect(k)
+        print(latex(m1))
+
+
+        return
+
+    def simEqn(self,s,m):
+        """
+        docstring for simEqn
+        simplify the equation
+        """
+        s = s.expand().simplify()
+        s,denom = fraction(s)
+        s = s.expand().collect(m)
+        return s
+
+
+    def fixedPointParabola(self):
+        """
+        docstring for fixedPointParabola
+        """
+        p,k,m,l  = symbols("p k m,l")
+        alpha,beta = symbols("alpha beta")
+        x = symbols("x0:3")
+        y = symbols("y0:3")
+
+        x12  = -(2*k*m - 2*p)/(k*k)
+        x1x2 = (m/k)**2
+        y12  = k*k*x12 + k*m*x1x2 + m*m 
+        y1y2 = k*x1x2 + 2*m 
+        xy12 = 2*k*x12 + m*x1x2
+
+        s = (xy12 + 2*x[0]*y[0])*alpha
+        s = s - alpha*(x[0]*y1y2 + y[0]*x1x2)
+        s = s + beta*(y12 - y[0]*y1y2 + y[0]**2)
+        s = s - l*(x12 - x[0]*x1x2 + x[0]**2 )  
+        s = s.subs(m,y[0] - k*x[0])
+        s = self.simEqn(s,m) 
+        print(latex(s)) 
+
+        s = s.factor()
+        print(latex(s))
+
+        return
     def test(self):
         """
         docstring for test
@@ -106,6 +213,9 @@ class Puzzles():
         # self.abSeven()
         # self.abcDelta()
         # self.nSquare()
+        # self.fixedPointConic()
+        self.fixedPointParabola()
+
         return
 
 puzzle = Puzzles()
