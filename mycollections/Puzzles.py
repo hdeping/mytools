@@ -188,8 +188,8 @@ class Puzzles():
         x = symbols("x0:3")
         y = symbols("y0:3")
 
-        x12  = -(2*k*m - 2*p)/(k*k)
-        x1x2 = (m/k)**2
+        x1x2  = -(2*k*m - 2*p)/(k*k)
+        x12 = (m/k)**2
         y12  = k*k*x12 + k*m*x1x2 + m*m 
         y1y2 = k*x1x2 + 2*m 
         xy12 = 2*k*x12 + m*x1x2
@@ -198,12 +198,19 @@ class Puzzles():
         s = s - alpha*(x[0]*y1y2 + y[0]*x1x2)
         s = s + beta*(y12 - y[0]*y1y2 + y[0]**2)
         s = s - l*(x12 - x[0]*x1x2 + x[0]**2 )  
-        s = s.subs(m,y[0] - k*x[0])
-        s = self.simEqn(s,m) 
+        # s = s.subs(m,y[0] - k*x[0])
+        s = -self.simEqn(s,m) 
         print(latex(s)) 
 
-        s = s.factor()
-        print(latex(s))
+        print(s)
+
+        x0,y0 = x[0],y[0]
+        m1 = 2*alpha*k*y0 + 2*alpha*p 
+        m1 = m1 + 2*beta*k*p - 2*k*l*x0
+        m1 = m1/l - (y[0] - k*x[0])
+        m1 = m1.expand().simplify()
+        m1 = m1.collect(k)
+        print(latex(m1))
 
         return
     def test(self):
