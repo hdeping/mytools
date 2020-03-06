@@ -231,10 +231,81 @@ class Puzzles():
         A = np.ones((2,2))
         A[0,:] = line1[:2]
         A[1,:] = line2[:2]
-        b = [line1[2],line2[2]]
-        x = np.linalg(A,b)
+        b = [-line1[2],-line2[2]]
+        x = np.linalg.solve(A,b)
         return x
+    
+    def solveQuadratic(self,arr):
+        """
+        docstring for solveQuadratic
+        arr:
+            1d array, [a,b,c]
+        """
+        a,b,c = arr 
+        delta = (b*b - 4*a*c)**0.5 
+        x1 = (-b + delta)/(2*a)
+        x2 = (-b - delta)/(2*a)
+
+        return [x1,x2]
+    def ellipseIntersect(self,line,ellipse):
+        """
+        docstring for ellipseIntersect
+        line:
+            [A,B,C]
+        ellipse:
+            [a,b],(x/a)^2 + (y/b)^2 = 1
+        """
+        A,B,C = line 
+        a,b = ellipse
+        arr = []
+        arr.append(A**2*a**2 + B**2*b**2)
+        arr.append(2*A*C*a**2)
+        arr.append(- B**2*a**2*b**2 + C**2*a**2)
+        sol = self.solveQuadratic(arr)
         
+        res = []
+        for x in sol:
+            y = (-C-A*x)/B
+            res.append([x,y])
+
+        return res
+
+    def fixedOpposite(self):
+        """
+        docstring for fixedOpposite
+        """
+        line1 = [1/2,1/3,-1]
+        line2 = [1/3,1/2,-1]
+        p = self.getIntersectPoint(line1,line2)
+        print(p)
+        A,B,C,a,b = symbols("A B C a b")
+        x,y = symbols("x y")
+        s = (x/a)**2 + (y/b)**2 - 1 
+        s = s.subs(y,(-C-A*x)/B)
+        s = s*(a*B*b)**2
+        s = s.expand().collect(x)
+        print(s)
+
+        p = [-1,0]
+        ellipse = [2,3]
+
+        lines = []
+        for k in range(1,10):
+            line = [k,-1,p[1] - k*p[0]]
+            res  = self.ellipseIntersect(line, ellipse)
+            p1 = [res[0][0],-res[0][1]]
+            line = self.getLine(p1,res[1])
+            lines.append(line)
+        for i in range(9):
+            for j in range(9):
+                if i == j:
+                    continue
+
+                p1 = self.getIntersectPoint(lines[i],lines[j])
+                print(p1)
+
+        return   
+
     def test(self):
         """
         docstring for test
@@ -243,7 +314,8 @@ class Puzzles():
         # self.abcDelta()
         # self.nSquare()
         # self.fixedPointConic()
-        self.fixedPointParabola()
+        # self.fixedPointParabola()
+        self.fixedOpposite()
 
         return
 
