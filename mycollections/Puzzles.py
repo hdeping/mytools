@@ -306,6 +306,30 @@ class Puzzles():
 
         return   
 
+    def pointLinePoint(self):
+        """
+        docstring for pointLinePoint
+        """
+
+        a,b,k,m,l = symbols("a b k m,l")
+        x = list(symbols("x0:3"))
+        y = list(symbols("y0:3"))
+
+        k = (y[1] - y[0])/x[1]
+        m = y[0]
+        x1x2 = -2*a*a*k*m/((a*k)**2+b*b)
+        x[2] = x1x2 - x[1]
+        y[2] = k*x[2] + m 
+        s    = y[1] + x[1]*(y[2]-y[1])/x1x2
+        s    = s.expand().simplify()
+        # print(latex(y))
+
+        x1x2 = x[1]*(y[2]-y[1])/x1x2
+        x1x2 = x1x2.expand().simplify()
+        print(latex(x1x2))
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -315,7 +339,8 @@ class Puzzles():
         # self.nSquare()
         # self.fixedPointConic()
         # self.fixedPointParabola()
-        self.fixedOpposite()
+        # self.fixedOpposite()
+        self.pointLinePoint()
 
         return
 
