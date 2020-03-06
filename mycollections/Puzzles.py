@@ -224,7 +224,7 @@ class Puzzles():
         c = -(a*coor1[0] + b*coor1[1])
         return [a,b,c]
 
-    def get_intersect_point(self,line1,line2):
+    def getIntersectPoint(self,line1,line2):
         """
         get the intersect point of two lines
         """
@@ -234,6 +234,7 @@ class Puzzles():
         b = [line1[2],line2[2]]
         x = np.linalg(A,b)
         return x
+        
     def test(self):
         """
         docstring for test
