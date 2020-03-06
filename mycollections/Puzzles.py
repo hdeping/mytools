@@ -330,6 +330,53 @@ class Puzzles():
 
         
         return
+
+
+    def fixedPointGeneral(self):
+        """
+        docstring for fixedPointGeneral
+        """
+
+        a,b,c,d,e  = symbols("a b c d e")
+        f,g,k,m,l  = symbols("f g k m l")
+        alpha,beta = symbols("alpha beta")
+        x,y = symbols("x y")
+        s = a*x*x+b*x*y+c*y*y+d*x+e*y+f
+        s = s.subs(y,k*x+m).expand().collect(x)
+        # print(latex(s))
+
+
+        x = symbols("x0:3")
+        y = symbols("y0:3")
+
+        x1x2  = -(b*m+2*c*k*m+d+e*k)/(a+b*k+c*k*k)
+        x12 = (c*m*m+e*m+f)/(a+b*k+c*k*k)
+        y12  = k*k*x12 + k*m*x1x2 + m*m 
+        y1y2 = k*x1x2 + 2*m 
+        xy12 = 2*k*x12 + m*x1x2
+
+        s = (xy12 + 2*x[0]*y[0])*alpha
+        s = s - alpha*(x[0]*y1y2 + y[0]*x1x2)
+        s = s + beta*(y12 - y[0]*y1y2 + y[0]**2)
+        s = s - l*(x12 - x[0]*x1x2 + x[0]**2 )  
+        # s = s.subs(m,y[0] - k*x[0])
+        s = self.simEqn(s,m) 
+        print(latex(s)) 
+        print("-----------------------")
+        print("-----------------------")
+        print(s)
+
+        x0,y0 = x[0],y[0]
+        m1 = -2*a*alpha*x0 - 2*a*beta*y0 - alpha*b*k*x0 
+        m1 = m1 + alpha*b*y0 + 2*alpha*c*k*y0 - alpha*d 
+        m1 = m1 + alpha*e*k - b*beta*k*y0 - b*l*x0 
+        m1 = m1 - beta*d*k - 2*c*k*l*x0 - e*l
+        m1 = -m1/(a*beta - alpha*b - c*l) - (y[0] - k*x[0])
+        m1 = m1.expand().simplify()
+        m1 = m1.collect(k)
+        print(latex(m1))
+        
+        return
     def test(self):
         """
         docstring for test
@@ -340,7 +387,8 @@ class Puzzles():
         # self.fixedPointConic()
         # self.fixedPointParabola()
         # self.fixedOpposite()
-        self.pointLinePoint()
+        # self.pointLinePoint()
+        self.fixedPointGeneral()
 
         return
 
