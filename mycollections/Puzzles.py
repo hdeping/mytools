@@ -213,6 +213,27 @@ class Puzzles():
         print(latex(m1))
 
         return
+
+    def getLine(self,coor1,coor2):
+        """
+        get line equation of two points
+        """
+        # a*x + b*y + c = 0
+        a = coor2[1] - coor1[1]
+        b = coor1[0] - coor2[0]
+        c = -(a*coor1[0] + b*coor1[1])
+        return [a,b,c]
+
+    def get_intersect_point(self,line1,line2):
+        """
+        get the intersect point of two lines
+        """
+        A = np.ones((2,2))
+        A[0,:] = line1[:2]
+        A[1,:] = line2[:2]
+        b = [line1[2],line2[2]]
+        x = np.linalg(A,b)
+        return x
     def test(self):
         """
         docstring for test
