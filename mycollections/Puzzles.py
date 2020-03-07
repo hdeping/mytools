@@ -377,6 +377,38 @@ class Puzzles():
         print(latex(m1))
         
         return
+
+
+    def ellipseTran(self):
+        """
+        docstring for ellipseTran
+        """
+        a,b = symbols("a b")
+        b2 = b*b 
+        a2 = a*a 
+        a6 = a**6
+        b6 = b**6
+        A = 4*b2+9*a2 
+        B = -4*(a2+3*b2)
+        C = (a6+4*b6)/(a2*b2)
+
+        delta = (B*B - 4*A*C)
+        delta = delta.expand().factor()
+        print(latex(delta))
+
+        x,y,x0,y0 = symbols("x y x0 y0")
+        eqn = []
+        eqn.append(x0+2*y0-x)
+        eqn.append(-a2*y0+2*b2*x0-a2*y)
+        sol = solve(eqn,[x0,y0])
+        # print(latex(sol[x0]))
+        # print(latex(sol[y0]))
+        x0 = sol[x0]
+        y0 = sol[y0]
+        s = a2*y0**2 + b2*x0**2 - a2*b2 
+        s = s.expand().simplify().collect([x,y])
+        print(latex(s))
+        return
     def test(self):
         """
         docstring for test
@@ -388,7 +420,8 @@ class Puzzles():
         # self.fixedPointParabola()
         # self.fixedOpposite()
         # self.pointLinePoint()
-        self.fixedPointGeneral()
+        # self.fixedPointGeneral()
+        self.ellipseTran()
 
         return
 
