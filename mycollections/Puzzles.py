@@ -396,18 +396,40 @@ class Puzzles():
         delta = delta.expand().factor()
         print(latex(delta))
 
-        x,y,x0,y0 = symbols("x y x0 y0")
+        x,y,x0,y0    = symbols("x y x0 y0")
+        alpha,beta,l = symbols("alpha beta l")
+        d = a2*l-b2*beta
+        e = a2*l+b2*beta
+        f = -2*a2*alpha
+
+        d,e,f = symbols("d e f")
         eqn = []
-        eqn.append(x0+2*y0-x)
-        eqn.append(-a2*y0+2*b2*x0-a2*y)
+        eqn.append(e*x0+f*y0-d*x)
+        eqn.append(f*x0-e*y0-d*y)
         sol = solve(eqn,[x0,y0])
-        # print(latex(sol[x0]))
-        # print(latex(sol[y0]))
+
+        print(latex(sol[x0]))
+        print("-------------------------")
+        print(latex(sol[y0]))
+        print("-------------------------")
         x0 = sol[x0]
         y0 = sol[y0]
         s = a2*y0**2 + b2*x0**2 - a2*b2 
         s = s.expand().simplify().collect([x,y])
+        s,denom = fraction(s)
         print(latex(s))
+
+
+        f2 = f*f 
+        e2 = e*e 
+        A = a2*f2+b2*e2 
+        B = -2*e*f*(a2 - b2)
+        C = a2*e2+b2*f2
+        delta = (B*B - 4*A*C)
+        delta = delta.expand().factor()
+        print("-------------------------")
+        print(latex(delta))
+
         return
     def test(self):
         """
