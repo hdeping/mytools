@@ -247,6 +247,18 @@ class Puzzles():
         x2 = (-b - delta)/(2*a)
 
         return [x1,x2]
+    def solveQuadraticSymbolic(self,arr):
+        """
+        docstring for solveQuadratic
+        arr:
+            1d array, [a,b,c]
+        """
+        a,b,c = arr 
+        delta = sqrt(b*b - 4*a*c) 
+        x1 = (-b + delta)/(2*a)
+        x2 = (-b - delta)/(2*a)
+
+        return [x1,x2]
     def ellipseIntersect(self,line,ellipse):
         """
         docstring for ellipseIntersect
@@ -382,6 +394,7 @@ class Puzzles():
     def ellipseTran(self):
         """
         docstring for ellipseTran
+        trajectory of the fixed points
         """
         a,b = symbols("a b")
         b2 = b*b 
@@ -431,6 +444,78 @@ class Puzzles():
         print(latex(delta))
 
         return
+
+    def transformGeneralConic(self,arr):
+        """
+        arr:
+            [a,b,c,d,e,f]
+            ax^{2}+bxy+cy^{2}+dx+ey+f=0
+            2x/(1-x^2) = b/(a-c)=tan(2theta)
+            x = 
+        """
+        a,b,c,d,e,f = arr
+        delta = b*b - 4*a*c
+        if delta < 0:
+            print("it is an ellipse")
+        elif delta > 0:
+            print("it is a hyperbola")
+        else:
+            print("it is a parabola")
+            
+        if a == c:
+            k1 = 1 
+            k2 = 1
+        else:
+            arr = [b,2*(a-c),-b]
+            tantheta = self.solveQuadraticSymbolic(arr)[0]
+            k1,k2 = fraction(tantheta)
+        # sintheta = k1/sqrt(k1*k1+k2*k2)
+        # costheta = k2/sqrt(k1*k1+k2*k2)
+        costheta = k2 
+        sintheta = k1
+        x,y,u,v = symbols("x y u v")
+        x = costheta*u - sintheta*v
+        y = sintheta*u + costheta*v
+        s = a*x*x+b*x*y+c*y*y+d*x+e*y+f
+        s = s.expand().simplify()
+        s,denom = fraction(s)
+        s = s.collect([u,v])
+        # print(latex(s))
+        poly = Poly(s,[u,v]).as_dict()
+        print(poly)
+        sol = solve([diff(s,u),diff(s,v)],[u,v])
+        uv_center = [sol[u],sol[v]]
+        s = s.subs(u,sol[u])
+        s = s.subs(v,sol[v])
+        s = s.expand()
+        au = poly[(2,0)]
+        bu = poly[(1,0)]
+        av = poly[(0,2)]
+        bv = poly[(0,1)]
+        k  = bu*bu/au/4 + bv*bv/av/4 - poly[(0,0)]
+        k  = k.expand().simplify()
+        print(k)
+
+        center = self.uv2XY(uv_center,k1,k2)
+        print(center)
+
+
+        return
+
+    def uv2XY(self,uv,k1,k2):
+
+        u,v = uv
+        delta = sqrt(k1*k1+k2*k2)
+        x = (k2*u - k1*v)/delta
+        y = (k1*u + k2*v)/delta
+
+        x = x.expand().simplify()
+        y = y.expand().simplify()
+        print(latex(x))
+        print(latex(y))
+
+        return [x,y] 
+
     def test(self):
         """
         docstring for test
@@ -443,7 +528,9 @@ class Puzzles():
         # self.fixedOpposite()
         # self.pointLinePoint()
         # self.fixedPointGeneral()
-        self.ellipseTran()
+        # self.ellipseTran()
+        arr = [7,24,3489,4,5,6]
+        self.transformGeneralConic(arr)
 
         return
 
