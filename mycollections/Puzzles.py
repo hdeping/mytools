@@ -721,6 +721,26 @@ class Puzzles():
 
         
         return
+
+    def getDigitsSum(self,a):
+        """
+        docstring for getDigitsSum
+        """
+        a = str(a)
+        res = 0 
+        for i in a:
+            res += int(i)
+
+        return res 
+    def digitsProblem(self):
+        """
+        docstring for digitsProblem
+        """
+        a = 8888**8888 
+        for i in range(10):
+            a = self.getDigitsSum(a)
+            print(i,a)
+        return
     def test(self):
         """
         docstring for test
@@ -740,7 +760,8 @@ class Puzzles():
         # self.testSolve()
         # self.quarticPlot()
         # self.xLogX()
-        self.nSquare()
+        # self.nSquare()
+        self.digitsProblem()
 
         return
 
