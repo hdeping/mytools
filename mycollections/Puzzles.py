@@ -18,6 +18,10 @@
 from sympy import *
 import itertools
 import numpy as np
+import matplotlib
+matplotlib.use("TkAgg")
+import matplotlib.pyplot as plt
+
 
 
 class Puzzles():
@@ -516,6 +520,146 @@ class Puzzles():
 
         return [x,y] 
 
+    def solveCubic(self,arr):
+        """
+        docstring for solveCubic
+        arr:
+            [a,b,c,d]
+        """
+        a,b,c,d = arr
+        q = -(2*b**3-9*a*b*c+27*a**2*d)/2
+        p = 3*a*c - b**2 
+        delta = (q**2+p**3)**0.5
+        m = (q+delta)**(1/3)
+        n = (q-delta)**(1/3)
+        if delta.imag == 0:
+            if q+delta < 0:
+                m = -(-q-delta)**(1/3)
+            if q-delta < 0:
+                n = -(-q+delta)**(1/3)
+            
+        # print(q,p,delta,m)
+        omega1 = -1/2+3**0.5/2*1j
+        omega2 = -1/2-3**0.5/2*1j
+        x1 = (-b + m + n)/(3*a)
+        x2 = (-b + omega1*m + omega2*n)/(3*a)
+        x3 = (-b + omega2*m + omega1*n)/(3*a)
+        # print(x1+x2+x3)
+        # print(x1*(x2+x3)+x2*x3)
+        # print(x1*x2*x3)
+        # print("-------")
+        return [x1,x2,x3]
+
+    def solveQuartic(self,arr):
+        """
+        docstring for solveQuartic
+        arr:
+            [a,b,c,d,e]
+        """
+        a,b,c,d,e = arr 
+        A = 8*a*c - 3*b*b 
+        C = b**3-4*a*b*c+8*d*a*a
+        B = (b*b-4*a*c)**2 + 2*b*C - 64*e*a**3
+        arr = [1,A,B,C*C]
+        y1,y2,y3 = self.solveCubic(arr)
+        print(arr,"C = ",C)
+        print("y1 = ",y1)
+        print("y2 = ",y2)
+        print("y3 = ",y3)
+        self.checkRoot([y1,y2,y3])
+
+        y1 = y1**0.5
+        y2 = y2**0.5
+        y3 = y3**0.5
+        print(y1,y2,y3)
+        C = y1*y2*y3 
+        if C.imag is not 0:
+            y1 = -y1*1j
+        print("y1y2y3 = ",y1*y2*y3)
+        x1 = (-b-y1-y2-y3)/(4*a)
+        x2 = (-b+y1+y2-y3)/(4*a)
+        x3 = (-b+y1-y2+y3)/(4*a)
+        x4 = (-b-y1+y2+y3)/(4*a)
+
+
+        return [x1,x2,x3,x4]
+    def checkRoot(self,roots):
+        """
+        docstring for checkRoot
+        """
+        num = len(roots)
+        for i in range(1,num+1):
+            res = 0 
+            combinations = itertools.combinations(roots,i)
+            for line in combinations:
+                res += np.prod(line)
+            print(i,res)
+        return
+    def distanceEllipse(self):
+        """
+        docstring for distanceEllipse
+        """
+        x,y = symbols("x y")
+        eqn = [2*sqrt(2)/x-1/y-1]
+        s = x*x/2+y*y-1
+        eqn.append(s)
+        # sol = solve(eqn,[x,y])
+        # print(latex(sol[0]))
+        # print(len(sol))
+        s = s.subs(y,1/(2*sqrt(2)/x-1))
+        s = s.expand().simplify()
+        s,denom = fraction(s)
+        s = s.expand()*2
+        print(latex(s))
+
+        return
+
+    def testSolve(self):
+        """
+        docstring for testSolve
+        """
+        sol = self.solveCubic([1,1,1,1])
+        self.checkRoot(sol)
+        arr = [1,-10,35,-50,24]
+        arr = [1,-4,4,4,-4]
+        sol = self.solveQuartic(arr)
+        for x in sol:
+            print("-----",x)
+        self.checkRoot(sol)
+       
+        return
+
+    def quarticPlot(self):
+        """
+        docstring for quarticPlot
+        """
+        x = Symbol("x")
+        s = ((x-1)*(x-2)*(x-3)*(x-4)).expand()
+        print(s)
+        s = x*(x*(x*(x-4)+4)+4)-4
+        s = s.expand()
+        print(s.factor())
+        print(s.subs(x,-0.946965).expand())
+        x = np.linspace(-1.2,1.2,100)
+        x = np.linspace(-0.947,-0.946,100)
+        # x = np.linspace(0.7747,0.7748,100)
+        y = x**4 - 4*x**3 + 4*x**2 + 4*x - 4
+        plt.plot(x,y,lw=4)
+        plt.plot(x,x-x,lw=4)
+        # plt.show()
+        return
+
+    def xLogX(self):
+        """
+        docstring for xLogX
+        """
+        x = np.linspace(0.001,0.999,100)
+        x = np.linspace(1.1,10,100)
+        y = x/np.log(x)
+        plt.plot(x,y,lw=4)
+        plt.plot(x,x-x,lw=4)
+        plt.show()
+        return
     def test(self):
         """
         docstring for test
@@ -529,8 +673,12 @@ class Puzzles():
         # self.pointLinePoint()
         # self.fixedPointGeneral()
         # self.ellipseTran()
-        arr = [7,24,3489,4,5,6]
-        self.transformGeneralConic(arr)
+        # arr = [7,24,3489,4,5,6]
+        # self.transformGeneralConic(arr)
+        # self.distanceEllipse()
+        # self.testSolve()
+        # self.quarticPlot()
+        # self.xLogX()
 
         return
 
