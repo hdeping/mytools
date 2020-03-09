@@ -741,6 +741,27 @@ class Puzzles():
             a = self.getDigitsSum(a)
             print(i,a)
         return
+
+
+    def sequenceConverge(self):
+        """
+        docstring for sequenceConverge
+        """
+        res = [Integer(2)]
+        res = [2]
+        for i in range(400000):
+            a = res[-1] - 1/res[-1]
+            res.append(a)
+            # print(i,a)
+            if abs(a) < 0.1:
+                print(i+1,a)
+
+        x = np.arange(len(res))
+        res = np.array(res)
+
+        plt.plot(x,res)
+        plt.show()
+        return
     def test(self):
         """
         docstring for test
@@ -761,7 +782,8 @@ class Puzzles():
         # self.quarticPlot()
         # self.xLogX()
         # self.nSquare()
-        self.digitsProblem()
+        # self.digitsProblem()
+        self.sequenceConverge()
 
         return
 
