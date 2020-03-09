@@ -669,17 +669,56 @@ class Puzzles():
         for a,b are integers
         """
 
-        n = 1000
+        n = 10
         arr = np.arange(1,n)
         combinations = itertools.combinations(arr,2)
+        for line in combinations:
+            a,b = line
+            A = a*a+b*b 
+            B = 1+a*b 
+            N = A//B 
+            if A == N*B:
+                print("(%d,%d),"%(a,b))
+        n = 300000
+        m = 9
+        for a in range(2,n):
+            A = a**3 - m 
+            B = a*m+1
+            b = A//B 
+            if A == b*B:
+                print("((a,b) = %d,%d),"%(a,b))
 
-        for a in range(1,n):
-            for b in range(1,n):
-                A = a*a+b*b 
-                B = 1+a*b 
-                N = A//B 
-                if A == N*B:
-                    print(N,a,b)
+        a,b,n,t = symbols("a b n t")
+        s = (a*a+b*b)*a - (1+a*b)*(b+n)
+        s = solve([s],[b])
+        b = s[b]
+        print(b)
+        b = b.subs(a,(t-1)/n)
+        b = b.expand()
+        # print(latex(b))
+        b = b*n**3*t
+        b = b.expand()
+        print(b)
+
+        a = 8 
+        n = 2
+        b = 30
+        t = a*n + 1
+        print(a*a+b*b,a,b,t)
+        print((a**3-n)/t)
+        print((t-1)**3-n**4)
+
+        k = Symbol("k")
+        a = k**5 - k 
+        b = k**3 
+        s = a*a+b*b 
+        s = s.expand()
+        print(s)
+        s = 1+a*b 
+        s = s.expand()
+        print(s)
+
+
         
         return
     def test(self):
