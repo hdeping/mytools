@@ -660,6 +660,28 @@ class Puzzles():
         plt.plot(x,x-x,lw=4)
         plt.show()
         return
+
+    def nSquare(self):
+        """
+        docstring for nSquare
+        prove that n is a square if 
+        n = (a*a+b*b)/(1+ab) is an integer 
+        for a,b are integers
+        """
+
+        n = 1000
+        arr = np.arange(1,n)
+        combinations = itertools.combinations(arr,2)
+
+        for a in range(1,n):
+            for b in range(1,n):
+                A = a*a+b*b 
+                B = 1+a*b 
+                N = A//B 
+                if A == N*B:
+                    print(N,a,b)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -679,6 +701,7 @@ class Puzzles():
         # self.testSolve()
         # self.quarticPlot()
         # self.xLogX()
+        self.nSquare()
 
         return
 
