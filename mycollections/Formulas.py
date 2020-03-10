@@ -22,7 +22,7 @@ from sympy import sympify,trigsimp,expand_trig
 from sympy import Matrix,limit,tan,Integer,symbols,Poly
 from sympy.solvers import diophantine
 import numpy as np
-from mytools import MyCommon
+# from mytools import MyCommon
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
@@ -591,7 +591,8 @@ class EllipticCurve():
         return
     
 
-class Formulas(MyCommon,EllipticCurve):
+# class Formulas(MyCommon,EllipticCurve):
+class Formulas(EllipticCurve):
     """
     Formulas Deriations with sympy
     self.one:
