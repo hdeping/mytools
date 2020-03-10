@@ -3286,6 +3286,8 @@ class Formulas(EllipticCurve):
                 res.append([i])
             # print("res:",res)
             return res 
+        if len(arr) == 0:
+            return arr
         else:
             res = self.getAllCombinator(arr[:-1])
             total = []
@@ -4958,7 +4960,7 @@ class Formulas(EllipticCurve):
             res = (res // i)*(i-1)
         return res
 
-    def getAllFactors(self,n):
+    def getAllFactors(self,n,factors = None):
         """
         docstring for getAllFactors
         18 => [1,2,3,6,9,18]
@@ -4968,13 +4970,17 @@ class Formulas(EllipticCurve):
             factor array
         """
         n = Integer(n)
-        factors = sympy.factorint(n)
+        if factors == None:
+            factors = sympy.factorint(n)
         indeces = []
         keys    = []
         res     = []
         for key in factors:
             value = factors[key]
-            indeces.append(np.arange(value+1))
+            tmp = []
+            for ii in range(value+1):
+                tmp.append(ii)
+            indeces.append(tmp)
             # print(value)
             keys.append(key)
 

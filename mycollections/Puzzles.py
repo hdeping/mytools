@@ -762,41 +762,73 @@ class Puzzles(Formulas):
         plt.plot(x,res)
         plt.show()
         return
-    def sylowSimpleTest(self,order):
+    def sylowSimpleTest(self,order,factors = None):
         """
         docstring for sylowSimpleTest
         order:
             group order
         according to the Sylow's Theorem
         """
-        print("group order is ",order)
+        # print("group order is ",order)
 
         totalNum = 1
-        factors = factorint(order)
+        isNonSimple = False
+        if factors == None:
+            factors = factorint(order)
         for key in factors:
             index = factors[key]
-            value = order//(key**index)
-            allFactors = self.getAllFactors(value)
+            if factors == None:
+                value = order//(key**index)
+                allFactors = self.getAllFactors(value)
+            else:
+                res = {}
+                for i in factors:
+                    if i != key:
+                        res[i] = factors[i]
+                allFactors = self.getAllFactors(1,factors=res)
             res = []
             for i in allFactors:
                 if i%key == 1:
                     res.append(i)
-            print("n_{%d} & = & "%(key),res)
+            # print("n_{%d} & = & "%(key),res)
             if len(res) > 1:
                 totalNum += res[1]*(key-1)
             else:
                 totalNum += (key-1)
+                isNonSimple = True
+                # print("group %d is not simple"%(order))
 
-        return totalNum
+        return totalNum,isNonSimple
 
     def testSylow(self):
         """
         docstring for testSylow
         """
-        orders = [12,60,6545,1365,2907,132,462]
+        orders = [12,60,6545,1365,2907,
+                  132,462,7920,39*97*101*9783]
         for order in orders:
-            res = self.sylowSimpleTest(order)
+            res,i = self.sylowSimpleTest(order)
             print("totalNum = ",res)
+
+        # factors = { 2:41,3:13,5:6,7:2,
+        #             11:1,13:1,17:1,19:1,
+        #             23:1,31:1,47:1}
+
+        # print(factors)
+        # res = self.sylowSimpleTest(1,factors = factors)
+        # print("totalNum = ",res)
+
+        count = 0 
+        for i in range(4,10000):
+            if isprime(i):
+                continue
+            # print(i)
+            res,judge = self.sylowSimpleTest(i)
+            if judge == False and res <= i:
+                print("order = ",i,"totalNum = ",res)
+                count += 1 
+        print(count)
+
         return
     def test(self):
         """
