@@ -21,10 +21,10 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
+from Formulas import Formulas
 
 
-
-class Puzzles():
+class Puzzles(Formulas):
     """
     solutions for math puzzles
     """
@@ -762,6 +762,42 @@ class Puzzles():
         plt.plot(x,res)
         plt.show()
         return
+    def sylowSimpleTest(self,order):
+        """
+        docstring for sylowSimpleTest
+        order:
+            group order
+        according to the Sylow's Theorem
+        """
+        print("group order is ",order)
+
+        totalNum = 1
+        factors = factorint(order)
+        for key in factors:
+            index = factors[key]
+            value = order//(key**index)
+            allFactors = self.getAllFactors(value)
+            res = []
+            for i in allFactors:
+                if i%key == 1:
+                    res.append(i)
+            print("n_{%d} & = & "%(key),res)
+            if len(res) > 1:
+                totalNum += res[1]*(key-1)
+            else:
+                totalNum += (key-1)
+
+        return totalNum
+
+    def testSylow(self):
+        """
+        docstring for testSylow
+        """
+        orders = [12,60,6545,1365,2907,132,462]
+        for order in orders:
+            res = self.sylowSimpleTest(order)
+            print("totalNum = ",res)
+        return
     def test(self):
         """
         docstring for test
@@ -783,7 +819,8 @@ class Puzzles():
         # self.xLogX()
         # self.nSquare()
         # self.digitsProblem()
-        self.sequenceConverge()
+        # self.sequenceConverge()
+        self.testSylow()
 
         return
 
