@@ -830,6 +830,54 @@ class Puzzles(Formulas):
         print(count)
 
         return
+
+    def IMO1977(self,m,n):
+        """
+        docstring for IMO1977
+        any sum of continuous m terms are negative, 
+        any sum of continuous n terms are positive, 
+        what is longest length of the sequence?
+        """
+        if m > n:
+            print("%d,%d is invalid, try %d,%d"%(m,n,n,m))
+            return
+        indeces = [0]
+        for i in range(m+n-1):
+            if indeces[-1] >= m:
+                num = indeces[-1] - m 
+                indeces.append(num)
+            else:
+                num = indeces[-1] + n 
+                indeces.append(num)
+
+        print(indeces)
+
+        Sn = np.arange(1,m+n)
+        for j,i in enumerate(indeces[1:]):
+            i = i-1
+            Sn[i] = j+1
+        print(Sn)
+        Sn = Sn[1:] - Sn[0:-1]
+        print(Sn)
+        for k2 in [m,n]:
+            k1 = len(Sn)-k2
+            for i in range(k1):  
+                print(i,sum(Sn[i:i+k2]))
+
+        print(len(Sn))
+
+        res = 0 
+        for j,i in enumerate(Sn):
+            res = res + i
+            print(j,res)
+        
+        matrix = np.ones((m-1,n),int)
+        for i in range(m-1):
+            matrix[i,:] = Sn[i:i+n]
+        print(matrix)
+        print(np.sum(matrix,axis=0))
+        print(np.sum(matrix,axis=1))
+        return
     def test(self):
         """
         docstring for test
@@ -852,7 +900,8 @@ class Puzzles(Formulas):
         # self.nSquare()
         # self.digitsProblem()
         # self.sequenceConverge()
-        self.testSylow()
+        # self.testSylow()
+        # self.IMO1977(7,11)
 
         return
 
