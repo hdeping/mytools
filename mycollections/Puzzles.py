@@ -899,7 +899,7 @@ class Puzzles(Algorithms):
         """
         docstring for getEllipticDelta
         """
-        n = 30
+        n = 400
         A = self.getSigmaN(3,n=n)
         B = self.getSigmaN(5,n=n)
         A2 = self.polynomialPow(A,2)[:n+1]
@@ -921,15 +921,44 @@ class Puzzles(Algorithms):
         for i in range(len(g2)):
             g2[i] *= 240 
         g2[0] = 1 
-        print(g2)
+        # print(g2)
         g23 = self.polynomialPow(g2,3)[:n+1]
-        print(g23)
+        # print(g23)
 
         Delta = Delta[1:]
-        print(Delta)
+        # print(Delta)
+
+
+        jTau = self.polynomialDivide(g23,Delta)
+        # print(jTau[:100])
+        for i in range(21):
+            cn = self.asymCn(i)
+            print("c(%d) & = & %d \\\\"%(i,jTau[i+1]),cn)
+
+        n = 385
+        c385 = jTau[n+1]
+        a1 = (c385 // 25)
+        a2 = (c385 // 7)
+        a3 = (c385 // 11)
+        print("c%d = %d"%(n,c385))
+        print(a1*25)
+        print(a2*7)
+        print(a3*11)
+        
+        print(self.asymCn(n))
 
 
         return
+
+    def asymCn(self,n):
+        """
+        docstring for asymCn
+        """
+        if n == 0:
+            return 1
+        cn = np.exp(4*np.pi*n**0.5)
+        cn = cn/(2**0.5*n**(3/4))
+        return cn
     def test(self):
         """
         docstring for test
