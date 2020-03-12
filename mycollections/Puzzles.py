@@ -22,9 +22,10 @@ import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from Formulas import Formulas
+from Algorithms import Algorithms
 
 
-class Puzzles(Formulas):
+class Puzzles(Algorithms):
     """
     solutions for math puzzles
     """
@@ -878,6 +879,57 @@ class Puzzles(Formulas):
         print(np.sum(matrix,axis=0))
         print(np.sum(matrix,axis=1))
         return
+
+    def getSigmaN(self,alpha,n=20):
+        """
+        docstring for getSigmaN
+        \sigma_{\alpha}(n)&=&\sum_{d\mid n}d^{\alpha}
+        """
+        res = [0,1]
+        for i in range(2,n+1):
+            factors = self.getAllFactors(i)
+            num = 0 
+            for j in factors:
+                num += j**alpha 
+            res.append(num)
+        
+        return res
+
+    def getEllipticDelta(self):
+        """
+        docstring for getEllipticDelta
+        """
+        n = 30
+        A = self.getSigmaN(3,n=n)
+        B = self.getSigmaN(5,n=n)
+        A2 = self.polynomialPow(A,2)[:n+1]
+        A3 = self.polynomialPow(A,3)[:n+1]
+        B2 = self.polynomialPow(B,2)[:n+1]
+        # print(A)
+        # print(B)
+        # print(A2)
+        # print(A3)
+        # print(B2)
+        Delta = []
+        for i in range(n+1):
+            num = (5*A[i]+7*B[i])//12
+            num += 100*A2[i] - 147*B2[i] + 8000*A3[i]
+            # print(num)
+            Delta.append(num)
+
+        g2 = A.copy()
+        for i in range(len(g2)):
+            g2[i] *= 240 
+        g2[0] = 1 
+        print(g2)
+        g23 = self.polynomialPow(g2,3)[:n+1]
+        print(g23)
+
+        Delta = Delta[1:]
+        print(Delta)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -902,6 +954,7 @@ class Puzzles(Formulas):
         # self.sequenceConverge()
         # self.testSylow()
         # self.IMO1977(7,11)
+        self.getEllipticDelta()
 
         return
 
