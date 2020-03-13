@@ -31,6 +31,9 @@ class Puzzles(Algorithms):
     """
     def __init__(self):
         super(Puzzles, self).__init__()
+
+        self.gamma = 0.57721566490153286
+
     def abSeven(self):
         """
         docstring for abSeven
@@ -988,7 +991,7 @@ class Puzzles(Algorithms):
         """
         a = 2
         b = 2
-        m = 10000
+        m = 50000
         base = 13
         n = base**m 
         phi = (base - 1)*n//base
@@ -1035,6 +1038,7 @@ class Puzzles(Algorithms):
 
         final = []
         for i,line in enumerate(exponents):
+            print(i)
             res = 1 
 
             for x,y in zip(X,line):
@@ -1047,6 +1051,43 @@ class Puzzles(Algorithms):
             final.append(res)
 
         print(sum(final[:3])%n - final[-1])
+
+
+        return
+
+    def getGamma(self,z):
+        """
+        docstring for getGamma
+        -\ln\Gamma(z) &=& \ln z+\gamma z+\sum_{k=1}^{\infty}
+        \left[\ln\left(1+\frac{z}{k}\right)-\frac{z}{k}\right]
+
+        """
+        res = np.log(z) + self.gamma*z
+        n   = 100000 
+        arr = np.arange(1,n+1)
+        arr = z/arr
+        arr = np.log(1+arr) - arr 
+        res = res + sum(arr)
+        res = np.exp(-res)
+
+        return res 
+
+    def testGamma(self):
+        """
+        docstring for testGamma
+        """
+        z = 0.5
+        res = self.getGamma(z) 
+        print(z,res,res**2)
+        print(self.getGamma(1.46163))
+
+        arr = np.linspace(0.01,6,100)
+        y = []
+        for x in arr:
+            y.append(self.getGamma(x))
+        plt.plot(arr,y,lw=4)
+        plt.savefig("gamma.png",dpi=300)
+        plt.show()
 
 
         return
@@ -1076,7 +1117,8 @@ class Puzzles(Algorithms):
         # self.IMO1977(7,11)
         # self.getEllipticDelta()
         # self.getQuarticArea()
-        self.checkDiophantine()
+        # self.checkDiophantine()
+        self.testGamma()
 
         return
 
