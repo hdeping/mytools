@@ -947,6 +947,9 @@ class Puzzles(Algorithms):
         
         print(self.asymCn(n))
 
+        for i,j in enumerate(Delta):
+            print(i+1,j)
+
 
         return
 
@@ -959,6 +962,51 @@ class Puzzles(Algorithms):
         cn = np.exp(4*np.pi*n**0.5)
         cn = cn/(2**0.5*n**(3/4))
         return cn
+
+
+    def getQuarticArea(self):
+        """
+        docstring for getQuarticArea
+        S(x^4+y^4 = x^2+y^2)
+        """
+        u,v = symbols("u v")
+        x,y = symbols("x y")
+
+        s = x**4+y**4-x**2-y**2 
+        s = s.subs(x,u+v)
+        s = s.subs(y,u-v)
+        s = s.expand()
+
+        print(s)
+        return
+
+    def checkDiophantine(self):
+        """
+        docstring for checkDiophantine
+        """
+        a = 1 
+        b = 1 
+        x = [30020,37240,77420,73549,b,a,a+b]
+        exponents = [[2687610569,6427526880,5704546660,
+                      1322543931,23356556334698066540,
+                      25901953851181467018439618,
+                      26135095002607441931954713422],
+                     [2646868620,6330090899,5618070460,
+                      1302495261,23002490296274144359,
+                      25509301695782051146507739,
+                      25738908620556798547437966882],
+                     [2594429420,6204680480,5506766439,
+                      1276690501,22546769834733299498,
+                      25003916818203407240682920,
+                      25228974819258001151748259762],
+                     [2593145049,6201608856,5504040317,
+                      1276058476,22535608067488382023,
+                      24991538641560732286603374,
+                      25216485227763318972960265574]]
+
+        for line in exponents:
+            print(line[-1])
+        return
     def test(self):
         """
         docstring for test
@@ -983,7 +1031,9 @@ class Puzzles(Algorithms):
         # self.sequenceConverge()
         # self.testSylow()
         # self.IMO1977(7,11)
-        self.getEllipticDelta()
+        # self.getEllipticDelta()
+        # self.getQuarticArea()
+        self.checkDiophantine()
 
         return
 
