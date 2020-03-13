@@ -983,10 +983,21 @@ class Puzzles(Algorithms):
     def checkDiophantine(self):
         """
         docstring for checkDiophantine
+        check the equation
+        20D^{2020}&=&49A^{1949}+79B^{1979}+19C^{2019}
         """
-        a = 1 
-        b = 1 
-        x = [30020,37240,77420,73549,b,a,a+b]
+        a = 2
+        b = 2
+        m = 10000
+        base = 13
+        n = base**m 
+        phi = (base - 1)*n//base
+        X = [30020,37240,77420,73549,b,a,a+b]
+        res = []
+        for i in X:
+            res.append(i%n)
+        X = res 
+        print("X = ",X)
         exponents = [[2687610569,6427526880,5704546660,
                       1322543931,23356556334698066540,
                       25901953851181467018439618,
@@ -1003,9 +1014,41 @@ class Puzzles(Algorithms):
                       1276058476,22535608067488382023,
                       24991538641560732286603374,
                       25216485227763318972960265574]]
-
+        res = []
         for line in exponents:
-            print(line[-1])
+            tmp = []
+            for i in line:
+                tmp.append(i%phi)
+            res.append(tmp)
+
+        exponents = res
+
+        # check A, B, C and D
+
+        # 20D^{2020}&=&
+        # 49A^{1949}+79B^{1979}+19C^{2019}
+
+        arr = []
+
+        indeces = [1949,1979,2019,2020]
+        coef = [49,79,19,20]
+
+        final = []
+        for i,line in enumerate(exponents):
+            res = 1 
+
+            for x,y in zip(X,line):
+                # print(x,y)
+                res *= self.getModN(x,y,n)
+                res  = res%n
+
+            res = self.getModN(res,indeces[i],n)
+            res = (coef[i]*res)%n
+            final.append(res)
+
+        print(sum(final[:3])%n - final[-1])
+
+
         return
     def test(self):
         """
