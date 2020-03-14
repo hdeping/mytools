@@ -1228,17 +1228,50 @@ class Puzzles(Algorithms):
             res.append(line)
 
         return res
-    
+    def arctanAddTwo(self,a,b):
+        """
+        docstring for arctanAddTwo
+        tan(arctan a + arctan b)
+        """
+        res = (a+b)/(1-a*b)
+        return res
+    def arctanTimes(self,a,n):
+        """
+        docstring for arctanTimes
+        tan(n*arctan a)
+        """
+        res = a 
+        for i in range(n-1):
+            res = self.arctanAddTwo(res,a)
+
+        return res 
+    def arctanAddArray(self,arr):
+        """
+        docstring for arctanAddArray
+        """
+        length = len(arr)
+        res = arr[0]
+        for i in range(1,length):
+            res = self.arctanAddTwo(res,arr[i])
+
+        return res
     def testTanArctan(self):
         """
         docstring for testTanArctan
         """
         types = "\\arctan\\frac{1}{%d}"
         string = "%s &=& %s + %s"%(types,types,types)
-        for m in range(2,100):
+        for m in range(2,3):
             res = self.getTanArctan(m)
             for line in res:
                 print(string%(m,*line))
+
+        a = self.arctanTimes(1/Integer(18),12)
+        b = self.arctanTimes(1/Integer(57),8)
+        c = -self.arctanTimes(1/Integer(239),5)
+        print(a,b,c)
+        print(self.arctanAddArray([a,b,c]))
+
 
         return
 
