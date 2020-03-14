@@ -1211,6 +1211,37 @@ class Puzzles(Algorithms):
         # self.checkRoot(res)
         return
 
+
+    def getTanArctan(self,m):
+        """
+        docstring for tanTanArctan
+        \arctan\frac{1}{m}&=&\arctan\frac{1}{x}+\arctan\frac{1}{y}
+        """
+        n = m*m + 1 
+        factors = self.getAllFactors(n)
+        length  = (len(factors)+1)//2 
+        # print(factors,length)
+        res = []
+        for a in factors[:length]:
+            b = n // a 
+            line = [m + a,m+b]
+            res.append(line)
+
+        return res
+    
+    def testTanArctan(self):
+        """
+        docstring for testTanArctan
+        """
+        types = "\\arctan\\frac{1}{%d}"
+        string = "%s &=& %s + %s"%(types,types,types)
+        for m in range(2,100):
+            res = self.getTanArctan(m)
+            for line in res:
+                print(string%(m,*line))
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -1242,7 +1273,8 @@ class Puzzles(Algorithms):
         # self.getExp163()
         # self.testExp163()
         # self.getMatrixInverse()
-        self.tetraPolyhedron()
+        # self.tetraPolyhedron()
+        self.testTanArctan()
 
         return
 
