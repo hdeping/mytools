@@ -23,6 +23,9 @@ matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 from Formulas import Formulas
 from Algorithms import Algorithms
+from decimal import *
+from tqdm import tqdm
+
 
 
 class Puzzles(Algorithms):
@@ -1055,7 +1058,7 @@ class Puzzles(Algorithms):
 
         return
 
-    def getGamma(self,z):
+    def getGamma(self,z,n=100000):
         """
         docstring for getGamma
         -\ln\Gamma(z) &=& \ln z+\gamma z+\sum_{k=1}^{\infty}
@@ -1063,7 +1066,6 @@ class Puzzles(Algorithms):
 
         """
         res = np.log(z) + self.gamma*z
-        n   = 100000 
         arr = np.arange(1,n+1)
         arr = z/arr
         arr = np.log(1+arr) - arr 
@@ -1080,16 +1082,110 @@ class Puzzles(Algorithms):
         res = self.getGamma(z) 
         print(z,res,res**2)
         print(self.getGamma(1.46163))
+        res = self.getGamma(1/4)
+        print(res,res**2/2/np.pi**0.5)
 
-        arr = np.linspace(0.01,6,100)
-        y = []
-        for x in arr:
-            y.append(self.getGamma(x))
-        plt.plot(arr,y,lw=4)
-        plt.savefig("gamma.png",dpi=300)
-        plt.show()
+        res = self.getGamma(1j,n=1000000)
+        print(res)
+        res = self.getGamma(1j,n=100000)
+        print(res)
+        # arr = np.linspace(0.01,6,100)
+        # y = []
+        # for x in arr:
+        #     y.append(self.getGamma(x))
+        # plt.plot(arr,y,lw=4)
+        # plt.savefig("gamma.png",dpi=300)
+        # plt.show()
 
 
+        return
+
+    def getExp163(self,n=163,nine=0,epi=1,exponent=2):
+        """
+        docstring for getExp163
+        """
+
+        getcontext().prec = 100
+        a = Decimal(n)
+        if nine == 1:
+            a = a/Decimal(9)
+        a = a**(Decimal(1)/Decimal(exponent))
+        pi = Decimal(31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421)
+        # print("      ",pi)
+        pi = pi/Decimal(10**94)
+        # print("pi = ",pi)
+        e = Decimal(271828182845904523536028747135266249775724709369995957496696762772407663035354759457138217852516)
+        # print("e =  ", e)
+        e = e/Decimal(10**95)
+        # print("e = ", e)
+        # print("a = ",a,a**Decimal(2))
+        if epi == 0:
+            n = pi**(e*a)
+        else:
+            n = e**(pi*a)
+        # print(n)
+        return n
+
+    def testExp163(self):
+        """
+        docstring for testExp163
+        """
+        # print(self.getExp163(n=1))
+        # for i in tqdm(range(1,10)):
+        for j in range(3,10):
+            print("j = ",j)
+            for i in tqdm(range(1,30000)):
+                res = self.getExp163(n=i,epi=0,exponent=j)
+                res = str(res).split(".")
+                digits = res[1]
+                # print("%5d ==> "%(i),res)
+                m = 5
+                if digits[:m] == "9"*m:
+                    print(i,res[0],res[1][:10])
+
+        res = self.getExp163(nine=1)
+        a = Decimal(1)/(res - Decimal(640320))
+        print(a,int(a))
+        for i in range(1):
+            a = Decimal(1)/(a - Decimal(int(a)))
+            print(i,int(a))
+        return
+
+    def getMatrixInverse(self):
+        """
+        docstring for getMatrixInverse
+        a 20000X20000 matrix is zero everywhere 
+        except 2,3,5,...,224737 on the diagonal
+        and a_{ij} = 1 when abs(i-j)=2**m
+        what is A^{-1}_{11}?
+        """
+
+        n = 20
+        mat = Matrix.zeros(n)
+        # print(mat)
+
+        arr = []
+        for i in range(n):
+            arr.append(1<<i)
+            mat[i,i] = prime(i+1)
+            # mat[i,i] = 1
+        # print(arr)
+        for i in range(n):
+            for j in range(i+1,n):
+                res = j-i
+                # print(i,j,res)
+                if res in arr:
+                    mat[i,j] = 1
+                    mat[j,i] = 1
+        # print(mat)
+        # print(mat.inv())
+        a = mat.det()
+        b = mat[1:,1:].det()
+        print(b,a,b/a)
+
+        # print(latex(mat))
+
+        
         return
     def test(self):
         """
@@ -1118,10 +1214,15 @@ class Puzzles(Algorithms):
         # self.getEllipticDelta()
         # self.getQuarticArea()
         # self.checkDiophantine()
-        self.testGamma()
+        # self.testGamma()
+        # self.getExp163()
+        # self.testExp163()
+        # self.getMatrixInverse()
 
         return
 
 puzzle = Puzzles()
 puzzle.test()
+
+
         
