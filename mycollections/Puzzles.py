@@ -1241,6 +1241,8 @@ class Puzzles(Algorithms):
         tan(n*arctan a)
         """
         res = a 
+        if n == 1:
+            return res
         for i in range(abs(n)-1):
             res = self.arctanAddTwo(res,a)
         if n < 0:
@@ -1257,6 +1259,25 @@ class Puzzles(Algorithms):
             res = self.arctanAddTwo(res,arr[i])
 
         return res
+
+    def arctanIntArray(self,arr):
+        """
+        docstring for arctanDicts
+        arr:
+            2d array, [n,m]
+        return:
+            tan(\sum n*arctan (1/m))
+        """
+        res = []
+        for line in arr:
+            n,m = line 
+            num = 1/Integer(m) 
+            num = self.arctanTimes(num,n)
+            res.append(num)
+        res = self.arctanAddArray(res)
+
+        return res 
+
     def testTanArctan(self):
         """
         docstring for testTanArctan
@@ -1273,10 +1294,41 @@ class Puzzles(Algorithms):
         c = self.arctanTimes(1/Integer(239),-5)
         print(a,b,c)
         print(self.arctanAddArray([a,b,c]))
+        arr = [[12,18],[8,57],[-5,239]]
+        arr = [[2,2],[3,3]]
+        arr = [[2,70],[-2,12],[1,7]]
+        arr = [[12,5],[-4,7],[-8,8]]
+        print(self.arctanIntArray(arr))
+        arr = [[12,18],[8,57]]
+        print(self.arctanIntArray(arr))
+        arr = [[4,5],[-1,239]]
+        print(self.arctanIntArray(arr))
+        arr = [[5,5],[-3,18],[-2,57]]
+        print(self.arctanIntArray(arr))
+
 
 
         return
 
+    def testArctanTimes(self):
+        """
+        docstring for testArctanTimes
+        """
+        n,m = symbols("n m")
+        for order in tqdm(range(2,20)):
+            s = self.arctanTimes(1/n,order)
+            s = s.simplify()
+            # print(latex(s))
+            s1,s2 = fraction(s)
+            s = m*s1-s2*(m+1)
+            for k in range(2,10):
+                # print(k,s)
+                S = s.subs(n,k)
+                x = solve(S,[m])[0]
+                # print(order,k,x)
+                if x.is_integer:
+                    print(order,k,x)
+        return
     def test(self):
         """
         docstring for test
