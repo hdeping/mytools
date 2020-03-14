@@ -1241,8 +1241,10 @@ class Puzzles(Algorithms):
         tan(n*arctan a)
         """
         res = a 
-        for i in range(n-1):
+        for i in range(abs(n)-1):
             res = self.arctanAddTwo(res,a)
+        if n < 0:
+            res = - res
 
         return res 
     def arctanAddArray(self,arr):
@@ -1268,7 +1270,7 @@ class Puzzles(Algorithms):
 
         a = self.arctanTimes(1/Integer(18),12)
         b = self.arctanTimes(1/Integer(57),8)
-        c = -self.arctanTimes(1/Integer(239),5)
+        c = self.arctanTimes(1/Integer(239),-5)
         print(a,b,c)
         print(self.arctanAddArray([a,b,c]))
 
