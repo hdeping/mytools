@@ -1187,6 +1187,30 @@ class Puzzles(Algorithms):
 
         
         return
+
+    def tetraPolyhedron(self):
+        """
+        docstring for tetraPolyhedron
+        """
+        a,b,c,a1,b1,c1 = symbols("a b c a1 b1 c1")
+
+        cosA = (b**2+c**2-a1**2)/(2*b*c)
+        cosB = (b**2+a**2-c1**2)/(2*b*a)
+        cosC = (a**2+c**2-b1**2)/(2*a*c)
+
+        V = 1-cosA**2-cosB**2-cosC**2+2*cosA*cosB*cosC
+        V = V*4*(a*b*c)**2 
+        V = V.expand()
+        print(latex(V))
+
+
+        # s = a**4+4*a**3+4*a**2+1
+        # print(s.factor())
+        # res = self.solveQuartic([1,4,4,0,1])
+        # print(res)
+        # self.checkRoot(res)
+        return
+
     def test(self):
         """
         docstring for test
@@ -1218,6 +1242,7 @@ class Puzzles(Algorithms):
         # self.getExp163()
         # self.testExp163()
         # self.getMatrixInverse()
+        self.tetraPolyhedron()
 
         return
 
