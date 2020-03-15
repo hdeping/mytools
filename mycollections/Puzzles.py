@@ -25,8 +25,7 @@ from Formulas import Formulas
 from Algorithms import Algorithms
 from decimal import *
 from tqdm import tqdm
-
-
+import mpmath as mp
 
 class Puzzles(Algorithms):
     """
@@ -1097,6 +1096,17 @@ class Puzzles(Algorithms):
         # plt.savefig("gamma.png",dpi=300)
         # plt.show()
 
+        res = []
+        N = 100
+        delta = 0.1
+        for i in tqdm(range(1,N)):
+            x = 0.9 + i*delta*1j
+            y = self.getGamma(x)
+            res.append(abs(y))
+        plt.plot(np.arange(1,N)*delta,res,lw=4)
+        # plt.savefig("gamma.png",dpi=300)
+        plt.show()
+
 
         return
 
@@ -1329,6 +1339,43 @@ class Puzzles(Algorithms):
                 if x.is_integer:
                     print(order,k,x)
         return
+
+    def testZetaNegativeOdd(self):
+        """
+        docstring for testZetaNegativeOdd
+        """
+        for i in range(2):
+            i = -2*i-1
+            res = mp.zeta(i)
+            print(i,res)
+
+        a = 0.0210927960927961*2730*12 
+        print(a)
+
+        # print(mp.siegel(2))
+        X = np.linspace(0,100,500)
+        Y = []
+        for i in tqdm(X):
+            Y.append(mp.siegelz(i))
+        plt.plot(X,Y,lw=4)
+        plt.plot(X,X-X)
+        plt.show()
+
+        return
+
+    def testZeta(self):
+        """
+        docstring for testZeta
+        """
+        X = np.linspace(0,100,500)
+        Y = []
+        for i in tqdm(X):
+            Y.append(abs(mp.zeta(i*1j)))
+        plt.plot(X,Y,lw=4)
+        plt.plot(X,X-X)
+        plt.show()
+
+        return
     def test(self):
         """
         docstring for test
@@ -1361,7 +1408,10 @@ class Puzzles(Algorithms):
         # self.testExp163()
         # self.getMatrixInverse()
         # self.tetraPolyhedron()
-        self.testTanArctan()
+        # self.testTanArctan()
+        # self.testZetaNegativeOdd()
+        self.testZeta()
+
 
         return
 
