@@ -1376,6 +1376,51 @@ class Puzzles(Algorithms):
         plt.show()
 
         return
+    def showPlot(self,f,begin=0,end=10,N=500):
+        """
+        docstring for showPlot
+        """
+        X = np.linspace(begin,end,N)
+        Y = []
+        for i in tqdm(X):
+            Y.append(abs(f(i)))
+        plt.plot(X,Y,lw=4)
+        plt.plot(X,X-X)
+        plt.show()
+        return
+    def testKleinj(self):
+        """
+        docstring for testKleinj
+        """
+        print('plot begins')
+        
+        mp.cplot(lambda t: mp.kleinj(tau=t), 
+            [0.3,0.35], [0,0.1], 
+            points=50000,
+            file="kleinj2.png",
+            dpi=500)
+        print('plot done!')
+
+        return
+
+    def testEllipk(self):
+        """
+        docstring for testEllipk
+        """
+        print('plot begins')
+        
+        # mp.cplot(lambda t: mp.ellipk(t), 
+        #     [0,10], [0,10], 
+        #     points=10000,
+        #     file="ellipk.png",
+        #     dpi=500)
+        # print('plot done!')
+
+        self.showPlot(mp.ellipk,
+                      begin=-1000,end=1000,
+                      N = 10000)
+
+        return
     def test(self):
         """
         docstring for test
@@ -1410,7 +1455,9 @@ class Puzzles(Algorithms):
         # self.tetraPolyhedron()
         # self.testTanArctan()
         # self.testZetaNegativeOdd()
-        self.testZeta()
+        # self.testZeta()
+        # self.testKleinj()
+        self.testEllipk()
 
 
         return
