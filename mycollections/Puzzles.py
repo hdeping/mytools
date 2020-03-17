@@ -1448,6 +1448,22 @@ class Puzzles(Algorithms):
         plt.show()
         # print(res)
         return
+
+    def testDedekindEta(self):
+        """
+        docstring for testDedekindEta
+        """
+        res = [1,-1]
+        for i in range(2,30):
+            arr     = [0]*(i+1)
+            arr[0]  = 1 
+            arr[-1] = -1
+            # print(i,arr)
+            res = self.polynomialMulti(res,arr)
+        print(res)
+        res = self.polynomialPow(res,24)
+        print(res[:20])
+        return
     def test(self):
         """
         docstring for test
@@ -1485,7 +1501,8 @@ class Puzzles(Algorithms):
         # self.testZeta()
         # self.testKleinj()
         # self.testEllipk()
-        self.testSquareEqn()
+        # self.testSquareEqn()
+        # self.testDedekindEta()
 
 
         return
