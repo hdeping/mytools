@@ -1505,10 +1505,72 @@ class Puzzles(Algorithms):
         # self.testDedekindEta()
         
         return
+
+    def getPiE(self):
+        """
+        docstring for getPiE
+        """
+        getcontext().prec = 100
+        pi = Decimal(31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421)
+        # print("      ",pi)
+        pi = pi/Decimal(10**94)
+        # print("pi = ",pi)
+        e = Decimal(271828182845904523536028747135266249775724709369995957496696762772407663035354759457138217852516)
+        # print("e =  ", e)
+        e = e/Decimal(10**95)
+        return pi,e
+
+    def testRamanujanPi1(self):
+        """
+        docstring for testRamanujanPi1
+        """
+        pi,e = self.getPiE()
+        epsilon = lambda x: np.log(x+(x*x-1)**(0.5))
+        X = []
+        sq2  = 2**0.5
+        sq34 = 34**0.5
+        X.append(429    + 304*sq2)
+        X.append(627/2  + 221*sq2)
+        X.append(1071/2 + 92*sq34)
+        X.append(1553/2 + 133*sq34)
+
+        r_pi = np.log(2)
+        for i in range(4):
+            r_pi = r_pi + epsilon(X[i])
+        factor = 6/3502**0.5
+        r_pi = r_pi*factor
+        print("pi = ",r_pi)
+
+        X = []
+        sq2  = Decimal(2**0.5)
+        sq34 = Decimal(34**0.5)
+        two  = Decimal(2)
+        X.append(Decimal(429)+Decimal(304)*sq2)
+        X.append(Decimal(627)/two+Decimal(221)*sq2)
+        X.append(Decimal(1071)/two+Decimal(92)*sq34)
+        X.append(Decimal(1553)/two+Decimal(133)*sq34)
+        # print(X)
+        res = Decimal(2)
+        half = Decimal(0.5)
+        epsilon = lambda x: x+(x*x-Decimal(1))**half
+        for i in range(4):
+            res = res*epsilon(X[i])
+        res = res**Decimal(6)
+        factor = Decimal(3502)**half
+        # factor = factor/Decimal(6)
+        print(res)
+        print(e**(pi*factor)/res)
+
+        kk = (X[0] - Decimal(429))/Decimal(304)
+
+
+        return
+
     def test(self):
         """
         docstring for test
         """
+        self.testRamanujanPi1()
         
 
 
