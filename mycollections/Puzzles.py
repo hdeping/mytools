@@ -1464,9 +1464,9 @@ class Puzzles(Algorithms):
         res = self.polynomialPow(res,24)
         print(res[:20])
         return
-    def test(self):
+    def testBefore(self):
         """
-        docstring for test
+        docstring for testBefore
         """
         # self.abSeven()
         # self.abcDelta()
@@ -1503,6 +1503,13 @@ class Puzzles(Algorithms):
         # self.testEllipk()
         # self.testSquareEqn()
         # self.testDedekindEta()
+        
+        return
+    def test(self):
+        """
+        docstring for test
+        """
+        
 
 
         return
