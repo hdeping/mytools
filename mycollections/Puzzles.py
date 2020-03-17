@@ -1421,6 +1421,33 @@ class Puzzles(Algorithms):
                       N = 10000)
 
         return
+
+    def testSquareEqn(self):
+        """
+        docstring for testSquareEqn
+        """
+        self.square = 1
+        N = 5000
+        n = int((N+0.01)**0.5)
+        # res = self.getCombinatorEqnRecursive(n,N)
+        # print(N,len(res),res)
+
+        res = self.getCombinatorEqnSolNumByIter(n,N,square=True)
+        res = np.log(res[1:])
+        X   = np.arange(len(res)) + 1 
+        X   = np.sqrt(X)
+        # X   = np.log()
+        n = 2000
+        X = X[-n:]
+        res = res[-n:]
+        corr = np.corrcoef(X,res)
+        print(corr)
+        print(np.polyfit(X,res,1))
+        plt.plot(X,res,lw=2)
+        plt.plot(X,0.51795424*X + 7.15312448,lw=2)
+        plt.show()
+        # print(res)
+        return
     def test(self):
         """
         docstring for test
@@ -1457,7 +1484,8 @@ class Puzzles(Algorithms):
         # self.testZetaNegativeOdd()
         # self.testZeta()
         # self.testKleinj()
-        self.testEllipk()
+        # self.testEllipk()
+        self.testSquareEqn()
 
 
         return
