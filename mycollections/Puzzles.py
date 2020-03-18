@@ -1624,13 +1624,32 @@ class Puzzles(Algorithms):
 
 
         return
+    
+    def testGalois(self):
+        """
+        docstring for testGalois
+        """
+        a = symbols("a0:10")
+        x = symbols("x0:10")
 
+        s = 1 
+        n = 2
+        for i in range(1,n+1):
+            for j in range(i+1,n+1):
+                s = s*(x[i] - x[j])**2
+        s = s.expand()
+        # print(latex(s))
+        print(s)
+
+
+        return
     def test(self):
         """
         docstring for test
         """
         # self.testRamanujanPi1()
-        self.alibabaPuzzles()
+        # self.alibabaPuzzles()
+        self.testGalois()
         
 
 
