@@ -1601,6 +1601,24 @@ class Puzzles(Algorithms):
         # consider the symmetry
         
 
+        s = Integer(3)/4
+        t = Integer(4)/5
+        x = Symbol("x")
+        n = Symbol("n")
+
+        eqn = (x-s)*(x-t) - (1-s)*(1-t)
+        eqn = eqn.factor()
+        print(eqn)
+        a = Matrix([[s,1-t],[1-s,t]])
+        P,D = a.diagonalize()
+        P = P/3
+        print(P,D**n,P**(-1))
+        r = Integer(1)/3
+        r = 0
+        M = Matrix([[r],[1-r]])
+
+        res = P*(D**n)*(P**(-1))*M 
+        print(latex(res))
 
 
 
