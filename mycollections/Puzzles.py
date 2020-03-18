@@ -1624,7 +1624,60 @@ class Puzzles(Algorithms):
 
 
         return
-    
+
+    def getSnNewtonByArray(self,arr,N=5):
+        """
+        docstring for getSnNewtonByArray
+        arr:
+            [a1,a2,a3,...]
+        """
+       
+        M = []
+        n = len(arr)
+        for i in range(n):
+            M.append((i+1)*arr[i])
+        M = -Matrix(M)
+
+        A = eye(n)
+        for i in range(1,n):
+            for j in range(n-i):
+                A[i+j,j] = arr[i-1]
+       
+        A_inv = self.getInverseSymbolMatrix(A)
+        S = A_inv*M
+        S = S.expand()
+        res = [n] + list(S)
+        if N <= n:
+            return res[:N+1]
+        else:
+            for i in range(n+1,N+1):
+                num = 0 
+                for j in range(n):
+                    num = num - res[-j-1]*arr[j]
+                res.append(num)
+
+
+        return res
+
+    def getEqnDet(self,arr):
+        """
+        docstring for getEqnDet
+        arr:
+            [a1,a2,...]
+        """
+        n = len(arr)
+        A = eye(n)
+        res = self.getSnNewtonByArray(arr,N=2*n-2)
+        # print(res)
+        for i in range(n):
+            for j in range(n):
+                A[i,j] = res[i+j]
+
+        D = A.det()
+        D = D.expand()
+        
+        return D
+
     def testGalois(self):
         """
         docstring for testGalois
@@ -1641,6 +1694,93 @@ class Puzzles(Algorithms):
         # print(latex(s))
         print(s)
 
+        arr = symbols("a1:4")
+        # arr = [1,Integer(1)/2,Integer(1)/3]
+
+        # res = self.getSnNewtonByArray(arr)
+        # print(res)
+        p,q,r= symbols("p q r")
+
+        arr = [0]*8 + [p,q,r]
+        for i in range(0):
+            D = self.getEqnDet(arr)
+            # print("D_%d & = & %s \\\\"%(len(arr),latex(D)))
+            res = Poly(D).as_dict()
+            # print(res)
+            line = []
+            for key in res:
+                line.append(res[key])
+            print(len(arr),line[1:-2])
+            arr = [0] + arr
+
+        res = []
+        res.append(Integer(-4)/ 18)
+        res.append(Integer(-27)/ 144)
+        res.append(Integer(256)/ -1600)
+        res.append(Integer(3125)/ -22500)
+        res.append(Integer(-46656)/ 381024)
+        res.append(Integer(-823543)/ 7529536)
+        res.append(Integer(16777216)/ -169869312)
+        res.append(Integer(387420489)/ -4304672100)
+        res.append(Integer(-10000000000)/ 121000000000)
+        res.append(Integer(-285311670611)/ 3734989142544)
+        for j,i in enumerate(res):
+            print(j+3,i)
+
+        res = []
+        res.append(Integer(144)/ -128)
+        res.append(Integer(-1600)/ 2250)
+        res.append(Integer(-22500)/ 43200)
+        res.append(Integer(381024)/ -926100)
+        res.append(Integer(7529536)/ -22127616)
+        res.append(Integer(-169869312)/ 585252864)
+        res.append(Integer(-4304672100)/ 17006112000)
+        res.append(Integer(121000000000)/ -539055000000)
+        res.append(Integer(3734989142544)/ -18520607318400)
+        for j,i in enumerate(res):
+            n = j+4
+            print(n,i,Integer(2)*(n-1)**2/n/(n-2)**2)
+
+        res = []
+        res.append(Integer(43200)/ -13824)
+        res.append(Integer(-926100)/ 600250)
+        res.append(Integer(-22127616)/ 21676032)
+        res.append(Integer(585252864)/ -768144384)
+        res.append(Integer(17006112000)/ -27993600000)
+        res.append(Integer(-539055000000)/ 1067328900000)
+        res.append(Integer(-18520607318400)/ 42857603712000)
+
+        for j,i in enumerate(res):
+            n = j+5
+            print(n,i,Integer(3)*n**2/(n+1)/(n-1)/(n-4))
+
+        res = []
+        res.append(Integer(21676032)/ -3538944)
+        res.append(Integer(-768144384)/ 283553298)
+        res.append(Integer(-27993600000)/ 16588800000)
+        res.append(Integer(1067328900000)/ -880546342500)
+        res.append(Integer(42857603712000)/ -45539366400000)
+        res.append(Integer(-1816180145455104)/ 2367182715625728)
+        res.append(Integer(-81225792691610112)/ 125603592643436544)
+        res.append(Integer(3829976981812800000)/ -6858785309266800000)
+        res.append(Integer(190115735040000000000)/ -387144769536000000000)
+        res.append(Integer(-9917889551655763968000)/ 22639713698237644800000)
+        res.append(Integer(-542786611664628448985088)/ 1373075314682094431502336)
+        res.append(Integer(31108603786691939470319616)/ -86392213822962601743301632)
+        res.append(Integer(1863922796594312077468800000)/ -5638237379171714095833600000)
+        for j,i in enumerate(res):
+            n = j+6
+            print(n,i,Integer(4)*n**2/(n+1)/(n-1)/(n-4))
+
+        # for j,i in enumerate(range(1,len(res))):
+        #     n = j+6
+        #     num = res[i]/res[i-1]
+        #     a,b = fraction(a,b)
+        #     print(n,factorint(num))
+
+
+
+
 
         return
     def test(self):
@@ -1650,8 +1790,6 @@ class Puzzles(Algorithms):
         # self.testRamanujanPi1()
         # self.alibabaPuzzles()
         self.testGalois()
-        
-
 
         return
 
