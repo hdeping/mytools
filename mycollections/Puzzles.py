@@ -1769,8 +1769,10 @@ class Puzzles(Algorithms):
         res.append(Integer(31108603786691939470319616)/ -86392213822962601743301632)
         res.append(Integer(1863922796594312077468800000)/ -5638237379171714095833600000)
         for j,i in enumerate(res):
-            n = j+6
-            print(n,i,Integer(4)*n**2/(n+1)/(n-1)/(n-4))
+            n = j+6 
+            i = -i*n*(n+2)*(n-4)*(n-5)/(n+1)**2/(n-3)/4
+            a,b = fraction(i)
+            print(n,i,factorint(a),factorint(b))
 
         # for j,i in enumerate(range(1,len(res))):
         #     n = j+6
@@ -1778,7 +1780,42 @@ class Puzzles(Algorithms):
         #     a,b = fraction(a,b)
         #     print(n,factorint(num))
 
+        res = []
+        res.append(Integer(16588800000)/ -1638400000)
+        res.append(Integer(-880546342500)/ 209217810978)
+        res.append(Integer(-45539366400000)/ 18065203200000)
+        res.append(Integer(2367182715625728)/ -1343282255295552)
+        res.append(Integer(125603592643436544)/ -93645282089189376)
+        res.append(Integer(-6858785309266800000)/ 6368872072890600000)
+        res.append(Integer(-387144769536000000000)/ 431675021249740800000)
+        res.append(Integer(22639713698237644800000)/ -29521672123554201600000)
+        res.append(Integer(1373075314682094431502336)/ -2052486283538632506605568)
+        res.append(Integer(-86392213822962601743301632)/ 145750966625349536559330816)
+        res.append(Integer(-5638237379171714095833600000)/ 10602652958379099874713600000)
 
+        for j,i in enumerate(res):
+            n = j+7
+            i = -i*(n+1)*(n+3)*(n-6)*(n-5)/5/(n+2)**2/(n-3)
+            a,b = fraction(i)
+            print(n,i,factorint(a),factorint(b))
+
+        res = []
+        res.append(Integer(18065203200000)/ -1194393600000)
+        res.append(Integer(-1343282255295552)/ 222325651050074)
+        res.append(Integer(-93645282089189376)/ 26597476569710592)
+        res.append(Integer(6368872072890600000)/ -2640157428175312500)
+        res.append(Integer(431675021249740800000)/ -238753591999856640000)
+        res.append(Integer(-29521672123554201600000)/ 20584447164275097600000)
+        res.append(Integer(-2052486283538632506605568)/ 1735477549591646485610496)
+        res.append(Integer(145750966625349536559330816)/ -145301117962925618236616832)
+        res.append(Integer(10602652958379099874713600000)/ -12199941609897110446080000000)
+
+        print("m = 6")
+        for j,i in enumerate(res):
+            n = j+10
+            i = -i*(n)*(n+2)*(n-8)*(n-9)/6/(n+1)**2/(n-5)
+            a,b = fraction(i)
+            print(n,i,factorint(a),factorint(b))
 
 
 
