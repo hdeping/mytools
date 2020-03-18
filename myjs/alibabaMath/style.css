@@ -1,0 +1,35 @@
+/*
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-04-27 21:03:42
+    @project      : 0.1
+    @version      : learning d3
+    @source file  : style.css
+
+============================
+*/      
+
+
+.tooltip {
+    position: absolute;
+    z-index: 9999;
+    padding: 0;
+    color: black;
+    font-size: 33px;
+    text-align: left;
+    border-radius: 2px;
+    pointer-events: none;
+    font-weight:bold; 
+}
+
+.title{
+    color:blue;
+    font-size:50px;
+}
+
+svg{
+    /*background: linear-gradient(to right,white,green,yellow);*/
+    background: black;
+}
