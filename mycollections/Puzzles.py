@@ -1575,6 +1575,7 @@ class Puzzles(Algorithms):
         print(s.factor())
         # answer: y = z + 1 
 
+        # 3*4 tree planting problems
         arr = np.arange(4)
         combinations = itertools.combinations(arr,2)
         combinations2 = itertools.combinations(arr[:3],2)
@@ -1599,6 +1600,7 @@ class Puzzles(Algorithms):
                 break
         # consider the symmetry
         
+
 
 
 

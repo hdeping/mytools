@@ -3237,18 +3237,22 @@ class Formulas(EllipticCurve):
         a1 + 2a2+...+ na_n = s,type = 1
         0a0 + a1 + 2a2+...+ na_n = s,type = 0
         """
+        if self.square == True:
+            N = n*n
+        else:
+            N = n
         if n == type_in + 1:
             res = []
-            num = s // n + 1 
+            num = s // N + 1 
             for y in range(num):
-                x = s - n*y 
+                x = s - N*y 
                 res.append([x,y])
             return res
         else:
-            num = s // n + 1
+            num = s // N + 1
             total = []
             for y in range(num):
-                res = self.getCombinatorEqnRecursive(n-1,s-n*y,type_in)
+                res = self.getCombinatorEqnRecursive(n-1,s-N*y,type_in)
                 for line in res:
                     line.append(y)
                     total.append(line)
@@ -7040,7 +7044,7 @@ class Formulas(EllipticCurve):
         print(totalNum,self.getGeneralCombinator([n,base-1]))
 
         return
-    def getCombinatorEqnSolNumByIter(self,n,s):
+    def getCombinatorEqnSolNumByIter(self,n,s,square = False):
         """
         docstring for getCombinatorEqnSolNumByIter
         matrix(n,s+1)
@@ -7053,19 +7057,23 @@ class Formulas(EllipticCurve):
             res.append([1]*(s+1))
         for i in range(1,n):
             for j in range(s+1):
-                num = j//(i+1) + 1 
+                if square:
+                    N = (i+1)**2 
+                else:
+                    N = i+1
+                num = j//N + 1 
                 total = 0
                 for k in range(num):
-                    total += res[i-1][j-(i+1)*k]
+                    total += res[i-1][j-N*k]
                 res[i][j] = total
 
-        for i in range(s+1):
-            print(i,res[-1][i])
+        # for i in range(s+1):
+        #     print(i,res[-1][i])
         # res = np.array(res)
         # print(res)
 
         # print(res)
-        return
+        return res[-1]
 
     def getBaseLimit(self):
         """
