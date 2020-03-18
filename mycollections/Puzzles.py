@@ -1566,11 +1566,51 @@ class Puzzles(Algorithms):
 
         return
 
+    def alibabaPuzzles(self):
+        """
+        docstring for alibabaPuzzles
+        """
+        y,z = symbols("y z")
+        s = y**3 - 3*y*z - (z**3 + 1)
+        print(s.factor())
+        # answer: y = z + 1 
+
+        arr = np.arange(4)
+        combinations = itertools.combinations(arr,2)
+        combinations2 = itertools.combinations(arr[:3],2)
+        lines2 = []
+        for line2 in combinations2:
+            lines2.append(line2)
+
+        combinations2 = itertools.product(lines2,repeat=2)
+        lines2 = []
+        for line2 in combinations2:
+            lines2.append(line2)
+        count = 0
+        for line1 in combinations:
+            for line2 in lines2:
+                output = np.zeros((3,4),int)
+                count += 1
+                for i in range(2):
+                    for j in range(2):
+                        output[line2[i][j],line1[i]] = 1
+
+                print(count,output)
+                break
+        # consider the symmetry
+        
+
+
+
+
+        return
+
     def test(self):
         """
         docstring for test
         """
-        self.testRamanujanPi1()
+        # self.testRamanujanPi1()
+        self.alibabaPuzzles()
         
 
 
