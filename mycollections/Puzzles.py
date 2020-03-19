@@ -1672,7 +1672,7 @@ class Puzzles(Algorithms):
         for i in range(n):
             for j in range(n):
                 A[i,j] = res[i+j]
-        print(latex(A))
+        # print(latex(A))
         D = A.det()
         D = D.expand()
         
@@ -1821,6 +1821,14 @@ class Puzzles(Algorithms):
 
         return
 
+    def getIntegerArray(self,arr):
+        """
+        docstring for getIntegerArray
+        """
+        res = []
+        for i in arr:
+            res.append(Integer(i))
+        return res
     def testEqnDet(self):
         """
         docstring for testEqnDet
@@ -1844,10 +1852,30 @@ class Puzzles(Algorithms):
                     print("square: ",p,q,res)
 
         x = Symbol("x")
-        p,q = 11,44
+        p,q = -5,12
         s = x**5 + p*x + q 
         print(s.factor())
+        res = f(p,q)
+        print(res,factorint(res))
 
+        arr1 = [1,0,0,0,-5,4]
+        arr2 = [1,-1]
+        arr1 = self.getIntegerArray(arr1)
+        arr2 = self.getIntegerArray(arr2)
+        res,remain = self.polynomialFactor(arr1,arr2)
+        print(res,remain)
+
+        arr1 = [1,1,1]
+        arr2 = [1,0,1,1]
+        res = self.polynomialMulti(arr1, arr2)
+        print(res)
+        arr = [0,-14,0,56,0,-56,22]
+        D = self.getEqnDet(arr)
+        print(D,factorint(D))
+        x = Symbol("x")
+
+        y = self.getPolynomialValues(res,x)
+        print(y.factor())
         return
 
     def getOutZeros(self,arr,n=120):
@@ -1892,6 +1920,34 @@ class Puzzles(Algorithms):
 
         return
 
+    def testFrobebius(self):
+        """
+        docstring for testFrobebius
+        A Frobebius(20) group is defined by
+        x,y&:&x^{4}=y^{5}=1
+        xyx^{-1}&=&y^{2}
+        x^{n}y^{m}x^{-n}&=&y^{2^{n}m\left(mod\;5\right)}
+        """
+        strings = "x^{%d}y^{%d}&=&y^{%d}x^{%d} \\\\"
+        for n in range(1,4):
+            for m in range(1,5):
+                k = (m*2**n)%(5)
+                print(strings%(n,m,k,n))
+        X = []
+        for n in range(1,4):
+            X.append("x%d"%(n))
+        Y = []
+        for n in range(1,5):
+            Y.append("y%d"%(n))
+
+        f20 = ["e"] + X + Y
+        for x in X:
+            for y in Y:
+                f20.append(x+y)
+        print(f20)
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -1899,8 +1955,9 @@ class Puzzles(Algorithms):
         # self.testRamanujanPi1()
         # self.alibabaPuzzles()
         # self.testGalois()
-        self.testEqnDet()
+        # self.testEqnDet()
         # self.testCharacters()
+        self.testFrobebius()
 
         return
 
