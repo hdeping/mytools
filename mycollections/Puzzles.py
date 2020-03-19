@@ -1672,7 +1672,7 @@ class Puzzles(Algorithms):
         for i in range(n):
             for j in range(n):
                 A[i,j] = res[i+j]
-
+        print(latex(A))
         D = A.det()
         D = D.expand()
         
@@ -1769,8 +1769,8 @@ class Puzzles(Algorithms):
         res.append(Integer(31108603786691939470319616)/ -86392213822962601743301632)
         res.append(Integer(1863922796594312077468800000)/ -5638237379171714095833600000)
         for j,i in enumerate(res):
-            n = j+6 
-            i = -i*n*(n+2)*(n-4)*(n-5)/(n+1)**2/(n-3)/4
+            n = j+8
+            i = -i*n*(n-2)*(n-6)*(n-7)/(n-1)**2/(n-5)/4
             a,b = fraction(i)
             print(n,i,factorint(a),factorint(b))
 
@@ -1794,8 +1794,8 @@ class Puzzles(Algorithms):
         res.append(Integer(-5638237379171714095833600000)/ 10602652958379099874713600000)
 
         for j,i in enumerate(res):
-            n = j+7
-            i = -i*(n+1)*(n+3)*(n-6)*(n-5)/5/(n+2)**2/(n-3)
+            n = j+10
+            i = -i*(n-2)*(n)*(n-9)*(n-8)/5/(n-1)**2/(n-6)
             a,b = fraction(i)
             print(n,i,factorint(a),factorint(b))
 
@@ -1812,12 +1812,41 @@ class Puzzles(Algorithms):
 
         print("m = 6")
         for j,i in enumerate(res):
-            n = j+10
-            i = -i*(n)*(n+2)*(n-8)*(n-9)/6/(n+1)**2/(n-5)
+            n = j+12
+            i = -i*(n-2)*(n)*(n-10)*(n-11)/6/(n-1)**2/(n-7)
             a,b = fraction(i)
             print(n,i,factorint(a),factorint(b))
 
 
+
+        return
+
+    def testEqnDet(self):
+        """
+        docstring for testEqnDet
+        """
+        p,q = symbols("p q")
+        n = 5 
+        # p,q = -1
+        arr = [0]*(n-2) + [p,q]
+        D = self.getEqnDet(arr)
+        print(D)
+
+        f = lambda p,q:256*p**5 + 3125*q**4 
+        N = 3
+        for p in range(-N,N):
+            for q in range(N):
+                res = f(p,q)
+                # print(p,q,res)
+                # if res == 0:
+                #     print("0: ",p,q,res)
+                if sqrt(res).is_integer:
+                    print("square: ",p,q,res)
+
+        x = Symbol("x")
+        p,q = 11,44
+        s = x**5 + p*x + q 
+        print(s.factor())
 
         return
     def test(self):
@@ -1826,7 +1855,8 @@ class Puzzles(Algorithms):
         """
         # self.testRamanujanPi1()
         # self.alibabaPuzzles()
-        self.testGalois()
+        # self.testGalois()
+        self.testEqnDet()
 
         return
 
