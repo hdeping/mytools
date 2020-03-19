@@ -1849,6 +1849,49 @@ class Puzzles(Algorithms):
         print(s.factor())
 
         return
+
+    def getOutZeros(self,arr,n=120):
+        """
+        docstring for getOutZeros
+
+        get rid of zeros and add number of zeros
+        """
+        res = []
+        for i in arr:
+            if i is not 0:
+                res.append(i)
+        if sum(res) < n:
+            res.append(n-sum(res))
+
+        res.sort()
+
+        return res
+    def testCharacters(self):
+        """
+        docstring for testCharacters
+        test \chi
+        """
+        
+        # characters for S5, |S5| = 120
+        # 7 kinds of conjugacy classes
+        sizes = [1,10,20,15,30,20,24] 
+
+        self.square = True
+        N = 120
+        n = int((N+0.01)**0.5)
+
+        res = self.getCombinatorEqnRecursive(n,N)
+        print(len(res))
+        for line in res:
+            arr = self.getOutZeros(line)
+            # print(arr,line)
+            if len(arr) == 7:
+                print(arr,line)
+            # break
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -1857,6 +1900,7 @@ class Puzzles(Algorithms):
         # self.alibabaPuzzles()
         # self.testGalois()
         self.testEqnDet()
+        # self.testCharacters()
 
         return
 
