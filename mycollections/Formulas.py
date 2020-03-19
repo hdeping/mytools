@@ -5992,9 +5992,9 @@ class Formulas(EllipticCurve):
             # print(s,s.group(0),s.group(1))
             st = st + str(len(s.group(0)))+s.group(1)
         return st
-    def getPolymonialValues(self,p,x):
+    def getPolynomialValues(self,p,x):
         """
-        docstring for getPolymonialValues
+        docstring for getPolynomialValues
         p:
             1d array, coefficients of the polynomial 
             length n+1, n is the order 
@@ -6114,7 +6114,7 @@ class Formulas(EllipticCurve):
              -59,54,-45,54,-53,39,-42,43,-38,37,
              -39,33,-25,23,-13,8,-6]
         print(len(p),p)
-        print(self.getPolymonialValues(p,x))
+        print(self.getPolynomialValues(p,x))
 
 
         # p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
@@ -6131,7 +6131,7 @@ class Formulas(EllipticCurve):
 
         # x = Decimal(1.3035772690342963912570991121525518907307025046594)
         x = Decimal(1.303577269034296391257099)
-        print(self.getPolymonialValues(p,x))
+        print(self.getPolynomialValues(p,x))
 
 
     
@@ -6429,7 +6429,7 @@ class Formulas(EllipticCurve):
             # print(a)
             a = np.math.factorial(n)
             s = (np.pi)**0.5*(n/np.exp(1))**n 
-            # s = s*(self.getPolymonialValues(p,n))**(1/6)
+            # s = s*(self.getPolynomialValues(p,n))**(1/6)
             k = (a/s)**8 - (2*n)**4
             k = k - 10*n**3
             k = k/(n**2)/n
