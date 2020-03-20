@@ -2247,6 +2247,77 @@ class Puzzles(Algorithms):
 
         return
 
+    def getCharacterRows(self,coefs):
+        """
+        docstring for getCharacterRows
+        """
+        n = sum(coefs)
+        res = self.getSquareEqn(coefs,n)
+        # print(res)
+        rows = []
+        for line in res:
+            if line[0] > 0:
+                tmp = self.getSignCombination(coefs,line)
+                rows += tmp
+        return rows 
+
+    def getCharacterUnits(self,coefs):
+        """
+        docstring for getCharacterUnits
+        """
+        n = sum(coefs)
+        coefs = [1]*len(coefs)
+        res = self.getSquareEqn(coefs,n)
+        # print(res)
+        arr = []
+        for line in res:
+            line.sort()
+            if line not in arr:
+                arr.append(line)
+
+        return arr
+    def testCharacterExercise(self):
+        """
+        docstring for testCharacter
+        """
+        coefs = [1,2,1,2,2]
+        coefs = [1,4,5,5,5]
+        coefs = [1,3,3,7,7]
+        coefs = [1,2,2,5]
+        coefs = [1,3,6,6,8]
+        coefs = [1,15,20,12,12]
+        rows = self.getCharacterRows(coefs)
+        print(rows)
+
+        arr = self.getCharacterUnits(coefs)
+
+        print(arr)
+
+        dims = [1,3,3,4,5]
+
+        x = symbols("x0:16")
+        eqns = []
+        N    = sum(coefs)
+        for i in range(4):
+            s = dims[i+1]
+            for j in range(4):
+                s = s + x[i*4+j]*coefs[j+1]
+            eqns.append(s)
+            s = 1
+            for j in range(4):
+                s = s + x[j*4+i]*dims[j+1]
+            eqns.append(s)
+        print(eqns)
+
+
+        coefs = [1,1,2,2,3,3]
+        rows = self.getCharacterRows(coefs)
+        print(rows)
+        arr = self.getCharacterUnits(coefs)
+
+        print(arr)
+
+        return
     def test(self):
         """
         docstring for test
@@ -2259,7 +2330,7 @@ class Puzzles(Algorithms):
         # self.testFrobenius()
         # self.symmetryGroup()
         # self.solvableQuintic()
-        
+        self.testCharacterExercise()
 
 
         return
