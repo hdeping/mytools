@@ -26,6 +26,7 @@ from Algorithms import Algorithms
 from decimal import *
 from tqdm import tqdm
 import mpmath as mp
+import math
 
 class Puzzles(Algorithms):
     """
@@ -1949,6 +1950,168 @@ class Puzzles(Algorithms):
         
         return 
 
+    def getFactorials(self,n):
+        """
+        docstring for getFactorials
+        n:
+            integer
+        return:
+            [1!,2!,...,n!]
+        """
+        res = []
+        num = 1 
+        for i in range(1,n+1):
+            num = num*i 
+            res.append(num)
+
+        return res
+
+    def getNewForm(self,arr):
+        """
+        docstring for getNewForm
+        [2,2,1,0] => [1,1,2,2,3]
+        """
+        new_form = []
+        for i,j in enumerate(arr):
+            if j > 0:
+                new_form += [i+1]*j
+
+        return new_form 
+    
+    def getSignCombination(self,arr,line):
+        """
+        docstring for getSignCombination
+
+        A = {a:a=+/- 1}, A is a set of 1 and -1 
+        sum(arr*line*A) = 0
+
+        try to find a candidate for the characters 
+        of a group
+        """
+        assert(len(arr) == len(line))
+        n = len(arr)
+        products = itertools.product([1,-1],repeat = n-1)
+        res = []
+        arr = np.array(arr)
+        line = np.array(line)
+        for tmp in products:
+            out = line[1:]*np.array(tmp)
+            out = [line[0]] + out.tolist()
+            out = np.array(out)
+            if sum(arr*out) == 0:
+                out = out.tolist()
+                if out not in res:
+                    res.append(out)
+        
+        return res
+
+    def str2List(self,string):
+        """
+        docstring for str2List
+        """
+        string = string[1:-1]
+        string = string.split(",")
+        res = []
+        for i in string:
+            res.append(int(i))
+
+        return res 
+    def getMultiValue(self,coefs,line1,line2):
+        """
+        docstring for getMultiValue
+        """
+
+        coefs = np.array(coefs)
+        arr1 = np.array(line1)
+        arr2 = np.array(line2)
+        res  = sum(coefs*arr1*arr2)
+
+        return res 
+
+    def getOrthogonalChi(self,coefs,rows,conju):
+        """
+        docstring for getOrthogonalChi
+        """
+        combi = itertools.combinations(rows,2)
+        count = 0
+
+        dicts = {}
+        for line in combi:
+            res = self.getMultiValue(coefs,*line)
+            if res == 0:
+                count += 1 
+                # print(count,line)
+                for key in line:
+                    key = str(key)
+                    if key in dicts:
+                        dicts[key] += 1 
+                    else:
+                        dicts[key] = 1
+
+        # print(dicts)
+        res = []
+        for key in dicts:
+            val = dicts[key]
+            if val >= conju - 1:
+                # print(key)
+                res.append(self.str2List(key))
+
+        # print(dicts)
+
+        return res,dicts.values()
+    
+    def checkCharacterTable(self,table,coefs,n):
+        """
+        docstring for checkCharacterTable
+        n:
+            order of the group
+        coefs:
+            1d array, size of the conjugacy classes
+
+        S5:
+            n = 120, coefs = [1,10,15,20,20,30,24]
+        """
+        table = np.array(table)
+        coefs = np.array(coefs)
+
+        # check orthoganal
+        m = len(table)
+        combi = itertools.combinations(np.arange(m),2)
+        out = []
+        for line in combi:
+            i,j = line
+            res = sum(coefs*table[i,:]*table[j,:])
+            out.append(res)
+            if res != 0:
+                return 0 
+            res = sum(table[:,i]*table[:,j])
+            if res != 0:
+                return 0 
+        # print(out)
+
+        out1,out2 = [],[]
+        for i in range(m):
+            res1 = sum(coefs*table[i,:]**2)
+            out1.append(res1)
+            res2 = sum(table[:,i]**2)
+            out2.append(res2)
+            if res1 != n:
+                return 0 
+            if res2 != n//coefs[i]:
+                return 0 
+        # print(out1,out2)
+        return 1
+
+    def combination2List(self,arr,m):
+        """
+        docstring for combination2List
+        """
+        res = itertools.combinations(arr,2)
+        out = []
+        for line in res:
+            out.append(line)
+
+        return out 
     def symmetryGroup(self):
         """
         docstring for symmetryGroup
@@ -1956,8 +2119,68 @@ class Puzzles(Algorithms):
         order: n!
         conjugacy classes: p(n)
         """
+
+        n = 5
+        self.square = 0
+        res = self.getCombinatorEqnRecursive(n,n)
+        factorials = self.getFactorials(n)
+        # print(factorials)
+        coefs = []
+        for line in res:
+            num = factorials[n-1]
+            new_form = []
+            for i,j in enumerate(line):
+                if j > 0:
+                    tmp = (i+1)**j*factorials[j-1]
+                    num = num // tmp
+                    if i > 0:
+                        new_form += [i+1]*j
+
+            coefs.append(num)
+
+        self.square = 1
+        conju = len(res)
+
+        print("coefs",coefs)
+        coefs = np.array(coefs)
+        N   = factorials[n-1]
+        res = self.getSquareEqn(coefs,N)
+        count = 0 
+
+        rows = []
+        for line in res:
+            if line[0] > 0:
+                tmp = self.getSignCombination(coefs,line)
+                rows += tmp
+        rows.append([1]*conju)
+        rows.sort()
+        for i,line in enumerate(rows):
+            print("rows",i,line)
+
+        res,values = self.getOrthogonalChi(coefs, rows,conju)
+        res,values = self.getOrthogonalChi(coefs, res,conju)
+        res,values = self.getOrthogonalChi(coefs, res,conju)
+        res.sort()
+        for i,line in enumerate(res):
+            print(i,line)
+
+        combi1 = self.combination2List(res[3:9],2)
+        combi2 = self.combination2List(res[9:15],2)
+
+        count = 0 
+        for line1 in combi1:
+            for line2 in combi2:
+                table = res[1:3] + list(line1)
+                table += list(line2) + [res[-1]]
+                judge = self.checkCharacterTable(table,coefs,N)
+                count += 1 
+                # print(count)
+                if judge:
+                    print("characters: ",np.array(table))
+                # break
         
         return
+
     def test(self):
         """
         docstring for test
@@ -1968,7 +2191,7 @@ class Puzzles(Algorithms):
         # self.testEqnDet()
         # self.testCharacters()
         # self.testFrobenius()
-        
+        self.symmetryGroup()
 
         return
 

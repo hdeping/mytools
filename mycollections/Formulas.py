@@ -3258,6 +3258,50 @@ class Formulas(EllipticCurve):
                     total.append(line)
             return total 
 
+    def isSquare(self,n):
+        """
+        docstring for isSquare
+        """
+        if n == 1:
+            return True,1
+        m = int((n+0.001)**0.5)
+        if n == m*m:
+            return True,m
+        else:
+            return False,m
+
+    def getSquareEqn(self,arr,s):
+        """
+        docstring for getSquareEqn
+        arr:
+            [1,a1,a2,...]
+            1+a1*x1**2 + a2*x2**2 + ... = s
+        s:
+            the total number
+        """
+        assert(len(arr) > 1)
+        if len(arr) == 2:
+            res = []
+            N   = arr[-1]
+            num = int((s/N)**0.5) + 1
+            for y in range(num):
+                x = s - N*y*y 
+                judge,m = self.isSquare(x)
+                if judge:
+                    res.append([m,y])
+            return res
+        else:
+            N   = arr[-1]
+            num = int((s/N)**0.5) + 1
+            total = []
+            for y in range(num):
+                res = self.getSquareEqn(arr[:-1],s-N*y*y)
+                for line in res:
+                    line.append(y)
+                    total.append(line)
+            return total 
+        
+
     def getCombinatorEqnSolNum(self,n,s,type_in=1):
         """
         docstring for getCombinatorEqnRecursive

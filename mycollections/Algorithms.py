@@ -191,13 +191,28 @@ class Algorithms(Formulas):
         assert(arr2[0] == 1)
 
         res = [1]
-        for i in range(1,len(arr1)-1):
+
+        n = len(arr1)-1
+        for i in range(1,n):
             num = arr1[i]
             for j in range(i):
                 num = num - arr2[j+1]*res[i-j-1]
             res.append(num)
             
         return res
+    def polynomialFactor(self,arr1,arr2):
+        """
+        docstring for polynomialFactor
+        (a1x^n+...) = (b1x+c1)*(k1x^(n-1)) + K
+        """
+        assert(len(arr2) == 2)
+
+        res = [arr1[0]/arr2[0]]
+        for i in range(1,len(arr1)-1):
+            num = (arr1[i] - arr2[1]*res[-1])/arr2[0]
+            res.append(num)
+        remain = arr1[-1] - res[-1]*arr2[1]
+        return res,remain
     def polynomialPow(self,arr,n):
         """
         docstring for polynomialPow
