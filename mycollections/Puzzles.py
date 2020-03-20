@@ -2181,6 +2181,72 @@ class Puzzles(Algorithms):
         
         return
 
+    def quintic2Sextic(self,p,q):
+        """
+        docstring for quintic2Sextic
+        p,q:
+            rational
+        """
+        x = Symbol("x")
+        arr = [1,8*p,40*p**2,160*p**3]
+        arr.append(400*p**4)
+        arr.append(512*p**5-3125*q**4)
+        arr.append(-9375*p*q**4+256*p**6)
+        y = self.getPolynomialValues(arr,x)
+        y = y.expand().factor()
+        # print(y.factor())
+        # y = Poly(y).as_dict()
+        return y
+    def solvableQuintic(self):
+        """
+        docstring for solvableQuintic
+        """
+        p,q = -5,4 
+        f = lambda p,q:256*p**5 + 3125*q**4 
+        x = Symbol("x")
+        arr = [1,0,0,0,p,q]
+        y = self.getPolynomialValues(arr,x)
+        y = y.expand()
+        print(y)
+        print(f(p,q))
+
+        p,q = 11,44
+        p,q = 20,16
+
+        n = 10
+        for p in tqdm(range(-n,n)):
+            for q in range(1,n):
+                # y = self.quintic2Sextic(p,q)
+                res = f(p,q)
+                judge,m = self.isSquare(abs(res))
+                if judge:
+                    
+                    y = self.quintic2Sextic(p,q)
+                    print(p,q,res,m,y)
+        print(factorint(f(95,76)))
+
+        p,q = 11,44
+        p,q = 124,496
+        res = factorint(f(p,q))
+        print(res)
+        y = self.quintic2Sextic(p,q)
+        print(y)
+
+        res = []
+        res.append((x - 3240)*(x**5 + 6561000*x**3 + 10628820000*x**2 + 45199057050000*x - 85077539384400000))
+        res.append((x**2 - 1136*x + 323424)*(x**4 - 256*x**3 + 596800*x**2 - 82122496*x + 80343871744))
+        res.append((x - 640)*(x**5 + 256000*x**3 + 81920000*x**2 + 68812800000*x - 25585254400000))
+        res.append((x - 40)*(x**5 + 1000*x**3 + 20000*x**2 + 1050000*x - 24400000))
+        res.append((x - 88)*(x**5 + 176*x**4 + 20328*x**3 + 2001824*x**2 + 182016912*x + 4387146368))
+        res.append((x - 40)*(x**5 + 200*x**4 + 24000*x**3 + 2240000*x**2 + 153600000*x + 4505600000))
+        res.append((x - 1408)*(x**5 + 2816*x**4 + 5203968*x**3 + 8199471104*x**2 + 11928660344832*x + 4600256389971968))
+        res.append((x - 640)*(x**5 + 3200*x**4 + 6144000*x**3 + 9175040000*x**2 + 10066329600000*x + 4724464025600000))
+        for line in res:
+            print(latex(line))
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -2191,7 +2257,10 @@ class Puzzles(Algorithms):
         # self.testEqnDet()
         # self.testCharacters()
         # self.testFrobenius()
-        self.symmetryGroup()
+        # self.symmetryGroup()
+        # self.solvableQuintic()
+        
+
 
         return
 
