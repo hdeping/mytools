@@ -1920,9 +1920,9 @@ class Puzzles(Algorithms):
 
         return
 
-    def testFrobebius(self):
+    def testFrobenius(self):
         """
-        docstring for testFrobebius
+        docstring for testFrobenius
         A Frobebius(20) group is defined by
         x,y&:&x^{4}=y^{5}=1
         xyx^{-1}&=&y^{2}
@@ -1947,6 +1947,16 @@ class Puzzles(Algorithms):
         print(f20)
 
         
+        return 
+
+    def symmetryGroup(self):
+        """
+        docstring for symmetryGroup
+        permutation group, S_n
+        order: n!
+        conjugacy classes: p(n)
+        """
+        
         return
     def test(self):
         """
@@ -1957,7 +1967,8 @@ class Puzzles(Algorithms):
         # self.testGalois()
         # self.testEqnDet()
         # self.testCharacters()
-        self.testFrobebius()
+        # self.testFrobenius()
+        
 
         return
 
