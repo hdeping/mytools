@@ -2276,6 +2276,29 @@ class Puzzles(Algorithms):
                 arr.append(line)
 
         return arr
+
+    def getGroupDegrees(self,N,n_lim):
+        """
+        docstring for getGroupDegrees
+        """
+        n = int((N+0.01)**0.5)
+        self.n_lim = n_lim
+        factors = self.getAllFactors(N)
+        res = []
+        for i in factors:
+            if i > n:
+                break 
+            res.append(i)
+
+        res = self.getSquareEqnByFactor(res,N)
+
+        output = []
+        for line in res:
+            if sum(line) == self.n_lim:
+                # print(line,self.getNewForm(line))
+                output.append(line)
+
+        return output
     def testCharacterExercise(self):
         """
         docstring for testCharacter
@@ -2316,6 +2339,42 @@ class Puzzles(Algorithms):
         arr = self.getCharacterUnits(coefs)
 
         print(arr)
+
+        arr1 = [1,2,4]
+        arr2 = [3,5,6]
+        s = []
+        for i in arr1:
+            for j in arr2:
+                s.append((i+j)%7)
+        print(s)
+        # a+b = -1, ab = 2 
+
+        coefs = [1,3,3,7,7]
+        a = (-1+3**0.5)/2 
+        b = -1 - a
+        x = (-1+7**0.5)/2 
+        y = -1 - x
+        res = [[1,1,1,1,1],
+               [1,1,1,a,b],
+               [1,1,1,b,a],
+               [3,x,y,0,0],
+               [3,y,x,0,0]]
+        res = self.checkCharacterTable(res,coefs,21)
+        print(res)
+
+        N = 168
+        n_lim = 6
+        res = self.getGroupDegrees(N,n_lim)
+        # print(res)
+        for line in res:
+            print(line,self.getNewForm(line))
+        # for n_lim in range(2,20):
+        #     res = self.getGroupDegrees(N,n_lim)
+        #     if len(res) > 0:
+        #         print(n_lim,res)
+        coefs = [1,21,42,56,24,24]
+        rows = self.getCharacterRows(coefs)
+        print(rows)
 
         return
     def test(self):
