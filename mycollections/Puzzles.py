@@ -2377,6 +2377,56 @@ class Puzzles(Algorithms):
         print(rows)
 
         return
+
+    def plotArray(self,Y):
+        """
+        docstring for plotArray
+        """
+        N = len(Y[0])
+        x = np.arange(N)*0.001
+        labels = ["P","Q","R"]
+        plt.xlabel("time")
+        for i in range(3):
+            plt.plot(x,Y[i,:],lw=2,label=labels[i])
+        plt.legend(loc="upper left")
+        filename = "aerodynamics.png" 
+        print("write to ",filename)
+        
+        plt.savefig(filename,dpi=300)
+
+        plt.show()
+
+        return
+    def testAerodynamics(self):
+        """
+        docstring for testAerodynamics
+        dP/dt = a1QR + b1
+        dQ/dt = a2PR + b2
+        dR/dt = a3QP + b3
+        a1 + a2 + a3 = 0
+        """
+        deltaT = 0.001
+        N = 10000
+        X = np.zeros((3,N))
+        X[:,0] = [1.0,1.0,1.0]
+        A = np.array([[-1.0,1.0],
+                      [-1.0,2.0],
+                      [2,3.0]])
+
+        indeces = [[1,2],
+                   [0,2],
+                   [0,1]]
+        for i in range(1,N):
+            for j in range(3):
+                ii,jj = indeces[j]
+                res = A[j,0]*X[ii,i-1]*X[jj,i-1] + A[j,1]
+                X[j,i] = X[j,i-1] + deltaT*res 
+
+        # print(X[:,:1000])
+        self.plotArray(X)
+        
+        return
+
     def test(self):
         """
         docstring for test
@@ -2389,7 +2439,8 @@ class Puzzles(Algorithms):
         # self.testFrobenius()
         # self.symmetryGroup()
         # self.solvableQuintic()
-        self.testCharacterExercise()
+        # self.testCharacterExercise()
+        self.testAerodynamics()
 
 
         return
