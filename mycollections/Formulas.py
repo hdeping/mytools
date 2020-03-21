@@ -3300,6 +3300,43 @@ class Formulas(EllipticCurve):
                     line.append(y)
                     total.append(line)
             return total 
+    def getSquareEqnByFactor(self,arr,s):
+        """
+        docstring for getSquareEqn
+        arr:
+            [a1,a2,...]
+            x1*a1**2 + x2*a2**2 + ... = s
+        s:
+            [x1,x2...]
+        """
+        assert(len(arr) > 1)
+        if self.n_lim is not None:
+            n_lim = self.n_lim 
+        else:
+            n_lim = 10000
+        if len(arr) == 2:
+            res = []
+            N   = arr[-1]**2
+            num = s//N + 1
+
+            for y in range(num):
+                x = s - N*y 
+                line = [x,y]
+                if sum(line) <= n_lim and x > 0 :
+                    res.append(line)
+            return res
+        else:
+            N   = arr[-1]**2 
+            num   = s//N + 1 
+            total = []
+            for y in range(num):
+                res = self.getSquareEqnByFactor(arr[:-1],s-N*y)
+                for line in res:
+                    line.append(y)
+                    if sum(line) > n_lim:
+                        continue
+                    total.append(line)
+            return total
         
 
     def getCombinatorEqnSolNum(self,n,s,type_in=1):
