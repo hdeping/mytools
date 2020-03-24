@@ -22,7 +22,7 @@ from sympy import sympify,trigsimp,expand_trig
 from sympy import Matrix,limit,tan,Integer,symbols,Poly
 from sympy.solvers import diophantine
 import numpy as np
-from mytools import MyCommon
+# from mytools import MyCommon
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
@@ -591,7 +591,8 @@ class EllipticCurve():
         return
     
 
-class Formulas(MyCommon,EllipticCurve):
+# class Formulas(MyCommon,EllipticCurve):
+class Formulas(EllipticCurve):
     """
     Formulas Deriations with sympy
     self.one:
@@ -3236,22 +3237,107 @@ class Formulas(MyCommon,EllipticCurve):
         a1 + 2a2+...+ na_n = s,type = 1
         0a0 + a1 + 2a2+...+ na_n = s,type = 0
         """
+        if self.square == True:
+            N = n*n
+        else:
+            N = n
         if n == type_in + 1:
             res = []
-            num = s // n + 1 
+            num = s // N + 1 
             for y in range(num):
-                x = s - n*y 
+                x = s - N*y 
                 res.append([x,y])
             return res
         else:
-            num = s // n + 1
+            num = s // N + 1
             total = []
             for y in range(num):
-                res = self.getCombinatorEqnRecursive(n-1,s-n*y,type_in)
+                res = self.getCombinatorEqnRecursive(n-1,s-N*y,type_in)
                 for line in res:
                     line.append(y)
                     total.append(line)
             return total 
+
+    def isSquare(self,n):
+        """
+        docstring for isSquare
+        """
+        if n == 1:
+            return True,1
+        m = int((n+0.001)**0.5)
+        if n == m*m:
+            return True,m
+        else:
+            return False,m
+
+    def getSquareEqn(self,arr,s):
+        """
+        docstring for getSquareEqn
+        arr:
+            [1,a1,a2,...]
+            1+a1*x1**2 + a2*x2**2 + ... = s
+        s:
+            the total number
+        """
+        assert(len(arr) > 1)
+        if len(arr) == 2:
+            res = []
+            N   = arr[-1]
+            num = int((s/N)**0.5) + 1
+            for y in range(num):
+                x = s - N*y*y 
+                judge,m = self.isSquare(x)
+                if judge:
+                    res.append([m,y])
+            return res
+        else:
+            N   = arr[-1]
+            num = int((s/N)**0.5) + 1
+            total = []
+            for y in range(num):
+                res = self.getSquareEqn(arr[:-1],s-N*y*y)
+                for line in res:
+                    line.append(y)
+                    total.append(line)
+            return total 
+    def getSquareEqnByFactor(self,arr,s):
+        """
+        docstring for getSquareEqn
+        arr:
+            [a1,a2,...]
+            x1*a1**2 + x2*a2**2 + ... = s
+        s:
+            [x1,x2...]
+        """
+        assert(len(arr) > 1)
+        if self.n_lim is not None:
+            n_lim = self.n_lim 
+        else:
+            n_lim = 10000
+        if len(arr) == 2:
+            res = []
+            N   = arr[-1]**2
+            num = s//N + 1
+
+            for y in range(num):
+                x = s - N*y 
+                line = [x,y]
+                if sum(line) <= n_lim and x > 0 :
+                    res.append(line)
+            return res
+        else:
+            N   = arr[-1]**2 
+            num   = s//N + 1 
+            total = []
+            for y in range(num):
+                res = self.getSquareEqnByFactor(arr[:-1],s-N*y)
+                for line in res:
+                    line.append(y)
+                    if sum(line) > n_lim:
+                        continue
+                    total.append(line)
+            return total
+        
 
     def getCombinatorEqnSolNum(self,n,s,type_in=1):
         """
@@ -3285,6 +3371,8 @@ class Formulas(MyCommon,EllipticCurve):
                 res.append([i])
             # print("res:",res)
             return res 
+        if len(arr) == 0:
+            return arr
         else:
             res = self.getAllCombinator(arr[:-1])
             total = []
@@ -4957,7 +5045,7 @@ class Formulas(MyCommon,EllipticCurve):
             res = (res // i)*(i-1)
         return res
 
-    def getAllFactors(self,n):
+    def getAllFactors(self,n,factors = None):
         """
         docstring for getAllFactors
         18 => [1,2,3,6,9,18]
@@ -4967,13 +5055,17 @@ class Formulas(MyCommon,EllipticCurve):
             factor array
         """
         n = Integer(n)
-        factors = sympy.factorint(n)
+        if factors == None:
+            factors = sympy.factorint(n)
         indeces = []
         keys    = []
         res     = []
         for key in factors:
             value = factors[key]
-            indeces.append(np.arange(value+1))
+            tmp = []
+            for ii in range(value+1):
+                tmp.append(ii)
+            indeces.append(tmp)
             # print(value)
             keys.append(key)
 
@@ -5981,9 +6073,9 @@ class Formulas(MyCommon,EllipticCurve):
             # print(s,s.group(0),s.group(1))
             st = st + str(len(s.group(0)))+s.group(1)
         return st
-    def getPolymonialValues(self,p,x):
+    def getPolynomialValues(self,p,x):
         """
-        docstring for getPolymonialValues
+        docstring for getPolynomialValues
         p:
             1d array, coefficients of the polynomial 
             length n+1, n is the order 
@@ -6103,7 +6195,7 @@ class Formulas(MyCommon,EllipticCurve):
              -59,54,-45,54,-53,39,-42,43,-38,37,
              -39,33,-25,23,-13,8,-6]
         print(len(p),p)
-        print(self.getPolymonialValues(p,x))
+        print(self.getPolynomialValues(p,x))
 
 
         # p = [1,0,-1,-2,-1,2,2,1,-1,-1,-1,-1,-1,2,5,
@@ -6120,7 +6212,7 @@ class Formulas(MyCommon,EllipticCurve):
 
         # x = Decimal(1.3035772690342963912570991121525518907307025046594)
         x = Decimal(1.303577269034296391257099)
-        print(self.getPolymonialValues(p,x))
+        print(self.getPolynomialValues(p,x))
 
 
     
@@ -6418,7 +6510,7 @@ class Formulas(MyCommon,EllipticCurve):
             # print(a)
             a = np.math.factorial(n)
             s = (np.pi)**0.5*(n/np.exp(1))**n 
-            # s = s*(self.getPolymonialValues(p,n))**(1/6)
+            # s = s*(self.getPolynomialValues(p,n))**(1/6)
             k = (a/s)**8 - (2*n)**4
             k = k - 10*n**3
             k = k/(n**2)/n
@@ -7033,7 +7125,7 @@ class Formulas(MyCommon,EllipticCurve):
         print(totalNum,self.getGeneralCombinator([n,base-1]))
 
         return
-    def getCombinatorEqnSolNumByIter(self,n,s):
+    def getCombinatorEqnSolNumByIter(self,n,s,square = False):
         """
         docstring for getCombinatorEqnSolNumByIter
         matrix(n,s+1)
@@ -7046,19 +7138,23 @@ class Formulas(MyCommon,EllipticCurve):
             res.append([1]*(s+1))
         for i in range(1,n):
             for j in range(s+1):
-                num = j//(i+1) + 1 
+                if square:
+                    N = (i+1)**2 
+                else:
+                    N = i+1
+                num = j//N + 1 
                 total = 0
                 for k in range(num):
-                    total += res[i-1][j-(i+1)*k]
+                    total += res[i-1][j-N*k]
                 res[i][j] = total
 
-        for i in range(s+1):
-            print(i,res[-1][i])
+        # for i in range(s+1):
+        #     print(i,res[-1][i])
         # res = np.array(res)
         # print(res)
 
         # print(res)
-        return
+        return res[-1]
 
     def getBaseLimit(self):
         """

@@ -165,14 +165,54 @@ class Algorithms(Formulas):
         if num1 > num2:
             arr1,arr2 = arr2,arr1
             num1,num2 = num2,num1 
-        arr1 = np.array(arr1)
-        res = np.zeros(num1+num2-1,int)
+        # arr1 = np.array(arr1)
+        # res = np.zeros(num1+num2-1,int)
+        res = []
+        for i in range(num1+num2-1):
+            res.append(0)
 
         for index,i in enumerate(arr2):
-            res[index:index+num1] += arr1*i
+            # res[index:index+num1] += arr1*i
+            for j in range(num1):
+                res[j+index] += arr1[j]*i
 
         return res
 
+    def polynomialDivide(self,arr1,arr2):
+        """
+        docstring for polynomialDivide
+        arr1[0] = 1 and arr2[0] = 1
+        both arr1 and arr2 are infinely Tayler series
+        return:
+            arr1/arr2, division of the series
+
+        """
+        assert(arr1[0] == 1)
+        assert(arr2[0] == 1)
+
+        res = [1]
+
+        n = len(arr1)-1
+        for i in range(1,n):
+            num = arr1[i]
+            for j in range(i):
+                num = num - arr2[j+1]*res[i-j-1]
+            res.append(num)
+            
+        return res
+    def polynomialFactor(self,arr1,arr2):
+        """
+        docstring for polynomialFactor
+        (a1x^n+...) = (b1x+c1)*(k1x^(n-1)) + K
+        """
+        assert(len(arr2) == 2)
+
+        res = [arr1[0]/arr2[0]]
+        for i in range(1,len(arr1)-1):
+            num = (arr1[i] - arr2[1]*res[-1])/arr2[0]
+            res.append(num)
+        remain = arr1[-1] - res[-1]*arr2[1]
+        return res,remain
     def polynomialPow(self,arr,n):
         """
         docstring for polynomialPow
@@ -213,5 +253,5 @@ class Algorithms(Formulas):
         # print(self.getCombinatorEqnSolNumByIter(5,95))
         return
         
-algo = Algorithms()
-algo.test()
+# algo = Algorithms()
+# algo.test()
