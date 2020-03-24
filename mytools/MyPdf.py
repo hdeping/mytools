@@ -47,3 +47,29 @@ class MyPdf():
         print("Total pages are: %d pages"%(pages))
         print("number: %d/%d"%(count,num-1))
         return
+
+    def mergePdfs(self,filenames,mergedName,passwords=None):
+        """
+        docstring for mergePdfs
+        """
+        # number of the files
+        num = len(filenames)
+        # note that False should be used
+        pdf_merger = PdfFileMerger(False)
+    
+        for i in range(num):
+            # get the passwords
+            if passwords is None:
+                password = None
+            else:
+                password = passwords[i]
+            print("adding ",filenames[i])
+            pdf_reader = get_reader(filenames[i], password)
+            if not pdf_reader:
+                return
+            pdf_merger.append(pdf_reader)
+
+        with open(merged_name, 'wb') as fp:
+            pdf_merger.write(fp)
+
+        return
