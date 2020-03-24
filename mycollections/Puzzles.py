@@ -2427,6 +2427,28 @@ class Puzzles(Algorithms):
         
         return
 
+    def testXX(self):
+        """
+        docstring for testXX
+        S&=&\int_{0}^{\infty}x^{-x}dx
+        """
+        from scipy import integrate
+        x = np.linspace(0.01,10,1000)
+        y = x**(-x)
+        y = x*np.log(x)
+        # plt.plot(x,y)
+        # plt.show()
+
+        f = lambda x: x**(-x)
+        # f = lambda x: x*np.log(x)
+        s,err = integrate.quad(f,0,1)
+        # s =  1.9954559575000368 error is  3.971688089521308e-09
+        print("s = ",s,"error is ",err)
+
+        x = np.arange(1,15)
+        print(sum(1/(x**x)))
+        return
+
     def test(self):
         """
         docstring for test
@@ -2440,7 +2462,8 @@ class Puzzles(Algorithms):
         # self.symmetryGroup()
         # self.solvableQuintic()
         # self.testCharacterExercise()
-        self.testAerodynamics()
+        # self.testAerodynamics()
+        self.testXX()
 
 
         return
