@@ -91,15 +91,20 @@ class MyCommon():
         fp.close()
 
         return
-    def loadJson(self, filename):
+    # 从json文件中读取数据
+    def loadJson(self, filename,encoding="utf-8"):
         """
         load data from the json file
         input: filename, string type
         return: data, dicts type
         """
         print("load data from file ",filename)
-        fp = open(filename,"r")
-        data = json.load(fp)
+        fp = open(filename,"r",encoding=encoding)
+        data = fp.read()
+        if data.startswith(u'\ufeff'):
+            data = data.encode('utf8')[3:].decode('utf8')
+        data = json.loads(data)
+
         fp.close()
 
         return data

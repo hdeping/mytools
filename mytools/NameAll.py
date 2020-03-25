@@ -106,7 +106,7 @@ class NameAll():
         suffix_start = self.getSuffixIndex(filename)
         # get rid of the redundant characters
         #name = re.sub(r"[?()[]'\"{}#&/\\,.]",'',filename)
-        name = re.sub(r"[ .,#?\\{}()\[\]@*#&%!^]",'',filename)
+        name = re.sub(r"[.,#?\\{}()\[\]@*#&%!^]",'',filename)
         new_name   = name.split(' ')
         # if there is no strange characters
         p1 = (len(filename) - len(new_name[0]) == 1) 
