@@ -27,6 +27,7 @@ from decimal import *
 from tqdm import tqdm
 import mpmath as mp
 import math
+from scipy import integrate
 
 class Puzzles(Algorithms):
     """
@@ -2432,7 +2433,6 @@ class Puzzles(Algorithms):
         docstring for testXX
         S&=&\int_{0}^{\infty}x^{-x}dx
         """
-        from scipy import integrate
         x = np.linspace(0.01,10,1000)
         y = x**(-x)
         y = x*np.log(x)
@@ -2449,6 +2449,41 @@ class Puzzles(Algorithms):
         print(sum(1/(x**x)))
         return
 
+    def testABElliptic(self):
+        """
+        docstring for testABElliptic
+        """
+        p   = 2 
+
+        f = lambda x: (1+x**4)**(-1/2)
+        s1,err = integrate.quad(f,0,1)
+        print("s1 = ",s1)
+
+        f = lambda x: (1 + (p-1)*math.cos(x)**2)**(-1/2)
+        s2,err = integrate.quad(f,0,np.pi/2)
+        print("s2 = ",s2,s1*2**0.5)
+
+        a,b = 1,p**0.5 
+        # a,b = 1,1.01 
+        for i in range(30):
+            A = (a+b)/2 
+            B = (a*b)**0.5 
+            a,b = A,B 
+        print("a,b = ",a,b)
+
+        f = lambda x: (1+(p-1)*math.cos(x)**2)**(1/2)
+        s3,err = integrate.quad(f,0,np.pi/2)
+        print(s3,s3*2/np.pi)
+
+        f = lambda x: (1-x**4)**(-1/2)
+        s4,err = integrate.quad(f,0,1)
+        print(s4)
+
+        N = np.arange(1,14)
+        print(sum((N+1)/(N**N)))
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -2463,7 +2498,8 @@ class Puzzles(Algorithms):
         # self.solvableQuintic()
         # self.testCharacterExercise()
         # self.testAerodynamics()
-        self.testXX()
+        # self.testXX()
+        self.testABElliptic()
 
 
         return
