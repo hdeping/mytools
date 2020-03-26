@@ -16,7 +16,9 @@
 """
 
 import sys
-from PyPDF2 import PdfFileReader,PdfFileWriter
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfFileMerger
 
 class MyPdf():
     """
@@ -46,4 +48,34 @@ class MyPdf():
                 print("something is wrong with",names[j])
         print("Total pages are: %d pages"%(pages))
         print("number: %d/%d"%(count,num-1))
+        return
+
+    def mergePdfs(self,filenames,mergedName,passwords=None):
+        """
+        docstring for mergePdfs
+        filenames:
+            1d array of filenames
+        mergedName:
+            name of the output file
+        passwords:
+            passwords for the pdf files if is needed
+        """
+        # number of the files
+        num = len(filenames)
+        # note that False should be used
+        pdf_merger = PdfFileMerger()
+    
+        for i in range(num):
+            print("adding ",filenames[i])
+            fp =  open(filenames[i],"rb") 
+            pdf_reader = PdfFileReader(fp,strict=False)
+            if not pdf_reader:
+                return
+            pdf_merger.append(pdf_reader)
+            fp.close()
+
+        with open(mergedName, 'wb') as fp:
+            print("output to ",mergedName)
+            pdf_merger.write(fp)
+
         return
