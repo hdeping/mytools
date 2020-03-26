@@ -2495,6 +2495,22 @@ class Puzzles(Algorithms):
         
         return
 
+    def getPermArray(self,n,m):
+        """
+        docstring for getPermArray
+        n,m:
+            integers with n >= m 
+        return:
+            1d array
+            [1,n,n-1,...]
+        """
+
+        res = [1]
+        for i in range(m-1):
+            num = res[-1]*(n-i)
+            res.append(num)
+        
+        return res
     def getXXTaylor(self):
         """
         docstring for getXXTaylor
@@ -2507,27 +2523,33 @@ class Puzzles(Algorithms):
         sigma(n) = 1 for even, -1 for odd
         2n: K(2n,n)*sigma(n)*T(n-1,n)+K(2n,n+1)*sigma(n+1)*T(n,n-1)
         + K(2n,2n)*sigma(2n)*T(2n-1,0)
-        2n+1: sigma(n)*T(n-1,-1)+sigma(n+1)*T(n,-2)
-        + sigma(2n)*T(2n-1,-1-n)
+        2n+1: sigma(n)*T(n+1,n-1)+sigma(n+1)*T(n,-2)
+        + sigma(2n)*T(2n,0)
 
         """
-
+        N = 200
         res = [1,1]
         print(res)
         total = []
         total.append(self.inverseArray(res))
-        for i in range(100):
+        for i in range(N):
             res = self.polynomialMulti(res,[1,i+2])
             total.append(self.inverseArray(res))
-            print(i+2,total[-1])
+            # print(i+2,total[-1])
 
         results = [1]
         
-        for n in range(1,10):
+        for n in range(1,N):
             num = 0
             sigma = (-1)**n 
+            begin = (n+1)//2 - 1 
+            perm  = self.getPermArray(n,n-begin)
+            for i in range(begin,n):
+                num  += perm[-1+begin-i]*sigma*total[i][n-1-i]
+                sigma = - sigma
+            results.append(num)
+            print(n,num)
 
-        
         return
 
     def test(self):
