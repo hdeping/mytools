@@ -2452,17 +2452,11 @@ class Puzzles(Algorithms):
         s = diff(x**(-x),x)
         value = s.subs(x,1)
         res = [1,value]
-        for i in range(10):
+        for i in range(5):
             s = diff(s,x)
-            # print(i+2,latex(s*x**x) + r"\\")
-            # print(",",s.subs(x,1))
             value = s.subs(x,1)
-            if value > 0:
-                print("+%dx^{%d}"%(value,i+2))
-            else:
-                print("-%dx^{%d}"%(-value,i+2))
+            print(value,",")
 
-        # print(series((x+1)**(-x-1),x,x0=0,n=10))
         return
 
     def testABElliptic(self):
@@ -2500,6 +2494,42 @@ class Puzzles(Algorithms):
 
         
         return
+
+    def getXXTaylor(self):
+        """
+        docstring for getXXTaylor
+        taylor expansion of (x+1)^{-x-1} at x = 0 
+        1,-(x+1)x,(x+1)(x+2)x^2
+
+        [1,2],[2,4],[3,6],[4,8],[5,10],[6,12]
+        T(0) = [1,1]
+        T(1) = [2,3,1]
+        sigma(n) = 1 for even, -1 for odd
+        2n: K(2n,n)*sigma(n)*T(n-1,n)+K(2n,n+1)*sigma(n+1)*T(n,n-1)
+        + K(2n,2n)*sigma(2n)*T(2n-1,0)
+        2n+1: sigma(n)*T(n-1,-1)+sigma(n+1)*T(n,-2)
+        + sigma(2n)*T(2n-1,-1-n)
+
+        """
+
+        res = [1,1]
+        print(res)
+        total = []
+        total.append(self.inverseArray(res))
+        for i in range(100):
+            res = self.polynomialMulti(res,[1,i+2])
+            total.append(self.inverseArray(res))
+            print(i+2,total[-1])
+
+        results = [1]
+        
+        for n in range(1,10):
+            num = 0
+            sigma = (-1)**n 
+
+        
+        return
+
     def test(self):
         """
         docstring for test
@@ -2514,8 +2544,9 @@ class Puzzles(Algorithms):
         # self.solvableQuintic()
         # self.testCharacterExercise()
         # self.testAerodynamics()
-        self.testXX()
+        # self.testXX()
         # self.testABElliptic()
+        self.getXXTaylor()
 
 
         return
