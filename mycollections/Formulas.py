@@ -6700,6 +6700,19 @@ class Formulas(EllipticCurve):
         for i in range(m):
             res = res*(n-i)
         return res
+    def inverseArray(self,arr):
+        """
+        docstring for inverseArray
+        arr:
+            1d array, [1,2,3] -> [3,2,1]
+        """
+
+        res = []
+        while len(arr) > 0:
+            res.append(arr.pop())
+        
+        return res 
+        
     def funnyNumbers(self):
         """
         docstring for funnyNumbers
