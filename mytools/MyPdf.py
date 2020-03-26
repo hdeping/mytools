@@ -79,3 +79,26 @@ class MyPdf():
             pdf_merger.write(fp)
 
         return
+    def pick100(self,threshold=100):
+        """
+        docstring for getPages
+        get all the pages of the input pdf files
+        with over 100 pages from the command line
+        """  
+        import os 
+
+        names = os.listdir()
+        num = len(names)
+        pages = 0
+        count = 0
+        for j in range(1,num):
+            try:
+                input = PdfFileReader(open(names[j],"rb"))
+                i = input.numPages
+                if i > threshold:
+                    print("%s, %d pages"%(names[j],i))
+                    count += 1
+            except Exception:
+                print("something is wrong with",names[j])
+        print("there are %d books over %d pages"%(count,threshold))
+        return
