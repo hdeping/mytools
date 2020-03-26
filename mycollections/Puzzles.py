@@ -2447,6 +2447,22 @@ class Puzzles(Algorithms):
 
         x = np.arange(1,15)
         print(sum(1/(x**x)))
+
+        x = Symbol("x")
+        s = diff(x**(-x),x)
+        value = s.subs(x,1)
+        res = [1,value]
+        for i in range(10):
+            s = diff(s,x)
+            # print(i+2,latex(s*x**x) + r"\\")
+            # print(",",s.subs(x,1))
+            value = s.subs(x,1)
+            if value > 0:
+                print("+%dx^{%d}"%(value,i+2))
+            else:
+                print("-%dx^{%d}"%(-value,i+2))
+
+        # print(series((x+1)**(-x-1),x,x0=0,n=10))
         return
 
     def testABElliptic(self):
@@ -2498,8 +2514,8 @@ class Puzzles(Algorithms):
         # self.solvableQuintic()
         # self.testCharacterExercise()
         # self.testAerodynamics()
-        # self.testXX()
-        self.testABElliptic()
+        self.testXX()
+        # self.testABElliptic()
 
 
         return
