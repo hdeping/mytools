@@ -6708,8 +6708,9 @@ class Formulas(EllipticCurve):
         """
 
         res = []
-        while len(arr) > 0:
-            res.append(arr.pop())
+        line = arr.copy()
+        while len(line) > 0:
+            res.append(line.pop())
         
         return res 
         

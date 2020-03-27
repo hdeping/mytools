@@ -2556,6 +2556,7 @@ class Puzzles(Algorithms):
         """
         docstring for test
         """
+
         # self.testRamanujanPi1()
         # self.alibabaPuzzles()
         # self.testGalois()
@@ -2568,13 +2569,11 @@ class Puzzles(Algorithms):
         # self.testAerodynamics()
         # self.testXX()
         # self.testABElliptic()
+        
         self.getXXTaylor()
-
 
         return
 
 puzzle = Puzzles()
 puzzle.test()
-
-
         
