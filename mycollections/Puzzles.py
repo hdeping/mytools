@@ -2551,7 +2551,53 @@ class Puzzles(Algorithms):
             print(n,num)
 
         return
+    def testPseudoprimes(self,a=1):
+        """
+        docstring for testPseudoprimes
+        L_p = x1^n+x2^n
+        x^2 = x + 1 
+        x^2 = ax + 1 
+        """
+        L = [2,1]
+        L = [2,a]
+        for i in range(1000):
+            # num = L[-1] + L[-2]
+            num = a*L[-1] + L[-2]
+            L.append(num)
+            p2 = (not isprime(i+2))
+            if L[-1]%(i+2) == 1 and p2:
+                # print("a = ",a,i+2)
+                break
+        
+        return i+2
 
+    def testPseudo(self):
+        """
+        docstring for testPseudo
+        """
+        # when res = 26
+        dicts = {}
+        num = 130*2
+        for a in tqdm(range(1,num)):
+            res = self.testPseudoprimes(a=a)
+            # print(a,res)
+            if res == 26:
+                # print("%5d%5d"%(a,a%130))
+                key = str(a // 130)
+                if key in dicts:
+                    dicts[key].append(a%130)
+                else:
+                    dicts[key] = [a%130]
+
+        arr = [5,21,31,99,109,125]
+        for key in dicts:
+            line = arr.copy()
+            for i in dicts[key]:
+                line.remove(i)
+            print(key,line)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -2570,7 +2616,8 @@ class Puzzles(Algorithms):
         # self.testXX()
         # self.testABElliptic()
         
-        self.getXXTaylor()
+        # self.getXXTaylor()
+        self.testPseudo()
 
         return
 
