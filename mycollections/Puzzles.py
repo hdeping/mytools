@@ -2665,6 +2665,30 @@ class Puzzles(Algorithms):
 
         
         return
+
+    def testFiboFrac(self):
+        """
+        docstring for testFiboFrac
+        """
+        res = [0,1,1]
+        para = [1,1,1]
+        a = 0 
+        k = 20
+        frac = 1/k 
+        for i in range(1000):
+            num = 0
+            for j in range(3):
+                num += para[j]*res[-j-1]
+            res.append(num)
+        # print(res[-1])
+        for i in res:
+            frac = frac/k
+            a = a + i*frac
+        num = k*(k*(k-para[0])-para[1])-para[2]
+        print(a,a*num) 
+
+            
+        return
     def test(self):
         """
         docstring for test
@@ -2686,7 +2710,9 @@ class Puzzles(Algorithms):
         # self.getXXTaylor()
         # self.testPseudo()
         # self.testLucasSequence()
-        self.testCoinFountain()
+        # self.testCoinFountain()
+
+        self.testFiboFrac()
 
         return
 
