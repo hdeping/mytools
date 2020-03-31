@@ -2598,6 +2598,36 @@ class Puzzles(Algorithms):
 
 
         return
+
+    def testLucasSequence(self):
+        """
+        docstring for testLucasSequence
+        x^2 = ax + 1 
+        a_{n+1} = a*a_n + a_{n-1}
+        a0 = 2 
+        a1 = a 
+        """
+
+        res = [[2],[1]]
+        for i in range(26):
+            line = [1]
+            for j in range(1,len(res[-1])):
+                num = res[-1][j]+res[-2][j-1]
+                line.append(num)
+            if len(res[-1]) == len(res[-2]):
+                line.append(res[-2][-1])
+
+            k = 3 
+            if len(line) > k:
+                print(i+2,Integer(line[k-1])/line[k],line)
+            res.append(line)
+
+        n = 26
+        arr = np.array(res[n])
+        print(arr%n)    
+        for i in [5,21,31,99,109,125]:
+            print(i**8%n)    
+        return
     def test(self):
         """
         docstring for test
@@ -2617,7 +2647,8 @@ class Puzzles(Algorithms):
         # self.testABElliptic()
         
         # self.getXXTaylor()
-        self.testPseudo()
+        # self.testPseudo()
+        # self.testLucasSequence()
 
         return
 
