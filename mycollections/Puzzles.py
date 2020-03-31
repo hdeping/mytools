@@ -2628,6 +2628,43 @@ class Puzzles(Algorithms):
         for i in [5,21,31,99,109,125]:
             print(i**8%n)    
         return
+
+    def testCoinFountain(self):
+        """
+        docstring for testCoinFountain
+        https://mathpages.com/home/kmath052.htm
+        three coins in the fountain
+        head for 1, tail for 0
+        7 coins 
+        0 1 2 
+        3 4 5
+          6
+        circle 1: 0,1,3,4
+        circle 2: 1,2,4,5
+        circle 3: 3,4,5,6
+
+        """
+        circles = [[0,1,3,4],
+                   [1,2,4,5],
+                   [3,4,5,6]]
+
+        line = [1]*7 
+        status = [line]
+        rands = np.random.randint(0,3,10000)
+        for i in rands:
+            line = line.copy()
+            for j in circles[i]:
+                line[j] = 1 - line[j]
+            if line not in status:
+                status.append(line)
+        # print(len(status),status)
+        string = "%d %d %d\n%d %d %d\n  %d  "
+        for i,line in enumerate(status):
+            print("------%d------"%(i))
+            print(string%(tuple(line)))
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -2649,6 +2686,7 @@ class Puzzles(Algorithms):
         # self.getXXTaylor()
         # self.testPseudo()
         # self.testLucasSequence()
+        self.testCoinFountain()
 
         return
 
