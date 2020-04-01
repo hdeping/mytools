@@ -2781,6 +2781,54 @@ class Puzzles(Algorithms):
 
         print(res)
         return  
+
+    def testIntegral(self):
+        """
+        docstring for testIntegral
+        """
+        f = lambda x: np.exp(np.sin(x))*np.sin(x)
+        s4,err = integrate.quad(f,0,2*np.pi)
+        print(s4)
+
+        res = 0 
+        n_factorial = 1
+        for i in range(50):
+            n_factorial = n_factorial/((i+1)**2)
+            res += n_factorial*(2*i+2)/(2**(2*i+1))
+        print(res,res*np.pi)
+
+        f = lambda x: (np.sin(x)*np.cos(x))**2/(1-x**2)**0.5
+        s4,err = integrate.quad(f,-0.5,0.5)
+        print(s4)
+
+        # series expansion
+        res = 0
+        return
+
+    def getTaylorExpansion(self,x,f,n = 10):
+        """
+        docstring for getTaylorExpansion
+        """
+        print("--------",f)
+        print(0,f.subs(x,0))
+        for i in range(n):
+            f = diff(f,x)
+            print(i+1,f.subs(x,0))
+        return
+    def testExpCos(self):
+        """
+        docstring for testExpCos
+        """
+        x = Symbol("x")
+        f = exp(exp(x)-1)
+        self.getTaylorExpansion(x,f)
+        self.getTaylorExpansion(x,exp(sin(x)),n=2)
+        self.getTaylorExpansion(x,exp(1-cos(x)),n=30)
+        self.getTaylorExpansion(x,atan(sqrt(1+x*x)-1),n=34)
+
+        a = Integer(33399969978375)/factorial(18)
+        print(a)
+        return
     def test(self):
         """
         docstring for test
@@ -2806,7 +2854,9 @@ class Puzzles(Algorithms):
 
         # self.testFiboFrac()
         # self.testTaylorSeries()
-        self.testLucasSum()
+        # self.testLucasSum()
+        # self.testIntegral()
+        self.testExpCos()
 
         return
 
