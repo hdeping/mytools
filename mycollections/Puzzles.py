@@ -2689,6 +2689,74 @@ class Puzzles(Algorithms):
 
             
         return
+
+    def testTaylorSeries(self):
+        """
+        docstring for testTaylorSeries
+        """
+         
+        arr = [[3,3],
+              [5,30],
+              [6,90],
+              [7,630],
+              [9,22680],
+              [10,113400],
+              [11,1247400],
+              [13,97297200],
+              [14,681080400],
+              [15,10216206000]]
+
+        for i,j in arr:
+            print(i,j,factorial(i)/j)
+
+        arr = [[4,3,3],
+               [89,5,120],
+               [83,6,144],
+               [593,7,1260],
+               [287,8,720],
+               [41891,9,120960],
+               [158869,10,518400],
+               [152447,11,554400],
+               [678871,12,2721600],
+               [473847547,13,2075673600],
+               [1411410779,14,6706022400],
+               [63830876233,15,326918592000],
+               [21647448733,16,118879488000],
+               [2427359621209,17,14227497123840],
+               [4029579070333,18,25107347865600],
+               [209443167797947,19,1382330686464000]]
+        for k,i,j in arr:
+            print(i,j,k*factorial(i)/j)
+            # break 
+
+        # log(1+x)*exp(-x)
+        print("----------------------------")
+        print("----------------------------")
+        n = 20
+        logx = [0,1]
+        sigma = -1
+        for i in range(n):
+            logx.append(sigma*Integer(1)/(i+2))
+            sigma = -sigma
+        print(logx)
+
+        expx = [Integer(1)]
+
+        for i in range(n+1):
+            expx.append(-expx[-1]/(i+1))
+
+        print(expx)
+
+        res = [logx[0]*expx[0]]
+        for i in range(1,n+1):
+            num = 0 
+            for j in range(i+1):
+                num += logx[j]*expx[i-j]
+            num = factorial(i)*num
+            res.append(num)
+            print(i,num)
+
+        return  
     def test(self):
         """
         docstring for test
@@ -2712,7 +2780,8 @@ class Puzzles(Algorithms):
         # self.testLucasSequence()
         # self.testCoinFountain()
 
-        self.testFiboFrac()
+        # self.testFiboFrac()
+        # self.testTaylorSeries()
 
         return
 
