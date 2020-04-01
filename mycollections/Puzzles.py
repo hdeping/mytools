@@ -2805,15 +2805,19 @@ class Puzzles(Algorithms):
         res = 0
         return
 
-    def getTaylorExpansion(self,x,f,n = 10):
+    def getTaylor(self,x,f,n = 10,step=1):
         """
-        docstring for getTaylorExpansion
+        docstring for getTaylor
+        f:
+            a function
         """
         print("--------",f)
         print(0,f.subs(x,0))
+        count = 0 
         for i in range(n):
-            f = diff(f,x)
-            print(i+1,f.subs(x,0))
+            f = diff(f,x,step)
+            count += step
+            print(count,f.subs(x,0))
         return
     def testExpCos(self):
         """
@@ -2821,13 +2825,89 @@ class Puzzles(Algorithms):
         """
         x = Symbol("x")
         f = exp(exp(x)-1)
-        self.getTaylorExpansion(x,f)
-        self.getTaylorExpansion(x,exp(sin(x)),n=2)
-        self.getTaylorExpansion(x,exp(1-cos(x)),n=30)
-        self.getTaylorExpansion(x,atan(sqrt(1+x*x)-1),n=34)
+        self.getTaylor(x,f)
+        self.getTaylor(x,exp(sin(x)),n=2)
+        self.getTaylor(x,exp(1-cos(x)),n=10)
+        f = atan(sqrt(1+x*x)-1)
+        self.getTaylor(x,f,n=3)
 
         a = Integer(33399969978375)/factorial(18)
+        a = Integer(4368604540935009375)/factorial(22)
         print(a)
+
+        arr = [[2 ,1],
+              [4 ,-3],
+              [6 ,15],
+              [8 ,-315],
+              [10, 36855],
+              [12, -4833675],
+              [14, 711485775],
+              [16, -133449190875],
+              [18, 33399969978375],
+              [20, -10845524928112875],
+              [22, 4368604540935009375],
+              [24, -2121018409773134746875],
+              [26, 1222083076784378918484375],
+              [28, -826013017674132244878796875],
+              [30, 647724113841936142199672859375],
+              [32, -583169643524919352829283528046875],
+              [34, 597359177463144491308077497692734375],
+              [36, -690705634748275077389006998731704296875],
+              [38, 895308770935086347664096961848512087109375],
+              [40, -1293014756515190918978281765759779961360546875],
+              [42, 2069090654296251423055420621941125742237708984375],
+              [44, -3650287422951500638665261346616153988543455841796875],
+              [46, 7067644991767194875269793917621503636445835249443359375]]
+        for i,j in arr:
+            a = Integer(abs(j))/factorial(i)
+            nom,denom = fraction(a)
+            # print(i,denom)
+            # print(i,denom,factorint(denom/i))
+            print(i,denom,factorint(denom))
+            break
+
+        f = (1+x)**(1+x)
+        self.getTaylor(x,f,n=2)
+
+        arr = [[0, 1],
+              [1, 1],
+              [2, 2],
+              [3, 3],
+              [4, 8],
+              [5, 10],
+              [6, 54],
+              [7, -42],
+              [8, 944],
+              [9, -5112],
+              [10, 47160],
+              [11, -419760],
+              [12, 4297512],
+              [13, -47607144],
+              [14, 575023344],
+              [15, -7500202920],
+              [16, 105180931200],
+              [17, -1578296510400],
+              [18, 25238664189504],
+              [19, -428528786243904],
+              [20, 7700297625889920],
+              [21, -146004847062359040],
+              [22, 2913398154375730560],
+              [23, -61031188196889482880],
+              [24, 1339252684282847781504],
+              [25, -30722220593745761750400],
+              [26, 735384500710300207353600],
+              [27, -18335978741646751132022400],
+              [28, 475481863771471289192140800],
+              [29, -12804628568422088117232979200],
+              [30, 357611376476800486783526273280]]
+
+        for i,j in arr:
+            a = Integer(abs(j))/factorial(i)
+            nom,denom = fraction(a)
+            # print(i,denom)
+            # print(i,denom,factorint(denom/i))
+            print(i,nom,denom,factorint(denom))
+
         return
     def test(self):
         """
