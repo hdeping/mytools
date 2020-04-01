@@ -2757,6 +2757,30 @@ class Puzzles(Algorithms):
             print(i,num)
 
         return  
+
+
+    def testLucasSum(self):
+        """
+        docstring for testLucasSum
+        S&=&\sum_{k=0}^{n}\frac{L_{2k+1}}{\left(2k+1\right)^{2}C_{2k}^{k}}
+        """
+        lucas = [Decimal(-1),Decimal(2)]
+        for i in range(100):
+            num = Decimal(sum(lucas[-2:]))
+            lucas.append(num)
+        # print(lucas)
+        # from decimal import *
+        getcontext().prec = 100
+        res = Decimal(0)
+        c2nn = Decimal(1)
+        for i in range(20):
+            n = Decimal(2*i + 1)
+            res += lucas[2*i+1]/(n*n)/c2nn 
+            # print(i,c2nn)
+            c2nn = c2nn*(n+1)*n/((i+1)**2)
+
+        print(res)
+        return  
     def test(self):
         """
         docstring for test
@@ -2782,6 +2806,7 @@ class Puzzles(Algorithms):
 
         # self.testFiboFrac()
         # self.testTaylorSeries()
+        self.testLucasSum()
 
         return
 
