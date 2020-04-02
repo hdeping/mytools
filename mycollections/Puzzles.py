@@ -2908,7 +2908,117 @@ class Puzzles(Algorithms):
             # print(i,denom,factorint(denom/i))
             print(i,nom,denom,factorint(denom))
 
+
+        f = asin(1-sqrt(1-x*x))
+        
+        # f = asin(sqrt(1+x*x)-1)
+        self.getTaylor(x,f,n=2)
+
+        arr = [[2,1],
+               [4,3],
+               [6,60],
+               [8,2205],
+               [10,150255],
+               [12,15592500],
+               [14,2329051725],
+               [16,470583988875],
+               [18,123830632926000],
+               [20,41119444417676625]]
+        for i,j in arr:
+            print(i,factorint(j))
+
+        f = exp(atan(x))
+        self.getTaylor(x,f,n=5)
+
+        f = atan(1-sqrt(1-x*x))
+        self.getTaylor(x,f,n=3)
+
         return
+
+    def judgeRamaMagic(self,magic_square):
+        """
+        magic_square:
+            2d array of n*n
+        return:
+            yes or no
+        """
+
+        n = len(magic_square)
+        magic_square = np.array(magic_square)
+        total = sum(magic_square[0])
+
+        # n rows, n columns, tow diagonals
+        arr_sum = np.zeros(2*n+2,int)
+        arr_sum[:n] = np.sum(magic_square,axis=0)
+        arr_sum[n:2*n] = np.sum(magic_square,axis=1)
+        for i in range(n):
+            arr_sum[2*n] += magic_square[i,i]
+            arr_sum[2*n+1] += magic_square[i,n - 1 - i]
+
+        print(arr_sum)
+
+        combinations = itertools.combinations(np.arange(n),2)
+        arr = []
+        for line in combinations:
+            arr.append(list(line))
+
+        res = []
+        count = 0 
+        for row in arr:
+            for col in arr:
+                matrix = np.zeros((n,n),int)
+                num = 0 
+                for i in row:
+                    for j in col:
+                        tmp = magic_square[i,j] 
+                        matrix[i,j] = tmp 
+                        num += tmp
+                if num == total:
+                    count += 1
+                    res.append([row,col])
+                    print(count,"-------",row,col)
+                    print(matrix)
+        # print(len(res),res)
+
+        line = [[0,2],[1,3]]
+        res = [0,0]
+        for i,j in line:
+            res[0] += magic_square[i,j]
+            res[0] += magic_square[j,i]
+            res[1] += magic_square[i,n-1-j]
+            res[1] += magic_square[j,n-1-i]
+        print(res)
+
+
+        return
+        
+    def testRamaMagicSquare(self):
+        """
+        docstring for testRamaMagicSquare
+        """
+        res = [[23, 11, 19, 90],
+               [91, 18, 8, 26],
+               [9, 25, 92, 17],
+               [20, 89, 24, 10]]
+
+
+        self.judgeRamaMagic(res)
+
+        # Ramanujan's birthday: 1887-12-22
+        # 86 87 88 89
+        # 9  10 11 12
+        # 16 17 18 19
+        # 22 23 24 25
+        res = [[22, 12, 18, 87],
+               [88, 17, 9, 25],
+               [10, 24, 89, 16],
+               [19, 86, 23, 11]]
+
+
+        self.judgeRamaMagic(res)
+
+
+        return  
     def test(self):
         """
         docstring for test
@@ -2936,7 +3046,8 @@ class Puzzles(Algorithms):
         # self.testTaylorSeries()
         # self.testLucasSum()
         # self.testIntegral()
-        self.testExpCos()
+        # self.testExpCos()
+        self.testRamaMagicSquare()
 
         return
 
