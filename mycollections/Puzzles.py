@@ -2955,7 +2955,7 @@ class Puzzles(Algorithms):
             arr_sum[2*n] += magic_square[i,i]
             arr_sum[2*n+1] += magic_square[i,n - 1 - i]
 
-        print(arr_sum)
+        # print(arr_sum)
 
         combinations = itertools.combinations(np.arange(n),2)
         arr = []
@@ -2976,9 +2976,10 @@ class Puzzles(Algorithms):
                 if num == total:
                     count += 1
                     res.append([row,col])
-                    print(count,"-------",row,col)
-                    print(matrix)
+                    # print(count,"-------",row,col)
+                    # print(matrix)
         # print(len(res),res)
+        print("equations number",len(res))
 
         line = [[0,2],[1,3]]
         res = [0,0]
@@ -2987,7 +2988,9 @@ class Puzzles(Algorithms):
             res[0] += magic_square[j,i]
             res[1] += magic_square[i,n-1-j]
             res[1] += magic_square[j,n-1-i]
-        print(res)
+        # print(res)
+
+
 
 
         return
@@ -3016,9 +3019,80 @@ class Puzzles(Algorithms):
 
 
         self.judgeRamaMagic(res)
+        self.checkRamaMagic([22, 12, 18, 87])
 
 
         return  
+    def checkSuit(self,checked, total):
+        return (checked in total) or (checked <= 0)
+
+    def checkRamaMagic(self,arr):
+        """
+        check Ramanujan matrix 
+        code from the internet
+        https://cloud.tencent.com/developer/article/1503127
+        (a, b, c, d) = (22, 12, 18, 87)
+        (e, f, g, h) = (0, 0, 0, 0)
+        (i, j, k, l) = (0, 0, 0, 0)
+        (m, n, o, p) = (0, 0, 0, 0)
+
+        """
+        count = 0
+        a, b, c, d = arr
+        x = 4*max(arr)
+        y = sum(arr)
+
+        for f in range(1, x):
+            for k in range(1, x):
+                line = [a, b, c, d, f]
+                if self.checkSuit(k, line):continue
+                line.append(k)
+                p = y - a - f - k
+                if self.checkSuit(p, line):continue
+                line.append(p)
+                e = y - a - b - f
+                if self.checkSuit(e, line):continue
+                line.append(e)
+                m = y - a - d - p
+                if self.checkSuit(m, line):continue
+                line.append(m)
+                i = y - a - e - m
+                if self.checkSuit(i, line):continue
+                line.append(i)
+                j = y - e - f - i
+                if self.checkSuit(j, line):continue
+                line.append(j)
+                n = y - b - f - j
+                if self.checkSuit(n, line):continue
+                line.append(n)
+                o = y - m - n - p
+                if self.checkSuit(o, line):continue
+                line.append(o)
+                g = y - c - k - o
+                if self.checkSuit(g, line):continue
+                line.append(g)
+                h = y - e - f - g
+                if self.checkSuit(h, line):continue
+                line.append(h)
+                l = y - d - h - p
+                if self.checkSuit(l, line):continue
+                line.append(l)
+                if ((y == c + d + g + h) and (y == i + j + m + n) and \
+                    (y == k + l + o + p) and (y == i + j + k + l) and \
+                    (y == b + c + n + o) and (y == e + i + h + l) and \
+                    (y == d + g + j + m) and (y == f + g + j + k) and \
+                    (y == b + e + l + o) and (y == c + h + i + n) and \
+                    (y == g + h + k + l)):
+                    count += 1
+                    line = np.array([ a, b, c, d,
+                                      e, f, g, h,
+                                      i, j, k, l,
+                                      m, n, o, p])
+                    line = line.reshape((4,4))
+                    print("count:",count)
+                    self.judgeRamaMagic(line)
+        print("numbers",count)
+        return count
     def test(self):
         """
         docstring for test
