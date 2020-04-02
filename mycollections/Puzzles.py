@@ -3099,6 +3099,49 @@ class Puzzles(Algorithms):
                     # self.judgeRamaMagic(line)
         # print("numbers",count)
         return count
+
+    def testArctanSqrt(self):
+        """
+        docstring for testArctanSqrt
+
+        f\left(x\right)&=&\arctan\left(1-\sqrt{1-x^{2}}\right)
+
+        """
+
+        paras = [Integer(1),Integer(1)/2]
+        n = 30
+        for i in range(n):
+            num = paras[-1]*(2*i+2)*(2*i+1)
+            num = num /(4*(i+2)*(i+1))
+            paras.append(num)
+        print(paras)
+
+        b = []
+        b.append(paras[0])
+        b.append(-paras[1])
+        for i in range(2,n+2):
+            num = paras[i-1] - 3*paras[i]
+            b.append(num)
+
+
+        print(b)
+
+        factorials = self.getFactorials(2*n+1)
+        factorials = [1] + factorials
+
+        res = [1]
+        for i in range(1,n):
+            num = 0
+            for k in range(i):
+                # print("k = ",k,res[k],b[i-k])
+                num += res[k]*b[i-k]/factorials[2*k+1]
+            num = -num*factorials[2*i+1]
+            print(i,num)
+            res.append(num)
+
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -3128,6 +3171,7 @@ class Puzzles(Algorithms):
         # self.testIntegral()
         # self.testExpCos()
         # self.testRamaMagicSquare()
+        self.testArctanSqrt()
 
         return
 
