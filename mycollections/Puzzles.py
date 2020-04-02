@@ -3005,7 +3005,7 @@ class Puzzles(Algorithms):
                [20, 89, 24, 10]]
 
 
-        self.judgeRamaMagic(res)
+        # self.judgeRamaMagic(res)
 
         # Ramanujan's birthday: 1887-12-22
         # 86 87 88 89
@@ -3018,8 +3018,12 @@ class Puzzles(Algorithms):
                [19, 86, 23, 11]]
 
 
-        self.judgeRamaMagic(res)
-        self.checkRamaMagic([22, 12, 18, 87])
+        # self.judgeRamaMagic(res)
+        for i in range(100,101):
+            line = [50,2,3,i]
+            num = self.checkRamaMagic(line)
+            print(line,"number = ",num)
+        num = self.checkRamaMagic(line)
 
 
         return  
@@ -3088,10 +3092,12 @@ class Puzzles(Algorithms):
                                       e, f, g, h,
                                       i, j, k, l,
                                       m, n, o, p])
-                    line = line.reshape((4,4))
-                    print("count:",count)
-                    self.judgeRamaMagic(line)
-        print("numbers",count)
+                    # line = line.reshape((4,4))
+                    line.sort()
+                    # print(count,line)
+                    # print("count:",count,line)
+                    # self.judgeRamaMagic(line)
+        # print("numbers",count)
         return count
     def test(self):
         """
@@ -3121,7 +3127,7 @@ class Puzzles(Algorithms):
         # self.testLucasSum()
         # self.testIntegral()
         # self.testExpCos()
-        self.testRamaMagicSquare()
+        # self.testRamaMagicSquare()
 
         return
 
