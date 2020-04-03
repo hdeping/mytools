@@ -3109,12 +3109,12 @@ class Puzzles(Algorithms):
         """
 
         paras = [Integer(1),Integer(1)/2]
-        n = 30
+        n = 3000
         for i in range(n):
             num = paras[-1]*(2*i+2)*(2*i+1)
             num = num /(4*(i+2)*(i+1))
             paras.append(num)
-        print(paras)
+        # print(paras)
 
         b = []
         b.append(paras[0])
@@ -3124,24 +3124,103 @@ class Puzzles(Algorithms):
             b.append(num)
 
 
-        print(b)
+        # print(b)
 
         factorials = self.getFactorials(2*n+1)
         factorials = [1] + factorials
 
         res = [1]
+        factors = []
+        # for i in tqdm(range(1,n)):
         for i in range(1,n):
             num = 0
             for k in range(i):
                 # print("k = ",k,res[k],b[i-k])
                 num += res[k]*b[i-k]/factorials[2*k+1]
+
+            p,q = fraction(-num/(2*i+2))
             num = -num*factorials[2*i+1]
-            print(i,num)
+            a = factorint(q)[2]
+            k = 2*(i+1)-a
+            # print(i+1,a,k,factorint(2*(i+1)),factorint(q))
+            p,q = fraction(q/(2*i+2))
+            # print(i+1,q)
+            if q != 1:
+                print(i+1,q)
+            # print(i+1,isprime(p))
+            # if isprime(p):
+            #     print(i+1,p)
+            factors.append(k)
+            # print(i+1,q)
+            # print(i,num)
             res.append(num)
+
+        # print(factors)
+
+        print("get factors")
+        res = [1]
+        for i in range(2):
+            line = []
+            for j in res:
+                line.append(j+1)
+            res = res + line 
+        print(res)
+
 
 
         
         return
+
+    def checkFermatPrime(self,n,m,num=6):
+        """
+        docstring for checkFermatPrime
+        n,m:
+            integers
+        return:
+            [2,1] ==> [3,5,17,257,65537,...]
+        """
+        results = []
+        for i in range(num):
+            res = n**(2**i)+m
+            res = isprime(res)
+            results.append(res)
+        return results 
+    def testFermatNum(self):
+        """
+        docstring for testFermatNum
+        May I conjecture that there are 
+        no more than 5 k-s so that p(n) 
+        are primes for any pair of (n,m)?
+        """
+        n = 500
+        p = []
+        for i in range(2,n+2):
+            p.append(prime(i))
+        # print(p)
+
+        dicts = {}
+        overFour = {}
+        length = 7 
+        for i in range(4,length+1):
+            overFour[i] = []
+
+        for q in tqdm(p):
+            for i in range(2,q,2):
+                res = self.checkFermatPrime(q,i,num=length)
+                k = sum(res)
+                if k in dicts:
+                    dicts[k] += 1 
+                else:
+                    dicts[k]  = 1
+                # print(q,i,k,res)
+                if k > 3:
+                    overFour[k].append([q,i])
+                    print(q,i,k)
+
+        print(dicts)
+        print(overFour)
+        return
+
     def test(self):
         """
         docstring for test
@@ -3171,10 +3250,11 @@ class Puzzles(Algorithms):
         # self.testIntegral()
         # self.testExpCos()
         # self.testRamaMagicSquare()
-        self.testArctanSqrt()
+        # self.testArctanSqrt()
+        self.testFermatNum()
 
         return
 
 puzzle = Puzzles()
 puzzle.test()
-        
+
