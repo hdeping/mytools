@@ -3295,27 +3295,33 @@ class Puzzles(Algorithms):
                 radical = radical*factor 
             if radical < c and count == 1:
                 # print(line,a,b,c,radical)
-                print(line,dicts,c/radical)
+                string = self.getFactorString(line1+line2,line,len1)
+                i = factor 
+                j = dicts[i]
+                print("%s &=& %d^{%d} \\\\"%(string,i,j))
         return
     def testABCConjecture(self):
         """
         docstring for testABCConjecture
         """
-        print(self.getFactorString([2,3,5,7,11,13],[0,1,2,3,1,0],3))
-        return 
         primes = []
-        for i in range(1,11):
+        for i in range(1,40):
             primes.append(prime(i))
 
-        line1 = [2,3]
-        line2 = [5,7]
         # self.ABCTest(line1,line2)
         combinations = itertools.combinations(primes,2)
-        for line1 in combinations:
-            line2 = primes.copy()
-            for i in line1:
-                line2.remove(i)
-            print(line1,line2)
+        combi = [[0,1,2,3],
+                 [0,2,1,3],
+                 [0,3,1,2]]
+
+        for line in tqdm(combinations):
+            self.ABCTest([line[0]],[line[1]],n=10)
+            continue
+            for indeces in combi:
+                line1 = []
+                for i in indeces:
+                    line1.append(line[i])
+                self.ABCTest(line1[:2],line1[2:])
 
 
         return
