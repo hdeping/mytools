@@ -3222,6 +3222,32 @@ class Puzzles(Algorithms):
         print(overFour)
         return
 
+    def getFactorString(self,factors,exponents,splitNum):
+        """
+        docstring for getFactorString
+        factors:
+            1d array
+        exponents:
+            1d array 
+        [2,3,5,7],[3,5,2,4],2 
+          => 2^{3}*3^{5} + 5^{3}*3^{5}
+        """
+        res = ""
+        for i,j in zip(factors[:splitNum],exponents[:splitNum]):
+            if j == 1:
+                res = "%s%d*"%(res,i)
+            elif j > 1:
+                res = "%s%d^{%d}*"%(res,i,j)
+        res = res[:-1] + " + "
+        for i,j in zip(factors[splitNum:],exponents[splitNum:]):
+            if j == 1:
+                res = "%s%d*"%(res,i)
+            elif j > 1:
+                res = "%s%d^{%d}*"%(res,i,j)
+        res = res[:-1]
+        
+        return res
+
     def ABCTest(self,line1,line2,n = 10):
         """
         docstring for ABCTest
@@ -3268,12 +3294,21 @@ class Puzzles(Algorithms):
         """
         docstring for testABCConjecture
         """
-        
-        primes = [2,3,5,7]
+        print(self.getFactorString([2,3,5,7,11,13],[0,1,2,3,1,0],3))
+        return 
+        primes = []
+        for i in range(1,11):
+            primes.append(prime(i))
 
         line1 = [2,3]
         line2 = [5,7]
-        self.ABCTest(line1,line2)
+        # self.ABCTest(line1,line2)
+        combinations = itertools.combinations(primes,2)
+        for line1 in combinations:
+            line2 = primes.copy()
+            for i in line1:
+                line2.remove(i)
+            print(line1,line2)
 
 
         return
