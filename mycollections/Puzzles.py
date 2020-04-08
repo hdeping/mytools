@@ -3305,7 +3305,7 @@ class Puzzles(Algorithms):
         docstring for testABCConjecture
         """
         primes = []
-        for i in range(1,40):
+        for i in range(1,200):
             primes.append(prime(i))
 
         # self.ABCTest(line1,line2)
@@ -3315,7 +3315,7 @@ class Puzzles(Algorithms):
                  [0,3,1,2]]
 
         for line in tqdm(combinations):
-            self.ABCTest([line[0]],[line[1]],n=10)
+            self.ABCTest([line[0]],[line[1]],n=6)
             continue
             for indeces in combi:
                 line1 = []
