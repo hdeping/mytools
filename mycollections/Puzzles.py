@@ -3023,12 +3023,13 @@ class Puzzles(Algorithms):
             line = [50,2,3,i]
             num = self.checkRamaMagic(line)
             print(line,"number = ",num)
-        num = self.checkRamaMagic(line)
+            break
+        num = self.checkRamaMagic([1,2,16,15])
 
 
         return  
     def checkSuit(self,checked, total):
-        return (checked in total) or (checked <= 0)
+        return (checked in total) or (checked <= 0) or (checked >= 18)
 
     def checkRamaMagic(self,arr):
         """
@@ -3221,6 +3222,61 @@ class Puzzles(Algorithms):
         print(overFour)
         return
 
+    def ABCTest(self,line1,line2,n = 10):
+        """
+        docstring for ABCTest
+        """
+        res = np.arange(n)
+        
+        len1  = len(line1)
+        len2  = len(line2)
+        length = len1 + len2
+        combinations = itertools.product(res,repeat=length)
+
+        for line in combinations:
+            if sum(line[:len1]) == 0:
+                continue
+            if sum(line[len1:]) == 0:
+                continue
+            radical = 1 
+            for i,j in enumerate(line1):
+                if j > 0:
+                    radical *= line1[i]
+            for i,j in enumerate(line2):
+                if j > 0:
+                    radical *= line2[i]
+
+            a = 1 
+            b = 1
+            for i,j in zip(line1,line[:len1]):
+                a *= i**j
+            for i,j in zip(line2,line[len1:]):
+                b *= i**j  
+
+            c = a + b
+
+            dicts = factorint(Integer(c))
+            count = 0 
+            for factor in dicts:
+                count += 1 
+                radical = radical*factor 
+            if radical < c and count == 1:
+                # print(line,a,b,c,radical)
+                print(line,dicts,c/radical)
+        return
+    def testABCConjecture(self):
+        """
+        docstring for testABCConjecture
+        """
+        
+        primes = [2,3,5,7]
+
+        line1 = [2,3]
+        line2 = [5,7]
+        self.ABCTest(line1,line2)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3251,7 +3307,8 @@ class Puzzles(Algorithms):
         # self.testExpCos()
         # self.testRamaMagicSquare()
         # self.testArctanSqrt()
-        self.testFermatNum()
+        # self.testFermatNum()
+        self.testABCConjecture()
 
         return
 
