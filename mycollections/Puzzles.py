@@ -3222,6 +3222,19 @@ class Puzzles(Algorithms):
         print(overFour)
         return
 
+    def getExponentString(self,factors,exponents):
+        """
+        docstring for getExponentString
+        """
+        res = ""
+        for i,j in zip(factors,exponents):
+            if j == 1:
+                res = "%s%d*"%(res,i)
+            elif j > 1:
+                res = "%s%d^{%d}*"%(res,i,j)
+        res = res[:-1]
+        return res
+
     def getFactorString(self,factors,exponents,splitNum):
         """
         docstring for getFactorString
@@ -3232,19 +3245,13 @@ class Puzzles(Algorithms):
         [2,3,5,7],[3,5,2,4],2 
           => 2^{3}*3^{5} + 5^{3}*3^{5}
         """
-        res = ""
-        for i,j in zip(factors[:splitNum],exponents[:splitNum]):
-            if j == 1:
-                res = "%s%d*"%(res,i)
-            elif j > 1:
-                res = "%s%d^{%d}*"%(res,i,j)
-        res = res[:-1] + " + "
-        for i,j in zip(factors[splitNum:],exponents[splitNum:]):
-            if j == 1:
-                res = "%s%d*"%(res,i)
-            elif j > 1:
-                res = "%s%d^{%d}*"%(res,i,j)
-        res = res[:-1]
+        res1 = self.getExponentString(factors[:splitNum],
+                                     exponents[:splitNum])
+       
+        res2 = self.getExponentString(factors[splitNum:],
+                                     exponents[splitNum:])
+
+        res = "%s + %s"%(res1,res2)
         
         return res
 
