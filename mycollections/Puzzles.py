@@ -1505,6 +1505,30 @@ class Puzzles(Algorithms):
         # self.testEllipk()
         # self.testSquareEqn()
         # self.testDedekindEta()
+
+        # self.testRamanujanPi1()
+        # self.alibabaPuzzles()
+        # self.testGalois()
+        # self.testEqnDet()
+        # self.testCharacters()
+        # self.testFrobenius()
+        # self.symmetryGroup()
+        # self.solvableQuintic()
+        # self.testCharacterExercise()
+        # self.testAerodynamics()
+        # self.testXX()
+        # self.testABElliptic()
+        
+        # self.getXXTaylor()
+        # self.testPseudo()
+        # self.testLucasSequence()
+        # self.testCoinFountain()
+
+        # self.testFiboFrac()
+        # self.testTaylorSeries()
+        # self.testLucasSum()
+        # self.testIntegral()
+        # self.testExpCos()
         
         return
 
@@ -3330,29 +3354,6 @@ class Puzzles(Algorithms):
         docstring for test
         """
 
-        # self.testRamanujanPi1()
-        # self.alibabaPuzzles()
-        # self.testGalois()
-        # self.testEqnDet()
-        # self.testCharacters()
-        # self.testFrobenius()
-        # self.symmetryGroup()
-        # self.solvableQuintic()
-        # self.testCharacterExercise()
-        # self.testAerodynamics()
-        # self.testXX()
-        # self.testABElliptic()
-        
-        # self.getXXTaylor()
-        # self.testPseudo()
-        # self.testLucasSequence()
-        # self.testCoinFountain()
-
-        # self.testFiboFrac()
-        # self.testTaylorSeries()
-        # self.testLucasSum()
-        # self.testIntegral()
-        # self.testExpCos()
         # self.testRamaMagicSquare()
         # self.testArctanSqrt()
         # self.testFermatNum()
