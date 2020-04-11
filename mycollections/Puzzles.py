@@ -3349,6 +3349,58 @@ class Puzzles(Algorithms):
 
 
         return
+
+    def getCollatzNum(self,num):
+        """
+        docstring for getCollatzNum
+        """
+        res = 0 
+        line = [num]
+        while num > 1:
+            if num%2 == 0:
+                num = num//2 
+            else:
+                num = 3*num + 1 
+            res += 1 
+            line.append(num)
+        print(line)
+
+        return res
+    def testCollatz(self):
+        """
+        docstring for testCollatz
+        """
+        res = 1
+        y = []
+        x = []
+        for i in range(1):
+            res = 9*res + 1 
+            y.append(self.getCollatzNum(res))
+            x.append(i+1)
+            print(x[-1],y[-1])
+        plt.plot(x,y)
+        # plt.savefig("collatz.png",dpi=300)
+        # plt.show()
+        n = 7
+        print(self.getCollatzNum(2**n-1))
+
+        res = [1,2]
+        for i in range(10):
+            num = res[-1]*res[-2]-1
+            print(num**0.5)
+            num = 7*res[-1] - res[-2]
+            res.append(num)
+
+        res = [Integer(2),Integer(2)]
+        for i in range(10):
+            a,b = res[-2:]
+            num = 2*b - 3*a*b + 17*a - 16
+            num /= (3*b - 4*a*b + 18*a - 17)
+            res.append(num)
+            print(i+3,sqrt(1/(num-1)))
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3357,7 +3409,8 @@ class Puzzles(Algorithms):
         # self.testRamaMagicSquare()
         # self.testArctanSqrt()
         # self.testFermatNum()
-        self.testABCConjecture()
+        # self.testABCConjecture()
+        self.testCollatz()
 
         return
 
