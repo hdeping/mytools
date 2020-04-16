@@ -3416,6 +3416,50 @@ class Puzzles(Algorithms):
             num2 = 2**k*(2**k-1)*bernoulli(k)/factorial(k)
             print(2*n-1,num,num-abs(num2))
         return
+
+    def getSeriesT(self,k,n=1000,zeta = False):
+        """
+        docstring for getSeriesT
+        Tk = 1-1/3^k+1/5^k+...
+        or 
+        zeta(k)
+        """
+        res = 0 
+        if zeta is False:
+            for i in range(1,n):
+                res += (-1)**(i-1)/(2*i-1)**k
+        else:
+            for i in range(1,n):
+                res += 1/i**k
+
+        return res
+
+    def arctanIntegral(self):
+        """
+        docstring for arctanIntegral
+        \int_0^1 (arctan x)^n dx
+        """
+        print(self.getSeriesT(2,n=100))
+
+        f = lambda x: (np.arctan(x))**3 
+        res = integrate.quad(f,0,1)[0]
+        print("area",res)
+
+        T2 = self.getSeriesT(2)
+        T3 = self.getSeriesT(3)
+        Z3 = self.getSeriesT(3,zeta=True)
+        print(T3,Z3)
+        print(np.pi**3/T3)
+        print(np.pi**5/self.getSeriesT(5))
+
+        res = np.pi**3/64+3*np.pi**2*np.log(2)/32 
+        res += (-3*np.pi*T2/4 + 63*Z3/64)
+        print("area",res)
+
+        f = lambda x: np.log(1+x**2)*(np.arctan(x))/(1+x**2)
+        res = integrate.quad(f,0,1)[0]
+        print("integral",res)
+        return
     def test(self):
         """
         docstring for test
@@ -3426,7 +3470,8 @@ class Puzzles(Algorithms):
         # self.testFermatNum()
         # self.testABCConjecture()
         # self.testCollatz()
-        self.tangentPower()
+        # self.tangentPower()
+        self.arctanIntegral()
 
         return
 
