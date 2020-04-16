@@ -3461,9 +3461,9 @@ class Puzzles(Algorithms):
         print("integral",res)
         return
 
-    def getDirichletL(self):
+    def getEulerNumbers(self):
         """
-        docstring for getDirichletL
+        docstring for getEulerNumbers  
         S(s)&=&S\left(s,\frac{1}{2}\right)
         =\sum_{k=0}^{\infty}\frac{\left(-1\right)^{k}}{\left(2k+1\right)^{s}}
         """
@@ -3492,7 +3492,7 @@ class Puzzles(Algorithms):
         # self.testCollatz()
         # self.tangentPower()
         # self.arctanIntegral()
-        self.getDirichletL()
+        self.getEulerNumbers()
 
         return
 
