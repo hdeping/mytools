@@ -3460,6 +3460,26 @@ class Puzzles(Algorithms):
         res = integrate.quad(f,0,1)[0]
         print("integral",res)
         return
+
+    def getDirichletL(self):
+        """
+        docstring for getDirichletL
+        S(s)&=&S\left(s,\frac{1}{2}\right)
+        =\sum_{k=0}^{\infty}\frac{\left(-1\right)^{k}}{\left(2k+1\right)^{s}}
+        """
+        res = [Integer(1)/4]
+        for n in range(1,100):
+            num = 1/factorial(2*n)/2**(2*n+1)
+            for k in range(n):
+                num -= (-1)**k*res[k]/factorial(2*n-2*k)
+            num = num*(-1)**n/2 
+            res.append(num)
+            a,b = fraction(num)
+            # print(n,num,factorint(a))
+            if isprime(a):
+                print(n,a)
+
+        return
     def test(self):
         """
         docstring for test
@@ -3471,7 +3491,8 @@ class Puzzles(Algorithms):
         # self.testABCConjecture()
         # self.testCollatz()
         # self.tangentPower()
-        self.arctanIntegral()
+        # self.arctanIntegral()
+        self.getDirichletL()
 
         return
 
