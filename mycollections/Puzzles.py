@@ -3401,6 +3401,21 @@ class Puzzles(Algorithms):
 
 
         return
+
+    def tangentPower(self):
+        """
+        docstring for tangentPower
+        """
+        
+        for n in range(1,10):
+            num  = bernoulli(2*n+2)
+            a    = 2**(2*n+1)
+            num *= a*(2*a-1)*(2*n+1)*(2*n)/factorial(2*n+2)
+            num  = abs(num)
+            k    = 2*n
+            num2 = 2**k*(2**k-1)*bernoulli(k)/factorial(k)
+            print(2*n-1,num,num-abs(num2))
+        return
     def test(self):
         """
         docstring for test
@@ -3410,7 +3425,8 @@ class Puzzles(Algorithms):
         # self.testArctanSqrt()
         # self.testFermatNum()
         # self.testABCConjecture()
-        self.testCollatz()
+        # self.testCollatz()
+        self.tangentPower()
 
         return
 
