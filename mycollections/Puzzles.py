@@ -27,6 +27,7 @@ from decimal import *
 from tqdm import tqdm
 import mpmath as mp
 import math
+from scipy import integrate
 
 class Puzzles(Algorithms):
     """
@@ -1504,6 +1505,30 @@ class Puzzles(Algorithms):
         # self.testEllipk()
         # self.testSquareEqn()
         # self.testDedekindEta()
+
+        # self.testRamanujanPi1()
+        # self.alibabaPuzzles()
+        # self.testGalois()
+        # self.testEqnDet()
+        # self.testCharacters()
+        # self.testFrobenius()
+        # self.symmetryGroup()
+        # self.solvableQuintic()
+        # self.testCharacterExercise()
+        # self.testAerodynamics()
+        # self.testXX()
+        # self.testABElliptic()
+        
+        # self.getXXTaylor()
+        # self.testPseudo()
+        # self.testLucasSequence()
+        # self.testCoinFountain()
+
+        # self.testFiboFrac()
+        # self.testTaylorSeries()
+        # self.testLucasSum()
+        # self.testIntegral()
+        # self.testExpCos()
         
         return
 
@@ -2432,7 +2457,6 @@ class Puzzles(Algorithms):
         docstring for testXX
         S&=&\int_{0}^{\infty}x^{-x}dx
         """
-        from scipy import integrate
         x = np.linspace(0.01,10,1000)
         y = x**(-x)
         y = x*np.log(x)
@@ -2447,29 +2471,1031 @@ class Puzzles(Algorithms):
 
         x = np.arange(1,15)
         print(sum(1/(x**x)))
+
+        x = Symbol("x")
+        s = diff(x**(-x),x)
+        value = s.subs(x,1)
+        res = [1,value]
+        for i in range(5):
+            s = diff(s,x)
+            value = s.subs(x,1)
+            print(value,",")
+
         return
 
+    def testABElliptic(self):
+        """
+        docstring for testABElliptic
+        """
+        p   = 2 
+
+        f = lambda x: (1+x**4)**(-1/2)
+        s1,err = integrate.quad(f,0,1)
+        print("s1 = ",s1)
+
+        f = lambda x: (1 + (p-1)*math.cos(x)**2)**(-1/2)
+        s2,err = integrate.quad(f,0,np.pi/2)
+        print("s2 = ",s2,s1*2**0.5)
+
+        a,b = 1,p**0.5 
+        # a,b = 1,1.01 
+        for i in range(30):
+            A = (a+b)/2 
+            B = (a*b)**0.5 
+            a,b = A,B 
+        print("a,b = ",a,b)
+
+        f = lambda x: (1+(p-1)*math.cos(x)**2)**(1/2)
+        s3,err = integrate.quad(f,0,np.pi/2)
+        print(s3,s3*2/np.pi)
+
+        f = lambda x: (1-x**4)**(-1/2)
+        s4,err = integrate.quad(f,0,1)
+        print(s4)
+
+        N = np.arange(1,14)
+        print(sum((N+1)/(N**N)))
+
+        
+        return
+
+    def getPermArray(self,n,m):
+        """
+        docstring for getPermArray
+        n,m:
+            integers with n >= m 
+        return:
+            1d array
+            [1,n,n-1,...]
+        """
+
+        res = [1]
+        for i in range(m-1):
+            num = res[-1]*(n-i)
+            res.append(num)
+        
+        return res
+    def getXXTaylor(self):
+        """
+        docstring for getXXTaylor
+        taylor expansion of (x+1)^{-x-1} at x = 0 
+        1,-(x+1)x,(x+1)(x+2)x^2
+
+        [1,2],[2,4],[3,6],[4,8],[5,10],[6,12]
+        T(0) = [1,1]
+        T(1) = [2,3,1]
+        sigma(n) = 1 for even, -1 for odd
+        2n: K(2n,n)*sigma(n)*T(n-1,n)+K(2n,n+1)*sigma(n+1)*T(n,n-1)
+        + K(2n,2n)*sigma(2n)*T(2n-1,0)
+        2n+1: sigma(n)*T(n+1,n-1)+sigma(n+1)*T(n,-2)
+        + sigma(2n)*T(2n,0)
+
+        """
+        N = 200
+        res = [1,1]
+        print(res)
+        total = []
+        total.append(self.inverseArray(res))
+        for i in range(N):
+            res = self.polynomialMulti(res,[1,i+2])
+            total.append(self.inverseArray(res))
+            # print(i+2,total[-1])
+
+        results = [1]
+        
+        for n in range(1,N):
+            num = 0
+            sigma = (-1)**n 
+            begin = (n+1)//2 - 1 
+            perm  = self.getPermArray(n,n-begin)
+            for i in range(begin,n):
+                num  += perm[-1+begin-i]*sigma*total[i][n-1-i]
+                sigma = - sigma
+            results.append(num)
+            print(n,num)
+
+        return
+    def testPseudoprimes(self,a=1):
+        """
+        docstring for testPseudoprimes
+        L_p = x1^n+x2^n
+        x^2 = x + 1 
+        x^2 = ax + 1 
+        """
+        L = [2,1]
+        L = [2,a]
+        for i in range(1000):
+            # num = L[-1] + L[-2]
+            num = a*L[-1] + L[-2]
+            L.append(num)
+            p2 = (not isprime(i+2))
+            if L[-1]%(i+2) == 1 and p2:
+                # print("a = ",a,i+2)
+                break
+        
+        return i+2
+
+    def testPseudo(self):
+        """
+        docstring for testPseudo
+        """
+        # when res = 26
+        dicts = {}
+        num = 130*2
+        for a in tqdm(range(1,num)):
+            res = self.testPseudoprimes(a=a)
+            # print(a,res)
+            if res == 26:
+                # print("%5d%5d"%(a,a%130))
+                key = str(a // 130)
+                if key in dicts:
+                    dicts[key].append(a%130)
+                else:
+                    dicts[key] = [a%130]
+
+        arr = [5,21,31,99,109,125]
+        for key in dicts:
+            line = arr.copy()
+            for i in dicts[key]:
+                line.remove(i)
+            print(key,line)
+
+
+        return
+
+    def testLucasSequence(self):
+        """
+        docstring for testLucasSequence
+        x^2 = ax + 1 
+        a_{n+1} = a*a_n + a_{n-1}
+        a0 = 2 
+        a1 = a 
+        """
+
+        res = [[2],[1]]
+        for i in range(26):
+            line = [1]
+            for j in range(1,len(res[-1])):
+                num = res[-1][j]+res[-2][j-1]
+                line.append(num)
+            if len(res[-1]) == len(res[-2]):
+                line.append(res[-2][-1])
+
+            k = 3 
+            if len(line) > k:
+                print(i+2,Integer(line[k-1])/line[k],line)
+            res.append(line)
+
+        n = 26
+        arr = np.array(res[n])
+        print(arr%n)    
+        for i in [5,21,31,99,109,125]:
+            print(i**8%n)    
+        return
+
+    def testCoinFountain(self):
+        """
+        docstring for testCoinFountain
+        https://mathpages.com/home/kmath052.htm
+        three coins in the fountain
+        head for 1, tail for 0
+        7 coins 
+        0 1 2 
+        3 4 5
+          6
+        circle 1: 0,1,3,4
+        circle 2: 1,2,4,5
+        circle 3: 3,4,5,6
+
+        """
+        circles = [[0,1,3,4],
+                   [1,2,4,5],
+                   [3,4,5,6]]
+
+        line = [1]*7 
+        status = [line]
+        rands = np.random.randint(0,3,10000)
+        for i in rands:
+            line = line.copy()
+            for j in circles[i]:
+                line[j] = 1 - line[j]
+            if line not in status:
+                status.append(line)
+        # print(len(status),status)
+        string = "%d %d %d\n%d %d %d\n  %d  "
+        for i,line in enumerate(status):
+            print("------%d------"%(i))
+            print(string%(tuple(line)))
+
+        
+        return
+
+    def testFiboFrac(self):
+        """
+        docstring for testFiboFrac
+        """
+        res = [0,1,1]
+        para = [1,1,1]
+        a = 0 
+        k = 20
+        frac = 1/k 
+        for i in range(1000):
+            num = 0
+            for j in range(3):
+                num += para[j]*res[-j-1]
+            res.append(num)
+        # print(res[-1])
+        for i in res:
+            frac = frac/k
+            a = a + i*frac
+        num = k*(k*(k-para[0])-para[1])-para[2]
+        print(a,a*num) 
+
+            
+        return
+
+    def testTaylorSeries(self):
+        """
+        docstring for testTaylorSeries
+        """
+         
+        arr = [[3,3],
+              [5,30],
+              [6,90],
+              [7,630],
+              [9,22680],
+              [10,113400],
+              [11,1247400],
+              [13,97297200],
+              [14,681080400],
+              [15,10216206000]]
+
+        for i,j in arr:
+            print(i,j,factorial(i)/j)
+
+        arr = [[4,3,3],
+               [89,5,120],
+               [83,6,144],
+               [593,7,1260],
+               [287,8,720],
+               [41891,9,120960],
+               [158869,10,518400],
+               [152447,11,554400],
+               [678871,12,2721600],
+               [473847547,13,2075673600],
+               [1411410779,14,6706022400],
+               [63830876233,15,326918592000],
+               [21647448733,16,118879488000],
+               [2427359621209,17,14227497123840],
+               [4029579070333,18,25107347865600],
+               [209443167797947,19,1382330686464000]]
+        for k,i,j in arr:
+            print(i,j,k*factorial(i)/j)
+            # break 
+
+        # log(1+x)*exp(-x)
+        print("----------------------------")
+        print("----------------------------")
+        n = 20
+        logx = [0,1]
+        sigma = -1
+        for i in range(n):
+            logx.append(sigma*Integer(1)/(i+2))
+            sigma = -sigma
+        print(logx)
+
+        expx = [Integer(1)]
+
+        for i in range(n+1):
+            expx.append(-expx[-1]/(i+1))
+
+        print(expx)
+
+        res = [logx[0]*expx[0]]
+        for i in range(1,n+1):
+            num = 0 
+            for j in range(i+1):
+                num += logx[j]*expx[i-j]
+            num = factorial(i)*num
+            res.append(num)
+            print(i,num)
+
+        return  
+
+
+    def testLucasSum(self):
+        """
+        docstring for testLucasSum
+        S&=&\sum_{k=0}^{n}\frac{L_{2k+1}}{\left(2k+1\right)^{2}C_{2k}^{k}}
+        """
+        lucas = [Decimal(-1),Decimal(2)]
+        for i in range(100):
+            num = Decimal(sum(lucas[-2:]))
+            lucas.append(num)
+        # print(lucas)
+        # from decimal import *
+        getcontext().prec = 100
+        res = Decimal(0)
+        c2nn = Decimal(1)
+        for i in range(20):
+            n = Decimal(2*i + 1)
+            res += lucas[2*i+1]/(n*n)/c2nn 
+            # print(i,c2nn)
+            c2nn = c2nn*(n+1)*n/((i+1)**2)
+
+        print(res)
+        return  
+
+    def testIntegral(self):
+        """
+        docstring for testIntegral
+        """
+        f = lambda x: np.exp(np.sin(x))*np.sin(x)
+        s4,err = integrate.quad(f,0,2*np.pi)
+        print(s4)
+
+        res = 0 
+        n_factorial = 1
+        for i in range(50):
+            n_factorial = n_factorial/((i+1)**2)
+            res += n_factorial*(2*i+2)/(2**(2*i+1))
+        print(res,res*np.pi)
+
+        f = lambda x: (np.sin(x)*np.cos(x))**2/(1-x**2)**0.5
+        s4,err = integrate.quad(f,-0.5,0.5)
+        print(s4)
+
+        # series expansion
+        res = 0
+        return
+
+    def getTaylor(self,x,f,n = 10,step=1):
+        """
+        docstring for getTaylor
+        f:
+            a function
+        """
+        print("--------",f)
+        print(0,f.subs(x,0))
+        count = 0 
+        for i in range(n):
+            f = diff(f,x,step)
+            count += step
+            print(count,f.subs(x,0))
+        return
+    def testExpCos(self):
+        """
+        docstring for testExpCos
+        """
+        x = Symbol("x")
+        f = exp(exp(x)-1)
+        self.getTaylor(x,f)
+        self.getTaylor(x,exp(sin(x)),n=2)
+        self.getTaylor(x,exp(1-cos(x)),n=10)
+        f = atan(sqrt(1+x*x)-1)
+        self.getTaylor(x,f,n=3)
+
+        a = Integer(33399969978375)/factorial(18)
+        a = Integer(4368604540935009375)/factorial(22)
+        print(a)
+
+        arr = [[2 ,1],
+              [4 ,-3],
+              [6 ,15],
+              [8 ,-315],
+              [10, 36855],
+              [12, -4833675],
+              [14, 711485775],
+              [16, -133449190875],
+              [18, 33399969978375],
+              [20, -10845524928112875],
+              [22, 4368604540935009375],
+              [24, -2121018409773134746875],
+              [26, 1222083076784378918484375],
+              [28, -826013017674132244878796875],
+              [30, 647724113841936142199672859375],
+              [32, -583169643524919352829283528046875],
+              [34, 597359177463144491308077497692734375],
+              [36, -690705634748275077389006998731704296875],
+              [38, 895308770935086347664096961848512087109375],
+              [40, -1293014756515190918978281765759779961360546875],
+              [42, 2069090654296251423055420621941125742237708984375],
+              [44, -3650287422951500638665261346616153988543455841796875],
+              [46, 7067644991767194875269793917621503636445835249443359375]]
+        for i,j in arr:
+            a = Integer(abs(j))/factorial(i)
+            nom,denom = fraction(a)
+            # print(i,denom)
+            # print(i,denom,factorint(denom/i))
+            print(i,denom,factorint(denom))
+            break
+
+        f = (1+x)**(1+x)
+        self.getTaylor(x,f,n=2)
+
+        arr = [[0, 1],
+              [1, 1],
+              [2, 2],
+              [3, 3],
+              [4, 8],
+              [5, 10],
+              [6, 54],
+              [7, -42],
+              [8, 944],
+              [9, -5112],
+              [10, 47160],
+              [11, -419760],
+              [12, 4297512],
+              [13, -47607144],
+              [14, 575023344],
+              [15, -7500202920],
+              [16, 105180931200],
+              [17, -1578296510400],
+              [18, 25238664189504],
+              [19, -428528786243904],
+              [20, 7700297625889920],
+              [21, -146004847062359040],
+              [22, 2913398154375730560],
+              [23, -61031188196889482880],
+              [24, 1339252684282847781504],
+              [25, -30722220593745761750400],
+              [26, 735384500710300207353600],
+              [27, -18335978741646751132022400],
+              [28, 475481863771471289192140800],
+              [29, -12804628568422088117232979200],
+              [30, 357611376476800486783526273280]]
+
+        for i,j in arr:
+            a = Integer(abs(j))/factorial(i)
+            nom,denom = fraction(a)
+            # print(i,denom)
+            # print(i,denom,factorint(denom/i))
+            print(i,nom,denom,factorint(denom))
+
+
+        f = asin(1-sqrt(1-x*x))
+        
+        # f = asin(sqrt(1+x*x)-1)
+        self.getTaylor(x,f,n=2)
+
+        arr = [[2,1],
+               [4,3],
+               [6,60],
+               [8,2205],
+               [10,150255],
+               [12,15592500],
+               [14,2329051725],
+               [16,470583988875],
+               [18,123830632926000],
+               [20,41119444417676625]]
+        for i,j in arr:
+            print(i,factorint(j))
+
+        f = exp(atan(x))
+        self.getTaylor(x,f,n=5)
+
+        f = atan(1-sqrt(1-x*x))
+        self.getTaylor(x,f,n=3)
+
+        return
+
+    def judgeRamaMagic(self,magic_square):
+        """
+        magic_square:
+            2d array of n*n
+        return:
+            yes or no
+        """
+
+        n = len(magic_square)
+        magic_square = np.array(magic_square)
+        total = sum(magic_square[0])
+
+        # n rows, n columns, tow diagonals
+        arr_sum = np.zeros(2*n+2,int)
+        arr_sum[:n] = np.sum(magic_square,axis=0)
+        arr_sum[n:2*n] = np.sum(magic_square,axis=1)
+        for i in range(n):
+            arr_sum[2*n] += magic_square[i,i]
+            arr_sum[2*n+1] += magic_square[i,n - 1 - i]
+
+        # print(arr_sum)
+
+        combinations = itertools.combinations(np.arange(n),2)
+        arr = []
+        for line in combinations:
+            arr.append(list(line))
+
+        res = []
+        count = 0 
+        for row in arr:
+            for col in arr:
+                matrix = np.zeros((n,n),int)
+                num = 0 
+                for i in row:
+                    for j in col:
+                        tmp = magic_square[i,j] 
+                        matrix[i,j] = tmp 
+                        num += tmp
+                if num == total:
+                    count += 1
+                    res.append([row,col])
+                    # print(count,"-------",row,col)
+                    # print(matrix)
+        # print(len(res),res)
+        print("equations number",len(res))
+
+        line = [[0,2],[1,3]]
+        res = [0,0]
+        for i,j in line:
+            res[0] += magic_square[i,j]
+            res[0] += magic_square[j,i]
+            res[1] += magic_square[i,n-1-j]
+            res[1] += magic_square[j,n-1-i]
+        # print(res)
+
+
+
+
+        return
+        
+    def testRamaMagicSquare(self):
+        """
+        docstring for testRamaMagicSquare
+        """
+        res = [[23, 11, 19, 90],
+               [91, 18, 8, 26],
+               [9, 25, 92, 17],
+               [20, 89, 24, 10]]
+
+
+        # self.judgeRamaMagic(res)
+
+        # Ramanujan's birthday: 1887-12-22
+        # 86 87 88 89
+        # 9  10 11 12
+        # 16 17 18 19
+        # 22 23 24 25
+        res = [[22, 12, 18, 87],
+               [88, 17, 9, 25],
+               [10, 24, 89, 16],
+               [19, 86, 23, 11]]
+
+
+        # self.judgeRamaMagic(res)
+        for i in range(100,101):
+            line = [50,2,3,i]
+            num = self.checkRamaMagic(line)
+            print(line,"number = ",num)
+            break
+        num = self.checkRamaMagic([1,2,16,15])
+
+
+        return  
+    def checkSuit(self,checked, total):
+        return (checked in total) or (checked <= 0) or (checked >= 18)
+
+    def checkRamaMagic(self,arr):
+        """
+        check Ramanujan matrix 
+        code from the internet
+        https://cloud.tencent.com/developer/article/1503127
+        (a, b, c, d) = (22, 12, 18, 87)
+        (e, f, g, h) = (0, 0, 0, 0)
+        (i, j, k, l) = (0, 0, 0, 0)
+        (m, n, o, p) = (0, 0, 0, 0)
+
+        """
+        count = 0
+        a, b, c, d = arr
+        x = 4*max(arr)
+        y = sum(arr)
+
+        for f in range(1, x):
+            for k in range(1, x):
+                line = [a, b, c, d, f]
+                if self.checkSuit(k, line):continue
+                line.append(k)
+                p = y - a - f - k
+                if self.checkSuit(p, line):continue
+                line.append(p)
+                e = y - a - b - f
+                if self.checkSuit(e, line):continue
+                line.append(e)
+                m = y - a - d - p
+                if self.checkSuit(m, line):continue
+                line.append(m)
+                i = y - a - e - m
+                if self.checkSuit(i, line):continue
+                line.append(i)
+                j = y - e - f - i
+                if self.checkSuit(j, line):continue
+                line.append(j)
+                n = y - b - f - j
+                if self.checkSuit(n, line):continue
+                line.append(n)
+                o = y - m - n - p
+                if self.checkSuit(o, line):continue
+                line.append(o)
+                g = y - c - k - o
+                if self.checkSuit(g, line):continue
+                line.append(g)
+                h = y - e - f - g
+                if self.checkSuit(h, line):continue
+                line.append(h)
+                l = y - d - h - p
+                if self.checkSuit(l, line):continue
+                line.append(l)
+                if ((y == c + d + g + h) and (y == i + j + m + n) and \
+                    (y == k + l + o + p) and (y == i + j + k + l) and \
+                    (y == b + c + n + o) and (y == e + i + h + l) and \
+                    (y == d + g + j + m) and (y == f + g + j + k) and \
+                    (y == b + e + l + o) and (y == c + h + i + n) and \
+                    (y == g + h + k + l)):
+                    count += 1
+                    line = np.array([ a, b, c, d,
+                                      e, f, g, h,
+                                      i, j, k, l,
+                                      m, n, o, p])
+                    # line = line.reshape((4,4))
+                    line.sort()
+                    # print(count,line)
+                    # print("count:",count,line)
+                    # self.judgeRamaMagic(line)
+        # print("numbers",count)
+        return count
+
+    def testArctanSqrt(self):
+        """
+        docstring for testArctanSqrt
+
+        f\left(x\right)&=&\arctan\left(1-\sqrt{1-x^{2}}\right)
+
+        """
+
+        paras = [Integer(1),Integer(1)/2]
+        n = 3000
+        for i in range(n):
+            num = paras[-1]*(2*i+2)*(2*i+1)
+            num = num /(4*(i+2)*(i+1))
+            paras.append(num)
+        # print(paras)
+
+        b = []
+        b.append(paras[0])
+        b.append(-paras[1])
+        for i in range(2,n+2):
+            num = paras[i-1] - 3*paras[i]
+            b.append(num)
+
+
+        # print(b)
+
+        factorials = self.getFactorials(2*n+1)
+        factorials = [1] + factorials
+
+        res = [1]
+        factors = []
+        # for i in tqdm(range(1,n)):
+        for i in range(1,n):
+            num = 0
+            for k in range(i):
+                # print("k = ",k,res[k],b[i-k])
+                num += res[k]*b[i-k]/factorials[2*k+1]
+
+            p,q = fraction(-num/(2*i+2))
+            num = -num*factorials[2*i+1]
+            a = factorint(q)[2]
+            k = 2*(i+1)-a
+            # print(i+1,a,k,factorint(2*(i+1)),factorint(q))
+            p,q = fraction(q/(2*i+2))
+            # print(i+1,q)
+            if q != 1:
+                print(i+1,q)
+            # print(i+1,isprime(p))
+            # if isprime(p):
+            #     print(i+1,p)
+            factors.append(k)
+            # print(i+1,q)
+            # print(i,num)
+            res.append(num)
+
+        # print(factors)
+
+        print("get factors")
+        res = [1]
+        for i in range(2):
+            line = []
+            for j in res:
+                line.append(j+1)
+            res = res + line 
+        print(res)
+
+
+
+        
+        return
+
+    def checkFermatPrime(self,n,m,num=6):
+        """
+        docstring for checkFermatPrime
+        n,m:
+            integers
+        return:
+            [2,1] ==> [3,5,17,257,65537,...]
+        """
+        results = []
+        for i in range(num):
+            res = n**(2**i)+m
+            res = isprime(res)
+            results.append(res)
+        return results 
+    def testFermatNum(self):
+        """
+        docstring for testFermatNum
+        May I conjecture that there are 
+        no more than 5 k-s so that p(n) 
+        are primes for any pair of (n,m)?
+        """
+        n = 500
+        p = []
+        for i in range(2,n+2):
+            p.append(prime(i))
+        # print(p)
+
+        dicts = {}
+        overFour = {}
+        length = 7 
+        for i in range(4,length+1):
+            overFour[i] = []
+
+        for q in tqdm(p):
+            for i in range(2,q,2):
+                res = self.checkFermatPrime(q,i,num=length)
+                k = sum(res)
+                if k in dicts:
+                    dicts[k] += 1 
+                else:
+                    dicts[k]  = 1
+                # print(q,i,k,res)
+                if k > 3:
+                    overFour[k].append([q,i])
+                    print(q,i,k)
+
+        print(dicts)
+        print(overFour)
+        return
+
+    def getExponentString(self,factors,exponents):
+        """
+        docstring for getExponentString
+        """
+        res = ""
+        for i,j in zip(factors,exponents):
+            if j == 1:
+                res = "%s%d*"%(res,i)
+            elif j > 1:
+                res = "%s%d^{%d}*"%(res,i,j)
+        res = res[:-1]
+        return res
+
+    def getFactorString(self,factors,exponents,splitNum):
+        """
+        docstring for getFactorString
+        factors:
+            1d array
+        exponents:
+            1d array 
+        [2,3,5,7],[3,5,2,4],2 
+          => 2^{3}*3^{5} + 5^{3}*3^{5}
+        """
+        res1 = self.getExponentString(factors[:splitNum],
+                                     exponents[:splitNum])
+       
+        res2 = self.getExponentString(factors[splitNum:],
+                                     exponents[splitNum:])
+
+        res = "%s + %s"%(res1,res2)
+        
+        return res
+
+    def ABCTest(self,line1,line2,n = 10):
+        """
+        docstring for ABCTest
+        """
+        res = np.arange(n)
+        
+        len1  = len(line1)
+        len2  = len(line2)
+        length = len1 + len2
+        combinations = itertools.product(res,repeat=length)
+
+        for line in combinations:
+            if sum(line[:len1]) == 0:
+                continue
+            if sum(line[len1:]) == 0:
+                continue
+            radical = 1 
+            for i,j in enumerate(line1):
+                if j > 0:
+                    radical *= line1[i]
+            for i,j in enumerate(line2):
+                if j > 0:
+                    radical *= line2[i]
+
+            a = 1 
+            b = 1
+            for i,j in zip(line1,line[:len1]):
+                a *= i**j
+            for i,j in zip(line2,line[len1:]):
+                b *= i**j  
+
+            c = a + b
+
+            dicts = factorint(Integer(c))
+            count = 0 
+            for factor in dicts:
+                count += 1 
+                radical = radical*factor 
+            if radical < c and count == 1:
+                # print(line,a,b,c,radical)
+                string = self.getFactorString(line1+line2,line,len1)
+                i = factor 
+                j = dicts[i]
+                print("%s &=& %d^{%d} \\\\"%(string,i,j))
+        return
+    def testABCConjecture(self):
+        """
+        docstring for testABCConjecture
+        """
+        primes = []
+        for i in range(1,200):
+            primes.append(prime(i))
+
+        # self.ABCTest(line1,line2)
+        combinations = itertools.combinations(primes,2)
+        combi = [[0,1,2,3],
+                 [0,2,1,3],
+                 [0,3,1,2]]
+
+        for line in tqdm(combinations):
+            self.ABCTest([line[0]],[line[1]],n=6)
+            continue
+            for indeces in combi:
+                line1 = []
+                for i in indeces:
+                    line1.append(line[i])
+                self.ABCTest(line1[:2],line1[2:])
+
+
+        return
+
+    def getCollatzNum(self,num):
+        """
+        docstring for getCollatzNum
+        """
+        res = 0 
+        line = [num]
+        while num > 1:
+            if num%2 == 0:
+                num = num//2 
+            else:
+                num = 3*num + 1 
+            res += 1 
+            line.append(num)
+        print(line)
+
+        return res
+    def testCollatz(self):
+        """
+        docstring for testCollatz
+        """
+        res = 1
+        y = []
+        x = []
+        for i in range(1):
+            res = 9*res + 1 
+            y.append(self.getCollatzNum(res))
+            x.append(i+1)
+            print(x[-1],y[-1])
+        plt.plot(x,y)
+        # plt.savefig("collatz.png",dpi=300)
+        # plt.show()
+        n = 7
+        print(self.getCollatzNum(2**n-1))
+
+        res = [1,2]
+        for i in range(10):
+            num = res[-1]*res[-2]-1
+            print(num**0.5)
+            num = 7*res[-1] - res[-2]
+            res.append(num)
+
+        res = [Integer(2),Integer(2)]
+        for i in range(10):
+            a,b = res[-2:]
+            num = 2*b - 3*a*b + 17*a - 16
+            num /= (3*b - 4*a*b + 18*a - 17)
+            res.append(num)
+            print(i+3,sqrt(1/(num-1)))
+
+
+        return
+
+    def tangentPower(self):
+        """
+        docstring for tangentPower
+        """
+        
+        for n in range(1,10):
+            num  = bernoulli(2*n+2)
+            a    = 2**(2*n+1)
+            num *= a*(2*a-1)*(2*n+1)*(2*n)/factorial(2*n+2)
+            num  = abs(num)
+            k    = 2*n
+            num2 = 2**k*(2**k-1)*bernoulli(k)/factorial(k)
+            print(2*n-1,num,num-abs(num2))
+        return
+
+    def getSeriesT(self,k,n=1000,zeta = False):
+        """
+        docstring for getSeriesT
+        Tk = 1-1/3^k+1/5^k+...
+        or 
+        zeta(k)
+        """
+        res = 0 
+        if zeta is False:
+            for i in range(1,n):
+                res += (-1)**(i-1)/(2*i-1)**k
+        else:
+            for i in range(1,n):
+                res += 1/i**k
+
+        return res
+
+    def arctanIntegral(self):
+        """
+        docstring for arctanIntegral
+        \int_0^1 (arctan x)^n dx
+        """
+        print(self.getSeriesT(2,n=100))
+
+        f = lambda x: (np.arctan(x))**3 
+        res = integrate.quad(f,0,1)[0]
+        print("area",res)
+
+        T2 = self.getSeriesT(2)
+        T3 = self.getSeriesT(3)
+        Z3 = self.getSeriesT(3,zeta=True)
+        print(T3,Z3)
+        print(np.pi**3/T3)
+        print(np.pi**5/self.getSeriesT(5))
+
+        res = np.pi**3/64+3*np.pi**2*np.log(2)/32 
+        res += (-3*np.pi*T2/4 + 63*Z3/64)
+        print("area",res)
+
+        f = lambda x: np.log(1+x**2)*(np.arctan(x))/(1+x**2)
+        res = integrate.quad(f,0,1)[0]
+        print("integral",res)
+        return
+
+    def getEulerNumbers(self):
+        """
+        docstring for getEulerNumbers  
+        S(s)&=&S\left(s,\frac{1}{2}\right)
+        =\sum_{k=0}^{\infty}\frac{\left(-1\right)^{k}}{\left(2k+1\right)^{s}}
+        """
+        res = [Integer(1)/4]
+        for n in range(1,100):
+            num = 1/factorial(2*n)/2**(2*n+1)
+            for k in range(n):
+                num -= (-1)**k*res[k]/factorial(2*n-2*k)
+            num = num*(-1)**n/2 
+            res.append(num)
+            a,b = fraction(num)
+            # print(n,num,factorint(a))
+            if isprime(a):
+                print(n,a)
+
+        return
     def test(self):
         """
         docstring for test
         """
-        # self.testRamanujanPi1()
-        # self.alibabaPuzzles()
-        # self.testGalois()
-        # self.testEqnDet()
-        # self.testCharacters()
-        # self.testFrobenius()
-        # self.symmetryGroup()
-        # self.solvableQuintic()
-        # self.testCharacterExercise()
-        # self.testAerodynamics()
-        self.testXX()
 
+        # self.testRamaMagicSquare()
+        # self.testArctanSqrt()
+        # self.testFermatNum()
+        # self.testABCConjecture()
+        # self.testCollatz()
+        # self.tangentPower()
+        # self.arctanIntegral()
+        self.getEulerNumbers()
 
         return
 
 puzzle = Puzzles()
 puzzle.test()
 
-
-        
