@@ -24,11 +24,26 @@ class CellularAutomata():
     """docstring for CellularAutomata"""
     def __init__(self):
         super(CellularAutomata, self).__init__()
+
+    def automata(self,ruleType=0):
+        """
+        docstring for automata
+        """
+        ruleType = 33
+        n = 1025
+        ruleType = bin(ruleType)
+        image = np.ones((n,n,3),np.uint8)
+        types =[[0,0,0],
+                [255,255,255]]
+
+        celluar = np.zeros((n,n),np.uint8)
+        celluar[0,n//2] = 1 
+        return
     def test(self):
         """
         docstring for test
         """
-        
+        self.automata()
         return
 
 celluar = CellularAutomata()
