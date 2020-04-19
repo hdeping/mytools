@@ -3480,6 +3480,50 @@ class Puzzles(Algorithms):
                 print(n,a)
 
         return
+
+    def getClosestPoints(self,points):
+        """
+        docstring for getClosestPoints
+        """
+        output = []
+        num = len(points)
+        combi = itertools.combinations(np.arange(num),2)
+        for line in combi:
+            p1 = points[line[0]]
+            p2 = points[line[1]]
+            res = 0 
+            for i,j in zip(p1,p2):
+                res += (i - j)**2 
+            if res == 1:
+                if p1 not in output:
+                    output.append(p1)
+                if p2 not in output:
+                    output.append(p2)
+        return output
+
+    def sphericalPacking(self):
+        """
+        docstring for sphericalPacking
+        """
+        points = []
+        res = [-1,1]
+        combi = itertools.product(res,repeat=2)
+        for line in combi:
+            p = [0,0,line[0]*sqrt(6)/4,line[1]*sqrt(10)/4]
+            points.append(p)
+            p = [0,sqrt(3)/3,line[0]*sqrt(6)/12,line[1]*sqrt(10)/4]
+            points.append(p)
+            p = [Integer(1)/2,-sqrt(3)/6,line[0]*sqrt(6)/12,line[1]*sqrt(10)/4]
+            points.append(p)
+            p = p.copy()
+            p[0] = -p[0]
+            points.append(p)
+
+        points = self.getClosestPoints(points)
+        print(points,len(points))
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -3492,7 +3536,8 @@ class Puzzles(Algorithms):
         # self.testCollatz()
         # self.tangentPower()
         # self.arctanIntegral()
-        self.getEulerNumbers()
+        # self.getEulerNumbers()
+        self.sphericalPacking()
 
         return
 
