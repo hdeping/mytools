@@ -3485,20 +3485,22 @@ class Puzzles(Algorithms):
         """
         docstring for getClosestPoints
         """
-        output = []
+        output = [points[0]]
         num = len(points)
-        combi = itertools.combinations(np.arange(num),2)
-        for line in combi:
-            p1 = points[line[0]]
-            p2 = points[line[1]]
-            res = 0 
-            for i,j in zip(p1,p2):
-                res += (i - j)**2 
-            if res == 1:
-                if p1 not in output:
-                    output.append(p1)
-                if p2 not in output:
-                    output.append(p2)
+        for i in range(1,num):
+            p2 = points[i]
+            judge = 1 
+            # compare every point in the output
+            for p1 in output:
+                res = 0 
+                for i,j in zip(p1,p2):
+                    res += (i - j)**2 
+                if res != 1:
+                    judge = 0 
+                    break
+            if judge == 1:
+                output.append(p2)
+
         return output
 
     def sphericalPacking(self):
@@ -3507,20 +3509,22 @@ class Puzzles(Algorithms):
         """
         points = []
         res = [-1,1]
-        combi = itertools.product(res,repeat=2)
+        combi = itertools.product(res,repeat=1)
         for line in combi:
-            p = [0,0,line[0]*sqrt(6)/4,line[1]*sqrt(10)/4]
+            p = [0,0,line[0]*sqrt(6)/4,sqrt(10)/4]
             points.append(p)
-            p = [0,sqrt(3)/3,line[0]*sqrt(6)/12,line[1]*sqrt(10)/4]
+            p = [0,sqrt(3)/3,line[0]*sqrt(6)/12,sqrt(10)/4]
             points.append(p)
-            p = [Integer(1)/2,-sqrt(3)/6,line[0]*sqrt(6)/12,line[1]*sqrt(10)/4]
+            p = [Integer(1)/2,-sqrt(3)/6,line[0]*sqrt(6)/12,sqrt(10)/4]
             points.append(p)
             p = p.copy()
             p[0] = -p[0]
             points.append(p)
 
         points = self.getClosestPoints(points)
-        print(points,len(points))
+        # print(points,len(points))
+        for i,p in enumerate(points):
+            print(i,p)
 
         
         return
