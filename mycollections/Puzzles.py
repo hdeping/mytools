@@ -3552,6 +3552,34 @@ class Puzzles(Algorithms):
 
 
         return
+
+    def testPolytype(self):
+        """
+        docstring for testPolytype
+        """
+        n = 4
+        mat = Matrix.ones(n)
+        texts = []
+        for i in range(n):
+            texts.append(str(i+1))
+        index = 0
+        for i in range(n):
+            for j in range(i+1,n):
+                angle = "\\theta_{%s%s}"%(texts[i],texts[j])
+                angle = Symbol(angle)
+                mat[i,j] = cos(angle)
+                mat[j,i] = mat[i,j]
+                index += 1
+        # print(latex(mat))
+        s = mat.det()
+        s = latex(s)
+        s = s.replace("{\\left(","")
+        s = s.replace("\\right)}","")
+        print(s)
+
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3566,7 +3594,8 @@ class Puzzles(Algorithms):
         # self.arctanIntegral()
         # self.getEulerNumbers()
         # self.sphericalPacking()
-        self.thetaSeries()
+        # self.thetaSeries()
+        self.testPolytype()
 
         return
 
