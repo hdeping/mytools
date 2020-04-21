@@ -3553,7 +3553,7 @@ class Puzzles(Algorithms):
 
         return
 
-    def testPolytype(self):
+    def testPolytope(self):
         """
         docstring for testPolytype
         """
@@ -3595,7 +3595,7 @@ class Puzzles(Algorithms):
         # self.getEulerNumbers()
         # self.sphericalPacking()
         # self.thetaSeries()
-        self.testPolytype()
+        self.testPolytope()
 
         return
 
