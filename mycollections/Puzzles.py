@@ -3528,6 +3528,30 @@ class Puzzles(Algorithms):
 
         
         return
+
+    def thetaSeries(self):
+        """
+        docstring for thetaSeries
+        """
+        q = Symbol("q")
+        th2 = q**2*(1+2*q**2+2*q**6+2*q**12)**8
+        th3 = (1+2*q+2*q**4+2*q**9)**8
+        th4 = (1-2*q+2*q**4-2*q**9)**8
+        s = th2 + th3 + th4 
+        s = s.expand()
+
+        # Leech lattice
+        tau = [0,1,-24, 252, -1472, 4830, -6048, 
+               -16744, 84480, -113643, -115920, 534612, 
+               -370944, -577738, 401856]
+        sigma11 = self.getSigmaN(11,n = 10)
+        for i in range(2,10):
+            num = sigma11[i] - tau[i]
+            num = num*65520//691
+            print(i,num)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3541,7 +3565,8 @@ class Puzzles(Algorithms):
         # self.tangentPower()
         # self.arctanIntegral()
         # self.getEulerNumbers()
-        self.sphericalPacking()
+        # self.sphericalPacking()
+        self.thetaSeries()
 
         return
 
