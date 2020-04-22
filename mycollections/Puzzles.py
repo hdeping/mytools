@@ -3609,6 +3609,10 @@ class Puzzles(Algorithms):
             res.append(self.getPhiCode(A,i))
 
         if number:
+            res = str(res).replace("[","")
+            res = str(res).replace("]","")
+            res = str(res).replace(" ","")
+            res = str(res).replace(",","")
             return str(res)
         string = ""
         for i in res:
@@ -3643,15 +3647,39 @@ class Puzzles(Algorithms):
         combi = itertools.product(res,repeat=3)
 
         dicts = {}
+
+        hexa = []
         for A in combi:
             res = self.getHexacode(list(A),number=True) 
             if res not in dicts:
                 dicts[res] = 1
             else:
                 dicts[res] += 1
-        for key in dicts:
-            print(dicts[key],key)
+            hexa.append(res)
 
+        print(hexa[2:8])
+
+        # classification
+        a = "232323"
+        # a = "010123"
+        res = np.arange(2)
+        combi = itertools.product(res,repeat=3)
+
+        images = []
+        for line in combi:
+            indeces = []
+            for i in line:
+                indeces.append(i)
+                indeces.append(1-i)
+            item = ""
+            for i in range(3):
+                for j in range(2):
+                    index = indeces[2*i+j]
+                    item += a[2*i+index]
+            # print(indeces,item)
+            if item in hexa:
+                images.append(item)
+        print(images)
         
         return
         
