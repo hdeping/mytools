@@ -3553,6 +3553,25 @@ class Puzzles(Algorithms):
 
         return
 
+    def getVolume3(self,A):
+        """
+        docstring for getVolume3
+        A:
+            list of length 3, [1,2,3]
+        """
+        types = "\\theta_{%d%d}"
+        angles = [Symbol(types%(A[0],A[1])),
+                  Symbol(types%(A[1],A[2])),
+                  Symbol(types%(A[0],A[2]))]
+
+        mat = Matrix.ones(3)
+        line = [[0,1],[0,2],[1,2]]
+        for i,(k,j) in enumerate(line):
+            mat[k,j] = cos(angles[i])
+            mat[j,k] = cos(angles[i])
+        
+        return mat.det()
+
     def testPolytope(self):
         """
         docstring for testPolytype
@@ -3571,8 +3590,13 @@ class Puzzles(Algorithms):
                 mat[j,i] = mat[i,j]
                 index += 1
         # print(latex(mat))
-        s = mat.det()
-        s = latex(s)
+        v4 = mat.det()
+        v1 = self.getVolume3([1,2,3])
+        v2 = self.getVolume3([1,2,4])
+        s = v1*v2 -v4 
+        s = s.expand().trigsimp()
+
+        s = latex(v4)
         s = s.replace("{\\left(","")
         s = s.replace("\\right)}","")
         # print(s)
@@ -3580,7 +3604,21 @@ class Puzzles(Algorithms):
         a = sqrt(5)
         s = (105+47*a)/(30+14*a)
         s = 3*(1+a)**2+(7+3*a)**2
-        print(s.simplify()/8)
+        # print(s.simplify()/8)
+
+        alpha,beta,gamma = symbols("alpha, beta, gamma")
+        angles = [alpha,beta,gamma]
+        angles = [alpha,beta]*3 
+        angles = [alpha,alpha,alpha,beta,beta,beta]
+        angles = [alpha,alpha,alpha,alpha,beta,alpha]
+        line = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
+        for i,(k,j) in enumerate(line):
+            mat[k,j] = cos(angles[i])
+            mat[j,k] = cos(angles[i])
+        s = latex(mat.det())
+        s = s.replace("{\\left(","")
+        s = s.replace("\\right)}","")
+        print(s)
 
         return
 
@@ -3657,7 +3695,7 @@ class Puzzles(Algorithms):
                 dicts[res] += 1
             hexa.append(res)
 
-        print(hexa[2:8])
+        print(hexa)
 
         # classification
         a = "232323"
@@ -3698,8 +3736,8 @@ class Puzzles(Algorithms):
         # self.getEulerNumbers()
         # self.sphericalPacking()
         # self.thetaSeries()
-        # self.testPolytope()
-        self.hexaCode()
+        self.testPolytope()
+        # self.hexaCode()
 
         return
 
