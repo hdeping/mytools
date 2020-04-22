@@ -3584,6 +3584,38 @@ class Puzzles(Algorithms):
 
         return
 
+    def getPhiCode(self,A,x):
+        """
+        docstring for getPhiCode
+        phi = ax^2+bx+c
+        """
+        a,b,c = A 
+        res1 = self.mulTable[a][x]
+        res1 = self.mulTable[res1][x]
+        res2 = self.mulTable[b][x]
+
+        res = self.addTable[res1][res2]
+        res = self.addTable[res][c]
+        
+        return res 
+
+    def getHexacode(self,A,number=False):
+        """
+        docstring for getHexacode
+        """
+        res = A.copy()
+
+        for i in range(1,4):
+            res.append(self.getPhiCode(A,i))
+
+        if number:
+            return str(res)
+        string = ""
+        for i in res:
+            string += self.codes[i]
+
+        return string
+
     def hexaCode(self):
         """
         docstring for hexaCode
@@ -3591,17 +3623,38 @@ class Puzzles(Algorithms):
         simplified by 0,1,2,3
 
         """
-        addTable = [[0,1,2,3],
+        self.addTable = [[0,1,2,3],
                     [1,0,3,2],
                     [2,3,0,1],
                     [3,2,1,0]]
 
-        mulTable = [[0,0,0,0],
+        self.mulTable = [[0,0,0,0],
                     [0,1,2,3],
                     [0,2,3,1],
                     [0,3,1,2]]
+
+        self.codes = ["0","1","\\omega","\\bar{\\omega}"]
+
+        print(self.getHexacode([1,0,0]))
+        print(self.getHexacode([0,1,0]))
+        print(self.getHexacode([0,0,1]))
+
+        res = np.arange(4)
+        combi = itertools.product(res,repeat=3)
+
+        dicts = {}
+        for A in combi:
+            res = self.getHexacode(list(A),number=True) 
+            if res not in dicts:
+                dicts[res] = 1
+            else:
+                dicts[res] += 1
+        for key in dicts:
+            print(dicts[key],key)
+
         
         return
+        
     def test(self):
         """
         docstring for test
