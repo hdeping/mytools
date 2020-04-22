@@ -3575,7 +3575,13 @@ class Puzzles(Algorithms):
         s = latex(s)
         s = s.replace("{\\left(","")
         s = s.replace("\\right)}","")
-        print(s)
+        # print(s)
+
+        a = sqrt(5)
+        s = (105+47*a)/(30+14*a)
+        s = 3*(1+a)**2+(7+3*a)**2
+        print(s.simplify()/8)
+
 
 
 
