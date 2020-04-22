@@ -3582,9 +3582,25 @@ class Puzzles(Algorithms):
         s = 3*(1+a)**2+(7+3*a)**2
         print(s.simplify()/8)
 
+        return
 
+    def hexaCode(self):
+        """
+        docstring for hexaCode
+        filed F4 0,1,\omega,\bar{\omega}
+        simplified by 0,1,2,3
 
+        """
+        addTable = [[0,1,2,3],
+                    [1,0,3,2],
+                    [2,3,0,1],
+                    [3,2,1,0]]
 
+        mulTable = [[0,0,0,0],
+                    [0,1,2,3],
+                    [0,2,3,1],
+                    [0,3,1,2]]
+        
         return
     def test(self):
         """
@@ -3601,7 +3617,8 @@ class Puzzles(Algorithms):
         # self.getEulerNumbers()
         # self.sphericalPacking()
         # self.thetaSeries()
-        self.testPolytope()
+        # self.testPolytope()
+        self.hexaCode()
 
         return
 
