@@ -27,7 +27,7 @@ from decimal import *
 from tqdm import tqdm
 import mpmath as mp
 import math
-from scipy import integrate
+from scipy import integrate as inte
 
 class Puzzles(Algorithms):
     """
@@ -2465,7 +2465,7 @@ class Puzzles(Algorithms):
 
         f = lambda x: x**(-x)
         # f = lambda x: x*np.log(x)
-        s,err = integrate.quad(f,0,1)
+        s,err = inte.quad(f,0,1)
         # s =  1.9954559575000368 error is  3.971688089521308e-09
         print("s = ",s,"error is ",err)
 
@@ -2490,11 +2490,11 @@ class Puzzles(Algorithms):
         p   = 2 
 
         f = lambda x: (1+x**4)**(-1/2)
-        s1,err = integrate.quad(f,0,1)
+        s1,err = inte.quad(f,0,1)
         print("s1 = ",s1)
 
         f = lambda x: (1 + (p-1)*math.cos(x)**2)**(-1/2)
-        s2,err = integrate.quad(f,0,np.pi/2)
+        s2,err = inte.quad(f,0,np.pi/2)
         print("s2 = ",s2,s1*2**0.5)
 
         a,b = 1,p**0.5 
@@ -2506,11 +2506,11 @@ class Puzzles(Algorithms):
         print("a,b = ",a,b)
 
         f = lambda x: (1+(p-1)*math.cos(x)**2)**(1/2)
-        s3,err = integrate.quad(f,0,np.pi/2)
+        s3,err = inte.quad(f,0,np.pi/2)
         print(s3,s3*2/np.pi)
 
         f = lambda x: (1-x**4)**(-1/2)
-        s4,err = integrate.quad(f,0,1)
+        s4,err = inte.quad(f,0,1)
         print(s4)
 
         N = np.arange(1,14)
@@ -2811,7 +2811,7 @@ class Puzzles(Algorithms):
         docstring for testIntegral
         """
         f = lambda x: np.exp(np.sin(x))*np.sin(x)
-        s4,err = integrate.quad(f,0,2*np.pi)
+        s4,err = inte.quad(f,0,2*np.pi)
         print(s4)
 
         res = 0 
@@ -2822,7 +2822,7 @@ class Puzzles(Algorithms):
         print(res,res*np.pi)
 
         f = lambda x: (np.sin(x)*np.cos(x))**2/(1-x**2)**0.5
-        s4,err = integrate.quad(f,-0.5,0.5)
+        s4,err = inte.quad(f,-0.5,0.5)
         print(s4)
 
         # series expansion
@@ -3442,7 +3442,7 @@ class Puzzles(Algorithms):
         print(self.getSeriesT(2,n=100))
 
         f = lambda x: (np.arctan(x))**3 
-        res = integrate.quad(f,0,1)[0]
+        res = inte.quad(f,0,1)[0]
         print("area",res)
 
         T2 = self.getSeriesT(2)
@@ -3457,7 +3457,7 @@ class Puzzles(Algorithms):
         print("area",res)
 
         f = lambda x: np.log(1+x**2)*(np.arctan(x))/(1+x**2)
-        res = integrate.quad(f,0,1)[0]
+        res = inte.quad(f,0,1)[0]
         print("integral",res)
         return
 
@@ -3743,7 +3743,44 @@ class Puzzles(Algorithms):
         print(dicts)        
         
         return
-        
+
+    def sphericalCrown(self):
+        """
+        docstring for sphericalCrown
+        """
+        R,h,x = symbols("R h x")
+
+        m = 3
+        v = integrate((R**2-x**2)**m,[x,R-h,R])
+        v = v + (h*(2*R-h))**m*(R-h)/(2*m+1)
+        v = v.factor()
+
+        print(latex(v))
+
+        return
+    
+    def getGCoef(self):
+        """
+        docstring for getGCoef
+        """
+
+        alpha = 7
+        getSum = lambda n: sum([2**(alpha*k) for k in range(n+1)])
+
+        coefs = [1]
+        for i in range(1,7):
+            res = -1 
+            for j in range(i):
+                res = res - coefs[j]*getSum(i-j)
+            coefs.append(res)
+            print(i,res)
+
+        res = np.arange(100)*2 + 1 
+        # print(res)
+        k = 2
+        a = sum(res**k/(1+np.exp(res*np.pi)))
+        print(1/a)
+        return 
     def test(self):
         """
         docstring for test
@@ -3760,7 +3797,9 @@ class Puzzles(Algorithms):
         # self.sphericalPacking()
         # self.thetaSeries()
         # self.testPolytope()
-        self.hexaCode()
+        # self.hexaCode()
+        # self.sphericalCrown()
+        self.getGCoef()
 
         return
 
