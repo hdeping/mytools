@@ -3658,6 +3658,40 @@ class Puzzles(Algorithms):
 
         return string
 
+    def getHexaImages(self,a):
+        """
+        docstring for getHexaImages
+        """
+        res = np.arange(2)
+        combi = itertools.product(res,repeat=3)
+
+        images = []
+        for line in combi:
+            indeces = []
+            for i in line:
+                indeces.append(i)
+                indeces.append(1-i)
+            item = ""
+            for i in range(3):
+                for j in range(2):
+                    index = indeces[2*i+j]
+                    item += a[2*i+index]
+            # print(indeces,item)
+            if item in self.hexa:
+                images.append(item)
+        print(images)
+        return images
+
+    def getSameHexaLen(self,code1,code2):
+        """
+        docstring for getSameHexaLen
+        """
+        res = 0 
+        for i,j in zip(code1,code2):
+            if i == j:
+                res += 1 
+        return res
+
     def hexaCode(self):
         """
         docstring for hexaCode
@@ -3677,10 +3711,6 @@ class Puzzles(Algorithms):
 
         self.codes = ["0","1","\\omega","\\bar{\\omega}"]
 
-        print(self.getHexacode([1,0,0]))
-        print(self.getHexacode([0,1,0]))
-        print(self.getHexacode([0,0,1]))
-
         res = np.arange(4)
         combi = itertools.product(res,repeat=3)
 
@@ -3695,29 +3725,22 @@ class Puzzles(Algorithms):
                 dicts[res] += 1
             hexa.append(res)
 
-        print(hexa)
+        # print(hexa)
+        self.hexa = hexa
 
         # classification
         a = "232323"
         # a = "010123"
-        res = np.arange(2)
-        combi = itertools.product(res,repeat=3)
+        self.getHexaImages(a)
 
-        images = []
+        res = np.arange(64)
+        combi = itertools.combinations(res,2)
+        dicts = {0:0,1:0,2:0}
         for line in combi:
-            indeces = []
-            for i in line:
-                indeces.append(i)
-                indeces.append(1-i)
-            item = ""
-            for i in range(3):
-                for j in range(2):
-                    index = indeces[2*i+j]
-                    item += a[2*i+index]
-            # print(indeces,item)
-            if item in hexa:
-                images.append(item)
-        print(images)
+            i,j = line 
+            num = self.getSameHexaLen(hexa[i],hexa[j])
+            dicts[num] += 1 
+        print(dicts)        
         
         return
         
@@ -3736,8 +3759,8 @@ class Puzzles(Algorithms):
         # self.getEulerNumbers()
         # self.sphericalPacking()
         # self.thetaSeries()
-        self.testPolytope()
-        # self.hexaCode()
+        # self.testPolytope()
+        self.hexaCode()
 
         return
 
