@@ -3700,14 +3700,14 @@ class Puzzles(Algorithms):
 
         """
         self.addTable = [[0,1,2,3],
-                    [1,0,3,2],
-                    [2,3,0,1],
-                    [3,2,1,0]]
+                         [1,0,3,2],
+                         [2,3,0,1],
+                         [3,2,1,0]]
 
         self.mulTable = [[0,0,0,0],
-                    [0,1,2,3],
-                    [0,2,3,1],
-                    [0,3,1,2]]
+                         [0,1,2,3],
+                         [0,2,3,1],
+                         [0,3,1,2]]
 
         self.codes = ["0","1","\\omega","\\bar{\\omega}"]
 
@@ -3719,10 +3719,6 @@ class Puzzles(Algorithms):
         hexa = []
         for A in combi:
             res = self.getHexacode(list(A),number=True) 
-            if res not in dicts:
-                dicts[res] = 1
-            else:
-                dicts[res] += 1
             hexa.append(res)
 
         # print(hexa)
@@ -3740,7 +3736,7 @@ class Puzzles(Algorithms):
             i,j = line 
             num = self.getSameHexaLen(hexa[i],hexa[j])
             dicts[num] += 1 
-        print(dicts)        
+        # print(dicts)        
         
         return
 
@@ -3780,7 +3776,47 @@ class Puzzles(Algorithms):
         k = 2
         a = sum(res**k/(1+np.exp(res*np.pi)))
         print(1/a)
-        return 
+        return
+
+
+    def golayCode(self):
+        """
+        docstring for golayCode
+        Golay code is based on hexacode
+        There are four interpreations for each 
+        digit out of [0,1,omega,omega_], two odd 
+        ones and two even ones
+        """
+        oddEvenTable = [[[1,0,0,0],[0,1,1,1],
+                         [0,0,0,0],[1,1,1,1]],
+                        [[0,1,0,0],[1,0,1,1],
+                         [1,1,0,0],[0,0,1,1]],
+                        [[0,0,1,0],[1,1,0,1],
+                         [0,1,0,1],[1,0,1,0]],
+                        [[0,0,0,1],[1,1,1,0],
+                         [1,0,0,1],[0,1,1,0]]]
+
+        oddEvenTable = np.array(oddEvenTable)
+
+        print(oddEvenTable[0,2])
+        # get hexacode
+        self.hexaCode()
+        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
+        print(self.hexa[10:20])
+        golay = hexaList(4)
+        print(golay)
+
+        order = [0,0,0,1,0,0]
+        res = []
+        for j,i in enumerate(golay):
+            code = oddEvenTable[i,order[j]]
+            res.append(code)
+        res = np.array(res).transpose()
+        print(res)
+
+        
+        return
+
     def test(self):
         """
         docstring for test
@@ -3799,7 +3835,8 @@ class Puzzles(Algorithms):
         # self.testPolytope()
         # self.hexaCode()
         # self.sphericalCrown()
-        self.getGCoef()
+        # self.getGCoef()
+        self.golayCode()
 
         return
 
