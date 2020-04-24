@@ -89,7 +89,21 @@ var rects = svg.selectAll("rect")
                   var ii = Math.floor(i/row);
                   for(var j = row*ii; j < row*(ii+1); j ++)
                   {
-                      console.log(i,j,colors[j],"#"+j);
+                      var id = "rect[class='0"+j+"']";
+                      if (colors[j] == 0) {
+                          d3.select(id).attr("fill","blue");    
+                      }
+                      else{
+                          d3.select(id).attr("fill","pink");     
+                      }
+                      colors[j] = 1 - colors[j];  
+                  }
+                  var ii = i%row;
+                  for(var j = ii; j < 21+ii; j = j + row)
+                  {
+                      if (j == i) {
+                        continue;
+                      }
                       var id = "rect[class='0"+j+"']";
                       if (colors[j] == 0) {
                           d3.select(id).attr("fill","blue");    
