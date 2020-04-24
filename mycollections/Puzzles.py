@@ -3801,19 +3801,30 @@ class Puzzles(Algorithms):
         print(oddEvenTable[0,2])
         # get hexacode
         self.hexaCode()
+        binary  = lambda x:np.array(list(bin(x)[2:])).astype(int)
         hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
         print(self.hexa[10:20])
         golay = hexaList(4)
         print(golay)
 
-        order = [0,0,0,1,0,0]
-        res = []
-        for j,i in enumerate(golay):
-            code = oddEvenTable[i,order[j]]
-            res.append(code)
-        res = np.array(res).transpose()
-        print(res)
+        count = 0 
+        for i in range(128):
+            order = []
+            k = i 
+            for j in range(6):
+                order.append(k%2)
+                k = k // 2
+            res = []
+            # print(i,order)
+            for j,k in enumerate(golay):
+                code = oddEvenTable[k,order[j]]
+                res.append(code)
+            res = np.array(res).transpose()
+            if sum(res[0]) in [1,3]:
+                count += 1
+                print(i,res)
 
+        print("count",count)
         
         return
 
