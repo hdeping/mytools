@@ -96,7 +96,7 @@ var rects = svg.selectAll("rect")
                       else{
                           d3.select(id).attr("fill","pink");     
                       }
-                      colors[j] = 1 - colors[j];  
+                      colors[j] = (1 + colors[j])%2 ;  
                   }
                   var ii = i%row;
                   for(var j = ii; j < 21+ii; j = j + row)
