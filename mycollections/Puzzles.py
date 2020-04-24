@@ -27,7 +27,7 @@ from decimal import *
 from tqdm import tqdm
 import mpmath as mp
 import math
-from scipy import integrate
+from scipy import integrate as inte
 
 class Puzzles(Algorithms):
     """
@@ -2465,7 +2465,7 @@ class Puzzles(Algorithms):
 
         f = lambda x: x**(-x)
         # f = lambda x: x*np.log(x)
-        s,err = integrate.quad(f,0,1)
+        s,err = inte.quad(f,0,1)
         # s =  1.9954559575000368 error is  3.971688089521308e-09
         print("s = ",s,"error is ",err)
 
@@ -2490,11 +2490,11 @@ class Puzzles(Algorithms):
         p   = 2 
 
         f = lambda x: (1+x**4)**(-1/2)
-        s1,err = integrate.quad(f,0,1)
+        s1,err = inte.quad(f,0,1)
         print("s1 = ",s1)
 
         f = lambda x: (1 + (p-1)*math.cos(x)**2)**(-1/2)
-        s2,err = integrate.quad(f,0,np.pi/2)
+        s2,err = inte.quad(f,0,np.pi/2)
         print("s2 = ",s2,s1*2**0.5)
 
         a,b = 1,p**0.5 
@@ -2506,11 +2506,11 @@ class Puzzles(Algorithms):
         print("a,b = ",a,b)
 
         f = lambda x: (1+(p-1)*math.cos(x)**2)**(1/2)
-        s3,err = integrate.quad(f,0,np.pi/2)
+        s3,err = inte.quad(f,0,np.pi/2)
         print(s3,s3*2/np.pi)
 
         f = lambda x: (1-x**4)**(-1/2)
-        s4,err = integrate.quad(f,0,1)
+        s4,err = inte.quad(f,0,1)
         print(s4)
 
         N = np.arange(1,14)
@@ -2811,7 +2811,7 @@ class Puzzles(Algorithms):
         docstring for testIntegral
         """
         f = lambda x: np.exp(np.sin(x))*np.sin(x)
-        s4,err = integrate.quad(f,0,2*np.pi)
+        s4,err = inte.quad(f,0,2*np.pi)
         print(s4)
 
         res = 0 
@@ -2822,7 +2822,7 @@ class Puzzles(Algorithms):
         print(res,res*np.pi)
 
         f = lambda x: (np.sin(x)*np.cos(x))**2/(1-x**2)**0.5
-        s4,err = integrate.quad(f,-0.5,0.5)
+        s4,err = inte.quad(f,-0.5,0.5)
         print(s4)
 
         # series expansion
@@ -3442,7 +3442,7 @@ class Puzzles(Algorithms):
         print(self.getSeriesT(2,n=100))
 
         f = lambda x: (np.arctan(x))**3 
-        res = integrate.quad(f,0,1)[0]
+        res = inte.quad(f,0,1)[0]
         print("area",res)
 
         T2 = self.getSeriesT(2)
@@ -3457,7 +3457,7 @@ class Puzzles(Algorithms):
         print("area",res)
 
         f = lambda x: np.log(1+x**2)*(np.arctan(x))/(1+x**2)
-        res = integrate.quad(f,0,1)[0]
+        res = inte.quad(f,0,1)[0]
         print("integral",res)
         return
 
@@ -3480,6 +3480,354 @@ class Puzzles(Algorithms):
                 print(n,a)
 
         return
+
+    def getClosestPoints(self,points):
+        """
+        docstring for getClosestPoints
+        """
+        output = [points[0]]
+        num = len(points)
+        for i in range(1,num):
+            p2 = points[i]
+            judge = 1 
+            # compare every point in the output
+            for p1 in output:
+                res = 0 
+                for i,j in zip(p1,p2):
+                    res += (i - j)**2 
+                if res != 1:
+                    judge = 0 
+                    break
+            if judge == 1:
+                output.append(p2)
+
+        return output
+
+    def sphericalPacking(self):
+        """
+        docstring for sphericalPacking
+        """
+        points = []
+        res = [-1,1]
+        combi = itertools.product(res,repeat=1)
+        for line in combi:
+            p = [0,0,line[0]*sqrt(6)/4,sqrt(10)/4]
+            points.append(p)
+            p = [0,sqrt(3)/3,line[0]*sqrt(6)/12,sqrt(10)/4]
+            points.append(p)
+            p = [Integer(1)/2,-sqrt(3)/6,line[0]*sqrt(6)/12,sqrt(10)/4]
+            points.append(p)
+            p = p.copy()
+            p[0] = -p[0]
+            points.append(p)
+
+        points = self.getClosestPoints(points)
+        # print(points,len(points))
+        for i,p in enumerate(points):
+            print(i,p)
+
+        
+        return
+
+    def thetaSeries(self):
+        """
+        docstring for thetaSeries
+        """
+        q = Symbol("q")
+        th2 = q**2*(1+2*q**2+2*q**6+2*q**12)**8
+        th3 = (1+2*q+2*q**4+2*q**9)**8
+        th4 = (1-2*q+2*q**4-2*q**9)**8
+        s = th2 + th3 + th4 
+        s = s.expand()
+
+        # Leech lattice
+        tau = [0,1,-24, 252, -1472, 4830, -6048, 
+               -16744, 84480, -113643, -115920, 534612, 
+               -370944, -577738, 401856]
+        sigma11 = self.getSigmaN(11,n = 10)
+        for i in range(2,10):
+            num = sigma11[i] - tau[i]
+            num = num*65520//691
+            print(i,num)
+
+
+        return
+
+    def getVolume3(self,A):
+        """
+        docstring for getVolume3
+        A:
+            list of length 3, [1,2,3]
+        """
+        types = "\\theta_{%d%d}"
+        angles = [Symbol(types%(A[0],A[1])),
+                  Symbol(types%(A[1],A[2])),
+                  Symbol(types%(A[0],A[2]))]
+
+        mat = Matrix.ones(3)
+        line = [[0,1],[0,2],[1,2]]
+        for i,(k,j) in enumerate(line):
+            mat[k,j] = cos(angles[i])
+            mat[j,k] = cos(angles[i])
+        
+        return mat.det()
+
+    def testPolytope(self):
+        """
+        docstring for testPolytype
+        """
+        n = 4
+        mat = Matrix.ones(n)
+        texts = []
+        for i in range(n):
+            texts.append(str(i+1))
+        index = 0
+        for i in range(n):
+            for j in range(i+1,n):
+                angle = "\\theta_{%s%s}"%(texts[i],texts[j])
+                angle = Symbol(angle)
+                mat[i,j] = cos(angle)
+                mat[j,i] = mat[i,j]
+                index += 1
+        # print(latex(mat))
+        v4 = mat.det()
+        v1 = self.getVolume3([1,2,3])
+        v2 = self.getVolume3([1,2,4])
+        s = v1*v2 -v4 
+        s = s.expand().trigsimp()
+
+        s = latex(v4)
+        s = s.replace("{\\left(","")
+        s = s.replace("\\right)}","")
+        # print(s)
+
+        a = sqrt(5)
+        s = (105+47*a)/(30+14*a)
+        s = 3*(1+a)**2+(7+3*a)**2
+        # print(s.simplify()/8)
+
+        alpha,beta,gamma = symbols("alpha, beta, gamma")
+        angles = [alpha,beta,gamma]
+        angles = [alpha,beta]*3 
+        angles = [alpha,alpha,alpha,beta,beta,beta]
+        angles = [alpha,alpha,alpha,alpha,beta,alpha]
+        line = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
+        for i,(k,j) in enumerate(line):
+            mat[k,j] = cos(angles[i])
+            mat[j,k] = cos(angles[i])
+        s = latex(mat.det())
+        s = s.replace("{\\left(","")
+        s = s.replace("\\right)}","")
+        print(s)
+
+        return
+
+    def getPhiCode(self,A,x):
+        """
+        docstring for getPhiCode
+        phi = ax^2+bx+c
+        """
+        a,b,c = A 
+        res1 = self.mulTable[a][x]
+        res1 = self.mulTable[res1][x]
+        res2 = self.mulTable[b][x]
+
+        res = self.addTable[res1][res2]
+        res = self.addTable[res][c]
+        
+        return res 
+
+    def getHexacode(self,A,number=False):
+        """
+        docstring for getHexacode
+        """
+        res = A.copy()
+
+        for i in range(1,4):
+            res.append(self.getPhiCode(A,i))
+
+        if number:
+            res = str(res).replace("[","")
+            res = str(res).replace("]","")
+            res = str(res).replace(" ","")
+            res = str(res).replace(",","")
+            return str(res)
+        string = ""
+        for i in res:
+            string += self.codes[i]
+
+        return string
+
+    def getHexaImages(self,a):
+        """
+        docstring for getHexaImages
+        """
+        res = np.arange(2)
+        combi = itertools.product(res,repeat=3)
+
+        images = []
+        for line in combi:
+            indeces = []
+            for i in line:
+                indeces.append(i)
+                indeces.append(1-i)
+            item = ""
+            for i in range(3):
+                for j in range(2):
+                    index = indeces[2*i+j]
+                    item += a[2*i+index]
+            # print(indeces,item)
+            if item in self.hexa:
+                images.append(item)
+        print(images)
+        return images
+
+    def getSameHexaLen(self,code1,code2):
+        """
+        docstring for getSameHexaLen
+        """
+        res = 0 
+        for i,j in zip(code1,code2):
+            if i == j:
+                res += 1 
+        return res
+
+    def hexaCode(self):
+        """
+        docstring for hexaCode
+        filed F4 0,1,\omega,\bar{\omega}
+        simplified by 0,1,2,3
+
+        """
+        self.addTable = [[0,1,2,3],
+                         [1,0,3,2],
+                         [2,3,0,1],
+                         [3,2,1,0]]
+
+        self.mulTable = [[0,0,0,0],
+                         [0,1,2,3],
+                         [0,2,3,1],
+                         [0,3,1,2]]
+
+        self.codes = ["0","1","\\omega","\\bar{\\omega}"]
+
+        res = np.arange(4)
+        combi = itertools.product(res,repeat=3)
+
+        dicts = {}
+
+        hexa = []
+        for A in combi:
+            res = self.getHexacode(list(A),number=True) 
+            hexa.append(res)
+
+        # print(hexa)
+        self.hexa = hexa
+
+        # classification
+        a = "232323"
+        # a = "010123"
+        self.getHexaImages(a)
+
+        res = np.arange(64)
+        combi = itertools.combinations(res,2)
+        dicts = {0:0,1:0,2:0}
+        for line in combi:
+            i,j = line 
+            num = self.getSameHexaLen(hexa[i],hexa[j])
+            dicts[num] += 1 
+        # print(dicts)        
+        
+        return
+
+    def sphericalCrown(self):
+        """
+        docstring for sphericalCrown
+        """
+        R,h,x = symbols("R h x")
+
+        m = 3
+        v = integrate((R**2-x**2)**m,[x,R-h,R])
+        v = v + (h*(2*R-h))**m*(R-h)/(2*m+1)
+        v = v.factor()
+
+        print(latex(v))
+
+        return
+    
+    def getGCoef(self):
+        """
+        docstring for getGCoef
+        """
+
+        alpha = 7
+        getSum = lambda n: sum([2**(alpha*k) for k in range(n+1)])
+
+        coefs = [1]
+        for i in range(1,7):
+            res = -1 
+            for j in range(i):
+                res = res - coefs[j]*getSum(i-j)
+            coefs.append(res)
+            print(i,res)
+
+        res = np.arange(100)*2 + 1 
+        # print(res)
+        k = 2
+        a = sum(res**k/(1+np.exp(res*np.pi)))
+        print(1/a)
+        return
+
+
+    def golayCode(self):
+        """
+        docstring for golayCode
+        Golay code is based on hexacode
+        There are four interpreations for each 
+        digit out of [0,1,omega,omega_], two odd 
+        ones and two even ones
+        """
+        oddEvenTable = [[[1,0,0,0],[0,1,1,1],
+                         [0,0,0,0],[1,1,1,1]],
+                        [[0,1,0,0],[1,0,1,1],
+                         [1,1,0,0],[0,0,1,1]],
+                        [[0,0,1,0],[1,1,0,1],
+                         [0,1,0,1],[1,0,1,0]],
+                        [[0,0,0,1],[1,1,1,0],
+                         [1,0,0,1],[0,1,1,0]]]
+
+        oddEvenTable = np.array(oddEvenTable)
+
+        print(oddEvenTable[0,2])
+        # get hexacode
+        self.hexaCode()
+        binary  = lambda x:np.array(list(bin(x)[2:])).astype(int)
+        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
+        print(self.hexa[10:20])
+        golay = hexaList(4)
+        print(golay)
+
+        count = 0 
+        for i in range(128):
+            order = []
+            k = i 
+            for j in range(6):
+                order.append(k%2)
+                k = k // 2
+            res = []
+            # print(i,order)
+            for j,k in enumerate(golay):
+                code = oddEvenTable[k,order[j]]
+                res.append(code)
+            res = np.array(res).transpose()
+            if sum(res[0]) in [1,3]:
+                count += 1
+                print(i,res)
+
+        print("count",count)
+        
+        return
+
     def test(self):
         """
         docstring for test
@@ -3492,7 +3840,14 @@ class Puzzles(Algorithms):
         # self.testCollatz()
         # self.tangentPower()
         # self.arctanIntegral()
-        self.getEulerNumbers()
+        # self.getEulerNumbers()
+        # self.sphericalPacking()
+        # self.thetaSeries()
+        # self.testPolytope()
+        # self.hexaCode()
+        # self.sphericalCrown()
+        # self.getGCoef()
+        self.golayCode()
 
         return
 

@@ -38,15 +38,26 @@ class CellularAutomata():
             ruleType = ruleType//self.colors
         return rules 
 
-    def automata(self,ruleType=0):
+    def arr2Num(self,arr):
+        """
+        docstring for arr2Num
+        """
+        res = 0 
+        for i in arr:
+            res = self.colors*res + i 
+        return res
+    def automata(self,ruleType=0,tag=None):
         """
         docstring for automata
         """
-        self.colors = 2
+        self.colors = 3
         self.positions = 3
-        rules = self.getRules(ruleType)
-        print(rules)
-        n = 1025
+        num = self.colors**(self.colors**3)
+        length = 1 + len(str(num))
+        # rules = self.getRules(ruleType)
+        # print(rules)
+        rules = np.random.randint(0,self.colors,self.colors**3)
+        ruleType = self.arr2Num(rules)
         n = 501
         m = n
 
@@ -54,11 +65,20 @@ class CellularAutomata():
         types =[[0,0,0],
                 [255,255,255],
                 [128,128,128]]
+        types =[[255,255,0],
+                [0,255,255],
+                [255,0,255]]
         # types =[[255,0,0],
         #         [0,0,255]]
 
         celluar = np.zeros(n,np.uint8)
-        celluar[n//2] = 1 
+        celluar[n//2] = 1
+        # random initialized first row
+
+        # celluar = np.random.randint(0,self.colors,n)
+        # tag     = self.arr2Num(celluar)
+
+
         for i in range(n):
             image[0,i,:] = types[celluar[i]]
 
@@ -84,8 +104,12 @@ class CellularAutomata():
 
         image = Image.fromarray(image)
         name = str(ruleType)
-        name = "0"*(4-len(name))+name
-        imageName = "automata%s.png"%(name)
+        name = "0"*(length-len(name))+name
+        if tag is None:
+            imageName = "automata%s_%d.png"%(name,self.colors)
+        else:
+            imageName = "automata%s_%d.png"%(name,tag)
+
         print("save to ",imageName)
         image.save(imageName)
 
@@ -98,8 +122,18 @@ class CellularAutomata():
         """
         begin = 50
         end   = 256
-        for i in range(begin,end):
-            self.automata(ruleType=i)
+        # for i in range(begin,end):
+        sets = [57,73,86,150,165,
+                126,52,129,99,109]
+
+        np.random.seed(2)
+        # for i in sets:
+        #     self.automata(ruleType=i)
+
+        for i in range(300):
+            self.automata(ruleType=129)
+
+
         return
     def test(self):
         """
