@@ -3861,7 +3861,53 @@ class Puzzles(Algorithms):
             B = combi(v,t)/kt
             print(v,B)
 
-        print(combi(24,5)/combi(8,5))
+        # steiner triple systems
+        # v = 6*n + 3
+        res = []
+        n = 2
+        num = 2*n+1
+        for i in range(num):
+            line = []
+            for j in range(3):
+                line.append(3*i+j+1)
+            # print(i,line)
+            line.sort()
+            res.append(line)
+
+        ij = itertools.combinations(np.arange(num),2)
+        # commutative idempotent group
+        # 012    021  
+        # 120 -> 210  
+        # 201    102 
+
+        tran = lambda i,j:(((i+j)%num)*(n+1))%num
+        for i,j in ij:
+            for k in range(3):
+                line = []
+                line.append(i*3+k+1)
+                line.append(j*3+k+1)
+                a = tran(i,j)*3+(k+1)%3+1
+                line.append(a)
+                line.sort()
+                # print(i,j,k,line)
+                res.append(line)
+
+        print(res,len(res))
+        for i in range(3*n+1):
+            begin = i*num 
+            end   = begin + num
+            print(res[begin:end])
+        total = []
+        for line in res:
+            total.append(line[:2])
+            total.append(line[1:])
+            total.append([line[0],line[2]])
+
+        total.sort()
+        # print(total,len(total))
+
+
+        # print(combi(24,5)/combi(8,5))
             
         return  
     def test(self):
@@ -3883,7 +3929,7 @@ class Puzzles(Algorithms):
         # self.hexaCode()
         # self.sphericalCrown()
         # self.getGCoef()
-        self.golayCode()
+        # self.golayCode()
         self.steinerSystem()
 
         return
