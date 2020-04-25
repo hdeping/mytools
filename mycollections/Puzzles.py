@@ -3779,6 +3779,38 @@ class Puzzles(Algorithms):
         return
 
 
+    def justifyGolay(self,index):
+        """
+        docstring for justifyGolay
+        res:
+            2d array with size [4,6]
+        """
+        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
+        golay = hexaList(index)
+        print(golay)
+
+        count = 0 
+        counts = {8:0,12:0,16:0}
+        justify = [[1,3],[2,4]]
+        for index in range(2):
+            for i in range(128):
+                order = []
+                k = i 
+                for j in range(6):
+                    order.append(k%2 + 2*index)
+                    k = k // 2
+                res = []
+                # print(i,order)
+                for j,k in enumerate(golay):
+                    code = self.oddEvenTable[k,order[j]]
+                    res.append(code)
+                res = np.array(res).transpose()
+                if sum(res[0]) in justify[index]:
+                    count += 1
+                    num = np.sum(res)
+                    # print(i,num)
+                    counts[num] += 1
+        return count,counts
     def golayCode(self):
         """
         docstring for golayCode
@@ -3796,38 +3828,42 @@ class Puzzles(Algorithms):
                         [[0,0,0,1],[1,1,1,0],
                          [1,0,0,1],[0,1,1,0]]]
 
-        oddEvenTable = np.array(oddEvenTable)
+        self.oddEvenTable = np.array(oddEvenTable)
 
-        print(oddEvenTable[0,2])
+        # print(oddEvenTable[0,2])
         # get hexacode
         self.hexaCode()
         binary  = lambda x:np.array(list(bin(x)[2:])).astype(int)
-        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
         print(self.hexa[10:20])
-        golay = hexaList(4)
-        print(golay)
 
-        count = 0 
-        for i in range(128):
-            order = []
-            k = i 
-            for j in range(6):
-                order.append(k%2)
-                k = k // 2
-            res = []
-            # print(i,order)
-            for j,k in enumerate(golay):
-                code = oddEvenTable[k,order[j]]
-                res.append(code)
-            res = np.array(res).transpose()
-            if sum(res[0]) in [1,3]:
-                count += 1
-                print(i,res)
 
-        print("count",count)
+        total = {8:0,12:0,16:0}
+        for i in range(64):
+            count,counts = self.justifyGolay(i)
+            for key in counts:
+                total[key] += counts[key]
+
+            print(i,"count",count,counts)
+        print(total)
         
         return
 
+    def steinerSystem(self):
+        """
+        docstring for steinerSystem
+        """
+        tuples = [[4,5],[5,6],[3,6],
+                  [4,7],[5,8]]
+        t,k = tuples[0]
+        combi = lambda n,m: factorial(n)/(factorial(n-m))/factorial(m)
+        kt = combi(k,t)
+        for v in range(5,20):
+            B = combi(v,t)/kt
+            print(v,B)
+
+        print(combi(24,5)/combi(8,5))
+            
+        return  
     def test(self):
         """
         docstring for test
@@ -3848,6 +3884,7 @@ class Puzzles(Algorithms):
         # self.sphericalCrown()
         # self.getGCoef()
         self.golayCode()
+        self.steinerSystem()
 
         return
 
