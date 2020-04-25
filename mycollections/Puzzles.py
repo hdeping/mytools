@@ -3848,6 +3848,28 @@ class Puzzles(Algorithms):
         
         return
 
+    def selectFullSequence(self,fullSeq,num):
+        """
+        docstring for selectFullSequence
+        """
+        res = fullSeq[0]
+        residue = fullSeq.copy()
+        residue.remove(fullSeq[0])
+
+        for line in fullSeq:
+            judge = 1
+            for i in line:
+                if i in res:
+                    judge = 0
+                    break 
+            if judge:
+                res += line 
+                residue.remove(line)
+            if len(res) == num*3:
+                break
+
+        return res,residue
+
     def steinerSystem(self):
         """
         docstring for steinerSystem
@@ -3908,6 +3930,13 @@ class Puzzles(Algorithms):
 
 
         # print(combi(24,5)/combi(8,5))
+
+        arr1,res = self.selectFullSequence(res, num)
+        arr2,res = self.selectFullSequence(res, num)
+        print(arr1)
+        print(arr2)
+
+
             
         return  
     def test(self):
