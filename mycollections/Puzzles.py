@@ -3953,24 +3953,63 @@ class Puzzles(Algorithms):
         """
         docstring for steiner45n
         """
-        
-        values = self.getRemainderValues([3,4,5])
+        p = [3,4,5] 
+        P = np.prod(p)
+        values = self.getRemainderValues(p)
         values = np.array(values)
 
-        arr = [[0,2],[1,3],[1,2,2,3]]
+        arr = [[0,2],[1,3],[0,1,2,3]]
         lines = self.getAllCombinator(arr)
 
         res = []
         for line in lines:
             line = np.array(line)
-            num = sum(line*values)%(3*4*5) 
+            num = sum(line*values)%(P) 
             if num in res:
+                print("repeat",line,num)
                 continue
+            print(line,num)
             res.append(num)
         res.sort()
         print(res)
 
 
+        return
+
+
+    def steiner5824(self):
+        """
+        docstring for steiner5824
+        """
+        combi = lambda n,m: factorial(n)/(factorial(n-m))/factorial(m)
+        combi2 = lambda t,k,v:combi(v,t)/combi(k,t)
+
+        paras = []
+        for k in range(5):
+            num = combi(24-k,5-k)/combi(8-k,3)
+            print(k,num)
+            paras.append(num)
+        paras += [1,1,1]
+        print(paras)
+
+        res = []
+        total = []
+        for i in paras:
+            line = [i]
+            for j in res:
+                line.append(j-line[-1])
+            res = line 
+            print(res)
+            total.append(res)
+
+        for res in total:
+            res = np.flip(res)
+            print(res)
+
+        print(combi(12,5),combi(8,5))
+        print(combi2(5,8,24))
+        print(combi2(5,6,108))
+        
         return
     def test(self):
         """
@@ -3993,7 +4032,8 @@ class Puzzles(Algorithms):
         # self.getGCoef()
         # self.golayCode()
         # self.steinerSystem()
-        self.steiner45n()
+        # self.steiner45n()
+        self.steiner5824()
 
         return
 
