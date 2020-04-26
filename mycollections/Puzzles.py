@@ -3856,6 +3856,7 @@ class Puzzles(Algorithms):
         residue = fullSeq.copy()
         residue.remove(fullSeq[0])
 
+        count = 0 
         for line in fullSeq:
             judge = 1
             for i in line:
@@ -3867,6 +3868,8 @@ class Puzzles(Algorithms):
                 residue.remove(line)
             if len(res) == num*3:
                 break
+            count += 1 
+        print("count = ",count)
 
         return res,residue
 
@@ -3914,11 +3917,6 @@ class Puzzles(Algorithms):
                 # print(i,j,k,line)
                 res.append(line)
 
-        print(res,len(res))
-        for i in range(3*n+1):
-            begin = i*num 
-            end   = begin + num
-            print(res[begin:end])
         total = []
         for line in res:
             total.append(line[:2])
@@ -3928,17 +3926,52 @@ class Puzzles(Algorithms):
         total.sort()
         # print(total,len(total))
 
+        res.sort()
+        # arr1,res = self.selectFullSequence(res,num)
+
+        order = []
+        for i in range(num*3):
+            order.append(i+1)
+
+        lines = itertools.combinations(np.arange(35),5)
+        for line in lines:
+            tmp = []
+            for i,j in enumerate(line):
+                tmp += res[j]
+            tmp.sort()
+            # print(tmp)
+            if tmp == order:
+                print(line,tmp)
+
 
         # print(combi(24,5)/combi(8,5))
 
-        arr1,res = self.selectFullSequence(res, num)
-        arr2,res = self.selectFullSequence(res, num)
-        print(arr1)
-        print(arr2)
-
-
             
         return  
+
+    def steiner45n(self):
+        """
+        docstring for steiner45n
+        """
+        
+        values = self.getRemainderValues([3,4,5])
+        values = np.array(values)
+
+        arr = [[0,2],[1,3],[1,2,2,3]]
+        lines = self.getAllCombinator(arr)
+
+        res = []
+        for line in lines:
+            line = np.array(line)
+            num = sum(line*values)%(3*4*5) 
+            if num in res:
+                continue
+            res.append(num)
+        res.sort()
+        print(res)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -3959,7 +3992,8 @@ class Puzzles(Algorithms):
         # self.sphericalCrown()
         # self.getGCoef()
         # self.golayCode()
-        self.steinerSystem()
+        # self.steinerSystem()
+        self.steiner45n()
 
         return
 
