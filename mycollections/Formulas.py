@@ -789,9 +789,9 @@ class Formulas(EllipticCurve):
             solution.append(value)
 
         # print(solution)
-        print("solution: ",solution[-2:])
-        print("%d*%d+%d*%d = 1"%(m,solution[-2],n,solution[-1]))
-        print(m*solution[-2]+n*solution[-1])
+        # print("solution: ",solution[-2:])
+        # print("%d*%d+%d*%d = 1"%(m,solution[-2],n,solution[-1]))
+        # print(m*solution[-2]+n*solution[-1])
 
 
         return solution[-2:]
@@ -818,6 +818,22 @@ class Formulas(EllipticCurve):
         
 
         return
+    def getRemainderValues(self,p):
+        """
+        docstring for getRemainderValues
+        p:
+            1d array
+        """
+        p = np.array(p)
+        P = np.prod(p)
+        q = P // p
+
+        values = []
+        for i in range(len(p)):
+            value = self.diophantine(p[i],q[i])[1]
+            values.append(value*q[i])
+        return values
+
     def pellSol(self,D,n):
         """
         docstring for pellSol
