@@ -155,7 +155,7 @@ class MyCommon():
             yaml.dump(data,fp)
         else:
             for line in data:
-                fp.write("%s\n")
+                fp.write("%s\n"%(line))
         
         fp.close()
 
