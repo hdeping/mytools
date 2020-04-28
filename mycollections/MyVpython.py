@@ -74,10 +74,10 @@ class MyVpython():
         v0 = 29780             # 地球公轉平均速率為 29780 m/s
         eps = 10000            # 計算週期用的精準度
         m = 4                  # 自訂行星 planet 軌道半徑為 m*d
-        ec = 0.0               # 自訂行星軌道離心率(eccentricity), 若 m != 1 時設為 0
+        ec = 0.5               # 自訂行星軌道離心率(eccentricity), 若 m != 1 時設為 0
         G = 6.67408E-11        # 重力常數
         t = 0                  # 時間
-        dt = 60*60             # 時間間隔
+        dt = 60*60*6            # 時間間隔
 
         """
          2. 畫面設定
@@ -85,8 +85,11 @@ class MyVpython():
             (2) 用 sphere 物件產生星球 http://www.glowscript.org/docs/VPythonDocs/sphere.html
             (3) 星球的半徑要手動調整比例, 否則會看不到星球
         """
-        scene = canvas(title="Kepler's Third Law of Planetary Motion", width=600, height=600,
-                       x=0, y=0, background=color.black)
+
+        title = "Kepler's Third Law of Planetary Motion"
+        scene = canvas(title=title, 
+                       width=900, height=900,
+                       x=0, y=0, background=color.white)
         # 產生太陽 sun, 地球 earth 及自訂行星 planet
         sun = sphere(pos=vec(0,0,0), radius=size, 
                      m=sun_m, color=color.orange, emissive=True)
@@ -97,7 +100,8 @@ class MyVpython():
                        retain=365, v=vec(0, v0, 0))
 
         planet = sphere(pos=vec(m*(1+ec)*d, 0, 0), 
-                        radius=size, color=color.red, 
+                        radius=size, color=color.red,
+                        texture=textures.earth, 
                         make_trail=True,
                         retain=365*m, 
                         v=vec(0, v0/sqrt(m)*sqrt((1-ec)/(1+ec)), 0))
@@ -106,8 +110,10 @@ class MyVpython():
                         radius=0.3*size, 
                         color=color.yellow)
 
-        # 原來的寫法為 scene.lights = [local_light(pos = vec(0,0,0), color = color.white)]
-        # 在 VPython 7 中 canvas.lights 無法設定為 local_light, 只能另外在太陽處放置另一個光源 lamp
+        # 原來的寫法為 scene.lights = [local_light(pos = vec(0,0,0), 
+        # color = color.white)]
+        # 在 VPython 7 中 canvas.lights 無法設定為 local_light, 
+        # 只能另外在太陽處放置另一個光源 lamp
         lamp = local_light(pos=vec(0,0,0), 
                            color=color.white)
 
@@ -116,7 +122,7 @@ class MyVpython():
         """
         while(True):
             rate(60*24)
-        # 計算行星加速度、更新速度、位置
+            # 計算行星加速度、更新速度、位置
             earth.a = -G*sun.m / earth.pos.mag2 * earth.pos.norm()
             earth.v += earth.a*dt
             earth.pos += earth.v*dt
@@ -133,12 +139,37 @@ class MyVpython():
 
         return
 
+    def spherePacking(self):
+        """
+        docstring for spherePacking
+        """
+        radius = 0.1
+        dist   = radius*3
+        spheres = []
+        postions = []
+        n,m = 3,3
+        scale = 3**0.5/2
+        for i in range(n):
+            for j in range(m):
+                pos = vec(dist*(i/2+j),dist*scale*j,0)
+                postions.append(pos)
+        print(postions)
+        for pos in postions:
+            print(pos)
+            solid = sphere(pos=pos, radius=radius, 
+                           color=color.blue, 
+                           texture=textures.earth,
+                           emissive=True)
+            spheres.append(solid)
+
+        return
     def test(self):
         """
         docstring for test
         """
         # self.oneDMotion()
-        self.planetMotion()
+        # self.planetMotion()
+        self.spherePacking()
         return
 
 vpy = MyVpython()
