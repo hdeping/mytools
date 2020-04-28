@@ -15,6 +15,8 @@
 ============================
 """
 from vpython import *
+import numpy as np
+
 
 class MyVpython():
     """docstring for MyVpython"""
@@ -147,20 +149,46 @@ class MyVpython():
         dist   = radius*3
         spheres = []
         postions = []
-        n,m = 3,3
+        sizes = [600,600]
+        n,m,l = 3,3,3
         scale = 3**0.5/2
+        dt = 1 # degrees
+
+        title = "sphere packing"
         for i in range(n):
             for j in range(m):
-                pos = vec(dist*(i/2+j),dist*scale*j,0)
-                postions.append(pos)
-        print(postions)
+                for k in range(l):  
+                    pos = vec(dist*(i/2+j),dist*scale*i,k*dist)
+                    postions.append(pos)
+
+        scene = canvas(title=title, 
+                       width=sizes[0], 
+                       height=sizes[1],
+                       x=0, y=0, 
+                       center = postions[(n*m*k)//2],
+                       background=color.white)
+
         for pos in postions:
             print(pos)
             solid = sphere(pos=pos, radius=radius, 
-                           color=color.blue, 
+                           trail_color=color.blue, 
                            texture=textures.earth,
                            emissive=True)
             spheres.append(solid)
+
+        theta = dt*np.pi/180
+        count = 0 
+        while(1):
+            rate(100)
+            for solid in spheres:
+                x = solid.pos.x
+                z = solid.pos.z
+                mat = [np.cos(theta),np.sin(theta)]
+                solid.pos.x = mat[0]*x-mat[1]*z
+                solid.pos.z = mat[1]*x+mat[0]*z
+            count += 1 
+            if count > 1:
+                break
 
         return
     def test(self):
