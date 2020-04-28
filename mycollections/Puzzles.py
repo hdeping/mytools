@@ -4011,6 +4011,40 @@ class Puzzles(Algorithms):
         print(combi2(5,6,108))
         
         return
+
+
+    def origamiCubic(self):
+        """
+        docstring for origamiCubic
+        """
+        a,b,x,y = symbols("a,b,x,y")
+        s = (1+x) - 9*(1-x)/(2-x)**2 
+        s,_ = fraction(s.simplify())
+        s = s.expand()
+
+        print(s)
+        s = s.subs(x,3/(2-x)-1)
+        s,_ = fraction(s.expand().simplify())
+        print(s)
+
+        s = (1+x) - (1-x)/(a+b-a*x)**2 
+        s,_ = fraction(s.simplify())
+        s = s.expand()
+        s = s.collect(x)
+
+        # print(latex(s))
+        # s = s.subs(x,1/(a+b-a*x)-1)
+        # s,_ = fraction(s.expand().simplify())
+        # s = s.collect(x)
+        # print(latex(s))
+
+        x = self.getCubicSol([1,-3,3,-3])
+        # print(latex(x))
+
+        x = self.getCubicSol([b,-1,b+2*a,-1])
+        x = self.getCubicSol([b,-1,1/3/b,-1])
+
+        return
     def test(self):
         """
         docstring for test
@@ -4033,7 +4067,8 @@ class Puzzles(Algorithms):
         # self.golayCode()
         # self.steinerSystem()
         # self.steiner45n()
-        self.steiner5824()
+        # self.steiner5824()
+        self.origamiCubic()
 
         return
 
