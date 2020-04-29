@@ -4074,6 +4074,46 @@ class Puzzles(Algorithms):
         print(latex(s))
         return
 
+    def diffVector(self,vec,x):
+        """
+        docstring for diffVector
+        """
+        res = []
+
+        for s in vec:
+            res.append(s.diff(x))
+
+        return res 
+
+    def getSurfaceArea(self,X,u,v):
+        """
+        docstring for getSurfaceArea
+        get the formula of the surface area
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)])
+        E = dotProd(Xu,Xu)
+        F = dotProd(Xu,Xv)
+        G = dotProd(Xv,Xv)
+
+        s = E*G - F**2 
+        s = s.trigsimp()
+
+        return s
+    def surfaceArea(self):
+        """
+        docstring for surfaceArea
+        """
+        u,v,r = symbols("u v r")
+        X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
+        s = self.getSurfaceArea(X,u,v)
+        print(s)
+
+        
+        
+        return
     def test(self):
         """
         docstring for test
@@ -4098,7 +4138,8 @@ class Puzzles(Algorithms):
         # self.steiner45n()
         # self.steiner5824()
         # self.origamiCubic()
-        self.curvature()
+        # self.curvature()
+        self.surfaceArea()
 
         return
 
