@@ -4045,6 +4045,35 @@ class Puzzles(Algorithms):
         x = self.getCubicSol([b,-1,1/3/b,-1])
 
         return
+
+    def curvature(self):
+        """
+        docstring for curvature
+        """
+
+        theta,x,y,z = symbols("theta x y z")
+        x1 = -x*sin(theta) + y*cos(theta)
+        y1 = x*cos(theta) + y*sin(theta)
+        x2 = -2*y*sin(theta) + (z-x)*cos(theta)
+        y2 = 2*y*cos(theta) + (z-x)*sin(theta)
+
+        s = x1*y2 - x2*y1 
+        s = s.expand().trigsimp()
+        print(s)
+
+        s = x1**2+y1**2 
+        s = s.expand().trigsimp()
+        print(s)
+
+        s1 = sqrt(cos(2*theta))
+        s2 = diff(s1,theta)
+        s3 = diff(s2,theta)
+
+        s = (s1**2 - s1*s3 + 2*s2**2)/sqrt(s1**2+s2**2)**3 
+        s = s.expand().trigsimp()
+        print(latex(s))
+        return
+
     def test(self):
         """
         docstring for test
@@ -4068,7 +4097,8 @@ class Puzzles(Algorithms):
         # self.steinerSystem()
         # self.steiner45n()
         # self.steiner5824()
-        self.origamiCubic()
+        # self.origamiCubic()
+        self.curvature()
 
         return
 
