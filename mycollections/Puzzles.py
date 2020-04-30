@@ -4111,9 +4111,38 @@ class Puzzles(Algorithms):
         s = self.getSurfaceArea(X,u,v)
         print(s)
 
+        X = [cos(u)*cos(v),cos(u)*sin(v),cos(v)**2]
+        s = self.getSurfaceArea(X,u,v)
+        print(s)
+
+        X = [cos(u)**3*cos(v)**3,cos(u)**3*sin(v)**3,sin(u)**3]
+        # s = self.getSurfaceArea(X,u,v)
+        # print(latex(s))
+
         
         
         return
+
+    def spherialTriangle(self):
+        """
+        docstring for spherialTriangle
+        """
+        a,b,c = symbols("a b c")
+
+        p = (a+b+c)/2 
+        # s1 = sin(p)*sin(p-a)/(sin(c)*sin(b)-(cos(p-a))**2*sin(p-b)*sin(p-c))
+        # s2 = sin(p)*sin(p-b)/(sin(c)*sin(a)-(cos(p-b))**2*sin(p-a)*sin(p-c))
+        bc = (cos(b-c)-cos(a))/2
+        a2 = (1+cos(b+c)*cos(a)+sin(b+c)*sin(a))/2
+        s = (sin(c)*sin(b)-a2*bc)*bc
+        s = s.expand().trigsimp()
+        print(s)
+        print("----")
+        print(latex(s))
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -4139,7 +4168,9 @@ class Puzzles(Algorithms):
         # self.steiner5824()
         # self.origamiCubic()
         # self.curvature()
-        self.surfaceArea()
+        # self.surfaceArea()
+        self.spherialTriangle()
+
 
         return
 
