@@ -4143,6 +4143,81 @@ class Puzzles(Algorithms):
 
         return
 
+    def getWedge(self,x,y):
+        """
+        docstring for getWedge
+        x,y:
+            1d array with length 3
+        """
+        getMat = lambda i,j: x[i]*y[j] - x[j]*y[i]
+
+        wedge = []
+        wedge.append(getMat(1,2))
+        wedge.append(-getMat(0,2))
+        wedge.append(getMat(0,1))
+
+        return wedge
+
+    def getSecondForm(self,X,u,v):
+        """
+        docstring for getSecondForm
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+        Xuu = self.diffVector(Xu,u)
+        Xuv = self.diffVector(Xu,v)
+        Xvv = self.diffVector(Xv,v)
+
+        # normal vector
+        N = self.getWedge(Xu,Xv)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)]) 
+        E = dotProd(Xu,Xu)
+        F = dotProd(Xu,Xv)
+        G = dotProd(Xv,Xv)
+        S = E*G-F**2 
+        S = S.trigsimp()
+        s = sqrt(S).simplify()
+        # print("S:", latex(S),latex(s))
+
+        e = (dotProd(N,Xuu)/s).trigsimp()
+        f = (dotProd(N,Xuv)/s).trigsimp()
+        g = (dotProd(N,Xvv)/s).trigsimp()
+
+        K = (e*g-f**2)/S
+        H = (e*G-2*f*F+g*E)/(2*S)
+
+        K = K.expand().trigsimp()
+        H = H.expand().trigsimp()
+
+        print("-----------------------------------")
+        print("-----------------------------------")
+        print("-----------------------------------")
+
+        print("e & = & %s\\\\"%(latex(e.trigsimp())))
+        print("f & = & %s\\\\"%(latex(f.trigsimp())))
+        print("g & = & %s\\\\"%(latex(g.trigsimp())))
+        print("E & = & %s\\\\"%(latex(E.trigsimp())))
+        print("F & = & %s\\\\"%(latex(F.trigsimp())))
+        print("G & = & %s\\\\"%(latex(G.trigsimp())))
+        print("K & = & %s\\\\"%(latex(K.trigsimp())))
+        print("H & = & %s"%(latex(H.trigsimp())))
+
+        return K,H
+
+    def secondForm(self):
+        """
+        docstring for secondForm
+        """
+        u,v,r,a = symbols("u v r a")
+        X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
+        K,H = self.getSecondForm(X,u,v)
+
+        X = [(a+r*cos(u))*cos(v),(a+r*cos(u))*sin(v),r*sin(u)]
+        K,H = self.getSecondForm(X,u,v)
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -4169,7 +4244,8 @@ class Puzzles(Algorithms):
         # self.origamiCubic()
         # self.curvature()
         # self.surfaceArea()
-        self.spherialTriangle()
+        # self.spherialTriangle()
+        self.secondForm()
 
 
         return
