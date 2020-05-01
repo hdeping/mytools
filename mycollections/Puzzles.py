@@ -4242,8 +4242,8 @@ class Puzzles(Algorithms):
         """
         dt = 1/N
 
-        gamma121 = lambda x,y: 2*y*(1+y*y-x*x)/(1+y*y+x*x)
-        gamma122 = lambda x,y: 2*x*(1-y*y+x*x)/(1+y*y+x*x)
+        gamma121 = lambda x,y: 2*y/(1+y*y+x*x)
+        gamma122 = lambda x,y: 2*x/(1+y*y+x*x)
 
         X  = [x1,x1+a*dt]
         Y  = [y1,y1+b*dt] 
@@ -4277,17 +4277,28 @@ class Puzzles(Algorithms):
          
         N = int(1e4)
 
-        a1,b1 = 2.0,2.4
+        a1,b1 = 1.7,2.5
+        delta = 0.02
         data = []
-        for i in range(11):
-            for j in range(11):
-                a = a1 + i*0.02
-                b = b1 + j*0.02
+        p = 100
+        n,m = 11,11
+        for i in range(n):
+            for j in range(m):
+                a = a1 + i*delta
+                b = b1 + j*delta
                 X,Y,length = self.getXYSol(a,b,N=N)
+                error = getError(X[-1],2,Y[-1],3)
+                if error < p:
+                    p = error
+                    A,B = a,b
+                    L  = length
                 res = [a,b,X[-1],Y[-1],length,error]
                 data.append(res)
 
 
+        print("a,b,error and length: ",A,B,p,L)
+        X,Y,length = self.getXYSol(A,B,N=N)
+        print(X[-1],Y[-1])
         X = np.array(X)
         Y = np.array(Y)
         Z = X*Y
@@ -4302,11 +4313,71 @@ class Puzzles(Algorithms):
 
         # plt.plot(T,X)
         # plt.plot(T,Y)
-        # plt.show()
-
-
+        plt.show()
 
         
+        return
+
+    def getChrisSymbols(self,X,u,v,trig=True):
+        """
+        docstring for getChrisSymbols
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)]) 
+        if trig:
+            E = dotProd(Xu,Xu).trigsimp()
+            F = dotProd(Xu,Xv).trigsimp()
+            G = dotProd(Xv,Xv).trigsimp()
+        else:
+            E = dotProd(Xu,Xu).expand().factor()
+            F = dotProd(Xu,Xv).expand().factor()
+            G = dotProd(Xv,Xv).expand().factor()
+
+        # Gamma 111,112,121,122,221,222
+        Eu = E.diff(u)/2
+        Ev = E.diff(v)/2
+        Fu = F.diff(u)
+        Fv = F.diff(v)
+        Gu = G.diff(u)/2
+        Gv = G.diff(v)/2
+        s = E*G-F**2
+        s = s.expand().simplify()
+        efg = Matrix([[G,-F],[-F,E]])/s
+        g11 = efg*Matrix([Eu,Fu-Ev])
+        g12 = efg*Matrix([Ev,Gu])
+        g22 = efg*Matrix([Fv-Gu,Gv])
+        Gamma = []
+        print(g11)
+        Gamma.append(g11[0,0])
+        Gamma.append(g11[1,0])
+        Gamma.append(g12[0,0])
+        Gamma.append(g12[1,0])
+        Gamma.append(g22[0,0])
+        Gamma.append(g22[1,0])
+        # print(g11)
+        # print(g12)
+        # print(g22)
+
+        return Gamma 
+
+    def christoffel(self):
+        """
+        docstring for christoffel
+        """
+        u,v,r = symbols("u v r")
+        a,b,c = 1,1,1
+        X = [a*sin(u)*cos(v),b*sin(u)*sin(v),c*cos(u)]
+        Gamma = self.getChrisSymbols(X,u,v)
+        print(Gamma)
+
+        X = [u,v,u*v]
+
+        Gamma = self.getChrisSymbols(X,u,v)
+
+
+        print(Gamma)
         return
     def test(self):
         """
@@ -4336,7 +4407,8 @@ class Puzzles(Algorithms):
         # self.surfaceArea()
         # self.spherialTriangle()
         # self.secondForm()
-        self.xyGeodesic()
+        # self.xyGeodesic()
+        # self.christoffel()
 
 
         return
