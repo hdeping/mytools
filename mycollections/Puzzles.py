@@ -4407,31 +4407,131 @@ class Puzzles(Algorithms):
             dx   = x - x0[i]
             dy   = y - y0[i]
             B    = a[i]*dx*dx+b[i]*dx*dy + c[i]*dy*dy
-            res += A[i]*np.exp(B)
+            res1 = A[i]*np.exp(B)
+            res += res1
             cx   = 2*a[i]*dx + b[i]*dy
             cy   = 2*c[i]*dy + b[i]*dx
-            fx  += cx*res
-            fy  += cy*res
-            fxx += (2*a[i]+cx*cx)*res
-            fxy += (b[i]+cx*cy)*res
-            fyy += (2*c[i]+cx*cx)*res
+            fx  += cx*res1
+            fy  += cy*res1
+            fxx += (2*a[i]+cx*cx)*res1
+            fxy += (b[i]+cx*cy)*res1
+            fyy += (2*c[i]+cx*cx)*res1
 
 
         values = [res,fx,fy,fxx,fxy,fyy]
 
         return values
 
+    def searchSol(self,A,n,C,func):
+        """
+        docstring for searchSol
+        A:
+            [a1,b1,delta,x1,y1]
+        n:
+            integer
+        B:
+            [x,y]
+        func:
+            function
+        """
+        getError = lambda a,b,c,d: ((a-b)**2+(c-d)**2)**0.5
+         
+        N = int(1e4)
+
+        a1,b1,delta,x1,y1 = A
+        p = 1000
+        m = n
+        A,B = 0,0
+        for i in range(n):
+            for j in range(m):
+                print("i,j = %d,%d"%(i,j),A,B,p)
+                a = a1 + i*delta
+                b = b1 + j*delta
+                X,Y,length = func(x1,y1,a,b)
+                error = getError(X[-1],C[0],Y[-1],C[1])
+                if error < p:
+                    p = error
+                    A,B = a,b
+                    L  = length
+                    X1 = X 
+                    Y1 = Y
+                    print("final point",X[-1],Y[-1])
+
+        print("a,b,error and length: ",A,B,p,L)
+
+        return A,B,L,X1,Y1
+
+    def getMullerSol(self,x1,y1,a,b,N=int(1e4)):
+        """
+        docstring for getMullerSol
+        a,b denotes x'(0) and y'(0)
+        """
+        dt = 1/N
+
+        X  = [x1,x1+a*dt]
+        Y  = [y1,y1+b*dt] 
+
+        length = 0
+        total = 10*N
+        for i in range(total):
+
+            dx = X[-1]-X[-2]
+            dy = Y[-1]-Y[-2]
+            dz = X[-1]*Y[-1] - X[-2]*Y[-2]
+            length += (dx*dx+dy*dy+dz*dz)**0.5
+
+            values = self.getMullerPotential(X[-2],Y[-2])
+            fx,fy,fxx,fxy,fyy = values[1:]
+            s = 1+fx*fx+fy*fy 
+            g111 = fx*fxx/s
+            g121 = fx*fxy/s
+            g221 = fx*fyy/s
+            g112 = fy*fxx/s
+            g122 = fy*fxy/s
+            g222 = fy*fyy/s
+            x = g111*dx*dx+2*g121*dx*dy+g221*dy*dy
+            x = 2*X[-1] - X[-2] - x 
+            y = g112*dx*dx+2*g122*dx*dy+g222*dy*dy
+            y = 2*Y[-1] - Y[-2] - y
+            X.append(x)
+            Y.append(y)
+
+        return X,Y,length
+
     def mullerPotential(self):
         """
         docstring for mullerPotential
         """
-        x,y = 0,0
+        x,y = -0.1,1.5
         dt = 1e-4
-        for i in range(1000):
+        for i in range(10):
             values = self.getMullerPotential(x,y)
             x = x - dt*values[1]
             y = y - dt*values[2]
-            print(x,y,i,values[:3])
+
+        print(x,y,i,values[:3])
+        # print(self.getMullerPotential(-0.558,1.442)[:3])
+        # print(self.getMullerPotential(0.623,0.028)[:3])
+
+        print("geodesic of Muller surface")
+
+        x1,y1 = -0.558,1.442
+        a1,b1 = -5,-5
+        delta = 2
+        n = 6
+        A = [a1,b1,delta,x1,y1]
+        B = [0.623,0.028]
+        A,B,L,X,Y = self.searchSol(A,n,B,self.getMullerSol)
+        # print(X[:100])
+        plt.plot(X,Y)
+        plt.show()
+
+        Z = []
+        for x,y in zip(X[-100:],Y[-100:]):
+            res = self.getMullerPotential(x,y)
+            Z.append(res[0])
+        print(Z[-10:])
+
         return
     def test(self):
         """
