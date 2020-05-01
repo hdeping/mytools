@@ -4158,7 +4158,7 @@ class Puzzles(Algorithms):
 
         return wedge
 
-    def getSecondForm(self,X,u,v):
+    def getSecondForm(self,X,u,v,trig=True):
         """
         docstring for getSecondForm
         """
@@ -4172,36 +4172,50 @@ class Puzzles(Algorithms):
         N = self.getWedge(Xu,Xv)
 
         dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)]) 
-        E = dotProd(Xu,Xu)
-        F = dotProd(Xu,Xv)
-        G = dotProd(Xv,Xv)
+        if trig:
+            E = dotProd(Xu,Xu).trigsimp()
+            F = dotProd(Xu,Xv).trigsimp()
+            G = dotProd(Xv,Xv).trigsimp()
+        else:
+            E = dotProd(Xu,Xu).expand().factor()
+            F = dotProd(Xu,Xv).expand().factor()
+            G = dotProd(Xv,Xv).expand().factor()
         S = E*G-F**2 
-        S = S.trigsimp()
+        S = S.simplify()
         s = sqrt(S).simplify()
         # print("S:", latex(S),latex(s))
 
-        e = (dotProd(N,Xuu)/s).trigsimp()
-        f = (dotProd(N,Xuv)/s).trigsimp()
-        g = (dotProd(N,Xvv)/s).trigsimp()
+        if trig:
+            e = (dotProd(N,Xuu)/s).trigsimp()
+            f = (dotProd(N,Xuv)/s).trigsimp()
+            g = (dotProd(N,Xvv)/s).trigsimp()
+        else:
+            e = (dotProd(N,Xuu)/s).expand().factor()
+            f = (dotProd(N,Xuv)/s).expand().factor()
+            g = (dotProd(N,Xvv)/s).expand().factor()
 
         K = (e*g-f**2)/S
         H = (e*G-2*f*F+g*E)/(2*S)
 
-        K = K.expand().trigsimp()
-        H = H.expand().trigsimp()
+        if trig:
+            K = K.expand().trigsimp()
+            H = H.expand().trigsimp()
+        else:
+            K = K.expand().expand().factor()
+            H = H.expand().expand().factor()
 
         print("-----------------------------------")
         print("-----------------------------------")
         print("-----------------------------------")
-
-        print("e & = & %s\\\\"%(latex(e.trigsimp())))
-        print("f & = & %s\\\\"%(latex(f.trigsimp())))
-        print("g & = & %s\\\\"%(latex(g.trigsimp())))
-        print("E & = & %s\\\\"%(latex(E.trigsimp())))
-        print("F & = & %s\\\\"%(latex(F.trigsimp())))
-        print("G & = & %s\\\\"%(latex(G.trigsimp())))
-        print("K & = & %s\\\\"%(latex(K.trigsimp())))
-        print("H & = & %s"%(latex(H.trigsimp())))
+        # print("e",e)
+        print("e & = & %s\\\\"%(latex(e)))
+        print("f & = & %s\\\\"%(latex(f)))
+        print("g & = & %s\\\\"%(latex(g)))
+        print("E & = & %s\\\\"%(latex(E)))
+        print("F & = & %s\\\\"%(latex(F)))
+        print("G & = & %s\\\\"%(latex(G)))
+        print("K & = & %s\\\\"%(latex(K)))
+        print("H & = & %s"%(latex(H)))
 
         return K,H
 
@@ -4210,14 +4224,90 @@ class Puzzles(Algorithms):
         docstring for secondForm
         """
         u,v,r,a = symbols("u v r a")
-        X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
-        K,H = self.getSecondForm(X,u,v)
+        # X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
+        # K,H = self.getSecondForm(X,u,v)
 
-        X = [(a+r*cos(u))*cos(v),(a+r*cos(u))*sin(v),r*sin(u)]
-        K,H = self.getSecondForm(X,u,v)
+        # X = [(a+r*cos(u))*cos(v),(a+r*cos(u))*sin(v),r*sin(u)]
+        # K,H = self.getSecondForm(X,u,v)
+
+        X = [u-u**3/3+u*v**2,v-v**3/3+v*u**2,u**2-v**2]
+        K,H = self.getSecondForm(X,u,v,trig=False)
 
         return
 
+    def getXYSol(self,a,b,x1=1,y1=1,N=int(1e4)):
+        """
+        docstring for getXYSol
+        a,b denotes x'(0) and y'(0)
+        """
+        dt = 1/N
+
+        gamma121 = lambda x,y: 2*y*(1+y*y-x*x)/(1+y*y+x*x)
+        gamma122 = lambda x,y: 2*x*(1-y*y+x*x)/(1+y*y+x*x)
+
+        X  = [x1,x1+a*dt]
+        Y  = [y1,y1+b*dt] 
+
+        length = 0
+        for i in range(N-1):
+
+            dx = X[-1]-X[-2]
+            dy = Y[-1]-Y[-2]
+            dz = X[-1]*Y[-1] - X[-2]*Y[-2]
+            length += (dx*dx+dy*dy+dz*dz)**0.5
+
+            res = dx*dy
+            x = gamma121(X[-2],Y[-2])*res 
+            x = 2*X[-1] - X[-2] - x 
+            y = gamma122(X[-2],Y[-2])*res
+            y = 2*Y[-1] - Y[-2] - y
+            X.append(x)
+            Y.append(y)
+
+        return X,Y,length
+
+    def xyGeodesic(self):
+        """
+        docstring for xyGeodesic
+        z = xy
+        (1,1,1) -> (2,3,6)
+        """
+
+        getError = lambda a,b,c,d: ((a-b)**2+(c-d)**2)**0.5
+         
+        N = int(1e4)
+
+        a1,b1 = 2.0,2.4
+        data = []
+        for i in range(11):
+            for j in range(11):
+                a = a1 + i*0.02
+                b = b1 + j*0.02
+                X,Y,length = self.getXYSol(a,b,N=N)
+                res = [a,b,X[-1],Y[-1],length,error]
+                data.append(res)
+
+
+        X = np.array(X)
+        Y = np.array(Y)
+        Z = X*Y
+        # print(Z[-100:])
+        T = np.arange(N+1)
+
+        from mpl_toolkits.mplot3d import Axes3D
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        ax.plot(X,Y,Z, label='parametric curve')
+
+        # plt.plot(T,X)
+        # plt.plot(T,Y)
+        # plt.show()
+
+
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -4245,7 +4335,8 @@ class Puzzles(Algorithms):
         # self.curvature()
         # self.surfaceArea()
         # self.spherialTriangle()
-        self.secondForm()
+        # self.secondForm()
+        self.xyGeodesic()
 
 
         return
