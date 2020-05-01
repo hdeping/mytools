@@ -4379,6 +4379,60 @@ class Puzzles(Algorithms):
 
         print(Gamma)
         return
+
+    def getMullerPotential(self,x,y):
+        """
+        docstring for getMullerPotential
+        x,y:
+            float values
+        """
+        # parameters
+        A  = [-200,-100,-170,15]
+        a  = [-1,-1,-6.5,0.7]
+        b  = [0,0,11,0.6]
+        c  = [-10,-10,-6.5,0.7]
+        x0 = [1,0,-0.5,-1]
+        y0 = [0,0.5,1.5,1]
+
+        # value of the function and the derivatives
+
+        res = 0
+        fx  = 0 
+        fy  = 0
+        fxx = 0
+        fxy = 0
+        fyy = 0
+
+        for i in range(4):
+            dx   = x - x0[i]
+            dy   = y - y0[i]
+            B    = a[i]*dx*dx+b[i]*dx*dy + c[i]*dy*dy
+            res += A[i]*np.exp(B)
+            cx   = 2*a[i]*dx + b[i]*dy
+            cy   = 2*c[i]*dy + b[i]*dx
+            fx  += cx*res
+            fy  += cy*res
+            fxx += (2*a[i]+cx*cx)*res
+            fxy += (b[i]+cx*cy)*res
+            fyy += (2*c[i]+cx*cx)*res
+
+
+        values = [res,fx,fy,fxx,fxy,fyy]
+
+        return values
+
+    def mullerPotential(self):
+        """
+        docstring for mullerPotential
+        """
+        x,y = 0,0
+        dt = 1e-4
+        for i in range(1000):
+            values = self.getMullerPotential(x,y)
+            x = x - dt*values[1]
+            y = y - dt*values[2]
+            print(x,y,i,values[:3])
+        return
     def test(self):
         """
         docstring for test
@@ -4409,6 +4463,7 @@ class Puzzles(Algorithms):
         # self.secondForm()
         # self.xyGeodesic()
         # self.christoffel()
+        self.mullerPotential()
 
 
         return
