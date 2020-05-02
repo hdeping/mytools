@@ -4181,9 +4181,15 @@ class Puzzles(Algorithms):
             F = dotProd(Xu,Xv).expand().factor()
             G = dotProd(Xv,Xv).expand().factor()
         S = E*G-F**2 
-        S = S.simplify()
-        s = sqrt(S).simplify()
-        # print("S:", latex(S),latex(s))
+        if trig:
+            S = S.expand().trigsimp()
+            s = sqrt(S).expand().trigsimp()
+        else:
+            S = S.simplify()
+            s = sqrt(S).simplify()
+        # print(Xu)
+        # print(Xv)
+        print("S:", latex(S),latex(s))
 
         if trig:
             e = (dotProd(N,Xuu)/s).trigsimp()
@@ -4305,6 +4311,16 @@ class Puzzles(Algorithms):
         # print(Z[-100:])
         T = np.arange(N+1)
 
+        self.plot3D(X,Y,Z)
+
+        
+        return
+
+    def plot3D(self,X,Y,Z):
+        """
+        docstring for plot3D
+        """
+
         from mpl_toolkits.mplot3d import Axes3D
         fig = plt.figure()
         ax = fig.gca(projection='3d')
@@ -4315,9 +4331,7 @@ class Puzzles(Algorithms):
         # plt.plot(T,Y)
         plt.show()
 
-        
         return
-
     def getChrisSymbols(self,X,u,v,trig=True):
         """
         docstring for getChrisSymbols
@@ -4518,19 +4532,41 @@ class Puzzles(Algorithms):
         x1,y1 = -0.558,1.442
         a1,b1 = -5,-5
         delta = 2
-        n = 6
+        n = 0
         A = [a1,b1,delta,x1,y1]
         B = [0.623,0.028]
-        A,B,L,X,Y = self.searchSol(A,n,B,self.getMullerSol)
+        # A,B,L,X,Y = self.searchSol(A,n,B,self.getMullerSol)
         # print(X[:100])
-        plt.plot(X,Y)
+        a,b = 1,-1
+        X,Y,L = self.getMullerSol(x1,y1,a,b,N=30000)
+        print(X[-1],Y[-1],L)
+        Z = []
+        X1,Y1 = [],[]
+        for i in range(0,len(X),1000):
+            x,y = X[i],Y[i]
+            # res = self.getMullerPotential(x,y)
+            # Z.append(res[0])
+            X1.append(x)
+            Y1.append(y)
+        # print(Z[-10:])
+        # self.plot3D(X1, Y1, Z)
+        plt.plot(X1,Y1)
         plt.show()
 
-        Z = []
-        for x,y in zip(X[-100:],Y[-100:]):
-            res = self.getMullerPotential(x,y)
-            Z.append(res[0])
-        print(Z[-10:])
+        return
+
+
+    def mobiusStrip(self):
+        """
+        docstring for mobiusStrip
+        """
+        print("get the curvature of the mobius strip")
+        u,v,r = symbols("u v r")
+        X = [(1+v*cos(u/2)/2)*cos(u),
+             (1+v*cos(u/2)/2)*sin(u),
+             v*sin(u/2)/2]
+
+        self.getSecondForm(X,u,v)
 
         return
     def test(self):
@@ -4563,7 +4599,8 @@ class Puzzles(Algorithms):
         # self.secondForm()
         # self.xyGeodesic()
         # self.christoffel()
-        self.mullerPotential()
+        # self.mullerPotential()
+        self.mobiusStrip()
 
 
         return
