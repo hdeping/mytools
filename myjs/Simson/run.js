@@ -56,12 +56,18 @@ for(var i = 0; i < 4; i ++)
     points.push([x,y]);
 }
 points[3][0] += 0;
-// get E,F and G 
+// get E,F and G 4-th ~ 6-th
 points.push(getOrthoPoint(3,0,1));
 points.push(getOrthoPoint(3,1,2));
 points.push(getOrthoPoint(3,0,2));
 // get three ortho-points and the orthocenter
+// 7-th ~ 10-th
 points.push(getOrthoCenter(0,1,2));
+points.push(getOrthoPoint(0,1,2));
+points.push(getOrthoPoint(1,2,0));
+points.push(getOrthoPoint(2,0,1));
+var tags = ["A","B","C","D","E","F","G",
+            "H","I","J","K"];
 
 console.log("line equation");
 
@@ -75,7 +81,8 @@ var indeces = [[0,1],[1,2],[0,2],
               [1,3],[2,3],[3,4],
               [3,5],[3,6],[4,5],
               [5,6],[0,4],[2,6],
-              [3,8]];
+              [3,7],[0,8],[1,9],
+              [2,10]];
 var dashes = [];
 
 var colors = [];
@@ -92,6 +99,11 @@ for(var i = 5; i < 10; i ++)
 {
     dashes[i] = [1,2];
     colors[i] = "orange";
+}
+for(var i = 13; i < 16; i ++)
+{
+    dashes[i] = [2,1];
+    colors[i] = "blue";
 }
 
 var circle1 = [1];
@@ -129,6 +141,22 @@ var sides = svg.selectAll("line")
                  return dashes[i];
                });
 
+// add texts
+var dx = 10,dy = 10;
+var texts = svg.selectAll("text")
+               .data(points)
+               .enter()
+               .append("text")
+               .attr("x",function (d,i) {
+                 return points[i][0] + dx;
+               })
+               .attr('y', function (d,i) {
+                 return points[i][1] + dy;
+               })
+               .text(function (d,i) {
+                 return tags[i];
+               })
+               .attr("fill","green");
 
 function getLineEqn (point1,point2) {
   // (x - x1)(y2-y1) - (x2-x1)(y - y1) = 0 
