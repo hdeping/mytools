@@ -14,20 +14,12 @@
 */
 
     
-var width  = 900;
-var height = 600;
+var width  = 1200;
+var height = 800;
 
 // var width  = 1920;
 // var height = 1080;
 
-
-
-var rect_width  = 120;
-var rect_height = 120;
-var padding     = 10;
-var radius      = 60;
-var x_begin = 120;
-var y_begin = 120;
 var background_color = "white";
 var line_color = "red";
 
@@ -43,7 +35,7 @@ var svg = d3.select("#tree").append("svg")
 // points A,B,C,D,E,F,G
 // 
 
-var theta = [-90,175,30,70];
+var theta = [-90,175,30,65];
 var points = [];
 var center = [width/2,height/2];
 var x,y,phi;
