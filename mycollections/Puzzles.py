@@ -29,6 +29,10 @@ import mpmath as mp
 import math
 from scipy import integrate as inte
 
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+
 class Puzzles(Algorithms):
     """
     solutions for math puzzles
@@ -4316,7 +4320,7 @@ class Puzzles(Algorithms):
         
         return
 
-    def plot3D(self,X,Y,Z):
+    def plot3D(self,X,Y,Z,show=False):
         """
         docstring for plot3D
         """
@@ -4329,9 +4333,10 @@ class Puzzles(Algorithms):
 
         # plt.plot(T,X)
         # plt.plot(T,Y)
-        plt.show()
+        if show:
+            plt.show()
 
-        return
+        return ax
     def getChrisSymbols(self,X,u,v,trig=True):
         """
         docstring for getChrisSymbols
@@ -4569,6 +4574,63 @@ class Puzzles(Algorithms):
         self.getSecondForm(X,u,v)
 
         return
+
+    def plot3DSurface(self,X,Y,Z,show=False):
+        """
+        docstring for plot3DSurface
+        """
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        # Make data.
+
+        # Plot the surface.
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+                               linewidth=0, antialiased=False)
+
+        # Customize the z axis.
+        # ax.set_zlim(-1.01, 1.01)
+        # ax.zaxis.set_major_locator(LinearLocator(10))
+        # ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+        # # Add a color bar which maps values to colors.
+        # fig.colorbar(surf, shrink=0.5, aspect=5)
+
+        if show:
+            plt.show()
+
+
+        return ax
+
+    def mullerSurface(self):
+        """
+        docstring for mullerSurface
+        """
+        X = np.arange(-0.6, 0.7, 0.05)
+        Y = np.arange(-0.1, 1.5, 0.05)
+        n,m = len(X),len(Y)
+        X, Y = np.meshgrid(X, Y)
+        Z = np.zeros((m,n))
+        # print(X.shape,Y.shape,n,m)
+        # print(X[:5,:5])
+        for i in range(m):
+            for j in range(n):
+                print(i,j)
+                Z[i,j] = self.getMullerPotential(X[i,j],Y[i,j])[0]
+
+        ax = self.plot3DSurface(X, Y, Z)
+        x1,y1,a,b = 0.6,0.03,-0.2,0.2
+        X,Y,L = self.getMullerSol(x1,y1,a,b,N=10000)
+        Z = []
+        for i,j in zip(X,Y):
+            Z.append(self.getMullerPotential(i,j)[0])
+        # self.plot3D(X, Y, Z)
+        ax.plot(X,Y,Z, label='parametric curve')
+
+        plt.show()
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -4600,7 +4662,8 @@ class Puzzles(Algorithms):
         # self.xyGeodesic()
         # self.christoffel()
         # self.mullerPotential()
-        self.mobiusStrip()
+        # self.mobiusStrip()
+        self.mullerSurface()
 
 
         return
