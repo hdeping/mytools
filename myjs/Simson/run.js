@@ -29,6 +29,7 @@ var radius      = 60;
 var x_begin = 120;
 var y_begin = 120;
 var background_color = "white";
+var line_color = "red";
 
 
 var svg = d3.select("#tree").append("svg")
@@ -40,8 +41,9 @@ var svg = d3.select("#tree").append("svg")
 
 
 // points A,B,C,D,E,F,G
+// 
 
-var theta = [90,-135,-60,-80];
+var theta = [-90,175,30,70];
 var points = [];
 var center = [width/2,height/2];
 var x,y,phi;
@@ -53,29 +55,47 @@ for(var i = 0; i < 4; i ++)
     y = radius*Math.sin(phi) + center[1];
     points.push([x,y]);
 }
-console.log(points);
+points[3][0] += 0;
+// get E,F and G 
+points.push(getPerp(3,0,1));
+points.push(getPerp(3,1,2));
+points.push(getPerp(3,0,2));
+
+console.log("line equation");
+
 console.log(getLineEqn(points[0],points[1]));
+console.log(points);
+
 
 
 // get all the lines
 // lines: AB,BC,CD,DA,BC,DG,DE,DF,EG
 var lines = [];
 var indeces = [[0,1],[1,2],[0,2],
-              [1,3],[2,3]];
+              [1,3],[2,3],[3,4],
+              [3,5],[3,6],[4,5],
+              [5,6],[0,4],[2,6]];
+var dashes = [];
+
+var colors = [];
 for(var i = 0; i < indeces.length; i ++)
 {
     var tmp = [];
-    tmp.push(points[indeces[0]]);
-    tmp.push(points[indeces[1]]);
+    tmp.push(points[indeces[i][0]]);
+    tmp.push(points[indeces[i][1]]);
     lines.push(tmp);
+    dashes.push([]);
+    colors.push(line_color);
 }
-console.log(lines);
+for(var i = 5; i < 10; i ++)
+{
+    dashes[i] = [1,2];
+    colors[i] = "orange";
+}
 
-
-
-
+var circle1 = [1];
 var circle = svg.selectAll("circle")
-                .data(lines)
+                .data(circle1)
                 .enter()
                 .append("circle")
                 .attr("cx",center[0])
@@ -100,8 +120,13 @@ var sides = svg.selectAll("line")
                .attr('y2', function (d,i) {
                  return lines[i][1][1];
                })
-               .attr("stroke",2)
-               .attr("stroke-width",2);
+               .attr("stroke",function (d,i) {
+                 return colors[i];
+               })
+               .attr("stroke-width",2)
+               .attr("stroke-dasharray",function (d,i) {
+                 return dashes[i];
+               });
 
 
 function getLineEqn (point1,point2) {
@@ -118,6 +143,31 @@ function getLineEqn (point1,point2) {
 
   return line; 
 }
-               
+
+function getPerp(i,j,k) {
+
+    var point1 = points[i];
+    var point2 = points[j];
+    var point3 = points[k];
+
+    var p = getPerpByPoints(point1,point2,point3);
+    return p;
+
+} 
+
+function getPerpByPoints (point1,point2,point3) {
+    // perpendicular point of point1 on the line point2-point3
+
+    var line = getLineEqn(point2,point3);
+    var A = line[0];
+    var B = line[1];
+    var C = line[2];
+    var x0 = point1[0], y0 = point1[1];
+    var g = (A*x0 + B*y0 + C)/(A*A+B*B);
+    var p = [x0 - A*g,y0 - B*g];
+
+    return p;
+
+}         
 
 
