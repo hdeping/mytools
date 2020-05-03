@@ -57,16 +57,16 @@ for(var i = 0; i < 4; i ++)
 }
 points[3][0] += 0;
 // get E,F and G 
-points.push(getPerp(3,0,1));
-points.push(getPerp(3,1,2));
-points.push(getPerp(3,0,2));
+points.push(getOrthoPoint(3,0,1));
+points.push(getOrthoPoint(3,1,2));
+points.push(getOrthoPoint(3,0,2));
+// get three ortho-points and the orthocenter
+points.push(getOrthoCenter(0,1,2));
 
 console.log("line equation");
 
 console.log(getLineEqn(points[0],points[1]));
 console.log(points);
-
-
 
 // get all the lines
 // lines: AB,BC,CD,DA,BC,DG,DE,DF,EG
@@ -74,7 +74,8 @@ var lines = [];
 var indeces = [[0,1],[1,2],[0,2],
               [1,3],[2,3],[3,4],
               [3,5],[3,6],[4,5],
-              [5,6],[0,4],[2,6]];
+              [5,6],[0,4],[2,6],
+              [3,8]];
 var dashes = [];
 
 var colors = [];
@@ -144,18 +145,18 @@ function getLineEqn (point1,point2) {
   return line; 
 }
 
-function getPerp(i,j,k) {
+function getOrthoPoint(i,j,k) {
 
     var point1 = points[i];
     var point2 = points[j];
     var point3 = points[k];
 
-    var p = getPerpByPoints(point1,point2,point3);
+    var p = getOrthoPointByPoints(point1,point2,point3);
     return p;
 
 } 
 
-function getPerpByPoints (point1,point2,point3) {
+function getOrthoPointByPoints (point1,point2,point3) {
     // perpendicular point of point1 on the line point2-point3
 
     var line = getLineEqn(point2,point3);
@@ -168,6 +169,53 @@ function getPerpByPoints (point1,point2,point3) {
 
     return p;
 
-}         
+}   
+function getDet2 (a,b,c,d) {
+  // get the determinant of 2*2 matrix
+  // |a b|
+  // |c d|
+  return a*d-b*c;
+} 
+function getLineInter (line1,line2) {
+  // get the intersection point of the two lines 
+  var A = getDet2(line1[1],line1[2],line2[1],line2[2]);
+  var B = -getDet2(line1[0],line1[2],line2[0],line2[2]);
+  var C = getDet2(line1[0],line1[1],line2[0],line2[1]);
+
+  var p = [A/C,B/C];
+  return p;
+}     
+
+function getOrthoLineByPoints(p1,p2,p3) {
+  var line1 = getLineEqn(p2,p3);
+  var A = line1[0];
+  var B = line1[1];
+  var C = line1[2];
+
+  var res = [B,-A];
+  res.push(A*p1[1]-B*p1[0]);
+
+  return res;
+}
+
+function getOrthoCenterByPoints(p1,p2,p3) {
+  var line1 = getOrthoLineByPoints(p1,p2,p3);
+  var line2 = getOrthoLineByPoints(p2,p1,p3);
+  return getLineInter(line1,line2);
+}
+
+function getOrthoCenter(i,j,k) {
+
+  var p1 = points[i];
+  var p2 = points[j];
+  var p3 = points[k];
+
+  var line1 = getOrthoLineByPoints(p1,p2,p3);
+  var line2 = getOrthoLineByPoints(p2,p1,p3);
+  return getLineInter(line1,line2);
+
+}
+
+
 
 
