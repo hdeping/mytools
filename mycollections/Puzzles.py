@@ -4704,7 +4704,42 @@ class Puzzles(Algorithms):
                 print(i,j,res)
         print(latex(self.eight))
 
-        return  
+        return 
+
+    def deMoivreQuintic(self):
+        """
+        docstring for deMoivreQuintic
+        0&=&x^{5}+5ax^{3}+5a^{2}x+b
+        """
+        a = 1
+        b = 1 
+        w = np.exp(2*np.pi*1j/5)
+        m = (b*b + 4*a**5)**0.5 
+        u1 = (-b+m)**(1/5)
+        u2 = -(b+m)**(1/5)
+        print(u1,u2)
+
+        X = []
+        for i in range(5):
+            x = u1*w**i + u2*w**(4*i)
+            X.append(x)
+            print(i,x**5+5*a*x**3+5*a**2*x+b)
+        print(X)
+
+        w,u1,u2 = symbols("w u1 u2")
+        X = []
+        for i in range(5):
+            X.append(u1*w**i + u2*w**(4*i))
+        print(X)
+        res = 1 
+        for x in X:
+            res = res*x 
+        res = res.expand().collect([u1,u2])
+        # print(latex(res))
+        res = Poly(res,[u1,u2]).as_dict()
+        print(res)
+
+        return 
     def test(self):
         """
         docstring for test
@@ -4738,7 +4773,8 @@ class Puzzles(Algorithms):
         # self.mullerPotential()
         # self.mobiusStrip()
         # self.mullerSurface()
-        self.eightSquares()
+        # self.eightSquares()
+        self.deMoivreQuintic()
 
 
         return
