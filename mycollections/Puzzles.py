@@ -4631,6 +4631,28 @@ class Puzzles(Algorithms):
 
 
         return
+
+
+    def eightSquares(self):
+        """
+        docstring for eightSquares
+        """
+
+        x = symbols("x0:9")
+        eight = [[x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]],
+                 [-x[2],x[1],x[4],-x[3],-x[6],x[5],x[8],-x[7]],
+                 [-x[3],-x[4],x[1],x[2],x[7],x[8],-x[5],-x[6]],
+                 [-x[4],x[3],-x[2],x[1],x[8],-x[7],x[6],-x[5]],
+                 [-x[5],-x[6],-x[7],-x[8],x[1],x[2],x[3],x[4]],
+                 [-x[6],x[5],-x[8],x[7],-x[2],x[1],x[4],-x[3]],
+                 [-x[7],-x[8],x[5],x[6],-x[3],-x[4],x[1],x[2]],
+                 [-x[8],x[7],-x[6],x[5],-x[4],x[3],-x[2],x[1]]]
+        eight = Matrix(eight)
+        print(eight)
+
+        res = eight.transpose()*eight 
+        print(res)
+        return  
     def test(self):
         """
         docstring for test
@@ -4663,7 +4685,8 @@ class Puzzles(Algorithms):
         # self.christoffel()
         # self.mullerPotential()
         # self.mobiusStrip()
-        self.mullerSurface()
+        # self.mullerSurface()
+        self.eightSquares()
 
 
         return
