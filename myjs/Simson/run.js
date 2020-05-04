@@ -35,7 +35,7 @@ var svg = d3.select("#tree").append("svg")
 // points A,B,C,D,E,F,G
 // 
 
-var theta = [-90,175,30,65];
+var theta = [-90,175,30,115];
 var points = [];
 var center = [width/2,height/2];
 var x,y,phi;
