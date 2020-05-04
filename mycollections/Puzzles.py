@@ -4632,6 +4632,32 @@ class Puzzles(Algorithms):
 
         return
 
+    def checkSign(self,eight,sign,j=0):
+        """
+        docstring for checkSign
+        """
+        a,b,c,d,e,f,g = sign
+        signs = [[1,1,1,1,1,1,1,1],
+                 [-1,1,a,-a,b,-b,c,-c],
+                 [-1,-a,1,a,d,e,-d,-e],
+                 [-1,a,-a,1,f,g,-g,-f],
+                 [-1,-b,-d,-f,1,b,d,f],
+                 [-1,b,-e,-g,-b,1,g,e],
+                 [-1,-c,d,g,-d,-g,1,c],
+                 [-1,c,e,f,-f,-e,-c,1]]
+        signs = Matrix(signs)
+
+        number = 0 
+        for i in range(8):
+            res = 0 
+            for k in range(8):
+                res += eight[j,k]*eight[i,k]*signs[i,k]*signs[j,k]
+            if res == 0:
+                number += 1
+        if number == 7:
+            return True 
+        else:
+            return False
 
     def eightSquares(self):
         """
@@ -4640,18 +4666,30 @@ class Puzzles(Algorithms):
 
         x = symbols("x0:9")
         eight = [[x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]],
-                 [-x[2],x[1],x[4],-x[3],-x[6],x[5],x[8],-x[7]],
-                 [-x[3],-x[4],x[1],x[2],x[7],x[8],-x[5],-x[6]],
-                 [-x[4],x[3],-x[2],x[1],x[8],-x[7],x[6],-x[5]],
-                 [-x[5],-x[6],-x[7],-x[8],x[1],x[2],x[3],x[4]],
-                 [-x[6],x[5],-x[8],x[7],-x[2],x[1],x[4],-x[3]],
-                 [-x[7],-x[8],x[5],x[6],-x[3],-x[4],x[1],x[2]],
-                 [-x[8],x[7],-x[6],x[5],-x[4],x[3],-x[2],x[1]]]
+                 [x[2],x[1],x[4],x[3],x[6],x[5],x[8],x[7]],
+                 [x[3],x[4],x[1],x[2],x[7],x[8],x[5],x[6]],
+                 [x[4],x[3],x[2],x[1],x[8],x[7],x[6],x[5]],
+                 [x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4]],
+                 [x[6],x[5],x[8],x[7],x[2],x[1],x[4],x[3]],
+                 [x[7],x[8],x[5],x[6],x[3],x[4],x[1],x[2]],
+                 [x[8],x[7],x[6],x[5],x[4],x[3],x[2],x[1]]]
         eight = Matrix(eight)
-        print(eight)
+        sol1 = []
+        combi = itertools.product([-1,1],repeat=7)
+        for line in combi:
+            sol1.append(list(line))
+        # print(sol1)
+        for i,sign in enumerate(sol1):
+            count = 0
+            for j in range(8):
+                if self.checkSign(eight,sign,j=j):
+                    count += 1 
+                else:
+                    break 
+            if count == 8:
+                print(i,sign)
+       
 
-        res = eight.transpose()*eight 
-        print(res)
         return  
     def test(self):
         """
