@@ -4646,7 +4646,10 @@ class Puzzles(Algorithms):
                  [-1,-c,d,g,-d,-g,1,c],
                  [-1,c,e,f,-f,-e,-c,1]]
         signs = Matrix(signs)
-
+        self.eight = Matrix.zeros(8)
+        for i in range(8):
+            for j in range(8):
+                self.eight[i,j] = eight[i,j]*signs[i,j]
         number = 0 
         for i in range(8):
             res = 0 
@@ -4688,7 +4691,18 @@ class Puzzles(Algorithms):
                     break 
             if count == 8:
                 print(i,sign)
-       
+            break
+
+        sign = [1, 1, 1, 1, -1, -1, -1] 
+        self.checkSign(eight,sign,j=0)
+        print(self.eight)
+        for i in range(8):
+            for j in range(i+1,8):
+                res = 0 
+                for k in range(8):
+                    res += self.eight[i,k]*self.eight[j,k]
+                print(i,j,res)
+        print(latex(self.eight))
 
         return  
     def test(self):
