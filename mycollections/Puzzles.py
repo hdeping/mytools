@@ -29,6 +29,10 @@ import mpmath as mp
 import math
 from scipy import integrate as inte
 
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+
 class Puzzles(Algorithms):
     """
     solutions for math puzzles
@@ -3779,6 +3783,38 @@ class Puzzles(Algorithms):
         return
 
 
+    def justifyGolay(self,index):
+        """
+        docstring for justifyGolay
+        res:
+            2d array with size [4,6]
+        """
+        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
+        golay = hexaList(index)
+        print(golay)
+
+        count = 0 
+        counts = {8:0,12:0,16:0}
+        justify = [[1,3],[2,4]]
+        for index in range(2):
+            for i in range(128):
+                order = []
+                k = i 
+                for j in range(6):
+                    order.append(k%2 + 2*index)
+                    k = k // 2
+                res = []
+                # print(i,order)
+                for j,k in enumerate(golay):
+                    code = self.oddEvenTable[k,order[j]]
+                    res.append(code)
+                res = np.array(res).transpose()
+                if sum(res[0]) in justify[index]:
+                    count += 1
+                    num = np.sum(res)
+                    # print(i,num)
+                    counts[num] += 1
+        return count,counts
     def golayCode(self):
         """
         docstring for golayCode
@@ -3796,37 +3832,945 @@ class Puzzles(Algorithms):
                         [[0,0,0,1],[1,1,1,0],
                          [1,0,0,1],[0,1,1,0]]]
 
-        oddEvenTable = np.array(oddEvenTable)
+        self.oddEvenTable = np.array(oddEvenTable)
 
-        print(oddEvenTable[0,2])
+        # print(oddEvenTable[0,2])
         # get hexacode
         self.hexaCode()
         binary  = lambda x:np.array(list(bin(x)[2:])).astype(int)
-        hexaList = lambda i:np.array(list(self.hexa[i])).astype(int)
         print(self.hexa[10:20])
-        golay = hexaList(4)
-        print(golay)
 
-        count = 0 
-        for i in range(128):
-            order = []
-            k = i 
-            for j in range(6):
-                order.append(k%2)
-                k = k // 2
-            res = []
-            # print(i,order)
-            for j,k in enumerate(golay):
-                code = oddEvenTable[k,order[j]]
-                res.append(code)
-            res = np.array(res).transpose()
-            if sum(res[0]) in [1,3]:
-                count += 1
-                print(i,res)
 
-        print("count",count)
+        total = {8:0,12:0,16:0}
+        for i in range(64):
+            count,counts = self.justifyGolay(i)
+            for key in counts:
+                total[key] += counts[key]
+
+            print(i,"count",count,counts)
+        print(total)
         
         return
+
+    def selectFullSequence(self,fullSeq,num):
+        """
+        docstring for selectFullSequence
+        """
+        res = fullSeq[0]
+        residue = fullSeq.copy()
+        residue.remove(fullSeq[0])
+
+        count = 0 
+        for line in fullSeq:
+            judge = 1
+            for i in line:
+                if i in res:
+                    judge = 0
+                    break 
+            if judge:
+                res += line 
+                residue.remove(line)
+            if len(res) == num*3:
+                break
+            count += 1 
+        print("count = ",count)
+
+        return res,residue
+
+    def steinerSystem(self):
+        """
+        docstring for steinerSystem
+        """
+        tuples = [[4,5],[5,6],[3,6],
+                  [4,7],[5,8]]
+        t,k = tuples[0]
+        combi = lambda n,m: factorial(n)/(factorial(n-m))/factorial(m)
+        kt = combi(k,t)
+        for v in range(5,20):
+            B = combi(v,t)/kt
+            print(v,B)
+
+        # steiner triple systems
+        # v = 6*n + 3
+        res = []
+        n = 2
+        num = 2*n+1
+        for i in range(num):
+            line = []
+            for j in range(3):
+                line.append(3*i+j+1)
+            # print(i,line)
+            line.sort()
+            res.append(line)
+
+        ij = itertools.combinations(np.arange(num),2)
+        # commutative idempotent group
+        # 012    021  
+        # 120 -> 210  
+        # 201    102 
+
+        tran = lambda i,j:(((i+j)%num)*(n+1))%num
+        for i,j in ij:
+            for k in range(3):
+                line = []
+                line.append(i*3+k+1)
+                line.append(j*3+k+1)
+                a = tran(i,j)*3+(k+1)%3+1
+                line.append(a)
+                line.sort()
+                # print(i,j,k,line)
+                res.append(line)
+
+        total = []
+        for line in res:
+            total.append(line[:2])
+            total.append(line[1:])
+            total.append([line[0],line[2]])
+
+        total.sort()
+        # print(total,len(total))
+
+        res.sort()
+        # arr1,res = self.selectFullSequence(res,num)
+
+        order = []
+        for i in range(num*3):
+            order.append(i+1)
+
+        lines = itertools.combinations(np.arange(35),5)
+        for line in lines:
+            tmp = []
+            for i,j in enumerate(line):
+                tmp += res[j]
+            tmp.sort()
+            # print(tmp)
+            if tmp == order:
+                print(line,tmp)
+
+
+        # print(combi(24,5)/combi(8,5))
+
+            
+        return  
+
+    def steiner45n(self):
+        """
+        docstring for steiner45n
+        """
+        p = [3,4,5] 
+        P = np.prod(p)
+        values = self.getRemainderValues(p)
+        values = np.array(values)
+
+        arr = [[0,2],[1,3],[0,1,2,3]]
+        lines = self.getAllCombinator(arr)
+
+        res = []
+        for line in lines:
+            line = np.array(line)
+            num = sum(line*values)%(P) 
+            if num in res:
+                print("repeat",line,num)
+                continue
+            print(line,num)
+            res.append(num)
+        res.sort()
+        print(res)
+
+
+        return
+
+
+    def steiner5824(self):
+        """
+        docstring for steiner5824
+        """
+        combi = lambda n,m: factorial(n)/(factorial(n-m))/factorial(m)
+        combi2 = lambda t,k,v:combi(v,t)/combi(k,t)
+
+        paras = []
+        for k in range(5):
+            num = combi(24-k,5-k)/combi(8-k,3)
+            print(k,num)
+            paras.append(num)
+        paras += [1,1,1]
+        print(paras)
+
+        res = []
+        total = []
+        for i in paras:
+            line = [i]
+            for j in res:
+                line.append(j-line[-1])
+            res = line 
+            print(res)
+            total.append(res)
+
+        for res in total:
+            res = np.flip(res)
+            print(res)
+
+        print(combi(12,5),combi(8,5))
+        print(combi2(5,8,24))
+        print(combi2(5,6,108))
+        
+        return
+
+
+    def origamiCubic(self):
+        """
+        docstring for origamiCubic
+        """
+        a,b,x,y = symbols("a,b,x,y")
+        s = (1+x) - 9*(1-x)/(2-x)**2 
+        s,_ = fraction(s.simplify())
+        s = s.expand()
+
+        print(s)
+        s = s.subs(x,3/(2-x)-1)
+        s,_ = fraction(s.expand().simplify())
+        print(s)
+
+        s = (1+x) - (1-x)/(a+b-a*x)**2 
+        s,_ = fraction(s.simplify())
+        s = s.expand()
+        s = s.collect(x)
+
+        # print(latex(s))
+        # s = s.subs(x,1/(a+b-a*x)-1)
+        # s,_ = fraction(s.expand().simplify())
+        # s = s.collect(x)
+        # print(latex(s))
+
+        x = self.getCubicSol([1,-3,3,-3])
+        # print(latex(x))
+
+        x = self.getCubicSol([b,-1,b+2*a,-1])
+        x = self.getCubicSol([b,-1,1/3/b,-1])
+
+        return
+
+    def curvature(self):
+        """
+        docstring for curvature
+        """
+
+        theta,x,y,z = symbols("theta x y z")
+        x1 = -x*sin(theta) + y*cos(theta)
+        y1 = x*cos(theta) + y*sin(theta)
+        x2 = -2*y*sin(theta) + (z-x)*cos(theta)
+        y2 = 2*y*cos(theta) + (z-x)*sin(theta)
+
+        s = x1*y2 - x2*y1 
+        s = s.expand().trigsimp()
+        print(s)
+
+        s = x1**2+y1**2 
+        s = s.expand().trigsimp()
+        print(s)
+
+        s1 = sqrt(cos(2*theta))
+        s2 = diff(s1,theta)
+        s3 = diff(s2,theta)
+
+        s = (s1**2 - s1*s3 + 2*s2**2)/sqrt(s1**2+s2**2)**3 
+        s = s.expand().trigsimp()
+        print(latex(s))
+        return
+
+    def diffVector(self,vec,x):
+        """
+        docstring for diffVector
+        """
+        res = []
+
+        for s in vec:
+            res.append(s.diff(x))
+
+        return res 
+
+    def getSurfaceArea(self,X,u,v):
+        """
+        docstring for getSurfaceArea
+        get the formula of the surface area
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)])
+        E = dotProd(Xu,Xu)
+        F = dotProd(Xu,Xv)
+        G = dotProd(Xv,Xv)
+
+        s = E*G - F**2 
+        s = s.trigsimp()
+
+        return s
+    def surfaceArea(self):
+        """
+        docstring for surfaceArea
+        """
+        u,v,r = symbols("u v r")
+        X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
+        s = self.getSurfaceArea(X,u,v)
+        print(s)
+
+        X = [cos(u)*cos(v),cos(u)*sin(v),cos(v)**2]
+        s = self.getSurfaceArea(X,u,v)
+        print(s)
+
+        X = [cos(u)**3*cos(v)**3,cos(u)**3*sin(v)**3,sin(u)**3]
+        # s = self.getSurfaceArea(X,u,v)
+        # print(latex(s))
+
+        
+        
+        return
+
+    def spherialTriangle(self):
+        """
+        docstring for spherialTriangle
+        """
+        a,b,c = symbols("a b c")
+
+        p = (a+b+c)/2 
+        # s1 = sin(p)*sin(p-a)/(sin(c)*sin(b)-(cos(p-a))**2*sin(p-b)*sin(p-c))
+        # s2 = sin(p)*sin(p-b)/(sin(c)*sin(a)-(cos(p-b))**2*sin(p-a)*sin(p-c))
+        bc = (cos(b-c)-cos(a))/2
+        a2 = (1+cos(b+c)*cos(a)+sin(b+c)*sin(a))/2
+        s = (sin(c)*sin(b)-a2*bc)*bc
+        s = s.expand().trigsimp()
+        print(s)
+        print("----")
+        print(latex(s))
+
+
+        return
+
+    def getWedge(self,x,y):
+        """
+        docstring for getWedge
+        x,y:
+            1d array with length 3
+        """
+        getMat = lambda i,j: x[i]*y[j] - x[j]*y[i]
+
+        wedge = []
+        wedge.append(getMat(1,2))
+        wedge.append(-getMat(0,2))
+        wedge.append(getMat(0,1))
+
+        return wedge
+
+    def getSecondForm(self,X,u,v,trig=True):
+        """
+        docstring for getSecondForm
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+        Xuu = self.diffVector(Xu,u)
+        Xuv = self.diffVector(Xu,v)
+        Xvv = self.diffVector(Xv,v)
+
+        # normal vector
+        N = self.getWedge(Xu,Xv)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)]) 
+        if trig:
+            E = dotProd(Xu,Xu).trigsimp()
+            F = dotProd(Xu,Xv).trigsimp()
+            G = dotProd(Xv,Xv).trigsimp()
+        else:
+            E = dotProd(Xu,Xu).expand().factor()
+            F = dotProd(Xu,Xv).expand().factor()
+            G = dotProd(Xv,Xv).expand().factor()
+        S = E*G-F**2 
+        if trig:
+            S = S.expand().trigsimp()
+            s = sqrt(S).expand().trigsimp()
+        else:
+            S = S.simplify()
+            s = sqrt(S).simplify()
+        # print(Xu)
+        # print(Xv)
+        print("S:", latex(S),latex(s))
+
+        if trig:
+            e = (dotProd(N,Xuu)/s).trigsimp()
+            f = (dotProd(N,Xuv)/s).trigsimp()
+            g = (dotProd(N,Xvv)/s).trigsimp()
+        else:
+            e = (dotProd(N,Xuu)/s).expand().factor()
+            f = (dotProd(N,Xuv)/s).expand().factor()
+            g = (dotProd(N,Xvv)/s).expand().factor()
+
+        K = (e*g-f**2)/S
+        H = (e*G-2*f*F+g*E)/(2*S)
+
+        if trig:
+            K = K.expand().trigsimp()
+            H = H.expand().trigsimp()
+        else:
+            K = K.expand().expand().factor()
+            H = H.expand().expand().factor()
+
+        print("-----------------------------------")
+        print("-----------------------------------")
+        print("-----------------------------------")
+        # print("e",e)
+        print("e & = & %s\\\\"%(latex(e)))
+        print("f & = & %s\\\\"%(latex(f)))
+        print("g & = & %s\\\\"%(latex(g)))
+        print("E & = & %s\\\\"%(latex(E)))
+        print("F & = & %s\\\\"%(latex(F)))
+        print("G & = & %s\\\\"%(latex(G)))
+        print("K & = & %s\\\\"%(latex(K)))
+        print("H & = & %s"%(latex(H)))
+
+        return K,H
+
+    def secondForm(self):
+        """
+        docstring for secondForm
+        """
+        u,v,r,a = symbols("u v r a")
+        # X = [r*sin(u)*cos(v),r*sin(u)*sin(v),r*cos(u)]
+        # K,H = self.getSecondForm(X,u,v)
+
+        # X = [(a+r*cos(u))*cos(v),(a+r*cos(u))*sin(v),r*sin(u)]
+        # K,H = self.getSecondForm(X,u,v)
+
+        X = [u-u**3/3+u*v**2,v-v**3/3+v*u**2,u**2-v**2]
+        K,H = self.getSecondForm(X,u,v,trig=False)
+
+        return
+
+    def getXYSol(self,a,b,x1=1,y1=1,N=int(1e4)):
+        """
+        docstring for getXYSol
+        a,b denotes x'(0) and y'(0)
+        """
+        dt = 1/N
+
+        gamma121 = lambda x,y: 2*y/(1+y*y+x*x)
+        gamma122 = lambda x,y: 2*x/(1+y*y+x*x)
+
+        X  = [x1,x1+a*dt]
+        Y  = [y1,y1+b*dt] 
+
+        length = 0
+        for i in range(N-1):
+
+            dx = X[-1]-X[-2]
+            dy = Y[-1]-Y[-2]
+            dz = X[-1]*Y[-1] - X[-2]*Y[-2]
+            length += (dx*dx+dy*dy+dz*dz)**0.5
+
+            res = dx*dy
+            x = gamma121(X[-2],Y[-2])*res 
+            x = 2*X[-1] - X[-2] - x 
+            y = gamma122(X[-2],Y[-2])*res
+            y = 2*Y[-1] - Y[-2] - y
+            X.append(x)
+            Y.append(y)
+
+        return X,Y,length
+
+    def xyGeodesic(self):
+        """
+        docstring for xyGeodesic
+        z = xy
+        (1,1,1) -> (2,3,6)
+        """
+
+        getError = lambda a,b,c,d: ((a-b)**2+(c-d)**2)**0.5
+         
+        N = int(1e4)
+
+        a1,b1 = 1.7,2.5
+        delta = 0.02
+        data = []
+        p = 100
+        n,m = 11,11
+        for i in range(n):
+            for j in range(m):
+                a = a1 + i*delta
+                b = b1 + j*delta
+                X,Y,length = self.getXYSol(a,b,N=N)
+                error = getError(X[-1],2,Y[-1],3)
+                if error < p:
+                    p = error
+                    A,B = a,b
+                    L  = length
+                res = [a,b,X[-1],Y[-1],length,error]
+                data.append(res)
+
+
+        print("a,b,error and length: ",A,B,p,L)
+        X,Y,length = self.getXYSol(A,B,N=N)
+        print(X[-1],Y[-1])
+        X = np.array(X)
+        Y = np.array(Y)
+        Z = X*Y
+        # print(Z[-100:])
+        T = np.arange(N+1)
+
+        self.plot3D(X,Y,Z)
+
+        
+        return
+
+    def plot3D(self,X,Y,Z,show=False):
+        """
+        docstring for plot3D
+        """
+
+        from mpl_toolkits.mplot3d import Axes3D
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        ax.plot(X,Y,Z, label='parametric curve')
+
+        # plt.plot(T,X)
+        # plt.plot(T,Y)
+        if show:
+            plt.show()
+
+        return ax
+    def getChrisSymbols(self,X,u,v,trig=True):
+        """
+        docstring for getChrisSymbols
+        """
+        Xu = self.diffVector(X,u)
+        Xv = self.diffVector(X,v)
+
+        dotProd = lambda X,Y: sum([x*y for x,y in zip(X,Y)]) 
+        if trig:
+            E = dotProd(Xu,Xu).trigsimp()
+            F = dotProd(Xu,Xv).trigsimp()
+            G = dotProd(Xv,Xv).trigsimp()
+        else:
+            E = dotProd(Xu,Xu).expand().factor()
+            F = dotProd(Xu,Xv).expand().factor()
+            G = dotProd(Xv,Xv).expand().factor()
+
+        # Gamma 111,112,121,122,221,222
+        Eu = E.diff(u)/2
+        Ev = E.diff(v)/2
+        Fu = F.diff(u)
+        Fv = F.diff(v)
+        Gu = G.diff(u)/2
+        Gv = G.diff(v)/2
+        s = E*G-F**2
+        s = s.expand().simplify()
+        efg = Matrix([[G,-F],[-F,E]])/s
+        g11 = efg*Matrix([Eu,Fu-Ev])
+        g12 = efg*Matrix([Ev,Gu])
+        g22 = efg*Matrix([Fv-Gu,Gv])
+        Gamma = []
+        print(g11)
+        Gamma.append(g11[0,0])
+        Gamma.append(g11[1,0])
+        Gamma.append(g12[0,0])
+        Gamma.append(g12[1,0])
+        Gamma.append(g22[0,0])
+        Gamma.append(g22[1,0])
+        # print(g11)
+        # print(g12)
+        # print(g22)
+
+        return Gamma 
+
+    def christoffel(self):
+        """
+        docstring for christoffel
+        """
+        u,v,r = symbols("u v r")
+        a,b,c = 1,1,1
+        X = [a*sin(u)*cos(v),b*sin(u)*sin(v),c*cos(u)]
+        Gamma = self.getChrisSymbols(X,u,v)
+        print(Gamma)
+
+        X = [u,v,u*v]
+
+        Gamma = self.getChrisSymbols(X,u,v)
+
+
+        print(Gamma)
+        return
+
+    def getMullerPotential(self,x,y):
+        """
+        docstring for getMullerPotential
+        x,y:
+            float values
+        """
+        # parameters
+        A  = [-200,-100,-170,15]
+        a  = [-1,-1,-6.5,0.7]
+        b  = [0,0,11,0.6]
+        c  = [-10,-10,-6.5,0.7]
+        x0 = [1,0,-0.5,-1]
+        y0 = [0,0.5,1.5,1]
+
+        # value of the function and the derivatives
+
+        res = 0
+        fx  = 0 
+        fy  = 0
+        fxx = 0
+        fxy = 0
+        fyy = 0
+
+        for i in range(4):
+            dx   = x - x0[i]
+            dy   = y - y0[i]
+            B    = a[i]*dx*dx+b[i]*dx*dy + c[i]*dy*dy
+            res1 = A[i]*np.exp(B)
+            res += res1
+            cx   = 2*a[i]*dx + b[i]*dy
+            cy   = 2*c[i]*dy + b[i]*dx
+            fx  += cx*res1
+            fy  += cy*res1
+            fxx += (2*a[i]+cx*cx)*res1
+            fxy += (b[i]+cx*cy)*res1
+            fyy += (2*c[i]+cx*cx)*res1
+
+
+        values = [res,fx,fy,fxx,fxy,fyy]
+
+        return values
+
+    def searchSol(self,A,n,C,func):
+        """
+        docstring for searchSol
+        A:
+            [a1,b1,delta,x1,y1]
+        n:
+            integer
+        B:
+            [x,y]
+        func:
+            function
+        """
+        getError = lambda a,b,c,d: ((a-b)**2+(c-d)**2)**0.5
+         
+        N = int(1e4)
+
+        a1,b1,delta,x1,y1 = A
+        p = 1000
+        m = n
+        A,B = 0,0
+        for i in range(n):
+            for j in range(m):
+                print("i,j = %d,%d"%(i,j),A,B,p)
+                a = a1 + i*delta
+                b = b1 + j*delta
+                X,Y,length = func(x1,y1,a,b)
+                error = getError(X[-1],C[0],Y[-1],C[1])
+                if error < p:
+                    p = error
+                    A,B = a,b
+                    L  = length
+                    X1 = X 
+                    Y1 = Y
+                    print("final point",X[-1],Y[-1])
+
+        print("a,b,error and length: ",A,B,p,L)
+
+        return A,B,L,X1,Y1
+
+    def getMullerSol(self,x1,y1,a,b,N=int(1e4)):
+        """
+        docstring for getMullerSol
+        a,b denotes x'(0) and y'(0)
+        """
+        dt = 1/N
+
+        X  = [x1,x1+a*dt]
+        Y  = [y1,y1+b*dt] 
+
+        length = 0
+        total = 10*N
+        for i in range(total):
+
+            dx = X[-1]-X[-2]
+            dy = Y[-1]-Y[-2]
+            dz = X[-1]*Y[-1] - X[-2]*Y[-2]
+            length += (dx*dx+dy*dy+dz*dz)**0.5
+
+            values = self.getMullerPotential(X[-2],Y[-2])
+            fx,fy,fxx,fxy,fyy = values[1:]
+            s = 1+fx*fx+fy*fy 
+            g111 = fx*fxx/s
+            g121 = fx*fxy/s
+            g221 = fx*fyy/s
+            g112 = fy*fxx/s
+            g122 = fy*fxy/s
+            g222 = fy*fyy/s
+            x = g111*dx*dx+2*g121*dx*dy+g221*dy*dy
+            x = 2*X[-1] - X[-2] - x 
+            y = g112*dx*dx+2*g122*dx*dy+g222*dy*dy
+            y = 2*Y[-1] - Y[-2] - y
+            X.append(x)
+            Y.append(y)
+
+        return X,Y,length
+
+    def mullerPotential(self):
+        """
+        docstring for mullerPotential
+        """
+        x,y = -0.1,1.5
+        dt = 1e-4
+        for i in range(10):
+            values = self.getMullerPotential(x,y)
+            x = x - dt*values[1]
+            y = y - dt*values[2]
+
+        print(x,y,i,values[:3])
+        # print(self.getMullerPotential(-0.558,1.442)[:3])
+        # print(self.getMullerPotential(0.623,0.028)[:3])
+
+        print("geodesic of Muller surface")
+
+        x1,y1 = -0.558,1.442
+        a1,b1 = -5,-5
+        delta = 2
+        n = 0
+        A = [a1,b1,delta,x1,y1]
+        B = [0.623,0.028]
+        # A,B,L,X,Y = self.searchSol(A,n,B,self.getMullerSol)
+        # print(X[:100])
+        a,b = 1,-1
+        X,Y,L = self.getMullerSol(x1,y1,a,b,N=30000)
+        print(X[-1],Y[-1],L)
+        Z = []
+        X1,Y1 = [],[]
+        for i in range(0,len(X),1000):
+            x,y = X[i],Y[i]
+            # res = self.getMullerPotential(x,y)
+            # Z.append(res[0])
+            X1.append(x)
+            Y1.append(y)
+        # print(Z[-10:])
+        # self.plot3D(X1, Y1, Z)
+        plt.plot(X1,Y1)
+        plt.show()
+
+        return
+
+
+    def mobiusStrip(self):
+        """
+        docstring for mobiusStrip
+        """
+        print("get the curvature of the mobius strip")
+        u,v,r = symbols("u v r")
+        X = [(1+v*cos(u/2)/2)*cos(u),
+             (1+v*cos(u/2)/2)*sin(u),
+             v*sin(u/2)/2]
+
+        self.getSecondForm(X,u,v)
+
+        return
+
+    def plot3DSurface(self,X,Y,Z,show=False):
+        """
+        docstring for plot3DSurface
+        """
+        fig = plt.figure()
+        ax = fig.gca(projection='3d')
+
+        # Make data.
+
+        # Plot the surface.
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+                               linewidth=0, antialiased=False)
+
+        # Customize the z axis.
+        # ax.set_zlim(-1.01, 1.01)
+        # ax.zaxis.set_major_locator(LinearLocator(10))
+        # ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+        # # Add a color bar which maps values to colors.
+        # fig.colorbar(surf, shrink=0.5, aspect=5)
+
+        if show:
+            plt.show()
+
+
+        return ax
+
+    def mullerSurface(self):
+        """
+        docstring for mullerSurface
+        """
+        X = np.arange(-0.6, 0.7, 0.05)
+        Y = np.arange(-0.1, 1.5, 0.05)
+        n,m = len(X),len(Y)
+        X, Y = np.meshgrid(X, Y)
+        Z = np.zeros((m,n))
+        # print(X.shape,Y.shape,n,m)
+        # print(X[:5,:5])
+        for i in range(m):
+            for j in range(n):
+                print(i,j)
+                Z[i,j] = self.getMullerPotential(X[i,j],Y[i,j])[0]
+
+        ax = self.plot3DSurface(X, Y, Z)
+        x1,y1,a,b = 0.6,0.03,-0.2,0.2
+        X,Y,L = self.getMullerSol(x1,y1,a,b,N=10000)
+        Z = []
+        for i,j in zip(X,Y):
+            Z.append(self.getMullerPotential(i,j)[0])
+        # self.plot3D(X, Y, Z)
+        ax.plot(X,Y,Z, label='parametric curve')
+
+        plt.show()
+
+
+        return
+
+    def checkSign(self,eight,sign,j=0):
+        """
+        docstring for checkSign
+        """
+        a,b,c,d,e,f,g = sign
+        signs = [[1,1,1,1,1,1,1,1],
+                 [-1,1,a,-a,b,-b,c,-c],
+                 [-1,-a,1,a,d,e,-d,-e],
+                 [-1,a,-a,1,f,g,-g,-f],
+                 [-1,-b,-d,-f,1,b,d,f],
+                 [-1,b,-e,-g,-b,1,g,e],
+                 [-1,-c,d,g,-d,-g,1,c],
+                 [-1,c,e,f,-f,-e,-c,1]]
+        signs = Matrix(signs)
+        self.eight = Matrix.zeros(8)
+        for i in range(8):
+            for j in range(8):
+                self.eight[i,j] = eight[i,j]*signs[i,j]
+        number = 0 
+        for i in range(8):
+            res = 0 
+            for k in range(8):
+                res += eight[j,k]*eight[i,k]*signs[i,k]*signs[j,k]
+            if res == 0:
+                number += 1
+        if number == 7:
+            return True 
+        else:
+            return False
+
+    def eightSquares(self):
+        """
+        docstring for eightSquares
+        """
+
+        x = symbols("x0:9")
+        eight = [[x[1],x[2],x[3],x[4],x[5],x[6],x[7],x[8]],
+                 [x[2],x[1],x[4],x[3],x[6],x[5],x[8],x[7]],
+                 [x[3],x[4],x[1],x[2],x[7],x[8],x[5],x[6]],
+                 [x[4],x[3],x[2],x[1],x[8],x[7],x[6],x[5]],
+                 [x[5],x[6],x[7],x[8],x[1],x[2],x[3],x[4]],
+                 [x[6],x[5],x[8],x[7],x[2],x[1],x[4],x[3]],
+                 [x[7],x[8],x[5],x[6],x[3],x[4],x[1],x[2]],
+                 [x[8],x[7],x[6],x[5],x[4],x[3],x[2],x[1]]]
+        eight = Matrix(eight)
+        sol1 = []
+        combi = itertools.product([-1,1],repeat=7)
+        for line in combi:
+            sol1.append(list(line))
+        # print(sol1)
+        for i,sign in enumerate(sol1):
+            count = 0
+            for j in range(8):
+                if self.checkSign(eight,sign,j=j):
+                    count += 1 
+                else:
+                    break 
+            if count == 8:
+                print(i,sign)
+            break
+
+        sign = [1, 1, 1, 1, -1, -1, -1] 
+        self.checkSign(eight,sign,j=0)
+        print(self.eight)
+        for i in range(8):
+            for j in range(i+1,8):
+                res = 0 
+                for k in range(8):
+                    res += self.eight[i,k]*self.eight[j,k]
+                print(i,j,res)
+        print(latex(self.eight))
+
+        return 
+
+    def getPolyRootCoef(self,Xu,k):
+        """
+        docstring for getPolyRootCoef
+        relations between the coefficients and the root
+        Xu:
+            1d array, [X,u1,u2]
+        k:
+            integer between 1 and len(X)
+        """
+        X,u1,u2,w = Xu
+        n = len(X)
+        s = 0
+        combi = itertools.combinations(np.arange(n),k)
+        for line in combi:
+            res = 1
+            for i in line:
+                res = res*X[i]
+            s += res 
+        res = s.expand().collect([u1,u2])
+        res = Poly(res,[u1,u2]).as_dict()
+        for key in res:
+            dicts = {}
+            for i in range(n):
+                dicts[i] = 0 
+            s = res[key]
+            s = Poly(s,w).as_dict()
+            for key0 in s:
+                dicts[key0[0]%n] += s[key0]
+
+            print(key,list(dicts.values()))
+
+        return  
+    def deMoivreQuintic(self):
+        """
+        docstring for deMoivreQuintic
+        0&=&x^{5}+5ax^{3}+5a^{2}x+b
+        """
+        a = 1
+        b = 1 
+        w = np.exp(2*np.pi*1j/5)
+        m = (b*b + 4*a**5)**0.5 
+        u1 = (-b+m)**(1/5)
+        u2 = -(b+m)**(1/5)
+        print(u1,u2)
+
+        X = []
+        for i in range(5):
+            x = u1*w**i + u2*w**(4*i)
+            X.append(x)
+            print(i,x**5+5*a*x**3+5*a**2*x+b)
+        print(X)
+
+        w,u1,u2 = symbols("w u1 u2")
+        # w = exp(2*pi*I/5)
+        n = 5 
+        X = []
+        for i in range(n):
+            X.append(u1*w**i + u2*w**(4*i))
+         
+        k = 5
+        Xu = [X,u1,u2,w]
+        self.getPolyRootCoef(Xu,k)
+        
+
+        return 
 
     def test(self):
         """
@@ -3847,7 +4791,23 @@ class Puzzles(Algorithms):
         # self.hexaCode()
         # self.sphericalCrown()
         # self.getGCoef()
-        self.golayCode()
+        # self.golayCode()
+        # self.steinerSystem()
+        # self.steiner45n()
+        # self.steiner5824()
+        # self.origamiCubic()
+        # self.curvature()
+        # self.surfaceArea()
+        # self.spherialTriangle()
+        # self.secondForm()
+        # self.xyGeodesic()
+        # self.christoffel()
+        # self.mullerPotential()
+        # self.mobiusStrip()
+        # self.mullerSurface()
+        # self.eightSquares()
+        self.deMoivreQuintic()
+
 
         return
 
