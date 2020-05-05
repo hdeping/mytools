@@ -5135,6 +5135,19 @@ class Formulas(EllipticCurve):
 
         return res 
 
+    def getDecimalLength2(self,n):
+        """
+        docstring for getDecimalLength2
+        n should not be even
+        """
+        if n%2 == 0 or n%5 == 0:
+            return 0 
+        count = 1 
+        s = 10 
+        while s != 1:
+            s = (10*s)%n 
+            count += 1
+        return count
     def getPascalTriangle(self,n):
         """
         docstring for getPascalTriangle
