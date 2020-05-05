@@ -32,8 +32,9 @@ from scipy import integrate as inte
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from Formulas import Formulas
 
-class Puzzles(Algorithms):
+class Puzzles(Algorithms,Formulas):
     """
     solutions for math puzzles
     """
@@ -4819,7 +4820,7 @@ class Puzzles(Algorithms):
         """
         w,u1,u2 = symbols("w u1 u2")
         # w = exp(2*pi*I/5)
-        n = 13
+        n = 6
         X = []
         W = []
         for i in range(n):
@@ -4833,20 +4834,20 @@ class Puzzles(Algorithms):
             self.getPolyRootCoef(Xu,k)
         return
 
-    def highOrderEqnByMat(self):
+    def highOrderEqnByMat(self,p=6):
         """
         docstring for highOrderEqnByMat
         """
-        p = Integer(13)
+        p = Integer(p)
 
         S = []
         n = (p-1)//2 
-        p = Symbol("p")
+        # p = Symbol("p")
         for i in range(1,n+1):
             num = factorial(2*i)/(factorial(i))**2
             S.append(p*num)
 
-        print(S)
+        # print("S",S)
 
         A = []
         A.append(-S[0]/2)
@@ -4858,10 +4859,45 @@ class Puzzles(Algorithms):
 
             num = (-S[i]-res)/(2*i+2)
             A.append(num)
-            print(i,num.factor())
-        # print(A)
+            # print(i,num.factor())
+        print(A)
 
             
+        return
+
+    def trigoSolveEqn(self):
+        """
+        docstring for trigoSolveEqn
+        """
+        theta,x = symbols("theta x")
+        y = cos(theta) + I*sin(theta)
+        n = 6 
+        y = y**n
+        y = y.expand().subs(I,x)
+        y = Poly(y,x).as_dict()
+        # print(y)
+        x1 = y[(0,)].subs(sin(theta)**2,1-x**2)
+        x1 = x1.subs(cos(theta),x).expand()
+        y1 = y[(1,)].subs(cos(theta)**2,1-x**2)
+        y1 = y1.subs(sin(theta),x).expand()
+        print(x1)
+        print(y1)
+
+        # print(self.testSinNx())
+        x,y = [],[]
+        for n in range(1,300):
+            m = 2*n+1
+            k = self.getDecimalLength2(m)
+            if k>0:
+                phi = self.getEulerPhi(m)
+                res = phi/k
+                print(n,m,k,res)
+                x.append(n)
+                y.append(res)
+        # print(self.getSinNx(n))
+        plt.plot(x,y,"o")
+        plt.show()
+
         return
     def test(self):
         """
@@ -4871,8 +4907,9 @@ class Puzzles(Algorithms):
         # self.eightSquares()
         # self.deMoivreQuintic()
         # self.highOrderEqn()
-        self.highOrderEqnByMat()
-
+        # for p in range(3,20):
+        #     self.highOrderEqnByMat(p=p)
+        self.trigoSolveEqn()
 
         return
 
