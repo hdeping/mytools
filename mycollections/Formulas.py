@@ -2976,6 +2976,20 @@ class Formulas(EllipticCurve):
         print("\\sin(%dx) & = & %s \\\\"%(n,latex(res)))
         return
 
+    def getCosNX(self,n):
+        """
+        docstring for getCosNX
+        """
+        theta,x = symbols("theta x")
+        y = cos(theta) + sympy.I*sin(theta)
+        y = y**n
+        y = y.expand().subs(sympy.I,x)
+        y = Poly(y,x).as_dict()
+        # print(y)
+        x1 = y[(0,)].subs(sin(theta)**2,1-x**2)
+        x1 = x1.subs(cos(theta),x).expand()
+        return x1
+
     def testSinNX(self):
         """
         docstring for testSinNX
