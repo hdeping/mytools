@@ -4869,20 +4869,45 @@ class Puzzles(Algorithms,Formulas):
         """
         docstring for trigoSolveEqn
         """
-        theta,x = symbols("theta x")
-        y = cos(theta) + I*sin(theta)
-        n = 6 
-        y = y**n
-        y = y.expand().subs(I,x)
-        y = Poly(y,x).as_dict()
-        # print(y)
-        x1 = y[(0,)].subs(sin(theta)**2,1-x**2)
-        x1 = x1.subs(cos(theta),x).expand()
-        y1 = y[(1,)].subs(cos(theta)**2,1-x**2)
-        y1 = y1.subs(sin(theta),x).expand()
-        print(x1)
-        print(y1)
+        for i in range(1,20):
+            s = self.getCosNX(i)
+            s = Poly(s).as_dict()
+            res = []
+            for key in s:
+                if key[0] == 0:
+                    continue
+                value = s[key]/(2**(key[0]-1))
+                res.append(value)
+            print(i,res)
 
+        n,x = symbols("n x")
+        y = cos(n*acos(x))
+        y_  = y.diff(x)
+        y__ = y_.diff(x)
+        # print(y__)
+        s = (1-x*x)*y__ - x*y_
+        s = s.trigsimp()
+        print(s)
+
+
+        return
+
+    def chebychefAndEqn(self):
+        """
+        docstring for chebychefAndEqn
+        """
+        a = [17, 204, 714, 1122, 935, 442, 119, 17, 1]
+        res = []
+        while len(a) > 0:
+            res.append(a.pop())
+            res.append(0)
+        print(res)
+        return
+        
+    def testDecimalLength(self):
+        """
+        docstring for testDecimalLength
+        """
         # print(self.testSinNx())
         x,y = [],[]
         for n in range(1,300):
@@ -4897,8 +4922,8 @@ class Puzzles(Algorithms,Formulas):
         # print(self.getSinNx(n))
         plt.plot(x,y,"o")
         plt.show()
-
         return
+
     def test(self):
         """
         docstring for test
@@ -4909,7 +4934,8 @@ class Puzzles(Algorithms,Formulas):
         # self.highOrderEqn()
         # for p in range(3,20):
         #     self.highOrderEqnByMat(p=p)
-        self.trigoSolveEqn()
+        # self.trigoSolveEqn()
+        self.chebychefAndEqn()
 
         return
 
