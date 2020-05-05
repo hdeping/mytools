@@ -1533,6 +1533,38 @@ class Puzzles(Algorithms):
         # self.testLucasSum()
         # self.testIntegral()
         # self.testExpCos()
+
+        # self.testRamaMagicSquare()
+        # self.testArctanSqrt()
+        # self.testFermatNum()
+        # self.testABCConjecture()
+        # self.testCollatz()
+        # self.tangentPower()
+        # self.arctanIntegral()
+        # self.getEulerNumbers()
+        # self.sphericalPacking()
+        # self.thetaSeries()
+        # self.testPolytope()
+        # self.hexaCode()
+        # self.sphericalCrown()
+        # self.getGCoef()
+        # self.golayCode()
+        # self.steinerSystem()
+        # self.steiner45n()
+        # self.steiner5824()
+        # self.origamiCubic()
+
+        # about differential geometry
+
+        # self.curvature()
+        # self.surfaceArea()
+        # self.spherialTriangle()
+        # self.secondForm()
+        # self.xyGeodesic()
+        # self.christoffel()
+        # self.mullerPotential()
+        # self.mobiusStrip()
+        # self.mullerSurface()
         
         return
 
@@ -4779,56 +4811,67 @@ class Puzzles(Algorithms):
             X.append(x)
             print(i,x,x**5+5*a*x**3+5*a**2*x+b)
 
+        return 
+
+    def highOrderEqn(self):
+        """
+        docstring for highOrderEqn
+        """
         w,u1,u2 = symbols("w u1 u2")
         # w = exp(2*pi*I/5)
-        n = 7
+        n = 13
         X = []
+        W = []
         for i in range(n):
-            X.append(u1*w**i + u2*w**(3*i))
+            W.append(w**i)
+        for i in range(n):
+            X.append(u1*W[i] + u2*W[(-i)%n])
          
         Xu = [X,u1,u2,w]
         for k in range(1,n+1):
             print("------ k = %d ------"%(k))
             self.getPolyRootCoef(Xu,k)
-        
+        return
 
-        return 
+    def highOrderEqnByMat(self):
+        """
+        docstring for highOrderEqnByMat
+        """
+        p = Integer(13)
 
+        S = []
+        n = (p-1)//2 
+        p = Symbol("p")
+        for i in range(1,n+1):
+            num = factorial(2*i)/(factorial(i))**2
+            S.append(p*num)
+
+        print(S)
+
+        A = []
+        A.append(-S[0]/2)
+
+        for i in range(1,n):
+            res = 0 
+            for j in range(i):
+                res += S[i-j-1]*A[j]
+
+            num = (-S[i]-res)/(2*i+2)
+            A.append(num)
+            print(i,num.factor())
+        # print(A)
+
+            
+        return
     def test(self):
         """
         docstring for test
         """
 
-        # self.testRamaMagicSquare()
-        # self.testArctanSqrt()
-        # self.testFermatNum()
-        # self.testABCConjecture()
-        # self.testCollatz()
-        # self.tangentPower()
-        # self.arctanIntegral()
-        # self.getEulerNumbers()
-        # self.sphericalPacking()
-        # self.thetaSeries()
-        # self.testPolytope()
-        # self.hexaCode()
-        # self.sphericalCrown()
-        # self.getGCoef()
-        # self.golayCode()
-        # self.steinerSystem()
-        # self.steiner45n()
-        # self.steiner5824()
-        # self.origamiCubic()
-        # self.curvature()
-        # self.surfaceArea()
-        # self.spherialTriangle()
-        # self.secondForm()
-        # self.xyGeodesic()
-        # self.christoffel()
-        # self.mullerPotential()
-        # self.mobiusStrip()
-        # self.mullerSurface()
         # self.eightSquares()
-        self.deMoivreQuintic()
+        # self.deMoivreQuintic()
+        # self.highOrderEqn()
+        self.highOrderEqnByMat()
 
 
         return
