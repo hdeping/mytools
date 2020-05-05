@@ -4706,6 +4706,38 @@ class Puzzles(Algorithms):
 
         return 
 
+    def getPolyRootCoef(self,Xu,k):
+        """
+        docstring for getPolyRootCoef
+        relations between the coefficients and the root
+        Xu:
+            1d array, [X,u1,u2]
+        k:
+            integer between 1 and len(X)
+        """
+        X,u1,u2,w = Xu
+        n = len(X)
+        s = 0
+        combi = itertools.combinations(np.arange(n),k)
+        for line in combi:
+            res = 1
+            for i in line:
+                res = res*X[i]
+            s += res 
+        res = s.expand().collect([u1,u2])
+        res = Poly(res,[u1,u2]).as_dict()
+        for key in res:
+            dicts = {}
+            for i in range(n):
+                dicts[i] = 0 
+            s = res[key]
+            s = Poly(s,w).as_dict()
+            for key0 in s:
+                dicts[key0[0]%n] += s[key0]
+
+            print(key,list(dicts.values()))
+
+        return  
     def deMoivreQuintic(self):
         """
         docstring for deMoivreQuintic
@@ -4727,19 +4759,19 @@ class Puzzles(Algorithms):
         print(X)
 
         w,u1,u2 = symbols("w u1 u2")
+        # w = exp(2*pi*I/5)
+        n = 5 
         X = []
-        for i in range(5):
+        for i in range(n):
             X.append(u1*w**i + u2*w**(4*i))
-        print(X)
-        res = 1 
-        for x in X:
-            res = res*x 
-        res = res.expand().collect([u1,u2])
-        # print(latex(res))
-        res = Poly(res,[u1,u2]).as_dict()
-        print(res)
+         
+        k = 5
+        Xu = [X,u1,u2,w]
+        self.getPolyRootCoef(Xu,k)
+        
 
         return 
+
     def test(self):
         """
         docstring for test
