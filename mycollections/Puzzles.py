@@ -4706,6 +4706,24 @@ class Puzzles(Algorithms):
 
         return 
 
+    def checkOmega(self,omega):
+        """
+        docstring for checkOmega
+        omega:
+            1d array, such as [1,1,1,1,1]
+        return:
+            integer or list
+            [a,b,b,b,b,...] => a-b
+            or => omega 
+        """
+
+        for i in omega[2:]:
+            if i != omega[1]:
+                return omega 
+        num = omega[0] - omega[1]
+
+        return num 
+
     def getPolyRootCoef(self,Xu,k):
         """
         docstring for getPolyRootCoef
@@ -4734,8 +4752,9 @@ class Puzzles(Algorithms):
             s = Poly(s,w).as_dict()
             for key0 in s:
                 dicts[key0[0]%n] += s[key0]
-
-            print(key,list(dicts.values()))
+            num = self.checkOmega(list(dicts.values()))
+            if num != 0:
+                print(key,num)
 
         return  
     def deMoivreQuintic(self):
@@ -4747,27 +4766,30 @@ class Puzzles(Algorithms):
         b = 1 
         w = np.exp(2*np.pi*1j/5)
         m = (b*b + 4*a**5)**0.5 
-        u1 = (-b+m)**(1/5)
-        u2 = -(b+m)**(1/5)
+        u1 = ((-b+m)/2)**(1/5)
+        u2 = -((b+m)/2)**(1/5)
         print(u1,u2)
 
         X = []
+        W = []
         for i in range(5):
-            x = u1*w**i + u2*w**(4*i)
+            W.append(w**i)
+        for i in range(5):
+            x = u1*W[i] + u2*W[(4*i)%5]
             X.append(x)
-            print(i,x**5+5*a*x**3+5*a**2*x+b)
-        print(X)
+            print(i,x,x**5+5*a*x**3+5*a**2*x+b)
 
         w,u1,u2 = symbols("w u1 u2")
         # w = exp(2*pi*I/5)
-        n = 5 
+        n = 7
         X = []
         for i in range(n):
-            X.append(u1*w**i + u2*w**(4*i))
+            X.append(u1*w**i + u2*w**(3*i))
          
-        k = 5
         Xu = [X,u1,u2,w]
-        self.getPolyRootCoef(Xu,k)
+        for k in range(1,n+1):
+            print("------ k = %d ------"%(k))
+            self.getPolyRootCoef(Xu,k)
         
 
         return 
