@@ -4901,7 +4901,25 @@ class Puzzles(Algorithms,Formulas):
         while len(a) > 0:
             res.append(a.pop())
             res.append(0)
-        print(res)
+        res[-1] = 1
+        print(res,len(res))
+
+        n = 17 
+        w = np.exp(2*np.pi*1j/n)
+        m = (res[-1]**2 + 4)**0.5 
+        u1 = ((-res[-1]+m)/2)**(1/n)
+        u2 = -((res[-1]+m)/2)**(1/n)
+        print(u1,u2)
+
+        X = []
+        W = []
+        for i in range(17):
+            W.append(w**i)
+        for i in range(n):
+            x = u1*W[i] + u2*W[(-i)%n]
+            X.append(x)
+            value = self.getPolynomialValues(res,x)
+            print(i,x,abs(value))
         return
         
     def testDecimalLength(self):
@@ -4924,6 +4942,43 @@ class Puzzles(Algorithms,Formulas):
         plt.show()
         return
 
+    def testHn(self):
+        """
+        docstring for testHn
+        from (Almost) Impossible series
+        """
+        
+        H = [0]
+        n = 1000
+        for i in range(1,n+1):
+            x = H[-1] + 1/i 
+            H.append(x)
+        # print(H)
+        H = np.array(H[1:])
+        N = np.arange(1,n+1)
+        A = H/N
+        res = sum(A**2)
+        # 17*zeta(4)/4
+        print(res,360*res/np.pi**4)
+
+        res = sum(H/N**3)
+        # 5*zeta(4)/4
+        print(res,np.pi**4/res)
+        print(sum(A))   
+
+        F = [1,1]
+        count = 1 
+        res = 0
+        for i in range(1000):
+            res = res + count/(F[-1]*F[-2])
+            count = - count
+            F.append(F[-1]+F[-2])     
+        print(res,(5**0.5-1)/2)
+
+
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -4935,7 +4990,8 @@ class Puzzles(Algorithms,Formulas):
         # for p in range(3,20):
         #     self.highOrderEqnByMat(p=p)
         # self.trigoSolveEqn()
-        self.chebychefAndEqn()
+        # self.chebychefAndEqn()
+        self.testHn()
 
         return
 
