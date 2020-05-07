@@ -40,6 +40,7 @@ var points = [];
 var center = [width/2,height/2];
 var x,y,phi;
 var radius  =  center[1] - 50;
+// 1-4th point
 for(var i = 0; i < 4; i ++)
 { 
     phi = theta[i]*Math.PI/180;
@@ -80,12 +81,23 @@ points[2] = [x + center[0],y + center[1]];
 
 var ii,jj,kk;
 var scale = 600;
+// 5-8th point
 for(var i = 0; i < 4; i ++)
 { 
     ii = (i+3)%4;
     jj = i%4;
     kk = (i+1)%4;
     p = getBisectionPoint(points[ii],points[jj],points[kk],scale);
+    points.push(p);
+}
+
+var insCircle = getQuadCircle(points);
+// 9-12th point
+for(var i = 0; i < 4; i ++)
+{ 
+    jj = (i+1)%4;
+    ii = i%4;
+    p = getOrthoPointByPoints(insCircle,points[ii],points[jj]);
     points.push(p);
 }
 
@@ -98,7 +110,8 @@ var tags = ["A","B","C","D","E","F","G",
 var lines = [];
 var indeces = [[0,1],[1,2],[2,3],
               [0,3],[0,4],[1,5],[2,6],
-              [3,7]];
+              [3,7],[8,10],[9,11],
+              [0,2],[1,3]];
 var dashes = [];
 
 var colors = [];
@@ -116,10 +129,16 @@ for(var i = 4; i < 8; i ++)
     dashes[i] = [1,2];
     colors[i] = "orange";
 }
+for(var i = 8; i < 12; i ++)
+{
+    dashes[i] = [2,3];
+    colors[i] = "green";
+}
 
 var circles = [[center[0],center[1],radius]];
 // get inscribed circle
-circles.push(getQuadCircle(points));
+circles.push(insCircle);
+
 var circle = svg.selectAll("circle")
                 .data(circles)
                 .enter()
