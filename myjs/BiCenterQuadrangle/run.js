@@ -35,7 +35,7 @@ var svg = d3.select("#tree").append("svg")
 // points A,B,C,D,E,F,G
 // 
 
-var theta = [-70,-160,30,-20];
+var theta = [-120,-160,30,-20];
 var points = [];
 var center = [width/2,height/2];
 var x,y,phi;
@@ -47,6 +47,36 @@ for(var i = 0; i < 4; i ++)
     y = radius*Math.sin(phi) + center[1];
     points.push([x,y]);
 }
+// B and D should be in the same height
+var a,b,c;
+c = points[1][0] - center[0];
+var l1 = getDist(points[0],points[1]);
+var l2 = getDist(points[0],points[3]);
+a = Math.abs(l1 - l2)/2;
+b = Math.sqrt(c*c-a*a);
+console.log(a,b,c);
+console.log(getQuadraticRoots(1,-1,-1));
+// interception of x^2+y^2 = r^2
+// and ()^2-()^2 = 1
+var A,B,C,y0;
+y0 = points[1][1] - center[1];
+A = c*c;
+B = -2*a*a*y0;
+C = Math.pow(a*y0,2)-b*b*(radius*radius-a*a);
+var x,y;
+y = getQuadraticRoots(A,B,C);
+console.log("y = ",y);
+if (y[0] >= 0) {
+  y = y[0];
+}
+else{
+  y = y[1];
+}
+x = Math.sqrt(radius*radius - y*y);
+if (l1 < l2) {
+  x = -x;
+}
+points[2] = [x + center[0],y + center[1]];
 
 var ii,jj,kk;
 var scale = 600;
@@ -87,14 +117,22 @@ for(var i = 4; i < 8; i ++)
     colors[i] = "orange";
 }
 
-var circle1 = [1];
+var circles = [[center[0],center[1],radius]];
+// get inscribed circle
+circles.push(getQuadCircle(points));
 var circle = svg.selectAll("circle")
-                .data(circle1)
+                .data(circles)
                 .enter()
                 .append("circle")
-                .attr("cx",center[0])
-                .attr("cy",center[1])
-                .attr("r",radius)
+                .attr("cx",function (d,i) {
+                  return circles[i][0];
+                })
+                .attr("cy",function (d,i) {
+                  return circles[i][1];
+                })
+                .attr("r",function (d,i) {
+                  return circles[i][2];
+                })
                 .attr("stroke-width",2)
                 .attr("stroke","blue");
 
