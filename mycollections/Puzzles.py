@@ -4979,6 +4979,21 @@ class Puzzles(Algorithms,Formulas):
 
 
         return
+
+    def testSolveEqn(self):
+        """
+        docstring for testSolveEqn
+        """
+
+        for i in range(2,20):
+            res = []
+            for j in range(1,i//2+1):
+                num  = self.getCombinator(i-j,j)
+                num += self.getCombinator(i-j-1,j-1)
+                res.append(num)
+            print(i,res)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -4991,7 +5006,8 @@ class Puzzles(Algorithms,Formulas):
         #     self.highOrderEqnByMat(p=p)
         # self.trigoSolveEqn()
         # self.chebychefAndEqn()
-        self.testHn()
+        # self.testHn()
+        self.testSolveEqn()
 
         return
 
