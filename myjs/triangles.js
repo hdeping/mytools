@@ -98,3 +98,60 @@ function getOrthoCenter(i,j,k) {
   return getLineInter(line1,line2);
 
 }
+function getBisectionPoint (p1,p2,p3,scale) {
+  // get a point on the bisection line 
+  // scale is the length scale
+
+  var line1 = getNormVector(p2,p1);
+  var line2 = getNormVector(p2,p3);
+  var bisection = [];
+  var x;
+  for(var i = 0; i < line1.length; i ++)
+  {
+      x  = scale*(line1[i]+line2[i])/2;
+      x += p2[i];
+      bisection.push(x);
+  }
+
+
+  return bisection;
+
+}
+
+function getVector (p1,p2) {
+  // vector from p1 to p2 
+
+  var res = [];
+  for(var i = 0; i < p1.length; i ++)
+  {
+      res.push(p2[i] - p1[i]);
+  }
+  return res;
+
+}
+
+function getNormVector (p1,p2) {
+  // vector from p1 to p2 
+  
+  var res = getVector(p1,p2);
+  var length = getVecLength(res);
+
+  for(var i = 0; i < res.length; i ++)
+  {
+      res[i] = res[i]/length;
+  }
+
+  return res;
+
+}
+
+function getVecLength (res) {
+  var length = 0;
+  for(var i = 0; i < res.length; i ++)
+  {
+      length += Math.pow(res[i],2);
+  }
+
+  length = Math.sqrt(length);
+  return length;
+}
