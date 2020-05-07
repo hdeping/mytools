@@ -59,6 +59,12 @@ function getDet2 (a,b,c,d) {
   // |c d|
   return a*d-b*c;
 } 
+function getVecDet2 (v1,v2) {
+  // get the determinant of 2*2 matrix
+  // |a b|
+  // |c d|
+  return getDet2(v1[0],v1[1],v2[0],v2[1]);
+} 
 function getLineInter (line1,line2) {
   // get the intersection point of the two lines 
   var A = getDet2(line1[1],line1[2],line2[1],line2[2]);
@@ -118,6 +124,11 @@ function getBisectionPoint (p1,p2,p3,scale) {
 
 }
 
+function getBisectionLine (p1,p2,p3) {
+    var p = getBisectionPoint(p1,p2,p3,1);
+    return getLineEqn(p2,p);
+}
+
 function getVector (p1,p2) {
   // vector from p1 to p2 
 
@@ -154,4 +165,47 @@ function getVecLength (res) {
 
   length = Math.sqrt(length);
   return length;
+}
+
+function getDist (p1,p2) {
+  // get the distance between two points
+  var vec = getVector(p1,p2);
+  return getVecLength(vec);
+}
+
+function getQuadraticRoots (a,b,c) {
+    var delta = Math.sqrt(b*b-4*a*c);
+    var res = [];
+    res.push((-b+delta)/(2*a));
+    res.push((-b-delta)/(2*a));
+    return res;
+}
+
+function getTriArea (p1,p2,p3) {
+
+  var v1 = getVector(p1,p2);
+  var v2 = getVector(p1,p3);
+  var area = getVecDet2(v1,v2);
+  return Math.abs(area/2);
+
+}
+function getQuadArea (p) {
+    // p: four points
+    var a1 = getTriArea(p[0],p[1],p[2]);
+    var a2 = getTriArea(p[0],p[2],p[3]);
+    return a1+a2;
+}
+function getQuadCircle (p) {
+  // p: four points 
+  // r = 2S/(a+b+c+d)
+  var a = getDist(p[0],p[1]);
+  var c = getDist(p[2],p[3]);
+  var area = getQuadArea (p);
+  var radius = area/(a+c);
+
+  // intersection of two bisections
+  var line1 = getBisectionLine(p[0],p[1],p[2]);
+  var line2 = getBisectionLine(p[1],p[2],p[3]);
+  var p1 = getLineInter(line1,line2);
+  return [p1[0],p1[1],radius];
 }
