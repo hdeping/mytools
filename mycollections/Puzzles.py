@@ -5111,6 +5111,21 @@ class Puzzles(Algorithms,Formulas):
                     self.sixEqn(p,q)
         
         return
+
+    def testQuartic(self):
+        """
+        docstring for testQuartic
+        """
+        
+        arr = self.solveQuartic([1,0,0,-8,6])
+        print(arr)
+        print(arr[1]**4-8*arr[1]+6)
+        arr = [1,8,24,-112,52]
+        res = self.solveQuartic(arr)
+        print(res)
+        print(self.getPolynomialValues(arr,res[1]))
+        return
+
     def test(self):
         """
         docstring for test
@@ -5125,10 +5140,7 @@ class Puzzles(Algorithms,Formulas):
         # self.chebychefAndEqn()
         # self.testHn()
         # self.testSolveEqn()
-        # self.testGalois2()
-        arr = self.solveQuartic([1,0,0,-8,6])
-        print(arr)
-        print(arr[1]**4-8*arr[1]+6)
+        self.testGalois2()
 
 
         return
