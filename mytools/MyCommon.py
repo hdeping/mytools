@@ -191,7 +191,7 @@ class MyCommon():
         return:
             data, array type, strings line by line
         """
-        fp = open(filename,'r')
+        fp = open(filename,'r',encoding="ISO-8859-2")
         data = fp.read()
         fp.close()
         data = data.split("\n")
