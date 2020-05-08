@@ -573,7 +573,8 @@ class Puzzles(Algorithms,Formulas):
         A = 8*a*c - 3*b*b 
         C = b**3-4*a*b*c+8*d*a*a
         B = (b*b-4*a*c)**2 + 2*b*C - 64*e*a**3
-        arr = [1,A,B,C*C]
+        arr = [1,A,B,-C*C]
+        self.getCubicSol(arr)
         y1,y2,y3 = self.solveCubic(arr)
         print(arr,"C = ",C)
         print("y1 = ",y1)
@@ -584,11 +585,10 @@ class Puzzles(Algorithms,Formulas):
         y1 = y1**0.5
         y2 = y2**0.5
         y3 = y3**0.5
-        print(y1,y2,y3)
-        C = y1*y2*y3 
-        if C.imag is not 0:
-            y1 = -y1*1j
+        if C < 0:
+            y1 = -y1
         print("y1y2y3 = ",y1*y2*y3)
+        print("y1,y2,y3",y1,y2,y3)
         x1 = (-b-y1-y2-y3)/(4*a)
         x2 = (-b+y1+y2-y3)/(4*a)
         x3 = (-b+y1-y2+y3)/(4*a)
@@ -4820,16 +4820,26 @@ class Puzzles(Algorithms,Formulas):
         """
         w,u1,u2 = symbols("w u1 u2")
         # w = exp(2*pi*I/5)
-        n = 6
+        n = 5
         X = []
         W = []
         for i in range(n):
             W.append(w**i)
-        for i in range(n):
-            X.append(u1*W[i] + u2*W[(-i)%n])
-         
-        Xu = [X,u1,u2,w]
+
+        combi = itertools.permutations(np.arange(2,5),3)
+        for line in combi:
+            for i in range(n):
+                ii,jj,kk = 2,3,4
+                x  = u1*W[i] + u2*W[(ii*i)%n]
+                x += u1**2*W[(jj*i)%n] + u2**2*W[(kk*i)%n]
+                X.append(x)
+             
+            Xu = [X,u1,u2,w]
+            print(line)
+            self.getPolyRootCoef(Xu,2)
+
         for k in range(1,n+1):
+            break
             print("------ k = %d ------"%(k))
             self.getPolyRootCoef(Xu,k)
         return
@@ -4994,6 +5004,113 @@ class Puzzles(Algorithms,Formulas):
             print(i,res)
         
         return
+
+    def getQuinticEqn(self,c,d):
+        """
+        docstring for getQuinticEqn
+        """
+        x = Symbol("x")
+        delta = d**4+256*c**5 
+
+        if sqrt(delta).is_integer or sqrt(delta/5).is_integer:
+            s = x**3-5*c*x**2+15*c**2*x+5*c**3 
+            s = s**2 - delta*x 
+            sol = solve(s)[0]
+            if sol.is_integer:
+                print(c,d,sol)
+            return sol
+        else:
+            return False
+
+    def sixEqn(self,c,d):
+        """
+        docstring for sixEqn
+        """
+        x = Symbol("x")
+        c,d = Integer(c),Integer(d)
+        c = c/5
+        s = x**3-5*c*x**2+15*c**2*x+5*c**3 
+        s = s**2 - (d**4+256*c**5)*x 
+        print(s.factor())
+
+        return s
+
+    def getQuinticEqn2(self,c,d):
+        """
+        docstring for getQuinticEqn2
+        """
+        s = self.sixEqn(c,d)
+        x = solve(s)[0]
+        y = sqrt(x)/5 
+        r = d*y/(25*y*y-c)
+        v = (3*y**3-c*y-r*r)/(2*y)
+        w = (3*y**3-c*y+r*r)/(2*y)
+        M = (v+y*y)*r/(2*y)
+        m1 = M*M+y**5
+        m2 = M*M-y**5
+        print("x,y,r,v,w = ",x,y,r,v,w)
+        print(M,m1,m2)
+        return
+    def testGalois2(self):
+        """
+        docstring for testGalois2
+        """
+        print(self.getEqnDet([0,0,0,15,-44]))
+        x = 0
+        for i in [54,12,648]:
+            x += i**(1/5)
+        x -= 144**(1/5)
+        print(x,x**5+330*x)
+        x = Symbol("x")
+        # 3,+/-44, 3,+/-12
+        c = 3 
+        d = -12
+        
+        n = 20
+        combi = itertools.permutations(np.arange(-n,n),2)
+        for line in combi:
+            c,d = line
+            if c == 0 or d == 0:
+                continue
+            break 
+
+        for d in range(1,100):
+            n = self.getQuinticEqn(3,d) 
+            if n:
+                print(n)
+        print(self.getQuinticEqn(15,12))
+
+        lines = [[-80,128],
+         [-55,88],
+         [-55,176],
+         [-5,4],
+         [-5,12],
+         [11,44],
+         [20,16],
+         [20,32],
+         [95,76],
+         [145,232],
+         [220,176]]
+        for line in lines:
+            c,d = line 
+            print(line)
+            self.sixEqn(c,d)
+
+
+        f = lambda p,q:256*p**5 + 3125*q**4 
+        N = 500
+        for p in tqdm(range(-N,N)):
+            for q in range(N):
+                res = f(p,q)
+                # print(p,q,res)
+                # if res == 0:
+                #     print("0: ",p,q,res)
+                # if sqrt(res).is_integer:
+                if sqrt(res).is_integer or sqrt(res/5).is_integer:
+                    print("square: ",p,q,res)
+                    self.sixEqn(p,q)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -5007,7 +5124,12 @@ class Puzzles(Algorithms,Formulas):
         # self.trigoSolveEqn()
         # self.chebychefAndEqn()
         # self.testHn()
-        self.testSolveEqn()
+        # self.testSolveEqn()
+        # self.testGalois2()
+        arr = self.solveQuartic([1,0,0,-8,6])
+        print(arr)
+        print(arr[1]**4-8*arr[1]+6)
+
 
         return
 
