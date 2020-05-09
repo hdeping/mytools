@@ -5247,6 +5247,30 @@ class Puzzles(Algorithms,Formulas):
                     output = output[:-4]
                 print(output)
 
+        pf,ph,px,py = symbols("pf ph px py")
+        dicts = {}
+        dicts[(1,1,2)] = - pf/2/py
+        dicts[(2,2,1)] = - ph/2/px
+        dicts[(1,1,1)] = pf/2/px
+        dicts[(2,2,2)] = ph/2/py
+        dicts[(1,2,1)] = pf/2/py
+        dicts[(1,2,2)] = ph/2/px
+        newG = lambda i,j,k: (i,j,k) if i < j else (j,i,k)
+
+        for (i,j) in prod(2):
+            res = 0 
+            for (p,k) in prod(2):
+                A = dicts[newG(i,p,k)]*dicts[newG(k,j,p)]
+                B = dicts[newG(k,p,k)]*dicts[newG(i,j,p)]
+                res += A - B
+            output = latex(res)
+            # output = output.replace("pf",r"{\partial{\ln f}}")
+            # output = output.replace("ph",r"{\partial{\ln h}}")
+            # output = output.replace("px",r"{\partial x}")
+            # output = output.replace("py",r"{\partial y}")
+            print(output)
+
+
 
         return
     def test(self):
