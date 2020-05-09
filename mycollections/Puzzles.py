@@ -5031,7 +5031,7 @@ class Puzzles(Algorithms,Formulas):
         c = c/5
         s = x**3-5*c*x**2+15*c**2*x+5*c**3 
         s = s**2 - (d**4+256*c**5)*x 
-        print(s.factor())
+        # print(s.factor())
 
         return s
 
@@ -5040,17 +5040,61 @@ class Puzzles(Algorithms,Formulas):
         docstring for getQuinticEqn2
         """
         s = self.sixEqn(c,d)
+        c = c/Integer(5)
         x = solve(s)[0]
+        if not sqrt(x).is_integer:
+            return
         y = sqrt(x)/5 
         r = d*y/(25*y*y-c)
         v = (3*y**3-c*y-r*r)/(2*y)
         w = (3*y**3-c*y+r*r)/(2*y)
-        M = (v+y*y)*r/(2*y)
-        m1 = M*M+y**5
-        m2 = M*M-y**5
-        print("x,y,r,v,w = ",x,y,r,v,w)
-        print(M,m1,m2)
-        return
+        M1 = (v+y*y)*r/(2*y)
+        M2= (w+y*y)*r/(2*y)
+        M1 = M1.simplify()
+        M2 = M2.simplify()
+        m1 = M1*M1+y**5
+        m2 = M2*M2-y**5
+        # print("x,y,r,v,w = ",x,y,r,v,w)
+        # print(M,m1,m2)
+        m1 = m1.simplify()
+        m2 = m2.simplify()
+        res1  = -(M1-sqrt(m1))**(1/Integer(5))
+        res2  = -(M2+sqrt(m2))**(1/Integer(5))
+        res3  = -(M2-sqrt(m2))**(1/Integer(5))
+        res4  = -(M1+sqrt(m1))**(1/Integer(5))
+        print("x = ",x)
+        print("u_1 &=& %s\\\\"%(latex(res1)))
+        print("u_2 &=& %s\\\\"%(latex(res2)))
+        print("u_3 &=& %s\\\\"%(latex(res3)))
+        print("u_4 &=& %s"%(latex(res4)))
+
+        return res1,res2
+
+    def getQuinticEqn3(self,c,d):
+        """
+        docstring for getQuinticEqn2
+        """
+        s = self.sixEqn(c,d)
+        c = c/5
+        x = solve(s)[0]
+        print("x = ",x)
+        y = x/5.0
+        r = d*y/(25*y*y-c)
+        v = (3*y**3-c*y-r*r)/(2*y)
+        w = (3*y**3-c*y+r*r)/(2*y)
+        M1 = (v+y*y)*r/(2*y)
+        M2= (w+y*y)*r/(2*y)
+        m1 = M1*M1+y**5
+        m2 = M2*M2-y**5
+        # print("x,y,r,v,w = ",x,y,r,v,w)
+        print("M,m = ",M1,M2,m1,m2)
+        res   = -(M1-m1**0.5)**(1/5)
+        res  += -(M1+m1**0.5)**(1/5)
+        res  += -(M2+m2**0.5)**(1/5)
+        res  += -(M2-m2**0.5)**(1/5)
+        print(self.getPolynomialValues([1,0,0,0,c,d],res))
+
+        return res
     def testGalois2(self):
         """
         docstring for testGalois2
@@ -5080,35 +5124,42 @@ class Puzzles(Algorithms,Formulas):
                 print(n)
         print(self.getQuinticEqn(15,12))
 
-        lines = [[-80,128],
-         [-55,88],
-         [-55,176],
-         [-5,4],
-         [-5,12],
-         [11,44],
-         [20,16],
-         [20,32],
-         [95,76],
-         [145,232],
-         [220,176]]
+        lines = [[-405,2916],
+                 [-80,384],
+                 [-5,4],
+                 [-5,12],
+                 [11,44],
+                 [15,-44],
+                 [20,16],
+                 [20,32],
+                 [176,1408],
+                 [320,1024],
+                 [330,4170]]
+
         for line in lines:
             c,d = line 
             print(line)
-            self.sixEqn(c,d)
+            # self.sixEqn(c,d)
+            self.getQuinticEqn2(c,d)
 
 
-        f = lambda p,q:256*p**5 + 3125*q**4 
-        N = 500
-        for p in tqdm(range(-N,N)):
-            for q in range(N):
-                res = f(p,q)
-                # print(p,q,res)
-                # if res == 0:
-                #     print("0: ",p,q,res)
-                # if sqrt(res).is_integer:
-                if sqrt(res).is_integer or sqrt(res/5).is_integer:
-                    print("square: ",p,q,res)
-                    self.sixEqn(p,q)
+        self.getQuinticEqn2(-5,12)
+        self.getQuinticEqn3(-5,12)
+        self.getQuinticEqn2(15,12)
+
+        c,d = -5,12
+        s5 = 5**0.5
+        a = 2*s5/5 
+        b = 9/5 
+        e = 99*s5/125
+        k = 1
+        res = []
+        res.append(-(k+a+(b+e)**0.5)**(0.2))
+        res.append(-(k-a+(b+e)**0.5)**(0.2))
+        res.append(-(k+a+(b-e)**0.5)**(0.2))
+        res.append(-(k-a+(b-e)**0.5)**(0.2))
+        res = sum(res)
+        print(res,res**5+c*res+d)
         
         return
 
@@ -5124,8 +5175,25 @@ class Puzzles(Algorithms,Formulas):
         res = self.solveQuartic(arr)
         print(res)
         print(self.getPolynomialValues(arr,res[1]))
+
         return
 
+    def testGalois3(self):
+        """
+        docstring for testGalois3
+        """
+        f = lambda p,q:256*p**5+q**4 
+        for i in range(1,10000):
+            for j in range(10000,1,-1):
+                a = f(i,j)
+                if a < 0:
+                    break
+                x = int((a+0.01)**0.5)
+                if a == x*x:
+                    print(i,j,a,x,x*x)
+                    self.getQuinticEqn2(5*i,12)
+
+        return
     def test(self):
         """
         docstring for test
@@ -5140,7 +5208,8 @@ class Puzzles(Algorithms,Formulas):
         # self.chebychefAndEqn()
         # self.testHn()
         # self.testSolveEqn()
-        self.testGalois2()
+        # self.testGalois2()
+        self.testGalois3()
 
 
         return
