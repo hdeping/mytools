@@ -5194,6 +5194,54 @@ class Puzzles(Algorithms,Formulas):
                     self.getQuinticEqn2(5*i,12)
 
         return
+
+    def getGamma(self,i,j,k,form=0):
+        """
+        docstring for getGamma
+        """
+        gammas = "\\Gamma_{%d%d}^{%d}"
+        if i > j:
+            i,j = j,i 
+        res = gammas % (i,j,k)
+        dicts = {}
+        if form:
+            return res
+        return res 
+
+    def getRiemannianCurvature(self):
+        """
+        docstring for getRiemannianCurvature
+        get Riemannian Curvature
+        """
+        N = 2
+        prod = lambda n:itertools.product(np.arange(1,N+1),repeat = n)
+        arr = prod(2)
+        string = "\\partial_%d%s -\\partial_%d%s +"
+
+        for (i,j) in arr:
+            print("i,j = ",i,j)
+            output = ""
+            for k in range(1,N+1):
+                res = []
+                res.append(self.getGamma(k,j,k))
+                res.append(self.getGamma(i,j,k))
+                output += string%(i,res[0],k,res[1])
+            print(output + "\\\\")
+            for (p,k) in prod(2):
+                res = []
+                res.append(self.getGamma(i,p,k,form=1))
+                res.append(self.getGamma(k,j,p,form=1))
+                res.append(self.getGamma(k,p,k,form=1))
+                res.append(self.getGamma(i,j,p,form=1))
+                output = "%s%s - %s%s +"%(tuple(res))
+                if k % 2 == 0:
+                    output += "\\\\"
+                if k+p == 2*N:
+                    output = output[:-4]
+                print(output)
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -5209,7 +5257,8 @@ class Puzzles(Algorithms,Formulas):
         # self.testHn()
         # self.testSolveEqn()
         # self.testGalois2()
-        self.testGalois3()
+        # self.testGalois3()
+        self.getRiemannianCurvature()
 
 
         return
