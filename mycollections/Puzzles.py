@@ -5219,7 +5219,7 @@ class Puzzles(Algorithms,Formulas):
         docstring for getRiemannianCurvature
         get Riemannian Curvature
         """
-        N = 2
+        N = 4
         prod = lambda n:itertools.product(np.arange(1,N+1),repeat = n)
         arr = prod(2)
         string = "\\partial_%d%s -\\partial_%d%s +"
@@ -5248,6 +5248,8 @@ class Puzzles(Algorithms,Formulas):
                 print(output)
 
         pf,ph,px,py = symbols("pf ph px py")
+        pff = symbols("pf0:5")
+        pxx = symbols("px0:5")
         dicts = {}
         dicts[(1,1,2)] = - pf/2/py
         dicts[(2,2,1)] = - ph/2/px
@@ -5255,20 +5257,42 @@ class Puzzles(Algorithms,Formulas):
         dicts[(2,2,2)] = ph/2/py
         dicts[(1,2,1)] = pf/2/py
         dicts[(1,2,2)] = ph/2/px
+
+        delta = lambda i,j: 1 if i == j else 0 
+        for (i,j) in itertools.combinations(np.arange(N+1),2):
+            i = i + 1
+            for k in range(1,N+1):
+                if i == j:
+                    if k == i:
+                        res = pff[k]/2/pxx[k]
+                    else:
+                        res = -pff[i]/2/pxx[k]
+                else:
+                    res  = delta(i,k)*pff[k]/2/pxx[j]
+                    res += delta(j,k)*pff[k]/2/pxx[i]
+                dicts[(i,j,k)] = res
+                print(i,j,k,res)
+
+            print(i,j)
         newG = lambda i,j,k: (i,j,k) if i < j else (j,i,k)
 
+        results = {}
         for (i,j) in prod(2):
             res = 0 
             for (p,k) in prod(2):
-                A = dicts[newG(i,p,k)]*dicts[newG(k,j,p)]
+                # A = dicts[newG(i,p,k)]*dicts[newG(k,j,p)]
+                A = dicts[newG(j,p,k)]*dicts[newG(i,k,p)]
                 B = dicts[newG(k,p,k)]*dicts[newG(i,j,p)]
                 res += A - B
-            output = latex(res)
+            # output = latex(res)
             # output = output.replace("pf",r"{\partial{\ln f}}")
             # output = output.replace("ph",r"{\partial{\ln h}}")
             # output = output.replace("px",r"{\partial x}")
             # output = output.replace("py",r"{\partial y}")
-            print(output)
+            print(i,j,str(res))
+            results[(i,j)] = str(res)
+            # break
+        print(results[(1,2)] == results[(2,1)])
 
 
 
