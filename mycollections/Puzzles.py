@@ -5204,8 +5204,14 @@ class Puzzles(Algorithms,Formulas):
             i,j = j,i 
         res = gammas % (i,j,k)
         dicts = {}
+        dicts[(1,1,2)] = r"-\frac{1}{2}\frac{\partial\ln f}{\partial y}"
+        dicts[(2,2,1)] = r"-\frac{1}{2}\frac{\partial\ln h}{\partial x}"
+        dicts[(1,1,1)] = r"\frac{1}{2}\frac{\partial\ln f}{\partial x}"
+        dicts[(2,2,2)] = r"\frac{1}{2}\frac{\partial\ln h}{\partial y}"
+        dicts[(1,2,1)] = r"\frac{1}{2}\frac{\partial\ln f}{\partial y}"
+        dicts[(1,2,2)] = r"\frac{1}{2}\frac{\partial\ln h}{\partial x}"
         if form:
-            return res
+            return dicts[(i,j,k)]
         return res 
 
     def getRiemannianCurvature(self):
@@ -5227,12 +5233,13 @@ class Puzzles(Algorithms,Formulas):
                 res.append(self.getGamma(i,j,k))
                 output += string%(i,res[0],k,res[1])
             print(output + "\\\\")
+            form = 0
             for (p,k) in prod(2):
                 res = []
-                res.append(self.getGamma(i,p,k,form=1))
-                res.append(self.getGamma(k,j,p,form=1))
-                res.append(self.getGamma(k,p,k,form=1))
-                res.append(self.getGamma(i,j,p,form=1))
+                res.append(self.getGamma(i,p,k,form=form))
+                res.append(self.getGamma(k,j,p,form=form))
+                res.append(self.getGamma(k,p,k,form=form))
+                res.append(self.getGamma(i,j,p,form=form))
                 output = "%s%s - %s%s +"%(tuple(res))
                 if k % 2 == 0:
                     output += "\\\\"
