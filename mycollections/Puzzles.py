@@ -5442,14 +5442,30 @@ class Puzzles(Algorithms,Formulas):
 
         print(mat)
         f = self.getCombinator 
-        m = 6
+        m = 20
         dicts = {}
         dicts[(0,2)] = 1
+
+        res = []
+        series = []
         for i in range(m-1):
             dicts = self.liftCombi(dicts,-i-2)
             arr = np.array(list(dicts.values()))
             A = latex(Matrix(np.flip(arr)).transpose())
-            print(i+2,A)
+            # print(i+2,A)
+            for j in arr:
+                if sqrt(j).is_integer:
+                    print(j,sqrt(j))
+            if len(arr) > 2:
+                res.append(arr[-2:])
+                series.append(Integer(arr[2]))
+
+        for k,[i,j] in enumerate(res):
+            print(k,Integer(-j)*(k+2)*(2*k+5)/i)
+        for i in range(1,len(series)):
+            print(i,series[i]/series[i-1])
+
+
         for i in range(m,N):
             break
             num = 0
@@ -5458,6 +5474,7 @@ class Puzzles(Algorithms,Formulas):
             print(i,i-m,mat[i,i-m],num)
         
         return
+
     def test(self):
         """
         docstring for test
