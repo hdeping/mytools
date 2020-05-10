@@ -5229,17 +5229,17 @@ class Puzzles(Algorithms,Formulas):
             output = ""
             for k in range(1,N+1):
                 res = []
-                res.append(self.getGamma(k,j,k))
                 res.append(self.getGamma(i,j,k))
+                res.append(self.getGamma(k,j,k))
                 output += string%(i,res[0],k,res[1])
             print(output + "\\\\")
             form = 0
             for (p,k) in prod(2):
                 res = []
-                res.append(self.getGamma(i,p,k,form=form))
-                res.append(self.getGamma(k,j,p,form=form))
                 res.append(self.getGamma(k,p,k,form=form))
                 res.append(self.getGamma(i,j,p,form=form))
+                res.append(self.getGamma(i,p,k,form=form))
+                res.append(self.getGamma(k,j,p,form=form))
                 output = "%s%s - %s%s +"%(tuple(res))
                 if k % 2 == 0:
                     output += "\\\\"
@@ -5281,8 +5281,8 @@ class Puzzles(Algorithms,Formulas):
             res = 0 
             for (p,k) in prod(2):
                 # A = dicts[newG(i,p,k)]*dicts[newG(k,j,p)]
-                A = dicts[newG(j,p,k)]*dicts[newG(i,k,p)]
-                B = dicts[newG(k,p,k)]*dicts[newG(i,j,p)]
+                B = dicts[newG(j,p,k)]*dicts[newG(i,k,p)]
+                A = dicts[newG(k,p,k)]*dicts[newG(i,j,p)]
                 res += A - B
             # output = latex(res)
             # output = output.replace("pf",r"{\partial{\ln f}}")
@@ -5296,6 +5296,113 @@ class Puzzles(Algorithms,Formulas):
 
 
 
+        return
+
+    def testEinsteinpy(self):
+        """
+        docstring for testEinsteinpy
+        """
+        import numpy as np
+        from astropy import units as u
+        from einsteinpy.coordinates import SphericalDifferential, CartesianDifferential
+        from einsteinpy.metric import Schwarzschild
+
+
+        M = 5.972e24 * u.kg
+        sph_coord = SphericalDifferential(306.0 * u.m, 
+                                  np.pi/2 * u.rad, -np.pi/6*u.rad,
+                                  0*u.m/u.s, 0*u.rad/u.s, 1900*u.rad/u.s)
+        obj = Schwarzschild.from_coords(sph_coord, M , 0* u.s)
+        cartsn_coord = CartesianDifferential(.265003774 * u.km, -153.000000e-03 * u.km,  0 * u.km,
+                  145.45557 * u.km/u.s, 251.93643748389 * u.km/u.s, 0 * u.km/u.s)
+        obj = Schwarzschild.from_coords(cartsn_coord, M , 0* u.s)
+        end_tau = 0.01 # approximately equal to coordinate time
+        stepsize = 0.3e-6
+        ans = obj.calculate_trajectory(end_lambda=end_tau, OdeMethodKwargs={"stepsize":stepsize})
+        # print(ans)
+
+        import numpy as np
+        from astropy import units as u
+        from einsteinpy.coordinates import BoyerLindquistDifferential
+        from einsteinpy.metric import Kerr
+        from einsteinpy.bodies import Body
+        from einsteinpy.geodesic import Geodesic
+
+        spin_factor = 0.3 * u.m
+        Attractor = Body(name="BH", mass = 1.989e30 * u.kg, a = spin_factor)
+        BL_obj = BoyerLindquistDifferential(50e5 * u.km, 
+                                            np.pi / 2 * u.rad, np.pi * u.rad,
+                                            0 * u.km / u.s, 0 * u.rad / u.s, 
+                                            0 * u.rad / u.s,
+                                            spin_factor)
+
+        Particle = Body(differential = BL_obj, parent = Attractor)
+        geodesic = Geodesic(body = Particle, 
+                            end_lambda = ((1 * u.year).to(u.s)).value / 930,
+                            step_size = ((0.02 * u.min).to(u.s)).value,
+                            metric=Kerr)
+
+        # from einsteinpy.plotting import GeodesicPlotter
+        # obj = GeodesicPlotter()
+        # obj.plot(geodesic)
+        data = geodesic.trajectory 
+        print(len(data),len(data[0]))
+        print(data.shape)
+        # obj.show()
+        print(np.min(data,axis=0),np.max(data,axis=0))
+        f = lambda i:np.log(np.abs(data[:,i]+1))
+        # f = lambda i:np.abs(data[:,i]+1)
+        # for i in range(1,8):
+        #     plt.plot(f(0),f(i),"-")
+        self.plot3D(f(0),f(1),f(2),show=True)
+        # plt.show()
+
+        return
+
+    def nPowSplit(self):
+        """
+        docstring for nPowSplit
+        n = n
+        n(n-1) = n^2 - n 
+        n(n-1)(n-2) = n^3-3n^2+2n
+
+        """
+        N = 15
+        mat = np.zeros((N,N),int)
+        mat[0,0] = 1 
+        for i in range(1,N):
+            mat[i,0] = 1
+            mat[i,1:i+1] = mat[i-1,1:i+1]-i*mat[i-1,0:i]
+        # get a new matrix
+        for i in range(N):
+            for j in range((i+1)//2):
+                mat[i,j],mat[i,i-j] = mat[i,i-j], mat[i,j]
+        mat0 = Matrix(mat)
+        mat = self.getInverseMatrix(mat)
+        mat2 = Matrix(mat)
+        # print(latex(mat0))
+        # print(latex(mat2))
+        # print(mat)
+        for i in range(4,6):
+            print(i,mat[:,i-1])
+        n = 8
+        coefs = Matrix.zeros(n)
+        B = Matrix.zeros(n)[:,0]
+        for i in range(n):
+            for j in range(n):
+                coefs[i,j] = (j+1)**(i+n)
+            B[i] = mat[n+i-1,n-1]
+        # print(coefs,B,coefs.det())
+        sol = coefs.solve(B).transpose()*factorial(n)
+        print(latex(sol))
+
+        print(mat)
+        f = self.getCombinator 
+        m = 3
+        for i in range(m,N):
+            num = f(i+2,4)*3 
+            num -= f(i+1,3)*2
+            print(i,i-m,mat[i,i-1],mat[i,i-m],num)
         return
     def test(self):
         """
@@ -5313,7 +5420,9 @@ class Puzzles(Algorithms,Formulas):
         # self.testSolveEqn()
         # self.testGalois2()
         # self.testGalois3()
-        self.getRiemannianCurvature()
+        # self.getRiemannianCurvature()
+        # self.testEinsteinpy()
+        self.nPowSplit()
 
 
         return
