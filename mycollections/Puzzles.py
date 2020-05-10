@@ -5359,6 +5359,50 @@ class Puzzles(Algorithms,Formulas):
 
         return
 
+    def liftCombi(self,dicts,K):
+        """
+        docstring for liftCombi
+        mC_{m+k}^{n}&=&\left(n+1\right)C_{m+k+1}^{n+1}-\left(k+1\right)C_{m+k}^{n}
+        (n,m) denotes the combinatorial number C(n,m)
+        return:
+            (m + k)*dicts
+        """
+        # indeces down
+        res = {}
+        for key in dicts:
+            k,n = key 
+            res[(k-1,n)] = dicts[key]
+        dicts = res
+
+        res = {}
+        # lift the indeces
+        for key in dicts:
+            k,n = key 
+            key1 = (k+1,n+1)
+            if key1 in res:
+                num = res[key1] + (n+1)*dicts[key]
+            else:
+                num = (n+1)*dicts[key]
+            res[key1] = num
+
+            if key in res:
+                num = res[key] - (k+1)*dicts[key]
+            else:
+                num = -(k+1)*dicts[key]
+            res[key] = num
+
+        # print(res) 
+        for key in dicts:
+            res[key] += dicts[key]*K
+        # lift indeces
+        dicts  = {}
+        for key in res:
+            k,n = key 
+            dicts[(k+1,n+1)] = res[key]
+
+
+        return dicts
+
     def nPowSplit(self):
         """
         docstring for nPowSplit
@@ -5398,11 +5442,21 @@ class Puzzles(Algorithms,Formulas):
 
         print(mat)
         f = self.getCombinator 
-        m = 3
+        m = 6
+        dicts = {}
+        dicts[(0,2)] = 1
+        for i in range(m-1):
+            dicts = self.liftCombi(dicts,-i-2)
+            arr = np.array(list(dicts.values()))
+            A = latex(Matrix(np.flip(arr)).transpose())
+            print(i+2,A)
         for i in range(m,N):
-            num = f(i+2,4)*3 
-            num -= f(i+1,3)*2
-            print(i,i-m,mat[i,i-1],mat[i,i-m],num)
+            break
+            num = 0
+            for j in range(m):
+                num += arr[j]*f(i+m-j,2*m-j)
+            print(i,i-m,mat[i,i-m],num)
+        
         return
     def test(self):
         """
