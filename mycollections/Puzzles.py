@@ -32,8 +32,9 @@ from scipy import integrate as inte
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from Formulas import Formulas
 
-class Puzzles(Algorithms):
+class Puzzles(Algorithms,Formulas):
     """
     solutions for math puzzles
     """
@@ -572,7 +573,8 @@ class Puzzles(Algorithms):
         A = 8*a*c - 3*b*b 
         C = b**3-4*a*b*c+8*d*a*a
         B = (b*b-4*a*c)**2 + 2*b*C - 64*e*a**3
-        arr = [1,A,B,C*C]
+        arr = [1,A,B,-C*C]
+        self.getCubicSol(arr)
         y1,y2,y3 = self.solveCubic(arr)
         print(arr,"C = ",C)
         print("y1 = ",y1)
@@ -583,11 +585,10 @@ class Puzzles(Algorithms):
         y1 = y1**0.5
         y2 = y2**0.5
         y3 = y3**0.5
-        print(y1,y2,y3)
-        C = y1*y2*y3 
-        if C.imag is not 0:
-            y1 = -y1*1j
+        if C < 0:
+            y1 = -y1
         print("y1y2y3 = ",y1*y2*y3)
+        print("y1,y2,y3",y1,y2,y3)
         x1 = (-b-y1-y2-y3)/(4*a)
         x2 = (-b+y1+y2-y3)/(4*a)
         x3 = (-b+y1-y2+y3)/(4*a)
@@ -1533,6 +1534,38 @@ class Puzzles(Algorithms):
         # self.testLucasSum()
         # self.testIntegral()
         # self.testExpCos()
+
+        # self.testRamaMagicSquare()
+        # self.testArctanSqrt()
+        # self.testFermatNum()
+        # self.testABCConjecture()
+        # self.testCollatz()
+        # self.tangentPower()
+        # self.arctanIntegral()
+        # self.getEulerNumbers()
+        # self.sphericalPacking()
+        # self.thetaSeries()
+        # self.testPolytope()
+        # self.hexaCode()
+        # self.sphericalCrown()
+        # self.getGCoef()
+        # self.golayCode()
+        # self.steinerSystem()
+        # self.steiner45n()
+        # self.steiner5824()
+        # self.origamiCubic()
+
+        # about differential geometry
+
+        # self.curvature()
+        # self.surfaceArea()
+        # self.spherialTriangle()
+        # self.secondForm()
+        # self.xyGeodesic()
+        # self.christoffel()
+        # self.mullerPotential()
+        # self.mobiusStrip()
+        # self.mullerSurface()
         
         return
 
@@ -4706,6 +4739,24 @@ class Puzzles(Algorithms):
 
         return 
 
+    def checkOmega(self,omega):
+        """
+        docstring for checkOmega
+        omega:
+            1d array, such as [1,1,1,1,1]
+        return:
+            integer or list
+            [a,b,b,b,b,...] => a-b
+            or => omega 
+        """
+
+        for i in omega[2:]:
+            if i != omega[1]:
+                return omega 
+        num = omega[0] - omega[1]
+
+        return num 
+
     def getPolyRootCoef(self,Xu,k):
         """
         docstring for getPolyRootCoef
@@ -4734,8 +4785,9 @@ class Puzzles(Algorithms):
             s = Poly(s,w).as_dict()
             for key0 in s:
                 dicts[key0[0]%n] += s[key0]
-
-            print(key,list(dicts.values()))
+            num = self.checkOmega(list(dicts.values()))
+            if num != 0:
+                print(key,num)
 
         return  
     def deMoivreQuintic(self):
@@ -4747,66 +4799,701 @@ class Puzzles(Algorithms):
         b = 1 
         w = np.exp(2*np.pi*1j/5)
         m = (b*b + 4*a**5)**0.5 
-        u1 = (-b+m)**(1/5)
-        u2 = -(b+m)**(1/5)
+        u1 = ((-b+m)/2)**(1/5)
+        u2 = -((b+m)/2)**(1/5)
         print(u1,u2)
 
         X = []
+        W = []
         for i in range(5):
-            x = u1*w**i + u2*w**(4*i)
+            W.append(w**i)
+        for i in range(5):
+            x = u1*W[i] + u2*W[(4*i)%5]
             X.append(x)
-            print(i,x**5+5*a*x**3+5*a**2*x+b)
-        print(X)
-
-        w,u1,u2 = symbols("w u1 u2")
-        # w = exp(2*pi*I/5)
-        n = 5 
-        X = []
-        for i in range(n):
-            X.append(u1*w**i + u2*w**(4*i))
-         
-        k = 5
-        Xu = [X,u1,u2,w]
-        self.getPolyRootCoef(Xu,k)
-        
+            print(i,x,x**5+5*a*x**3+5*a**2*x+b)
 
         return 
+
+    def highOrderEqn(self):
+        """
+        docstring for highOrderEqn
+        """
+        w,u1,u2 = symbols("w u1 u2")
+        # w = exp(2*pi*I/5)
+        n = 5
+        X = []
+        W = []
+        for i in range(n):
+            W.append(w**i)
+
+        combi = itertools.permutations(np.arange(2,5),3)
+        for line in combi:
+            for i in range(n):
+                ii,jj,kk = 2,3,4
+                x  = u1*W[i] + u2*W[(ii*i)%n]
+                x += u1**2*W[(jj*i)%n] + u2**2*W[(kk*i)%n]
+                X.append(x)
+             
+            Xu = [X,u1,u2,w]
+            print(line)
+            self.getPolyRootCoef(Xu,2)
+
+        for k in range(1,n+1):
+            break
+            print("------ k = %d ------"%(k))
+            self.getPolyRootCoef(Xu,k)
+        return
+
+    def highOrderEqnByMat(self,p=6):
+        """
+        docstring for highOrderEqnByMat
+        """
+        p = Integer(p)
+
+        S = []
+        n = (p-1)//2 
+        # p = Symbol("p")
+        for i in range(1,n+1):
+            num = factorial(2*i)/(factorial(i))**2
+            S.append(p*num)
+
+        # print("S",S)
+
+        A = []
+        A.append(-S[0]/2)
+
+        for i in range(1,n):
+            res = 0 
+            for j in range(i):
+                res += S[i-j-1]*A[j]
+
+            num = (-S[i]-res)/(2*i+2)
+            A.append(num)
+            # print(i,num.factor())
+        print(A)
+
+            
+        return
+
+    def trigoSolveEqn(self):
+        """
+        docstring for trigoSolveEqn
+        """
+        for i in range(1,20):
+            s = self.getCosNX(i)
+            s = Poly(s).as_dict()
+            res = []
+            for key in s:
+                if key[0] == 0:
+                    continue
+                value = s[key]/(2**(key[0]-1))
+                res.append(value)
+            print(i,res)
+
+        n,x = symbols("n x")
+        y = cos(n*acos(x))
+        y_  = y.diff(x)
+        y__ = y_.diff(x)
+        # print(y__)
+        s = (1-x*x)*y__ - x*y_
+        s = s.trigsimp()
+        print(s)
+
+
+        return
+
+    def chebychefAndEqn(self):
+        """
+        docstring for chebychefAndEqn
+        """
+        a = [17, 204, 714, 1122, 935, 442, 119, 17, 1]
+        res = []
+        while len(a) > 0:
+            res.append(a.pop())
+            res.append(0)
+        res[-1] = 1
+        print(res,len(res))
+
+        n = 17 
+        w = np.exp(2*np.pi*1j/n)
+        m = (res[-1]**2 + 4)**0.5 
+        u1 = ((-res[-1]+m)/2)**(1/n)
+        u2 = -((res[-1]+m)/2)**(1/n)
+        print(u1,u2)
+
+        X = []
+        W = []
+        for i in range(17):
+            W.append(w**i)
+        for i in range(n):
+            x = u1*W[i] + u2*W[(-i)%n]
+            X.append(x)
+            value = self.getPolynomialValues(res,x)
+            print(i,x,abs(value))
+        return
+        
+    def testDecimalLength(self):
+        """
+        docstring for testDecimalLength
+        """
+        # print(self.testSinNx())
+        x,y = [],[]
+        for n in range(1,300):
+            m = 2*n+1
+            k = self.getDecimalLength2(m)
+            if k>0:
+                phi = self.getEulerPhi(m)
+                res = phi/k
+                print(n,m,k,res)
+                x.append(n)
+                y.append(res)
+        # print(self.getSinNx(n))
+        plt.plot(x,y,"o")
+        plt.show()
+        return
+
+    def testHn(self):
+        """
+        docstring for testHn
+        from (Almost) Impossible series
+        """
+        
+        H = [0]
+        n = 1000
+        for i in range(1,n+1):
+            x = H[-1] + 1/i 
+            H.append(x)
+        # print(H)
+        H = np.array(H[1:])
+        N = np.arange(1,n+1)
+        A = H/N
+        res = sum(A**2)
+        # 17*zeta(4)/4
+        print(res,360*res/np.pi**4)
+
+        res = sum(H/N**3)
+        # 5*zeta(4)/4
+        print(res,np.pi**4/res)
+        print(sum(A))   
+
+        F = [1,1]
+        count = 1 
+        res = 0
+        for i in range(1000):
+            res = res + count/(F[-1]*F[-2])
+            count = - count
+            F.append(F[-1]+F[-2])     
+        print(res,(5**0.5-1)/2)
+
+
+
+
+        return
+
+    def testSolveEqn(self):
+        """
+        docstring for testSolveEqn
+        """
+
+        for i in range(2,20):
+            res = []
+            for j in range(1,i//2+1):
+                num  = self.getCombinator(i-j,j)
+                num += self.getCombinator(i-j-1,j-1)
+                res.append(num)
+            print(i,res)
+        
+        return
+
+    def getQuinticEqn(self,c,d):
+        """
+        docstring for getQuinticEqn
+        """
+        x = Symbol("x")
+        delta = d**4+256*c**5 
+
+        if sqrt(delta).is_integer or sqrt(delta/5).is_integer:
+            s = x**3-5*c*x**2+15*c**2*x+5*c**3 
+            s = s**2 - delta*x 
+            sol = solve(s)[0]
+            if sol.is_integer:
+                print(c,d,sol)
+            return sol
+        else:
+            return False
+
+    def sixEqn(self,c,d):
+        """
+        docstring for sixEqn
+        """
+        x = Symbol("x")
+        c,d = Integer(c),Integer(d)
+        c = c/5
+        s = x**3-5*c*x**2+15*c**2*x+5*c**3 
+        s = s**2 - (d**4+256*c**5)*x 
+        # print(s.factor())
+
+        return s
+
+    def getQuinticEqn2(self,c,d):
+        """
+        docstring for getQuinticEqn2
+        """
+        s = self.sixEqn(c,d)
+        c = c/Integer(5)
+        x = solve(s)[0]
+        if not sqrt(x).is_integer:
+            return
+        y = sqrt(x)/5 
+        r = d*y/(25*y*y-c)
+        v = (3*y**3-c*y-r*r)/(2*y)
+        w = (3*y**3-c*y+r*r)/(2*y)
+        M1 = (v+y*y)*r/(2*y)
+        M2= (w+y*y)*r/(2*y)
+        M1 = M1.simplify()
+        M2 = M2.simplify()
+        m1 = M1*M1+y**5
+        m2 = M2*M2-y**5
+        # print("x,y,r,v,w = ",x,y,r,v,w)
+        # print(M,m1,m2)
+        m1 = m1.simplify()
+        m2 = m2.simplify()
+        res1  = -(M1-sqrt(m1))**(1/Integer(5))
+        res2  = -(M2+sqrt(m2))**(1/Integer(5))
+        res3  = -(M2-sqrt(m2))**(1/Integer(5))
+        res4  = -(M1+sqrt(m1))**(1/Integer(5))
+        print("x = ",x)
+        print("u_1 &=& %s\\\\"%(latex(res1)))
+        print("u_2 &=& %s\\\\"%(latex(res2)))
+        print("u_3 &=& %s\\\\"%(latex(res3)))
+        print("u_4 &=& %s"%(latex(res4)))
+
+        return res1,res2
+
+    def getQuinticEqn3(self,c,d):
+        """
+        docstring for getQuinticEqn2
+        """
+        s = self.sixEqn(c,d)
+        c = c/5
+        x = solve(s)[0]
+        print("x = ",x)
+        y = x/5.0
+        r = d*y/(25*y*y-c)
+        v = (3*y**3-c*y-r*r)/(2*y)
+        w = (3*y**3-c*y+r*r)/(2*y)
+        M1 = (v+y*y)*r/(2*y)
+        M2= (w+y*y)*r/(2*y)
+        m1 = M1*M1+y**5
+        m2 = M2*M2-y**5
+        # print("x,y,r,v,w = ",x,y,r,v,w)
+        print("M,m = ",M1,M2,m1,m2)
+        res   = -(M1-m1**0.5)**(1/5)
+        res  += -(M1+m1**0.5)**(1/5)
+        res  += -(M2+m2**0.5)**(1/5)
+        res  += -(M2-m2**0.5)**(1/5)
+        print(self.getPolynomialValues([1,0,0,0,c,d],res))
+
+        return res
+    def testGalois2(self):
+        """
+        docstring for testGalois2
+        """
+        print(self.getEqnDet([0,0,0,15,-44]))
+        x = 0
+        for i in [54,12,648]:
+            x += i**(1/5)
+        x -= 144**(1/5)
+        print(x,x**5+330*x)
+        x = Symbol("x")
+        # 3,+/-44, 3,+/-12
+        c = 3 
+        d = -12
+        
+        n = 20
+        combi = itertools.permutations(np.arange(-n,n),2)
+        for line in combi:
+            c,d = line
+            if c == 0 or d == 0:
+                continue
+            break 
+
+        for d in range(1,100):
+            n = self.getQuinticEqn(3,d) 
+            if n:
+                print(n)
+        print(self.getQuinticEqn(15,12))
+
+        lines = [[-405,2916],
+                 [-80,384],
+                 [-5,4],
+                 [-5,12],
+                 [11,44],
+                 [15,-44],
+                 [20,16],
+                 [20,32],
+                 [176,1408],
+                 [320,1024],
+                 [330,4170]]
+
+        for line in lines:
+            c,d = line 
+            print(line)
+            # self.sixEqn(c,d)
+            self.getQuinticEqn2(c,d)
+
+
+        self.getQuinticEqn2(-5,12)
+        self.getQuinticEqn3(-5,12)
+        self.getQuinticEqn2(15,12)
+
+        c,d = -5,12
+        s5 = 5**0.5
+        a = 2*s5/5 
+        b = 9/5 
+        e = 99*s5/125
+        k = 1
+        res = []
+        res.append(-(k+a+(b+e)**0.5)**(0.2))
+        res.append(-(k-a+(b+e)**0.5)**(0.2))
+        res.append(-(k+a+(b-e)**0.5)**(0.2))
+        res.append(-(k-a+(b-e)**0.5)**(0.2))
+        res = sum(res)
+        print(res,res**5+c*res+d)
+        
+        return
+
+    def testQuartic(self):
+        """
+        docstring for testQuartic
+        """
+        
+        arr = self.solveQuartic([1,0,0,-8,6])
+        print(arr)
+        print(arr[1]**4-8*arr[1]+6)
+        arr = [1,8,24,-112,52]
+        res = self.solveQuartic(arr)
+        print(res)
+        print(self.getPolynomialValues(arr,res[1]))
+
+        return
+
+    def testGalois3(self):
+        """
+        docstring for testGalois3
+        """
+        f = lambda p,q:256*p**5+q**4 
+        for i in range(1,10000):
+            for j in range(10000,1,-1):
+                a = f(i,j)
+                if a < 0:
+                    break
+                x = int((a+0.01)**0.5)
+                if a == x*x:
+                    print(i,j,a,x,x*x)
+                    self.getQuinticEqn2(5*i,12)
+
+        return
+
+    def getGamma(self,i,j,k,form=0):
+        """
+        docstring for getGamma
+        """
+        gammas = "\\Gamma_{%d%d}^{%d}"
+        if i > j:
+            i,j = j,i 
+        res = gammas % (i,j,k)
+        dicts = {}
+        dicts[(1,1,2)] = r"-\frac{1}{2}\frac{\partial\ln f}{\partial y}"
+        dicts[(2,2,1)] = r"-\frac{1}{2}\frac{\partial\ln h}{\partial x}"
+        dicts[(1,1,1)] = r"\frac{1}{2}\frac{\partial\ln f}{\partial x}"
+        dicts[(2,2,2)] = r"\frac{1}{2}\frac{\partial\ln h}{\partial y}"
+        dicts[(1,2,1)] = r"\frac{1}{2}\frac{\partial\ln f}{\partial y}"
+        dicts[(1,2,2)] = r"\frac{1}{2}\frac{\partial\ln h}{\partial x}"
+        if form:
+            return dicts[(i,j,k)]
+        return res 
+
+    def getRiemannianCurvature(self):
+        """
+        docstring for getRiemannianCurvature
+        get Riemannian Curvature
+        """
+        N = 4
+        prod = lambda n:itertools.product(np.arange(1,N+1),repeat = n)
+        arr = prod(2)
+        string = "\\partial_%d%s -\\partial_%d%s +"
+
+        for (i,j) in arr:
+            print("i,j = ",i,j)
+            output = ""
+            for k in range(1,N+1):
+                res = []
+                res.append(self.getGamma(i,j,k))
+                res.append(self.getGamma(k,j,k))
+                output += string%(i,res[0],k,res[1])
+            print(output + "\\\\")
+            form = 0
+            for (p,k) in prod(2):
+                res = []
+                res.append(self.getGamma(k,p,k,form=form))
+                res.append(self.getGamma(i,j,p,form=form))
+                res.append(self.getGamma(i,p,k,form=form))
+                res.append(self.getGamma(k,j,p,form=form))
+                output = "%s%s - %s%s +"%(tuple(res))
+                if k % 2 == 0:
+                    output += "\\\\"
+                if k+p == 2*N:
+                    output = output[:-4]
+                print(output)
+
+        pf,ph,px,py = symbols("pf ph px py")
+        pff = symbols("pf0:5")
+        pxx = symbols("px0:5")
+        dicts = {}
+        dicts[(1,1,2)] = - pf/2/py
+        dicts[(2,2,1)] = - ph/2/px
+        dicts[(1,1,1)] = pf/2/px
+        dicts[(2,2,2)] = ph/2/py
+        dicts[(1,2,1)] = pf/2/py
+        dicts[(1,2,2)] = ph/2/px
+
+        delta = lambda i,j: 1 if i == j else 0 
+        for (i,j) in itertools.combinations(np.arange(N+1),2):
+            i = i + 1
+            for k in range(1,N+1):
+                if i == j:
+                    if k == i:
+                        res = pff[k]/2/pxx[k]
+                    else:
+                        res = -pff[i]/2/pxx[k]
+                else:
+                    res  = delta(i,k)*pff[k]/2/pxx[j]
+                    res += delta(j,k)*pff[k]/2/pxx[i]
+                dicts[(i,j,k)] = res
+                print(i,j,k,res)
+
+            print(i,j)
+        newG = lambda i,j,k: (i,j,k) if i < j else (j,i,k)
+
+        results = {}
+        for (i,j) in prod(2):
+            res = 0 
+            for (p,k) in prod(2):
+                # A = dicts[newG(i,p,k)]*dicts[newG(k,j,p)]
+                B = dicts[newG(j,p,k)]*dicts[newG(i,k,p)]
+                A = dicts[newG(k,p,k)]*dicts[newG(i,j,p)]
+                res += A - B
+            # output = latex(res)
+            # output = output.replace("pf",r"{\partial{\ln f}}")
+            # output = output.replace("ph",r"{\partial{\ln h}}")
+            # output = output.replace("px",r"{\partial x}")
+            # output = output.replace("py",r"{\partial y}")
+            print(i,j,str(res))
+            results[(i,j)] = str(res)
+            # break
+        print(results[(1,2)] == results[(2,1)])
+
+
+
+        return
+
+    def testEinsteinpy(self):
+        """
+        docstring for testEinsteinpy
+        """
+        import numpy as np
+        from astropy import units as u
+        from einsteinpy.coordinates import SphericalDifferential, CartesianDifferential
+        from einsteinpy.metric import Schwarzschild
+
+
+        M = 5.972e24 * u.kg
+        sph_coord = SphericalDifferential(306.0 * u.m, 
+                                  np.pi/2 * u.rad, -np.pi/6*u.rad,
+                                  0*u.m/u.s, 0*u.rad/u.s, 1900*u.rad/u.s)
+        obj = Schwarzschild.from_coords(sph_coord, M , 0* u.s)
+        cartsn_coord = CartesianDifferential(.265003774 * u.km, -153.000000e-03 * u.km,  0 * u.km,
+                  145.45557 * u.km/u.s, 251.93643748389 * u.km/u.s, 0 * u.km/u.s)
+        obj = Schwarzschild.from_coords(cartsn_coord, M , 0* u.s)
+        end_tau = 0.01 # approximately equal to coordinate time
+        stepsize = 0.3e-6
+        ans = obj.calculate_trajectory(end_lambda=end_tau, OdeMethodKwargs={"stepsize":stepsize})
+        # print(ans)
+
+        import numpy as np
+        from astropy import units as u
+        from einsteinpy.coordinates import BoyerLindquistDifferential
+        from einsteinpy.metric import Kerr
+        from einsteinpy.bodies import Body
+        from einsteinpy.geodesic import Geodesic
+
+        spin_factor = 0.3 * u.m
+        Attractor = Body(name="BH", mass = 1.989e30 * u.kg, a = spin_factor)
+        BL_obj = BoyerLindquistDifferential(50e5 * u.km, 
+                                            np.pi / 2 * u.rad, np.pi * u.rad,
+                                            0 * u.km / u.s, 0 * u.rad / u.s, 
+                                            0 * u.rad / u.s,
+                                            spin_factor)
+
+        Particle = Body(differential = BL_obj, parent = Attractor)
+        geodesic = Geodesic(body = Particle, 
+                            end_lambda = ((1 * u.year).to(u.s)).value / 930,
+                            step_size = ((0.02 * u.min).to(u.s)).value,
+                            metric=Kerr)
+
+        # from einsteinpy.plotting import GeodesicPlotter
+        # obj = GeodesicPlotter()
+        # obj.plot(geodesic)
+        data = geodesic.trajectory 
+        print(len(data),len(data[0]))
+        print(data.shape)
+        # obj.show()
+        print(np.min(data,axis=0),np.max(data,axis=0))
+        f = lambda i:np.log(np.abs(data[:,i]+1))
+        # f = lambda i:np.abs(data[:,i]+1)
+        # for i in range(1,8):
+        #     plt.plot(f(0),f(i),"-")
+        self.plot3D(f(0),f(1),f(2),show=True)
+        # plt.show()
+
+        return
+
+    def liftCombi(self,dicts,K):
+        """
+        docstring for liftCombi
+        mC_{m+k}^{n}&=&\left(n+1\right)C_{m+k+1}^{n+1}-\left(k+1\right)C_{m+k}^{n}
+        (n,m) denotes the combinatorial number C(n,m)
+        return:
+            (m + k)*dicts
+        """
+        # indeces down
+        res = {}
+        for key in dicts:
+            k,n = key 
+            res[(k-1,n)] = dicts[key]
+        dicts = res
+
+        res = {}
+        # lift the indeces
+        for key in dicts:
+            k,n = key 
+            key1 = (k+1,n+1)
+            if key1 in res:
+                num = res[key1] + (n+1)*dicts[key]
+            else:
+                num = (n+1)*dicts[key]
+            res[key1] = num
+
+            if key in res:
+                num = res[key] - (k+1)*dicts[key]
+            else:
+                num = -(k+1)*dicts[key]
+            res[key] = num
+
+        # print(res) 
+        for key in dicts:
+            res[key] += dicts[key]*K
+        # lift indeces
+        dicts  = {}
+        for key in res:
+            k,n = key 
+            dicts[(k+1,n+1)] = res[key]
+
+
+        return dicts
+
+    def nPowSplit(self):
+        """
+        docstring for nPowSplit
+        n = n
+        n(n-1) = n^2 - n 
+        n(n-1)(n-2) = n^3-3n^2+2n
+
+        """
+        N = 15
+        mat = np.zeros((N,N),int)
+        mat[0,0] = 1 
+        for i in range(1,N):
+            mat[i,0] = 1
+            mat[i,1:i+1] = mat[i-1,1:i+1]-i*mat[i-1,0:i]
+        # get a new matrix
+        for i in range(N):
+            for j in range((i+1)//2):
+                mat[i,j],mat[i,i-j] = mat[i,i-j], mat[i,j]
+        mat0 = Matrix(mat)
+        mat = self.getInverseMatrix(mat)
+        mat2 = Matrix(mat)
+        # print(latex(mat0))
+        # print(latex(mat2))
+        # print(mat)
+        for i in range(4,6):
+            print(i,mat[:,i-1])
+        n = 8
+        coefs = Matrix.zeros(n)
+        B = Matrix.zeros(n)[:,0]
+        for i in range(n):
+            for j in range(n):
+                coefs[i,j] = (j+1)**(i+n)
+            B[i] = mat[n+i-1,n-1]
+        # print(coefs,B,coefs.det())
+        sol = coefs.solve(B).transpose()*factorial(n)
+        print(latex(sol))
+
+        print(mat)
+        f = self.getCombinator 
+        m = 20
+        dicts = {}
+        dicts[(0,2)] = 1
+
+        res = []
+        series = []
+        for i in range(m-1):
+            dicts = self.liftCombi(dicts,-i-2)
+            arr = np.array(list(dicts.values()))
+            A = latex(Matrix(np.flip(arr)).transpose())
+            # print(i+2,A)
+            for j in arr:
+                if sqrt(j).is_integer:
+                    print(j,sqrt(j))
+            if len(arr) > 2:
+                res.append(arr[-2:])
+                series.append(Integer(arr[2]))
+
+        for k,[i,j] in enumerate(res):
+            print(k,Integer(-j)*(k+2)*(2*k+5)/i)
+        for i in range(1,len(series)):
+            print(i,series[i]/series[i-1])
+
+
+        for i in range(m,N):
+            break
+            num = 0
+            for j in range(m):
+                num += arr[j]*f(i+m-j,2*m-j)
+            print(i,i-m,mat[i,i-m],num)
+        
+        return
 
     def test(self):
         """
         docstring for test
         """
 
-        # self.testRamaMagicSquare()
-        # self.testArctanSqrt()
-        # self.testFermatNum()
-        # self.testABCConjecture()
-        # self.testCollatz()
-        # self.tangentPower()
-        # self.arctanIntegral()
-        # self.getEulerNumbers()
-        # self.sphericalPacking()
-        # self.thetaSeries()
-        # self.testPolytope()
-        # self.hexaCode()
-        # self.sphericalCrown()
-        # self.getGCoef()
-        # self.golayCode()
-        # self.steinerSystem()
-        # self.steiner45n()
-        # self.steiner5824()
-        # self.origamiCubic()
-        # self.curvature()
-        # self.surfaceArea()
-        # self.spherialTriangle()
-        # self.secondForm()
-        # self.xyGeodesic()
-        # self.christoffel()
-        # self.mullerPotential()
-        # self.mobiusStrip()
-        # self.mullerSurface()
         # self.eightSquares()
-        self.deMoivreQuintic()
+        # self.deMoivreQuintic()
+        # self.highOrderEqn()
+        # for p in range(3,20):
+        #     self.highOrderEqnByMat(p=p)
+        # self.trigoSolveEqn()
+        # self.chebychefAndEqn()
+        # self.testHn()
+        # self.testSolveEqn()
+        # self.testGalois2()
+        # self.testGalois3()
+        # self.getRiemannianCurvature()
+        # self.testEinsteinpy()
+        self.nPowSplit()
 
 
         return

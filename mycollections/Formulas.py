@@ -2976,6 +2976,20 @@ class Formulas(EllipticCurve):
         print("\\sin(%dx) & = & %s \\\\"%(n,latex(res)))
         return
 
+    def getCosNX(self,n):
+        """
+        docstring for getCosNX
+        """
+        theta,x = symbols("theta x")
+        y = cos(theta) + sympy.I*sin(theta)
+        y = y**n
+        y = y.expand().subs(sympy.I,x)
+        y = Poly(y,x).as_dict()
+        # print(y)
+        x1 = y[(0,)].subs(sin(theta)**2,1-x**2)
+        x1 = x1.subs(cos(theta),x).expand()
+        return x1
+
     def testSinNX(self):
         """
         docstring for testSinNX
@@ -5135,6 +5149,19 @@ class Formulas(EllipticCurve):
 
         return res 
 
+    def getDecimalLength2(self,n):
+        """
+        docstring for getDecimalLength2
+        n should not be even
+        """
+        if n%2 == 0 or n%5 == 0:
+            return 0 
+        count = 1 
+        s = 10 
+        while s != 1:
+            s = (10*s)%n 
+            count += 1
+        return count
     def getPascalTriangle(self,n):
         """
         docstring for getPascalTriangle
