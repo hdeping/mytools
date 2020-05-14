@@ -5475,6 +5475,51 @@ class Puzzles(Algorithms,Formulas):
         
         return
 
+    def testWeierstrass(self):
+        """
+        docstring for testWeierstrass
+        """
+        deltaT = 5e-3
+        res = [0]
+
+        N = 800
+        Z = []
+        for i in range(N-1):
+            f = res[-1]
+            f = (4*f**3-3.1*f-1)**0.5
+            res.append(f*deltaT+res[-1])
+            print(i,res[-1])
+
+        tmp = np.abs(res).reshape((-1,2))[:,0]
+        Z.append(tmp)
+        for i in tqdm(range(N)):
+            res1 = []
+            for j in range(N):
+                f = res[j]
+                f = (4*f**3-3.1*f-1)**0.5
+                res1.append(f*deltaT*1j+res[j])
+            if i%2 == 1:
+                tmp = np.abs(res1).reshape((-1,2))[:,0]
+                Z.append(tmp)
+            res = res1.copy()
+
+
+
+        X = np.arange(N//2)*1e-2
+        Y = np.arange(N//2)*1e-2
+        n,m = len(X),len(Y)
+        X, Y = np.meshgrid(X, Y)
+        Z.pop()
+        Z = np.array(Z)
+        print(n,m,Z.shape)
+        self.plot3DSurface(X,Y,Z,show=1)
+
+        # x = np.arange(len(res))*deltaT 
+        # print(np.abs(res[-100:]))
+        # plt.plot(x,np.abs(res))
+        # plt.show()
+        return
+
     def test(self):
         """
         docstring for test
@@ -5493,7 +5538,8 @@ class Puzzles(Algorithms,Formulas):
         # self.testGalois3()
         # self.getRiemannianCurvature()
         # self.testEinsteinpy()
-        self.nPowSplit()
+        # self.nPowSplit()
+        self.testWeierstrass()
 
 
         return
