@@ -5531,16 +5531,17 @@ class Puzzles(Algorithms,Formulas):
         l3 = 10*0.5 
         c1 = 3/2  
         c2 = 4/2 
-        a1 = (l2 - l1)/2
-        a2 = (l3 - l1)/2
+        a,b,c = 3,4,5
+        a1 = (c-b)/2
+        a2 = (c-a)/2
         b1 = (c1**2-a1**2)**0.5
         b2 = (c2**2-a2**2)**0.5
 
         theta = 0
         for i in range(30):
-            alpha = (c1+a1/np.cos(theta))/b2 
+            alpha = (c1 + a1/np.cos(theta))/b2 
             alpha = np.arctan(alpha)
-            theta = (c2-a2/np.cos(alpha))/b1  
+            theta = (c2 - a2/np.cos(alpha))/b1  
             theta = np.arctan(theta)
             if i%5 == 0:
                 print(i,alpha,theta)
@@ -5553,18 +5554,64 @@ class Puzzles(Algorithms,Formulas):
         L1 = np.linalg.norm([x,y])
         L2 = np.linalg.norm([x,y-3])
         L3 = np.linalg.norm([x-4,y])
-        print(L2-L1,a1*2)
-        print(L3-L1,a2*2)
-        print(L3-L2,l3-l2)
-        a,b,c = 3,4,5 
         p = (a+b+c)/2
-        print(L1+l1)
-        print(L2+l2)
-        print(L3+l3)
+        print(L1 - (p - a))
+        print(L2 - (p - b))
+        print(L3 - (p - c))
 
+        a,b,c,x = symbols("a b c x")
+        f1 = Integer(2)
+        f2 = Integer(4)
+        A1 = (c-b)**f1/f2
+        C1 = a/f1
+        B1 = C1**f1 - A1
+        A2 = (c-a)**f1/f2
+        C2 = b/f1
+        B2 = C2**f1 - A2
+
+        y2 = B2*((x-C2)**f1/A2 - Integer(1))
+        # print(latex(y2))
+        s = (A1+A1*x*x/B1-C1**f1-y2)**f1-a*a*y2 
+        # print(s.expand().collect(x))
 
         return
 
+    def getDistCost(self,p):
+        """
+        docstring for getDistCost
+        p:  
+            array with length 2
+        """
+
+        x,y = p
+        f =  lambda x,y: (x*x+y*y)**0.5
+        A = f(x,y)  -  self.p1
+        B = f(x-4,y) - self.p2
+        C = f(x,y-3) - self.p3
+        self.result = A,B,C
+
+        return f(A-B,A-C)
+    def testThreeCircles(self):
+        """
+        docstring for testThreeCircles
+        """
+        a,b = 3,4 
+        c = (a*a+b*b)**0.5 
+        p = (a+b+c)/2 
+        self.p1 = p-c
+        self.p2 = p-a 
+        self.p3 = p-b 
+            
+        p = [0,0]
+        from scipy.optimize import minimize
+        res = minimize(self.getDistCost,p)
+        print("value: ",res.fun)
+        print("x: ",res.x)
+
+        print(self.result)
+        
+
+        return
     def test(self):
         """
         docstring for test
@@ -5586,7 +5633,8 @@ class Puzzles(Algorithms,Formulas):
         # self.nPowSplit()
         # self.testWeierstrass()
         # self.getCubicSol([1,-21,35,-7])
-        self.threeCircles()
+        # self.threeCircles()
+        self.testThreeCircles()
 
 
         return
