@@ -40,7 +40,7 @@ var center = [width/2,height/2];
 var x,y,phi;
 var radius  =  center[1] - 50;
 // 1-3th point
-var scale = 40;
+var scale = 80;
 var a = 3,b = 4;
 a = a*scale;
 b = b*scale;
@@ -83,13 +83,15 @@ for(var i = 8; i < 12; i ++)
 }
 
 var circles = [];
-var radii = [p-c,p-b,p-a];
+var radii = [p-c,p-a,p-b];
+var circle_color = [];
 for(var i = 0; i < radii.length; i ++)
 {
     circles.push([points[i][0],points[i][1],radii[i]]);
+    circle_color.push("white");
 }
-
-
+circles.push([points[0][0] + 0.87*scale,points[0][1] - 0.91*scale,0.26*scale]);
+circle_color.push("blue");
 
 var circle = svg.selectAll("circle")
                 .data(circles)
@@ -104,8 +106,11 @@ var circle = svg.selectAll("circle")
                 .attr("r",function (d,i) {
                   return circles[i][2];
                 })
-                .attr("stroke-width",2)
-                .attr("stroke","blue");
+                .attr("stroke-width",0)
+                .attr("stroke","blue")
+                .attr("fill",function (d,i) {
+                  return circle_color[i];
+                });
 
 var sides = svg.selectAll("line")
                .data(lines)
