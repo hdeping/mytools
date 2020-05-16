@@ -41,15 +41,15 @@ var x,y,phi;
 var radius  =  center[1] - 50;
 // 1-3th point
 var scale = 40;
-var a = 4,b = 3;
+var a = 3,b = 4;
 a = a*scale;
 b = b*scale;
 var c = Math.sqrt(a*a+b*b);
 var p = (a+b+c)/2;
 
-points.push([center[0] - a/2,center[1] + b/2]);
-points.push([points[0][0]+a,points[0][1]]);
-points.push([points[0][0],points[0][1]-b]);
+points.push([center[0] - b/2,center[1] + a/2]);
+points.push([points[0][0]+b,points[0][1]]);
+points.push([points[0][0],points[0][1]-a]);
 
 
 var tags = ["A","B","C","D","E","F","G",
