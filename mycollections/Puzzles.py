@@ -5520,6 +5520,51 @@ class Puzzles(Algorithms,Formulas):
         # plt.show()
         return
 
+    def threeCircles(self):
+        """
+        docstring for threeCircles
+        """
+        # (0,0),(0,3),(4,0)
+        r = 1 
+        l1 = 2**0.5 
+        l2 = 5**0.5 
+        l3 = 10*0.5 
+        c1 = 3/2  
+        c2 = 4/2 
+        a1 = (l2 - l1)/2
+        a2 = (l3 - l1)/2
+        b1 = (c1**2-a1**2)**0.5
+        b2 = (c2**2-a2**2)**0.5
+
+        theta = 0
+        for i in range(30):
+            alpha = (c1+a1/np.cos(theta))/b2 
+            alpha = np.arctan(alpha)
+            theta = (c2-a2/np.cos(alpha))/b1  
+            theta = np.arctan(theta)
+            if i%5 == 0:
+                print(i,alpha,theta)
+        x = b1*np.tan(theta)
+        y = b2*np.tan(alpha)
+        print("x y = ",x,y)
+        print(c2+a2/np.cos(alpha),c1+a1/np.cos(theta))
+        print(((y-c1)/a1)**2-(x/b1)**2)
+        print(((x-c2)/a2)**2-(y/b2)**2)
+        L1 = np.linalg.norm([x,y])
+        L2 = np.linalg.norm([x,y-3])
+        L3 = np.linalg.norm([x-4,y])
+        print(L2-L1,a1*2)
+        print(L3-L1,a2*2)
+        print(L3-L2,l3-l2)
+        a,b,c = 3,4,5 
+        p = (a+b+c)/2
+        print(L1+l1)
+        print(L2+l2)
+        print(L3+l3)
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -5539,7 +5584,9 @@ class Puzzles(Algorithms,Formulas):
         # self.getRiemannianCurvature()
         # self.testEinsteinpy()
         # self.nPowSplit()
-        self.testWeierstrass()
+        # self.testWeierstrass()
+        # self.getCubicSol([1,-21,35,-7])
+        self.threeCircles()
 
 
         return
