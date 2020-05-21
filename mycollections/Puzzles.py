@@ -5612,6 +5612,31 @@ class Puzzles(Algorithms,Formulas):
         
 
         return
+
+    def exponentTimeEuler(self):
+        """
+        docstring for exponentTimeEuler
+
+        A_{n,1}&=&A_{n-1,1}=1
+        A_{n,n}&=&A_{n-1,n-1}=1
+        A_{n,k}&=&A_{n-1,k-1}+kA_{n-1,k}
+
+        see self.nPowSplit
+        """
+
+        total = []
+        res = [1]
+        n = 10
+        for i in range(2,n+1):
+            line = [1]
+            for j in range(1,i-1):
+                line.append(res[j-1]+(j+1)*res[j])
+            line.append(1)
+            res = line.copy()
+            total.append(res)
+            print(i,res)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -5634,7 +5659,8 @@ class Puzzles(Algorithms,Formulas):
         # self.testWeierstrass()
         # self.getCubicSol([1,-21,35,-7])
         # self.threeCircles()
-        self.testThreeCircles()
+        # self.testThreeCircles()
+        self.exponentTimeEuler()
 
 
         return
