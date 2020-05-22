@@ -5475,6 +5475,168 @@ class Puzzles(Algorithms,Formulas):
         
         return
 
+    def testWeierstrass(self):
+        """
+        docstring for testWeierstrass
+        """
+        deltaT = 5e-3
+        res = [0]
+
+        N = 800
+        Z = []
+        for i in range(N-1):
+            f = res[-1]
+            f = (4*f**3-3.1*f-1)**0.5
+            res.append(f*deltaT+res[-1])
+            print(i,res[-1])
+
+        tmp = np.abs(res).reshape((-1,2))[:,0]
+        Z.append(tmp)
+        for i in tqdm(range(N)):
+            res1 = []
+            for j in range(N):
+                f = res[j]
+                f = (4*f**3-3.1*f-1)**0.5
+                res1.append(f*deltaT*1j+res[j])
+            if i%2 == 1:
+                tmp = np.abs(res1).reshape((-1,2))[:,0]
+                Z.append(tmp)
+            res = res1.copy()
+
+
+
+        X = np.arange(N//2)*1e-2
+        Y = np.arange(N//2)*1e-2
+        n,m = len(X),len(Y)
+        X, Y = np.meshgrid(X, Y)
+        Z.pop()
+        Z = np.array(Z)
+        print(n,m,Z.shape)
+        self.plot3DSurface(X,Y,Z,show=1)
+
+        # x = np.arange(len(res))*deltaT 
+        # print(np.abs(res[-100:]))
+        # plt.plot(x,np.abs(res))
+        # plt.show()
+        return
+
+    def threeCircles(self):
+        """
+        docstring for threeCircles
+        """
+        # (0,0),(0,3),(4,0)
+        r = 1 
+        l1 = 2**0.5 
+        l2 = 5**0.5 
+        l3 = 10*0.5 
+        c1 = 3/2  
+        c2 = 4/2 
+        a,b,c = 3,4,5
+        a1 = (c-b)/2
+        a2 = (c-a)/2
+        b1 = (c1**2-a1**2)**0.5
+        b2 = (c2**2-a2**2)**0.5
+
+        theta = 0
+        for i in range(30):
+            alpha = (c1 + a1/np.cos(theta))/b2 
+            alpha = np.arctan(alpha)
+            theta = (c2 - a2/np.cos(alpha))/b1  
+            theta = np.arctan(theta)
+            if i%5 == 0:
+                print(i,alpha,theta)
+        x = b1*np.tan(theta)
+        y = b2*np.tan(alpha)
+        print("x y = ",x,y)
+        print(c2+a2/np.cos(alpha),c1+a1/np.cos(theta))
+        print(((y-c1)/a1)**2-(x/b1)**2)
+        print(((x-c2)/a2)**2-(y/b2)**2)
+        L1 = np.linalg.norm([x,y])
+        L2 = np.linalg.norm([x,y-3])
+        L3 = np.linalg.norm([x-4,y])
+        p = (a+b+c)/2
+        print(L1 - (p - a))
+        print(L2 - (p - b))
+        print(L3 - (p - c))
+
+        a,b,c,x = symbols("a b c x")
+        f1 = Integer(2)
+        f2 = Integer(4)
+        A1 = (c-b)**f1/f2
+        C1 = a/f1
+        B1 = C1**f1 - A1
+        A2 = (c-a)**f1/f2
+        C2 = b/f1
+        B2 = C2**f1 - A2
+
+        y2 = B2*((x-C2)**f1/A2 - Integer(1))
+        # print(latex(y2))
+        s = (A1+A1*x*x/B1-C1**f1-y2)**f1-a*a*y2 
+        # print(s.expand().collect(x))
+
+        return
+
+    def getDistCost(self,p):
+        """
+        docstring for getDistCost
+        p:  
+            array with length 2
+        """
+
+        x,y = p
+        f =  lambda x,y: (x*x+y*y)**0.5
+        A = f(x,y)  -  self.p1
+        B = f(x-4,y) - self.p2
+        C = f(x,y-3) - self.p3
+        self.result = A,B,C
+
+        return f(A-B,A-C)
+    def testThreeCircles(self):
+        """
+        docstring for testThreeCircles
+        """
+        a,b = 3,4 
+        c = (a*a+b*b)**0.5 
+        p = (a+b+c)/2 
+        self.p1 = p-c
+        self.p2 = p-a 
+        self.p3 = p-b 
+            
+        p = [0,0]
+        from scipy.optimize import minimize
+        res = minimize(self.getDistCost,p)
+        print("value: ",res.fun)
+        print("x: ",res.x)
+
+        print(self.result)
+        
+
+        return
+
+    def exponentTimeEuler(self):
+        """
+        docstring for exponentTimeEuler
+
+        A_{n,1}&=&A_{n-1,1}=1
+        A_{n,n}&=&A_{n-1,n-1}=1
+        A_{n,k}&=&A_{n-1,k-1}+kA_{n-1,k}
+
+        see self.nPowSplit
+        """
+
+        total = []
+        res = [1]
+        n = 10
+        for i in range(2,n+1):
+            line = [1]
+            for j in range(1,i-1):
+                line.append(res[j-1]+(j+1)*res[j])
+            line.append(1)
+            res = line.copy()
+            total.append(res)
+            print(i,res)
+        
+        return
     def test(self):
         """
         docstring for test
@@ -5493,7 +5655,12 @@ class Puzzles(Algorithms,Formulas):
         # self.testGalois3()
         # self.getRiemannianCurvature()
         # self.testEinsteinpy()
-        self.nPowSplit()
+        # self.nPowSplit()
+        # self.testWeierstrass()
+        # self.getCubicSol([1,-21,35,-7])
+        # self.threeCircles()
+        # self.testThreeCircles()
+        self.exponentTimeEuler()
 
 
         return
