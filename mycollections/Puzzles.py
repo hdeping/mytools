@@ -5723,6 +5723,39 @@ class Puzzles(Algorithms,Formulas):
 
         
         return
+
+    def checkPolyCheby(self):
+        """
+        docstring for checkPolyCheby
+        """
+        F = [1]
+        n = Symbol("n")
+        for i in range(10):
+            res = F[-1]*(n-i)
+            res = res/(i+1)
+            F.append(res)
+
+        coefs = [2,-4,4]
+        res = 0 
+        num = len(coefs)
+        for i in range(num):
+            res += F[num - i]*coefs[i]
+        res = res.factor()
+        print(res)
+        one = Integer(1)
+        coefs = [one/2**3,-one/2**3,one/2**4]
+        coefs = [one/2**4,-3*one/2**5,5*one/2**6,-5*one/2**7]
+        coefs = [one/2**5,-one/2**4,9*one/2**7,-7*one/2**7,7*one/2**8]
+        res = 0 
+        num = len(coefs)
+        for i in range(num):
+            res += F[num - i].subs(n,2*n)*coefs[i]
+        res = res.factor()
+        print(res)
+
+
+
+        return
     def test(self):
         """
         docstring for test
@@ -5748,7 +5781,8 @@ class Puzzles(Algorithms,Formulas):
         # self.testThreeCircles()
         # self.exponentTimeEuler()
         # self.testPolyCheby()
-        self.m2TwoM()
+        # self.m2TwoM()
+        self.checkPolyCheby()
 
 
         return
