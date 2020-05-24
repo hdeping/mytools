@@ -282,6 +282,15 @@ class MyCommon():
             print(i,key,value)
             if i > num - 1:
                 break
-        pass
+        return 
+    def loadHtml(self,filename):
+        """
+        docstring for loadHtml
+        """
+        print("load data from",filename)
+        import scrapy
+        data = open(filename,"r",encoding="ISO-8859-2")
+        data = data.read()
+        res = scrapy.Selector(text=data)
 
-
+        return res 
