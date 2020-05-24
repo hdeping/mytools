@@ -5613,7 +5613,7 @@ class Puzzles(Algorithms,Formulas):
 
         return
 
-    def exponentTimeEuler(self):
+    def exponentTimeEuler(self,n=10):
         """
         docstring for exponentTimeEuler
 
@@ -5626,7 +5626,7 @@ class Puzzles(Algorithms,Formulas):
 
         total = []
         res = [1]
-        n = 10
+        total.append(res)
         for i in range(2,n+1):
             line = [1]
             for j in range(1,i-1):
@@ -5634,9 +5634,9 @@ class Puzzles(Algorithms,Formulas):
             line.append(1)
             res = line.copy()
             total.append(res)
-            print(i,res)
+            # print(i,res)
         
-        return
+        return total
 
     def testPolyCheby(self):
         """
@@ -5666,6 +5666,62 @@ class Puzzles(Algorithms,Formulas):
             output.append(res)
         print(output)
 
+        return output
+
+    def getTwoPowers(self,n=10):
+        """
+        docstring for getTwoPowers
+        """
+        dicts = {}
+        for i in range(n,0,-1):
+            key = "}{%s}"%str(1<<i)
+            dicts[key] = "}{2^{%d}}"%i
+        return dicts
+
+    def m2TwoM(self):
+        """
+        docstring for m2TwoM
+        C(m,k) = \sum C(2m,i)
+        C(m,1) = C(2m,1)/2
+        """
+        A = self.exponentTimeEuler(n=30)
+        # print(A)
+        x = Symbol("x")
+        F = []
+        for line in A:
+            tmp = []
+            s = 1 
+            for i,j in enumerate(line):
+                s = s*(i+1)
+                tmp.append(s*j)
+            line = np.flip(tmp)
+            f = self.getPolynomialValues(line,x)
+            f = f.expand()
+            F.append(f)
+            # print(f)
+        p2 = self.getTwoPowers(n=60)
+        # print(p2)
+        for n in range(2,20):
+            
+            s = 1
+            for i in range(n):
+                s = s*(x-i)
+            s = (s/factorial(n)).subs(x,x/2)
+            s = Poly(s).as_dict()
+            res = 0 
+            for i in range(n):
+                res += s[(i+1,)]*F[i]
+            res = res.expand()
+            # print(n,res)
+            string = latex(res)
+            for key in p2:
+                value = p2[key]
+                if key in string:
+                    string = string.replace(key,value)
+
+            print("C_m^{%d} & = & %s \\\\"%(n,string))
+
+        
         return
     def test(self):
         """
@@ -5691,7 +5747,8 @@ class Puzzles(Algorithms,Formulas):
         # self.threeCircles()
         # self.testThreeCircles()
         # self.exponentTimeEuler()
-        self.testPolyCheby()
+        # self.testPolyCheby()
+        self.m2TwoM()
 
 
         return
