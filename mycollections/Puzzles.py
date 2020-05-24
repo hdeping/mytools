@@ -5637,6 +5637,36 @@ class Puzzles(Algorithms,Formulas):
             print(i,res)
         
         return
+
+    def testPolyCheby(self):
+        """
+        docstring for testPolyCheby
+        test for chebyschef polynomials
+        """
+        
+        res = [[1],[1,2]]
+        for i in range(3,11):
+            tmp = [1]
+            for index,j in enumerate(res[-1][1:]):
+                tmp.append(j + res[-2][index])
+            if i%2 == 0:
+                tmp.append(2)
+            res.append(tmp)
+        for line in res:
+            print(line)
+
+        n = 10 
+        f = self.getCombinator
+        output = []
+        for k in range(n//2+1):
+            res = 0
+            for m in range(k,n//2+1):
+                res += f(n,2*m)*f(m,k)
+            res = res // (2**(n - 2*k - 1))
+            output.append(res)
+        print(output)
+
+        return
     def test(self):
         """
         docstring for test
@@ -5660,7 +5690,8 @@ class Puzzles(Algorithms,Formulas):
         # self.getCubicSol([1,-21,35,-7])
         # self.threeCircles()
         # self.testThreeCircles()
-        self.exponentTimeEuler()
+        # self.exponentTimeEuler()
+        self.testPolyCheby()
 
 
         return
