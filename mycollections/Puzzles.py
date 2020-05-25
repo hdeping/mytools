@@ -5807,6 +5807,78 @@ class Puzzles(Algorithms,Formulas):
         for i in range(1,20):
             print(i,f(i,10))
         return
+
+    def getPowerSplitMat(self,n=10):
+        """
+        docstring for getPowerSplitMat
+        """
+        
+
+        init = {1:1}
+        mat = Matrix.zeros(n)
+        mat[0,0] = init[1]
+        for i in range(n-1):
+            total = {}
+            for key in init:
+                for j in range(key,key+2):
+                    if j in total:
+                        total[j] += j*init[key]
+                    else:
+                        total[j]  = j*init[key]
+            init = total
+            arr  = list(total.values())
+            print(arr)
+            for j in range(i+2):
+                mat[i+1,j] = arr[j]
+
+        return mat
+
+    def poly2Array(self,poly,n=10):
+        """
+        docstring for poly2Array
+        x**2 => [0,1]
+        """
+        tmp = []
+        arr = Poly(poly).as_dict()
+        for i in range(1,n+1):
+            key = (i,)
+            if key in arr:
+                tmp.append(arr[key])
+            else:
+                tmp.append(0)
+        tmp = Matrix(tmp).transpose()
+        return tmp
+
+    def combiAm(self):
+        """
+        docstring for combiAm
+        C_{am}^{1} = a C_{m}^{1} 
+        C_{am}^{2} = C_a^2 C_m^1 + a^2 C_{m}^{2} 
+        """
+        a = Symbol("a")
+        # a = Integer(2)
+        res = [[a]]
+        n = 10
+
+        dicts = self.getPowerSplitMat()
+        for k in range(2,n+1):
+            tmp = [res[-1][0]*(a-k+1)/(k)]
+            for j in range(2,k):
+                num = (a*j*res[-1][j-2]+(a*j-k+1)*res[-1][j-1])/k
+                num = num.factor()
+                tmp.append(num)
+            tmp.append(res[-1][-1]*a)
+            res.append(tmp)
+            m = 2
+            if len(tmp) > m:
+                print(k,self.poly2Array(tmp[m])*dicts)
+            # print(k,tmp)
+
+        # transform f(a) = k1*a^n+k2*a^(n-1)... into sum(C_a^i)
+        print(dicts)
+
+        
+        return
     def test(self):
         """
         docstring for test
@@ -5835,7 +5907,8 @@ class Puzzles(Algorithms,Formulas):
         # self.m2TwoM()
         # self.checkPolyCheby()
         # self.chebyInverse()
-        self.catalanTriangle()
+        # self.catalanTriangle()
+        self.combiAm()
 
 
         return
