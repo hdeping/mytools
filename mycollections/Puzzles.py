@@ -5712,6 +5712,12 @@ class Puzzles(Algorithms,Formulas):
             for i in range(n):
                 res += s[(i+1,)]*F[i]
             res = res.expand()
+            coef = []
+            coefs = Poly(res).as_dict()
+            for i,key in enumerate(coefs):
+                coef.append(coefs[key]*2**(2*n-1-i))
+            print(coef)
+
             # print(n,res)
             string = latex(res)
             for key in p2:
@@ -5719,7 +5725,7 @@ class Puzzles(Algorithms,Formulas):
                 if key in string:
                     string = string.replace(key,value)
 
-            print("C_m^{%d} & = & %s \\\\"%(n,string))
+            # print("C_m^{%d} & = & %s \\\\"%(n,string))
 
         
         return
@@ -5735,13 +5741,24 @@ class Puzzles(Algorithms,Formulas):
             res = res/(i+1)
             F.append(res)
 
-        coefs = [2,-4,4]
+        coefs = [1,-2,2]
+        coefs = [1,-3,5,-5]
+        coefs = [1,-4,5,-5]
         res = 0 
         num = len(coefs)
         for i in range(num):
             res += F[num - i]*coefs[i]
         res = res.factor()
-        print(res)
+        print(latex(res))
+
+        return F
+
+    def chebyInverse(self):
+        """
+        docstring for chebyInverse
+        """
+        n = Symbol("n")
+        F = self.checkPolyCheby()
         one = Integer(1)
         coefs = [one/2**3,-one/2**3,one/2**4]
         coefs = [one/2**4,-3*one/2**5,5*one/2**6,-5*one/2**7]
@@ -5753,8 +5770,42 @@ class Puzzles(Algorithms,Formulas):
         res = res.factor()
         print(res)
 
+        res = [[1],[-1, 1],
+               [2, -2, 1],
+               [-5, 5, -3, 1],
+               [14, -14, 9, -4, 1],
+               [-42, 42, -28, 14, -5, 1],
+               [132, -132, 90, -48, 20, -6, 1],
+               [-429, 429, -297, 165, -75, 27, -7, 1],
+               [1430, -1430, 1001, -572, 275, -110, 35, -8, 1],
+               [-4862, 4862, -3432, 2002, -1001, 429, -154, 44, -9, 1],
+               [16796, -16796, 11934, -7072, 3640, -1638, 637, -208, 54, -10, 1]]
+
+        n = len(res)
+        mat = np.zeros((n,n),int)
+        for i in range(n):
+            mat[i,:i+1] = res[i]
+        record = Matrix(mat)
+        mat = self.getInverseMatrix(mat)
+        mat = Matrix(mat)
+
+        for i in range(n):
+            for j in range(i+1):
+                record[i,j] /= 2**(2*i+1-j)
+        print(record)
+        print(latex(record.inv()))
 
 
+
+        return
+
+    def catalanTriangle(self):
+        """
+        docstring for catalanTriangle
+        """
+        f = lambda n,m: 0 if m > n else m*self.getCombinator(2*n-m,n)//(2*n-m)
+        for i in range(1,20):
+            print(i,f(i,10))
         return
     def test(self):
         """
@@ -5782,7 +5833,9 @@ class Puzzles(Algorithms,Formulas):
         # self.exponentTimeEuler()
         # self.testPolyCheby()
         # self.m2TwoM()
-        self.checkPolyCheby()
+        # self.checkPolyCheby()
+        # self.chebyInverse()
+        self.catalanTriangle()
 
 
         return
