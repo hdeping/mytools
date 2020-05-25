@@ -5878,10 +5878,12 @@ class Puzzles(Algorithms,Formulas):
         a = Symbol("a")
         # a = Integer(2)
         res = [[a]]
-        n = 12
+        n = 18
 
         dicts = self.getPowerSplitMat(n=n)
         print(dicts[:5,:])
+
+        secondLast = []
         for k in range(2,n+1):
             tmp = [res[-1][0]*(a-k+1)/(k)]
             for j in range(2,k):
@@ -5890,18 +5892,51 @@ class Puzzles(Algorithms,Formulas):
                 tmp.append(num)
             tmp.append(res[-1][-1]*a)
             res.append(tmp)
-            print(k,"----------------------------")
             total = Matrix.zeros(k)
             for m in range(k):
                 poly = self.poly2Array(tmp[m],n=n)*dicts
                 for j in range(k):
                     total[m,j] = poly[0,j]
                 # print(self.arr2Cm(poly),",\\\\")
-            print(latex(total))
+            # if k > 8:
+            #     print("E%d & = & %s \\\\"%(k,latex(total[:8,:8])))
+            diag = []
+            for m in range(k):
+                diag.append(total[m,m])
+            print(k,diag)
+            secondLast.append(diag[-2])
             # print(k,tmp)
-
+        print(secondLast)
 
         
+        return
+
+    def testCombiAm(self):
+        """
+        docstring for testCombiAm
+        """
+        arr = [4, 45, 432, 4200, 43200, 476280, 
+               5644800, 71850240, 979776000, 14270256000, 
+               221298739200, 3642807168000, 63465795993600, 
+               1167099373440000, 22596613079040000, 
+               459548157100032000, 9795631769763840000, 
+               218413777784057856000]
+        n = len(arr)
+
+        for i in range(n-1):
+            a = Integer(arr[i+1])/arr[i]
+            a = a/(i+3)**2
+            a = 2*a/((i+5))
+            print(a)
+
+        f0 = factorial 
+        f1 = self.getCombinator
+        n = 9
+        print(6*f1(n+1,4)*f0(n)/n**2)
+        for n in range(3,20):
+            
+            print(12*f1(n+1,4)/n)
+
         return
     def test(self):
         """
@@ -5932,7 +5967,8 @@ class Puzzles(Algorithms,Formulas):
         # self.checkPolyCheby()
         # self.chebyInverse()
         # self.catalanTriangle()
-        self.combiAm()
+        # self.combiAm()
+        self.testCombiAm()
 
 
         return
