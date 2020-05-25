@@ -5827,7 +5827,6 @@ class Puzzles(Algorithms,Formulas):
                         total[j]  = j*init[key]
             init = total
             arr  = list(total.values())
-            print(arr)
             for j in range(i+2):
                 mat[i+1,j] = arr[j]
 
@@ -5849,6 +5848,27 @@ class Puzzles(Algorithms,Formulas):
         tmp = Matrix(tmp).transpose()
         return tmp
 
+    def arr2Cm(self,poly):
+        """
+        docstring for arr2Cm
+        poly = Matrix([[...]])
+        [[1,2,3]] = C_a^1 + 2C_a^2+3C_a^3
+        """
+        string = ""
+
+        for i in range(len(poly)):
+            j = poly[0,i]
+            if j == 0:
+                continue
+            elif j == 1:
+                string += "C_a^{%d}+"%(i+1)
+            else:
+                string += "%dC_a^{%d}+"%(j,i+1)
+
+        string = string[:-1]
+
+        return string
+
     def combiAm(self):
         """
         docstring for combiAm
@@ -5858,9 +5878,10 @@ class Puzzles(Algorithms,Formulas):
         a = Symbol("a")
         # a = Integer(2)
         res = [[a]]
-        n = 10
+        n = 12
 
-        dicts = self.getPowerSplitMat()
+        dicts = self.getPowerSplitMat(n=n)
+        print(dicts[:5,:])
         for k in range(2,n+1):
             tmp = [res[-1][0]*(a-k+1)/(k)]
             for j in range(2,k):
@@ -5869,13 +5890,16 @@ class Puzzles(Algorithms,Formulas):
                 tmp.append(num)
             tmp.append(res[-1][-1]*a)
             res.append(tmp)
-            m = 2
-            if len(tmp) > m:
-                print(k,self.poly2Array(tmp[m])*dicts)
+            print(k,"----------------------------")
+            total = Matrix.zeros(k)
+            for m in range(k):
+                poly = self.poly2Array(tmp[m],n=n)*dicts
+                for j in range(k):
+                    total[m,j] = poly[0,j]
+                # print(self.arr2Cm(poly),",\\\\")
+            print(latex(total))
             # print(k,tmp)
 
-        # transform f(a) = k1*a^n+k2*a^(n-1)... into sum(C_a^i)
-        print(dicts)
 
         
         return
