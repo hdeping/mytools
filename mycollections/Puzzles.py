@@ -33,8 +33,9 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from Formulas import Formulas
+from mytools import MyCommon
 
-class Puzzles(Algorithms,Formulas):
+class Puzzles(Algorithms,Formulas,MyCommon):
     """
     solutions for math puzzles
     """
@@ -5938,6 +5939,38 @@ class Puzzles(Algorithms,Formulas):
             print(12*f1(n+1,4)/n)
 
         return
+
+
+    def alphaBetaGeo(self):
+        """
+        docstring for alphaBetaGeo
+        the so-called most complex problem in plane geometry
+
+        """
+
+        data = self.loadJson("alphaBetaGeo.json")
+        f = lambda x: x*np.pi/180 
+        fs = lambda x: np.sin(f(x))
+        fs2 = lambda x,y:fs(x)/fs(y)
+        f3 = lambda x,y,z:fs(x)*fs(y)*fs(z)
+
+        form = r"\sin %d \sin %d \sin %d &=& \sin %d \sin %d \sin %d \\"
+        for i,line in enumerate(data):
+            beta = line[0] + line[2]
+            a,b,c,d = beta,line[1],beta+line[1],beta+line[0]
+            y = fs2(a,b)*fs2(c,d)
+
+            # print(i+1,line,a,b,c,d)
+            k1,k2 = line[-1]+line[2],line[-1]
+            # print(y,fs2(k1,k2))
+            arr = [a,c,k2,b,d,k1]
+            for i in range(len(arr)):
+                if arr[i] > 90:
+                    arr[i] = 180 - arr[i]
+
+            print(i+1,form%(tuple(arr)))
+        
+        return
     def test(self):
         """
         docstring for test
@@ -5968,7 +6001,8 @@ class Puzzles(Algorithms,Formulas):
         # self.chebyInverse()
         # self.catalanTriangle()
         # self.combiAm()
-        self.testCombiAm()
+        # self.testCombiAm()
+        self.alphaBetaGeo()
 
 
         return
