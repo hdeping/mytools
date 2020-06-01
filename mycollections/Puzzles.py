@@ -35,6 +35,8 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from Formulas import Formulas
 from mytools import MyCommon
 
+import os
+
 class Puzzles(Algorithms,Formulas,MyCommon):
     """
     solutions for math puzzles
@@ -5879,13 +5881,13 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         a = Symbol("a")
         # a = Integer(2)
         res = [[a]]
-        n = 15
+        n = 22
 
         dicts = self.getPowerSplitMat(n=n)
         print(dicts[:5,:])
 
         secondLast = []
-        col = 4
+        col = 7
         for k in range(2,n+1):
             tmp = [res[-1][0]*(a-k+1)/(k)]
             for j in range(2,k):
@@ -6014,6 +6016,42 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         print(count)
         
         return
+
+    def quasiParticle(self):
+        """
+        docstring for quasiParticle
+        Riemann Conjecture and quasi-particle
+        """
+        
+        from mpmath import zetazero
+
+        getZeros = lambda begin,end: [zetazero(i+1) for i in range(begin,end)]
+        zeros = []
+        filename = "zetazeros.json"
+        if os.path.exists(filename):
+            zeros = self.loadJson(filename)
+        else:
+            for i in range(150):
+                print(i)
+                x = float(zetazero(i+1).imag)
+                zeros.append(x)
+            self.writeJson(zeros,filename)
+
+        zeros = np.array(zeros)
+        X = []
+        Y = []
+        for x in range(1000,2000):
+            X.append(x*0.01)
+            # Y.append(np.abs(sum(np.exp(1j*X[-1]*zeros))))
+
+        X = np.arange(1,1000)*0.01
+        Y = 1 - (np.sin(X)/X)**2
+        plt.plot(X,Y)
+        plt.show()
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -6043,9 +6081,10 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         # self.checkPolyCheby()
         # self.chebyInverse()
         # self.catalanTriangle()
-        self.combiAm()
+        # self.combiAm()
         # self.testCombiAm()
         # self.alphaBetaGeo()
+        self.quasiParticle()
 
 
         return
