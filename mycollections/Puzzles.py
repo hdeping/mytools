@@ -5879,13 +5879,13 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         a = Symbol("a")
         # a = Integer(2)
         res = [[a]]
-        n = 12
+        n = 15
 
         dicts = self.getPowerSplitMat(n=n)
         print(dicts[:5,:])
 
         secondLast = []
-        col = 3
+        col = 4
         for k in range(2,n+1):
             tmp = [res[-1][0]*(a-k+1)/(k)]
             for j in range(2,k):
@@ -5920,15 +5920,28 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         M = col
         n = m*M
         mat = Matrix.zeros(n)
+        begin = m+2 
+        if col > begin:
+            begin = col
         for i in range(n):
             count = 0 
-            k = i + 3
+            k = i + begin 
             for ii in range(1,m+1):
                 for jj in range(M):
                     mat[i,count] = k**jj*(ii+1)**k 
                     count += 1 
         y = Matrix(secondLast[:n])
-        print(mat.solve(y))
+        sol = mat.solve(y)
+        # print(list(sol[0]))
+
+        x = Symbol("x")
+        for i in range(m):
+            res = 0 
+            for j in range(M):
+                index  = M*i+j
+                res = res*x + sol[index,0]
+            res = res.subs(x,1/x)
+            print(i,res.factor())
             
 
         
