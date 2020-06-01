@@ -5954,7 +5954,9 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         fs2 = lambda x,y:fs(x)/fs(y)
         f3 = lambda x,y,z:fs(x)*fs(y)*fs(z)
 
-        form = r"\sin %d \sin %d \sin %d &=& \sin %d \sin %d \sin %d \\"
+        form = r"\sin %d \sin %d \sin %d & = & \sin %d \sin %d \sin %d \\"
+
+        count = 0
         for i,line in enumerate(data):
             beta = line[0] + line[2]
             a,b,c,d = beta,line[1],beta+line[1],beta+line[0]
@@ -5964,11 +5966,17 @@ class Puzzles(Algorithms,Formulas,MyCommon):
             k1,k2 = line[-1]+line[2],line[-1]
             # print(y,fs2(k1,k2))
             arr = [a,c,k2,b,d,k1]
-            for i in range(len(arr)):
-                if arr[i] > 90:
-                    arr[i] = 180 - arr[i]
+            for j in range(len(arr)):
+                if arr[j] > 90:
+                    arr[j] = 180 - arr[j]
 
-            print(i+1,form%(tuple(arr)))
+            # print(i+1,form%(tuple(arr)))
+            if arr[1] + arr[2] == 90:
+                count += 1
+                # print(i+1,arr)
+            else:
+                print(i+1,arr)
+        print(count)
         
         return
     def test(self):
