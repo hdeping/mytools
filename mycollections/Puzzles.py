@@ -5879,12 +5879,13 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         a = Symbol("a")
         # a = Integer(2)
         res = [[a]]
-        n = 18
+        n = 12
 
         dicts = self.getPowerSplitMat(n=n)
         print(dicts[:5,:])
 
         secondLast = []
+        col = 3
         for k in range(2,n+1):
             tmp = [res[-1][0]*(a-k+1)/(k)]
             for j in range(2,k):
@@ -5902,12 +5903,33 @@ class Puzzles(Algorithms,Formulas,MyCommon):
             # if k > 8:
             #     print("E%d & = & %s \\\\"%(k,latex(total[:8,:8])))
             diag = []
-            for m in range(k):
-                diag.append(total[m,m])
-            print(k,diag)
-            secondLast.append(diag[-2])
-            # print(k,tmp)
+            # print(k,diag)
+            # get new total array
+            # for ii in range(k):
+            #     for jj in range(k-1-ii,k):
+            #         total[ii,jj] /= factorial(jj+ii-(k-2))
+            if m > 1:
+                for m in range(k):
+                    diag.append(total[2,m])
+                if len(diag) >= col:
+                    secondLast.append(diag[-col])
+            print("k = ",k)
         print(secondLast)
+
+        m = 2
+        M = col
+        n = m*M
+        mat = Matrix.zeros(n)
+        for i in range(n):
+            count = 0 
+            k = i + 3
+            for ii in range(1,m+1):
+                for jj in range(M):
+                    mat[i,count] = k**jj*(ii+1)**k 
+                    count += 1 
+        y = Matrix(secondLast[:n])
+        print(mat.solve(y))
+            
 
         
         return
@@ -6008,9 +6030,9 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         # self.checkPolyCheby()
         # self.chebyInverse()
         # self.catalanTriangle()
-        # self.combiAm()
+        self.combiAm()
         # self.testCombiAm()
-        self.alphaBetaGeo()
+        # self.alphaBetaGeo()
 
 
         return
