@@ -91,15 +91,20 @@ class MyCommon():
         fp.close()
 
         return
-    def loadJson(self, filename):
+    # 从json文件中读取数据
+    def loadJson(self, filename,encoding="utf-8"):
         """
         load data from the json file
         input: filename, string type
         return: data, dicts type
         """
         print("load data from file ",filename)
-        fp = open(filename,"r")
-        data = json.load(fp)
+        fp = open(filename,"r",encoding=encoding)
+        data = fp.read()
+        if data.startswith(u'\ufeff'):
+            data = data.encode('utf8')[3:].decode('utf8')
+        data = json.loads(data)
+
         fp.close()
 
         return data
@@ -138,7 +143,7 @@ class MyCommon():
         would be used, any other formats are not 
         supported.
         write dicts data into a json file
-        input: data, dicts type
+        input: data, dicts type or list type
                filename, string type
 
         """
@@ -149,8 +154,8 @@ class MyCommon():
         elif filename.endswith("yml") or filename.endswith("yaml"):
             yaml.dump(data,fp)
         else:
-            data = None 
-            print("format wrong with ",filename)
+            for line in data:
+                fp.write("%s\n"%(line))
         
         fp.close()
 
@@ -186,11 +191,12 @@ class MyCommon():
         return:
             data, array type, strings line by line
         """
-        fp = open(filename,'r')
+        fp = open(filename,'r',encoding="ISO-8859-2")
         data = fp.read()
         fp.close()
         data = data.split("\n")
-        data.pop()
+        if data[-1] == "":
+            data.pop()
         return data        
         
     def getStringStati(self, array):

@@ -36,7 +36,7 @@ class OpenFiles():
         """
         super(OpenFiles, self).__init__()
         self.video_types = ["mp4","avi","rmvb","webm","ts",
-                            "mp3","ogg","wav","flac"]
+                            "mp3","ogg","wav","flac","mov"]
         self.image_types = ["jpg","jpeg","gif","png","bmp","icon"]
         self.text_types  = ["txt","py","c","h","html","css","js","gh",
                             "lisp","cpp","go","f","f90",
@@ -51,14 +51,16 @@ class OpenFiles():
                             "pptx":"wpp",
                             "xls":"et",
                             "xlsx":"et",
-                            "doc":"wps"
+                            "doc":"wps",
+                            "lyx":"lyx",
+                            "blend":"blender"
                             }
 
     def runCommand(self,program,i):
         """
         open the i-th file withe a specific program
         """
-        command = "%s %s"%(program,sys.argv[i])
+        command = "%s '%s'"%(program,sys.argv[i])
         os.system(command)
         return
 
