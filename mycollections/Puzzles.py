@@ -33,8 +33,11 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from Formulas import Formulas
+from mytools import MyCommon
 
-class Puzzles(Algorithms,Formulas):
+import os
+
+class Puzzles(Algorithms,Formulas,MyCommon):
     """
     solutions for math puzzles
     """
@@ -5613,7 +5616,7 @@ class Puzzles(Algorithms,Formulas):
 
         return
 
-    def exponentTimeEuler(self):
+    def exponentTimeEuler(self,n=10):
         """
         docstring for exponentTimeEuler
 
@@ -5626,7 +5629,7 @@ class Puzzles(Algorithms,Formulas):
 
         total = []
         res = [1]
-        n = 10
+        total.append(res)
         for i in range(2,n+1):
             line = [1]
             for j in range(1,i-1):
@@ -5634,9 +5637,421 @@ class Puzzles(Algorithms,Formulas):
             line.append(1)
             res = line.copy()
             total.append(res)
-            print(i,res)
+            # print(i,res)
+        
+        return total
+
+    def testPolyCheby(self):
+        """
+        docstring for testPolyCheby
+        test for chebyschef polynomials
+        """
+        
+        res = [[1],[1,2]]
+        for i in range(3,11):
+            tmp = [1]
+            for index,j in enumerate(res[-1][1:]):
+                tmp.append(j + res[-2][index])
+            if i%2 == 0:
+                tmp.append(2)
+            res.append(tmp)
+        for line in res:
+            print(line)
+
+        n = 10 
+        f = self.getCombinator
+        output = []
+        for k in range(n//2+1):
+            res = 0
+            for m in range(k,n//2+1):
+                res += f(n,2*m)*f(m,k)
+            res = res // (2**(n - 2*k - 1))
+            output.append(res)
+        print(output)
+
+        return output
+
+    def getTwoPowers(self,n=10):
+        """
+        docstring for getTwoPowers
+        """
+        dicts = {}
+        for i in range(n,0,-1):
+            key = "}{%s}"%str(1<<i)
+            dicts[key] = "}{2^{%d}}"%i
+        return dicts
+
+    def m2TwoM(self):
+        """
+        docstring for m2TwoM
+        C(m,k) = \sum C(2m,i)
+        C(m,1) = C(2m,1)/2
+        """
+        A = self.exponentTimeEuler(n=30)
+        # print(A)
+        x = Symbol("x")
+        F = []
+        for line in A:
+            tmp = []
+            s = 1 
+            for i,j in enumerate(line):
+                s = s*(i+1)
+                tmp.append(s*j)
+            line = np.flip(tmp)
+            f = self.getPolynomialValues(line,x)
+            f = f.expand()
+            F.append(f)
+            # print(f)
+        p2 = self.getTwoPowers(n=60)
+        # print(p2)
+        for n in range(2,20):
+            
+            s = 1
+            for i in range(n):
+                s = s*(x-i)
+            s = (s/factorial(n)).subs(x,x/2)
+            s = Poly(s).as_dict()
+            res = 0 
+            for i in range(n):
+                res += s[(i+1,)]*F[i]
+            res = res.expand()
+            coef = []
+            coefs = Poly(res).as_dict()
+            for i,key in enumerate(coefs):
+                coef.append(coefs[key]*2**(2*n-1-i))
+            print(coef)
+
+            # print(n,res)
+            string = latex(res)
+            for key in p2:
+                value = p2[key]
+                if key in string:
+                    string = string.replace(key,value)
+
+            # print("C_m^{%d} & = & %s \\\\"%(n,string))
+
         
         return
+
+    def checkPolyCheby(self):
+        """
+        docstring for checkPolyCheby
+        """
+        F = [1]
+        n = Symbol("n")
+        for i in range(10):
+            res = F[-1]*(n-i)
+            res = res/(i+1)
+            F.append(res)
+
+        coefs = [1,-2,2]
+        coefs = [1,-3,5,-5]
+        coefs = [1,-4,5,-5]
+        res = 0 
+        num = len(coefs)
+        for i in range(num):
+            res += F[num - i]*coefs[i]
+        res = res.factor()
+        print(latex(res))
+
+        return F
+
+    def chebyInverse(self):
+        """
+        docstring for chebyInverse
+        """
+        n = Symbol("n")
+        F = self.checkPolyCheby()
+        one = Integer(1)
+        coefs = [one/2**3,-one/2**3,one/2**4]
+        coefs = [one/2**4,-3*one/2**5,5*one/2**6,-5*one/2**7]
+        coefs = [one/2**5,-one/2**4,9*one/2**7,-7*one/2**7,7*one/2**8]
+        res = 0 
+        num = len(coefs)
+        for i in range(num):
+            res += F[num - i].subs(n,2*n)*coefs[i]
+        res = res.factor()
+        print(res)
+
+        res = [[1],[-1, 1],
+               [2, -2, 1],
+               [-5, 5, -3, 1],
+               [14, -14, 9, -4, 1],
+               [-42, 42, -28, 14, -5, 1],
+               [132, -132, 90, -48, 20, -6, 1],
+               [-429, 429, -297, 165, -75, 27, -7, 1],
+               [1430, -1430, 1001, -572, 275, -110, 35, -8, 1],
+               [-4862, 4862, -3432, 2002, -1001, 429, -154, 44, -9, 1],
+               [16796, -16796, 11934, -7072, 3640, -1638, 637, -208, 54, -10, 1]]
+
+        n = len(res)
+        mat = np.zeros((n,n),int)
+        for i in range(n):
+            mat[i,:i+1] = res[i]
+        record = Matrix(mat)
+        mat = self.getInverseMatrix(mat)
+        mat = Matrix(mat)
+
+        for i in range(n):
+            for j in range(i+1):
+                record[i,j] /= 2**(2*i+1-j)
+        print(record)
+        print(latex(record.inv()))
+
+
+
+        return
+
+    def catalanTriangle(self):
+        """
+        docstring for catalanTriangle
+        """
+        f = lambda n,m: 0 if m > n else m*self.getCombinator(2*n-m,n)//(2*n-m)
+        for i in range(1,20):
+            print(i,f(i,10))
+        return
+
+    def getPowerSplitMat(self,n=10):
+        """
+        docstring for getPowerSplitMat
+        """
+        
+
+        init = {1:1}
+        mat = Matrix.zeros(n)
+        mat[0,0] = init[1]
+        for i in range(n-1):
+            total = {}
+            for key in init:
+                for j in range(key,key+2):
+                    if j in total:
+                        total[j] += j*init[key]
+                    else:
+                        total[j]  = j*init[key]
+            init = total
+            arr  = list(total.values())
+            for j in range(i+2):
+                mat[i+1,j] = arr[j]
+
+        return mat
+
+    def poly2Array(self,poly,n=10):
+        """
+        docstring for poly2Array
+        x**2 => [0,1]
+        """
+        tmp = []
+        arr = Poly(poly).as_dict()
+        for i in range(1,n+1):
+            key = (i,)
+            if key in arr:
+                tmp.append(arr[key])
+            else:
+                tmp.append(0)
+        tmp = Matrix(tmp).transpose()
+        return tmp
+
+    def arr2Cm(self,poly):
+        """
+        docstring for arr2Cm
+        poly = Matrix([[...]])
+        [[1,2,3]] = C_a^1 + 2C_a^2+3C_a^3
+        """
+        string = ""
+
+        for i in range(len(poly)):
+            j = poly[0,i]
+            if j == 0:
+                continue
+            elif j == 1:
+                string += "C_a^{%d}+"%(i+1)
+            else:
+                string += "%dC_a^{%d}+"%(j,i+1)
+
+        string = string[:-1]
+
+        return string
+
+    def combiAm(self):
+        """
+        docstring for combiAm
+        C_{am}^{1} = a C_{m}^{1} 
+        C_{am}^{2} = C_a^2 C_m^1 + a^2 C_{m}^{2} 
+        """
+        a = Symbol("a")
+        # a = Integer(2)
+        res = [[a]]
+        n = 22
+
+        dicts = self.getPowerSplitMat(n=n)
+        print(dicts[:5,:])
+
+        secondLast = []
+        col = 7
+        for k in range(2,n+1):
+            tmp = [res[-1][0]*(a-k+1)/(k)]
+            for j in range(2,k):
+                num = (a*j*res[-1][j-2]+(a*j-k+1)*res[-1][j-1])/k
+                num = num.factor()
+                tmp.append(num)
+            tmp.append(res[-1][-1]*a)
+            res.append(tmp)
+            total = Matrix.zeros(k)
+            for m in range(k):
+                poly = self.poly2Array(tmp[m],n=n)*dicts
+                for j in range(k):
+                    total[m,j] = poly[0,j]
+                # print(self.arr2Cm(poly),",\\\\")
+            # if k > 8:
+            #     print("E%d & = & %s \\\\"%(k,latex(total[:8,:8])))
+            diag = []
+            # print(k,diag)
+            # get new total array
+            # for ii in range(k):
+            #     for jj in range(k-1-ii,k):
+            #         total[ii,jj] /= factorial(jj+ii-(k-2))
+            if m > 1:
+                for m in range(k):
+                    diag.append(total[2,m])
+                if len(diag) >= col:
+                    secondLast.append(diag[-col])
+            print("k = ",k)
+        print(secondLast)
+
+        m = 2
+        M = col
+        n = m*M
+        mat = Matrix.zeros(n)
+        begin = m+2 
+        if col > begin:
+            begin = col
+        for i in range(n):
+            count = 0 
+            k = i + begin 
+            for ii in range(1,m+1):
+                for jj in range(M):
+                    mat[i,count] = k**jj*(ii+1)**k 
+                    count += 1 
+        y = Matrix(secondLast[:n])
+        sol = mat.solve(y)
+        # print(list(sol[0]))
+
+        x = Symbol("x")
+        for i in range(m):
+            res = 0 
+            for j in range(M):
+                index  = M*i+j
+                res = res*x + sol[index,0]
+            res = res.subs(x,1/x)
+            print(i,res.factor())
+            
+
+        
+        return
+
+    def testCombiAm(self):
+        """
+        docstring for testCombiAm
+        """
+        arr = [4, 45, 432, 4200, 43200, 476280, 
+               5644800, 71850240, 979776000, 14270256000, 
+               221298739200, 3642807168000, 63465795993600, 
+               1167099373440000, 22596613079040000, 
+               459548157100032000, 9795631769763840000, 
+               218413777784057856000]
+        n = len(arr)
+
+        for i in range(n-1):
+            a = Integer(arr[i+1])/arr[i]
+            a = a/(i+3)**2
+            a = 2*a/((i+5))
+            print(a)
+
+        f0 = factorial 
+        f1 = self.getCombinator
+        n = 9
+        print(6*f1(n+1,4)*f0(n)/n**2)
+        for n in range(3,20):
+            
+            print(12*f1(n+1,4)/n)
+
+        return
+
+
+    def alphaBetaGeo(self):
+        """
+        docstring for alphaBetaGeo
+        the so-called most complex problem in plane geometry
+
+        """
+
+        data = self.loadJson("alphaBetaGeo.json")
+        f = lambda x: x*np.pi/180 
+        fs = lambda x: np.sin(f(x))
+        fs2 = lambda x,y:fs(x)/fs(y)
+        f3 = lambda x,y,z:fs(x)*fs(y)*fs(z)
+
+        form = r"\sin %d \sin %d \sin %d & = & \sin %d \sin %d \sin %d \\"
+
+        count = 0
+        for i,line in enumerate(data):
+            beta = line[0] + line[2]
+            a,b,c,d = beta,line[1],beta+line[1],beta+line[0]
+            y = fs2(a,b)*fs2(c,d)
+
+            # print(i+1,line,a,b,c,d)
+            k1,k2 = line[-1]+line[2],line[-1]
+            # print(y,fs2(k1,k2))
+            arr = [a,c,k2,b,d,k1]
+            for j in range(len(arr)):
+                if arr[j] > 90:
+                    arr[j] = 180 - arr[j]
+
+            # print(i+1,form%(tuple(arr)))
+            if arr[1] + arr[2] == 90:
+                count += 1
+                # print(i+1,arr)
+            else:
+                print(i+1,arr)
+        print(count)
+        
+        return
+
+    def quasiParticle(self):
+        """
+        docstring for quasiParticle
+        Riemann Conjecture and quasi-particle
+        """
+        
+        from mpmath import zetazero
+
+        getZeros = lambda begin,end: [zetazero(i+1) for i in range(begin,end)]
+        zeros = []
+        filename = "zetazeros.json"
+        if os.path.exists(filename):
+            zeros = self.loadJson(filename)
+        else:
+            for i in range(150):
+                print(i)
+                x = float(zetazero(i+1).imag)
+                zeros.append(x)
+            self.writeJson(zeros,filename)
+
+        zeros = np.array(zeros)
+        X = []
+        Y = []
+        for x in range(1000,2000):
+            X.append(x*0.01)
+            # Y.append(np.abs(sum(np.exp(1j*X[-1]*zeros))))
+
+        X = np.arange(1,1000)*0.01
+        Y = 1 - (np.sin(X)/X)**2
+        plt.plot(X,Y)
+        plt.show()
+
+
+        return
+
     def test(self):
         """
         docstring for test
@@ -5660,7 +6075,16 @@ class Puzzles(Algorithms,Formulas):
         # self.getCubicSol([1,-21,35,-7])
         # self.threeCircles()
         # self.testThreeCircles()
-        self.exponentTimeEuler()
+        # self.exponentTimeEuler()
+        # self.testPolyCheby()
+        # self.m2TwoM()
+        # self.checkPolyCheby()
+        # self.chebyInverse()
+        # self.catalanTriangle()
+        # self.combiAm()
+        # self.testCombiAm()
+        # self.alphaBetaGeo()
+        self.quasiParticle()
 
 
         return
