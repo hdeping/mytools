@@ -6059,7 +6059,7 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         import torch
         cuda = torch.cuda.is_available()
 
-        n = 1000
+        n = 10
         X = torch.rand(n,n)
         X = (X + X.transpose(0,1))/2
 
@@ -6070,9 +6070,39 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         value = value[:,0].numpy()
         print(len(value),max(value),min(value))
         
-        plt.xlim([-20,20])
-        plt.hist(value,bins=1000,density=True)
+        # plt.xlim([-20,20])
+        plt.figure(figsize=(12,9))
+        plt.xticks(fontsize=28)
+        plt.yticks([0.005,0.01,0.015],fontsize=28)
+        value = self.loadJson("randomMat.json")
+        # plt.hist(value,bins=1000,density=True)
+        # plt.savefig("randomMat.png",dvi=300)
+        # plt.show()
+        print(min(value),max(value))
+        X = [[100,13.71],
+             [200,19.61],
+             [300,24.14],
+             [400,27.95],
+             [500,31.30],
+             [600,34.34],
+             [700,37.12],
+             [800,39.70]]
+        X = np.array(X)
+        # plt.plot(X[:,0]**0.5,X[:,1])
+        # plt.show()
+        a,b = min(value),max(value)
+        N = 1000 
+        arr = np.zeros(N+1)
+        for i in value:
+            i = (i-a)/(b-a)
+            arr[int(i*N)] += 1 
+        arr = arr/len(value)
+        x = np.arange(N+1)*(b-a)/N+a 
+        x = np.abs(b*b-x*x)**0.5
+        plt.plot(x,arr,"o")
+        plt.savefig("randomMat-semicircle.png",dvi=300)
         plt.show()
+        print(np.polyfit(x,arr,1)*b*b*N**0.5)
 
 
 
