@@ -36,6 +36,7 @@ from Formulas import Formulas
 from mytools import MyCommon
 
 import os
+os.environ['KMP_DUPLICATE_LIB_OK']= "True"
 
 class Puzzles(Algorithms,Formulas,MyCommon):
     """
@@ -6052,6 +6053,34 @@ class Puzzles(Algorithms,Formulas,MyCommon):
 
         return
 
+    def randomMat(self):
+        """
+        """
+        import torch
+        cuda = torch.cuda.is_available()
+
+        n = 1000
+        A = torch.rand(n*(n+1)//2)
+        X = torch.zeros(n,n)
+        count = 0
+        for i in range(n):
+            for j in range(i,n):
+                X[i,j] = A[count]
+                X[j,i] = A[count]
+                count += 1
+
+        # if cuda:
+        #     X = X.cuda()
+        value = X.eig().eigenvalues
+        value = value[:,0].numpy()
+        
+        plt.hist(value,bins=10)
+        plt.show()
+
+
+
+        return 
+
     def test(self):
         """
         docstring for test
@@ -6084,7 +6113,8 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         # self.combiAm()
         # self.testCombiAm()
         # self.alphaBetaGeo()
-        self.quasiParticle()
+        # self.quasiParticle()
+        self.randomMat()
 
 
         return
