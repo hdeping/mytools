@@ -6060,21 +6060,18 @@ class Puzzles(Algorithms,Formulas,MyCommon):
         cuda = torch.cuda.is_available()
 
         n = 1000
-        A = torch.rand(n*(n+1)//2)
-        X = torch.zeros(n,n)
-        count = 0
-        for i in range(n):
-            for j in range(i,n):
-                X[i,j] = A[count]
-                X[j,i] = A[count]
-                count += 1
+        X = torch.rand(n,n)
+        X = (X + X.transpose(0,1))/2
 
         # if cuda:
         #     X = X.cuda()
+        print("get the eigenvalues")
         value = X.eig().eigenvalues
         value = value[:,0].numpy()
+        print(len(value),max(value),min(value))
         
-        plt.hist(value,bins=10)
+        plt.xlim([-20,20])
+        plt.hist(value,bins=1000,density=True)
         plt.show()
 
 
