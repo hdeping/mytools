@@ -8,5 +8,6 @@ test.yml
 *.bib
 run.sh
 .DS_Store
+*zip
 *.txt
 *.png
