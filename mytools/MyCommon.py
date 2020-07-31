@@ -283,13 +283,13 @@ class MyCommon():
             if i > num - 1:
                 break
         return 
-    def loadHtml(self,filename):
+    def loadHtml(self,filename,encoding="ISO-8859-2"):
         """
         docstring for loadHtml
         """
         print("load data from",filename)
         import scrapy
-        data = open(filename,"r",encoding="ISO-8859-2")
+        data = open(filename,"r",encoding=encoding)
         data = data.read()
         res = scrapy.Selector(text=data)
 
