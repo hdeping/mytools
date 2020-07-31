@@ -184,14 +184,14 @@ class MyCommon():
                 fp.write(str(line[-1]+'\n'))
 
         return
-    def loadStrings(self,filename):
+    def loadStrings(self,filename,encoding="ISO-8859-2"):
         """
         input: 
             filename, text
         return:
             data, array type, strings line by line
         """
-        fp = open(filename,'r',encoding="ISO-8859-2")
+        fp = open(filename,'r',encoding=encoding)
         data = fp.read()
         fp.close()
         data = data.split("\n")
