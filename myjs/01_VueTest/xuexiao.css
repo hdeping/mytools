@@ -1,0 +1,18 @@
+
+th {
+  border: 1px solid black;
+  width: 100px;
+  background-color: green;
+  color:yellow;
+  font-size:30;
+ }
+
+ td {
+  border: 1px solid black;
+  color:blue;
+  font-size:30;
+ }
+
+ a{
+    color:red;
+ }

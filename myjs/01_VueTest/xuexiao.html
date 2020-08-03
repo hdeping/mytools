@@ -1,0 +1,63 @@
+<html>
+ 
+<head>
+  <meta charset="utf-8">
+ <link rel="stylesheet" href="xuexiao.css">
+ <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+</head>
+ 
+<body>
+ <div id="app">
+  <h1>{{colleges.length}} 所公立院校</h1>
+ <table>
+  <thead>
+    <th>顺序</th> 
+    <th>学校名称</th> 
+    <th>简介</th>
+    <th>类别</th> 
+    <th>学校编号</th> 
+    <th>所在地</th> 
+    <th>最低分2019</th>  
+    <th>录取概率</th> 
+    <th>专业</th> 
+
+  </thead>
+  <tbody>
+  <template v-for="(item,index) in colleges">
+   <tr>
+
+    <td>{{item.顺序}}</td> 
+    <td>{{item.学校名称}}</td> 
+    <td>{{item.简介}}</td>
+    <td>{{item.类别}}</td> 
+    <td>
+      <a :href="'https://gkcx.eol.cn/school/' + item.学校编号">
+        {{item.学校编号}}
+      </a>  
+    </td> 
+
+    <td>{{item.所在地}}</td> 
+    <td>{{item.最低分2019}}</td> 
+    <td>{{item.录取概率}}</td> 
+    <td>
+      <ul>
+        <li>{{item.专业.专业1}}</li>
+        <li>{{item.专业.专业2}}</li>
+        <li>{{item.专业.专业3}}</li>
+      </ul>
+      
+    </td> 
+
+   </tr>
+  </template>
+ </tbody>
+ </table>
+
+
+ </div>
+ 
+ <script src="xuexiao_data4.js"> </script>
+ <script src="xuexiao.js"> </script>
+</body>
+ 
+</html>
