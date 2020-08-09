@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto-Input</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="test.css">
+
+    <script>
+        MathJax = {
+            tex:{
+                    inlineMath: [['$', '$'], 
+                                ['\\[', '\\]']]
+                }
+        };
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" 
+            id="MathJax-script" 
+            async  
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
+
+</head>
+<body>
+    <div id="app">
+        <template v-for="item in items">
+            <tr>
+                <td>{{item.field}}</td>
+                <td>
+                    <input  :name="item.name"
+                    :defallt="item.name">
+                </td>
+            </tr> 
+        </template>
+        <div> 
+            The formula for the calulation of the sludge production
+        </div>
+        <div class="form">
+        \begin{eqnarray*}
+        P_{X,TSS} &=& \left(1+f_{d}k_{d}\left(SRT\right)\right)\cdot\frac{QY\left(S_{0}-S\right)}{1+k_{d}\left(SRT\right)}\cdot\frac{1}{0.85}+\\
+                  & & QX_{0,i}+Q\left(TSS_{0}-VSS_{0}\right)
+        \end{eqnarray*}
+        </div>  
+            <template v-for="(item,index) in variables">
+                <tr>
+                    <td>{{item}}</td>
+                    <td>
+                        <input  ref="input"
+                        :name="'i'+index"
+                        :value="values[index]">
+                    </td>
+                </tr> 
+            </template>
+            <template>
+            <tr>
+                <td><input type="button" ref="calculate"
+            v-on:click="calculate" value="calculate"></td><br></br>
+            <td><input type="button" ref="reset"
+            v-on:click="reset" value="reset"></td><br>
+                <td><input readonly="readonly" ref="output1"></td><br>
+                <td><input readonly="readonly" ref="output2"></td><br>
+            </tr> 
+             </template>   
+
+    </div>
+
+    <script type="text/javascript" src="test.js">
+
+    </script>
+</body>
+</html>

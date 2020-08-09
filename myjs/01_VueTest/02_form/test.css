@@ -1,0 +1,33 @@
+/* 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2020-08-07 21:17:19
+    @project      : test the input
+    @version      : 1.0
+    @source file  : test.css
+
+============================
+*/
+
+body{
+    background:white;
+}
+
+input{
+    color: blue;
+    font-size:30px;
+}
+
+td{
+    font-size: 30px;
+}
+
+div{
+    font-size:30px;
+}
+
+.form{
+    color:blue;
+}
