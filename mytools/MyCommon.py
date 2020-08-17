@@ -322,9 +322,11 @@ class MyCommon():
     def getSeconds(self,time_string):
         """
         docstring for getSeconds
-        hh:mm:ss -> seconds
+        2020-08-17T00:02:47.000Z -> seconds
         """
         try:
+            time_string = time_string.split("T")[1]
+            time_string = time_string.split(".")[0]
             time_string = time_string.split(":")     
             seconds = 0
             for x in time_string:
@@ -343,8 +345,21 @@ class MyCommon():
         for line in res:
             line = line.split(",")
             seconds = self.getSeconds(line[0])
-            data.append([seconds,float(line[1]),float(line[1])])
+            data.append([seconds,float(line[1]),float(line[2])])
+        data = np.array(data)
 
+        # calculate the time,distance and speed
+        format_string = "%.1f 秒, %.1f 米, %.1f km/h"
+        output = []
+        for i in range(1,len(data)):
+            l1 = data[i-1]
+            l2 = data[i]
+            t = l2[0] - l1[0]
+            s = self.getGPSDist(l2[1:],l1[1:])
+            line = [t,s,s*3.6/t]
+            # print(format_string%(tuple(line)))
+            output.append(line)
+        print(np.sum(output,axis=0))
         return
 
 
