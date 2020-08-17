@@ -294,23 +294,44 @@ class MyCommon():
         res = scrapy.Selector(text=data)
 
         return res
+
+    def getEarthRadius(self,alpha):
+        """
+        docstring for getEarthRadius
+        the radius is different in the different
+        region in the earth
+
+        Earth Radius by Latitude (WGS 84)
+
+        """
+        a = 6378137 
+        b = 6356752
+        A = np.cos(alpha)**2
+        B = np.sin(alpha)**2
+        radius = (A*a**4+B*b**4)/(A*a**2+B*b**2)
+        radius = np.sqrt(radius)
+        return radius
+
     def getGPSCoor(self,arr):
         """
         docstring for getGPSCoor
-        arr = [latitude,longtitue]
+        arr = [latitude,longtitue,altitude]
         latitude:-90~90
         longtitude: -180~180
+        altitude: usually greater than 0
         经纬度数组
         """
         # the radius of the earth
-        radius = 6378137 
         alpha = arr[0]*np.pi/180 
         theta = arr[1]*np.pi/180
+        radius = self.getEarthRadius(alpha)
+        radius += arr[2]
         z = np.sin(alpha)*radius
         x = np.cos(alpha)*np.cos(theta)*radius
         y = np.cos(alpha)*np.sin(theta)*radius
 
         return np.array([x,y,z])
+
     def getGPSDist(self,arr1,arr2):
         """
         docstring for getGPSDist
@@ -345,7 +366,10 @@ class MyCommon():
         for line in res:
             line = line.split(",")
             seconds = self.getSeconds(line[0])
-            data.append([seconds,float(line[1]),float(line[2])])
+            item = [seconds]
+            for i in range(1,4):
+                item.append(float(line[i]))
+            data.append(item)
         data = np.array(data)
 
         # calculate the time,distance and speed
@@ -360,9 +384,5 @@ class MyCommon():
             # print(format_string%(tuple(line)))
             output.append(line)
         print(np.sum(output,axis=0))
-        return
-
-
-A = MyCommon()
-A.dealGPS() 
+        return output
 
