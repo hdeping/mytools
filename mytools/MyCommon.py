@@ -318,8 +318,36 @@ class MyCommon():
         coor1 = self.getGPSCoor(arr1)
         coor2 = self.getGPSCoor(arr2)
         return np.linalg.norm(coor1 - coor2)
-    
+
+    def getSeconds(self,time_string):
+        """
+        docstring for getSeconds
+        hh:mm:ss -> seconds
+        """
+        try:
+            time_string = time_string.split(":")     
+            seconds = 0
+            for x in time_string:
+                seconds = 60*seconds + int(x)
+        except Exception as e:
+            print("wrong with the time: ",time_string)
+            return -1
+
+        return seconds
+    def dealGPS(self,filename="20200817074537.json"):
+        """
+        docstring for dealGPS
+        """
+        res = self.loadStrings(filename)
+        data = []
+        for line in res:
+            line = line.split(",")
+            seconds = self.getSeconds(line[0])
+            data.append([seconds,float(line[1]),float(line[1])])
+
+        return
 
 
 A = MyCommon()
-A.dealGPS(filename = "20200817074537.json") 
+A.dealGPS() 
+
