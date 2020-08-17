@@ -293,4 +293,33 @@ class MyCommon():
         data = data.read()
         res = scrapy.Selector(text=data)
 
-        return res 
+        return res
+    def getGPSCoor(self,arr):
+        """
+        docstring for getGPSCoor
+        arr = [latitude,longtitue]
+        latitude:-90~90
+        longtitude: -180~180
+        经纬度数组
+        """
+        # the radius of the earth
+        radius = 6378137 
+        alpha = arr[0]*np.pi/180 
+        theta = arr[1]*np.pi/180
+        z = np.sin(alpha)*radius
+        x = np.cos(alpha)*np.cos(theta)*radius
+        y = np.cos(alpha)*np.sin(theta)*radius
+
+        return np.array([x,y,z])
+    def getGPSDist(self,arr1,arr2):
+        """
+        docstring for getGPSDist
+        """
+        coor1 = self.getGPSCoor(arr1)
+        coor2 = self.getGPSCoor(arr2)
+        return np.linalg.norm(coor1 - coor2)
+    
+
+
+A = MyCommon()
+A.dealGPS(filename = "20200817074537.json") 
