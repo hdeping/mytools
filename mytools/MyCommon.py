@@ -365,6 +365,8 @@ class MyCommon():
         data = []
         for line in res:
             line = line.split(",")
+            if line[0] == "time":
+                continue
             seconds = self.getSeconds(line[0])
             item = [seconds]
             for i in range(1,4):
