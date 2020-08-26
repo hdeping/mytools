@@ -412,4 +412,18 @@ class MyCommon():
             images += self.getCommand(command)
         return images
 
+    def writeImageJs(self):
+        """
+        docstring for writeImageJs
+        """
+        images = self.getCurrentImages()
+        filename = "images.js"
+        self.writeJson(images,filename)
+        with open(filename,'r') as fp:
+            data = fp.read()
+        with open(filename,'w') as fp:
+            fp.write("var images = "+data+";")
+
+        return
+
 
