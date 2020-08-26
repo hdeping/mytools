@@ -17,6 +17,7 @@
 import json
 import yaml
 import numpy as np
+import os
 
 
 class MyCommon():
@@ -387,4 +388,28 @@ class MyCommon():
             output.append(line)
         print(np.sum(output,axis=0))
         return output
+
+    def getCommand(self,command):
+        """
+        docstring for getCommand
+        command: system command
+        return: the system output
+        """
+        results = os.popen(command).read()
+        results = results.split("\n")
+        if results[-1] == "":
+            results.pop()
+        return results
+
+    def getCurrentImages(self):
+        """
+        docstring for getCurrentImages
+        """
+        images = []
+        img_types = ["jpg","png","jpeg","gif"]
+        for img in img_types:
+            command = "ls *" + img 
+            images += self.getCommand(command)
+        return images
+
 
