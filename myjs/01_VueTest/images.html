@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto-Input</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        <template v-for="image in images">
+            <img :src="image"
+             @click="showSrc"><br>
+        </template> 
+
+    </div>
+
+    <script type="text/javascript" src="data.js"></script>
+    <script type="text/javascript">
+        var saved_images = [];
+        var count = 0;
+        var vm = new Vue({
+        el:"#app",
+        data:{
+            images:images,
+        },
+        methods:{
+            showSrc:function (event) {
+                var src = event.target.src;
+                src = src.split("/");
+                src = src[src.length-1];
+                count += 1; 
+                console.log(count,src);
+                saved_images.push(src);
+            }
+        }
+    });
+    </script>
+</body>
+</html>
