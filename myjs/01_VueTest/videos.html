@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auto-Input</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <style type="text/css">
+        button{
+            width:240px;
+            height:150px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="app">
+         <button 
+            ref = "button" 
+            @click="last_play"> 
+             {{items[0]}}
+         </button>
+         <button 
+            ref = "button" 
+            @click="next_play"> 
+             {{items[1]}}
+         </button>
+
+        <video 
+         :src="videos[0]" 
+         ref="video"
+         controls 
+         width="720" 
+         height="480" 
+         type="video/mp4"> 
+        </video>
+    </div>
+
+    <script type="text/javascript" src="videos.js"></script>
+    <script type="text/javascript">
+        var saved_images = [];
+        var count = 0;
+        var vm = new Vue({
+        el:"#app",
+        data:{
+            videos:videos,
+            items:[
+                "上一页",
+                "下一页"
+            ],
+        },
+        methods:{
+            next_play:function () {
+              count += 1;
+              if (count > videos.length) {
+                  count -= videos.length;
+              }
+              this.$refs.video.src =  videos[count];
+          },
+          last_play:function () {
+              count -= 1;
+              if (count < 0) {
+                  count += videos.length;
+              }
+              this.$refs.video.src =  videos[count];
+          },
+
+            
+        }
+    });
+    </script>
+</body>
+</html>
