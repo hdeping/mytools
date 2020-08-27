@@ -51,7 +51,7 @@
         methods:{
             next_play:function () {
               count += 1;
-              if (count > videos.length) {
+              if (count >= videos.length) {
                   count -= videos.length;
               }
               this.$refs.video.src =  videos[count];
