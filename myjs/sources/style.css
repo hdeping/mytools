@@ -1,0 +1,27 @@
+body{
+    font-size: 20px;
+}
+button{
+  width:250px;
+  height:100px;
+  font-size:40px;
+  color: red;
+  background: #E3EDCD;
+
+}
+#toggle_style{
+  width:400px;
+  color:blue;
+  background: #E9EBFE;
+}
+input{
+  width:250px;
+  height:100px;
+  font-size:40px;
+  color: black;
+  text-align: center;
+
+}
+div{
+  text-align: center;
+}

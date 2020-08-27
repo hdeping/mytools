@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!-- 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2020-03-18 13:40:02
+    @project      : 1.0
+    @version      : learning d3
+    @source file  : index.html
+
+============================
+ -->
+
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  -->
+    <script type="text/javascript"
+        src="https://d3js.org/d3.v5.min.js">
+        </script>
+</head>
+
+<body>
+    <div class="title">
+        手机UI界面查看
+    </div>
+
+    <div id = "tree"></div>
+
+    <script src = "ui.js"> </script>
+    <script type="text/javascript">
+        var scale = 0.5;
+        var width  = 1080*scale;
+        var height = 2248*scale;
+        var radius = 0;
+
+        var colors = {
+            svg_background:"orange",
+            rect_fill:"white",
+            img:"red",
+            stroke:"pink",
+        };
+        var colors_status = [];
+        for(var i = 0; i < dataset.length; i ++)
+        {
+            colors_status.push(0);
+        }
+        console.log(colors_status);
+        
+        var svg = d3.select("#tree").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .attr("fill",colors.svg_background)
+                    .append("g")
+                    .attr("transform", "translate(0,0)");
+
+        var rects = svg.selectAll("rect")
+               .data(dataset)
+               .enter()
+               .append("rect")
+               .attr("fill",colors.rect_fill)
+               .attr("stroke",colors.stroke)
+               .attr('width', function (d,i) {
+                    var x = dataset[i][2] - dataset[i][0]; 
+                    return x*scale;
+               })
+               .attr('height', function (d,i) {
+                    var x = dataset[i][3] - dataset[i][1];
+                    return x*scale;
+               })
+               .attr('rx', radius)
+               .attr('ry', radius)
+               .attr("x",function (d,i) {
+                    var x = dataset[i][0];
+                    return x*scale;
+               })
+               .attr("y",function (d,i) {
+                    var x = dataset[i][1];
+                    return x*scale;
+               })
+               .on("click",function (d,i) {
+                  
+                  if (colors_status[i] == 0) {
+                        d3.select(this).attr("fill",colors.img);  
+                        var x = dataset[i][2] - dataset[i][0]; 
+                        var y = dataset[i][3] - dataset[i][1]; 
+                        console.log(dataset[i]);
+                        console.log("width:",x,"height:",y);
+                  }
+                  else{
+                      d3.select(this).attr("fill",colors.rect_fill);     
+                  }
+                  colors_status[i] = 1 - colors_status[i];
+                 
+               });
+    </script>
+    
+</body>
+
+</html>
