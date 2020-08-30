@@ -64,3 +64,43 @@ mp4()
            new$1.mp4
 }
 mp4 $1
+
+# ------ bak --------
+#!/usr/bin/bash
+
+name=`pwd|awk -F / '{print $NF}'`
+name=${name}.tgz
+rm -fr *\.o
+tar zcvf ../$name *
+# ------ base --------
+#!/bin/sh
+rename A a *
+rename B b *
+rename C c *
+rename D d *
+rename E e *
+rename F f *
+rename G g *
+rename H h *
+rename I i *
+rename J j *
+rename K k *
+rename L l *
+rename M m *
+rename N n *
+rename O o *
+rename P p *
+rename Q q *
+rename R r *
+rename S s *
+rename T t *
+rename U u *
+rename V v *
+rename W w *
+rename X x *
+rename Y y *
+rename Z z *
+# ------ bcchash.sh --------
+bitcoin-cli getblock `bitcoin-cli getblockhash $1`
+# ------ bcctran.sh --------
+bitcoin-cli decoderawtransaction `bitcoin-cli getrawtransaction $1`
