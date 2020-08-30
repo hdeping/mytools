@@ -144,3 +144,26 @@ convert $4 $5 $6  +append $file2
 convert $7 $8 $9  +append $file3
 convert $file1 $file2 $file3 -append combine_${10}.png
 }
+
+# ------ crop_png --------
+#!/usr/bin/bash
+
+cut_sw()
+{
+    convert $1 -gravity southwest -crop 1500X1500+0+0 new$1
+}
+cut()
+{
+    convert $1 -gravity center -crop 900X900+0+0 new$1
+}
+for name in $*
+do
+    cut $name
+done
+# ------ discuz --------
+#!/bin/sh
+
+rsync -avz hdp@210.45.125.225:/home/http/ /home/hdeping/02_disk/discuz/ 
+ssh hdp@210.45.125.225  'mysqldump -u root -pnclxin ultrax > ultrax.sql'
+scp hdp@210.45.125.225:ultrax.sql /home/hdeping/02_disk/
+
