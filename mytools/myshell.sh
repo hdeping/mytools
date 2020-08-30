@@ -410,5 +410,88 @@ vim pack.sh
 # ------ getpdf --------
 #!/usr/bin/bash
 
-
 pdftk `cat mv.sh` output total.pdf
+
+# ------ gspng --------
+#!/bin/bash
+
+for name in `ls *ps`
+do
+gs -r300 -dEPSCrop -dTextAlphaBits=4 -sDEVICE=png16m -sOutputFile=${name}.png -dBATCH -dNOPAUSE $name 
+done
+rename ps.png png *png
+rename epng png *png
+# ------ inc --------
+#!/usr/bin/bash
+name=$1
+find /usr/include -name "*${name}*"
+# ------ index --------
+#!/usr/bin/bash
+
+# rename a file with serial number
+# by xiaoeheng
+# 2015-12-18 15:54:36    
+
+i=$1
+name=$2
+
+mv $name ${i}_$name
+# ------ indexAll --------
+#!/usr/bin/bash
+
+i=0
+#for name in `ls *pdf`
+for name in `ls *pdf`
+do
+    ((i = i + 1))
+    if [ $i -lt 10 ];then
+        file=0${i}_$name
+    else
+        file=${i}_$name
+    fi
+    mv $name $file
+done
+
+# ------ install.sh --------
+./configure
+make
+make install
+# ------ makeAll.sh --------
+#!/usr/bin/bash
+
+for i in 0 1 3 5 7
+do
+    for j in 0 2 4 6 8 10
+    do
+        if [ $j -lt 10 ];then
+            dirName=0${i}_0$j
+        else
+            dirName=0${i}_$j
+        fi
+        echo "entering $dirName"
+        #cd $dirName
+        #make clean
+        #make
+        echo "leaving $dirName"
+        #cd ..
+    done
+
+done
+
+# ------ md.sh --------
+for name in `ls *md`
+do
+    markdown_py -o html4 $name > ${name}.html
+    wkhtmltopdf ${name}.html ${name}.pdf
+done
+rm *html
+rename md.pdf pdf
+mkdir pdfs
+mv *pdf pdfs
+# ------ mkvideo --------
+#!/usr/bin/bash
+
+format=`ls 0*|cut -d . -f 2|sort -u`
+ffmpeg -i ${3}%0${1}d.${format} \
+       -vb ${2}M -vcodec mpeg4  new.avi
+       
