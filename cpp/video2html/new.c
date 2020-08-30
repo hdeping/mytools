@@ -1,11 +1,12 @@
 #include "head.h"
 
-const char chapter[20][20] = {
+const char chapter[25][20] = {
 "第零一集", "第零二集", "第零三集", "第零四集",
 "第零五集", "第零六集", "第零七集", "第零八集",
 "第零九集", "第一十集", "第一一集", "第一二集",
 "第一三集", "第一四集", "第一五集", "第一六集",
-"第一七集", "第一八集", "第一九集" };
+"第一七集", "第一八集", "第一九集",
+"第二十集", "第二一集", "第二二集", "第二三集", "第二四集"};
 
 /*void writeToFileNew{{{*/
 void writeToFileNew(int j,char *filetype,char *dir,char *src)
@@ -108,15 +109,15 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "chang";
-    int len = 12;
-    char title[60] = "妖出长安";
+    char dir[20]      = "bigbang";
+    int len = 24;
+    char title[60] = "生活大爆炸";
     getIndexHtml(len,dir,title);
-    char src[120]      = "  src=\"files/chang";
+    char src[120]      = "  src=\"files/bigbang";
 
     for(int j = 1;j <= len;j++)
     {
-        writeToFileNew(j,"mp4",dir,src);
+        writeToFileNew(j,"mkv",dir,src);
     }
 }
 /*}}}*/
