@@ -109,15 +109,16 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "bigbang";
-    int len = 24;
-    char title[60] = "生活大爆炸";
+    char dir[20]      = "quantumMechanics";
+    int len = 10;
+    char title[60] = "Quantum Mechanics Standford";
     getIndexHtml(len,dir,title);
-    char src[120]      = "  src=\"files/bigbang";
+    char src[120]      = "  src=\"../Quantum_Mechanics_Stanford";
 
+    system("mkdir quantumMechanics");
     for(int j = 1;j <= len;j++)
     {
-        writeToFileNew(j,"mkv",dir,src);
+        writeToFileNew(j,"mp4",dir,src);
     }
 }
 /*}}}*/
