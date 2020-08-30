@@ -328,10 +328,33 @@ filename="data0.50-0.10.txt"
 plot filename using 1:2 w l lw 4 title "S" ,\
     filename using 1:3 w l lw 4  title "I" ,\
     filename using 1:4 w l lw 4  title "R" 
+# ------ fstab.sh --------
+for name in c0202 c0203 c0204 c0205 c0206 c0207 c0208 c0209 c0211 c0212
+do
+    scp fstab $name:/etc/fstab
+    ssh $name mount -a
+done
+# ------ get --------
+#!/usr/bin/bash
 
+sed 's/http/\nhttp/g'|\
+sed 's/jpg/jpg\n/g'|\
+sed 's/png/png\n/g'|\
+grep http|\
+sort -u
 
+# ------ getGif --------
+ #!/bin/sh
 
+palette="palette.png"
 
+filters="fps=25,scale=900:-1:flags=lanczos"
+
+ffmpeg -v warning -i $1 \
+       -vf "$filters,palettegen" \
+       -y $palette
+ffmpeg -v warning -i $1 -i $palette \
+       -lavfi "$filters [x]; [x][1:v] paletteuse" -y $2
 
 
 
