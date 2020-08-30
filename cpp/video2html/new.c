@@ -27,21 +27,9 @@ void getIndexHtml(int line,char *dir,char *title)
     {
         char htmlName[30];
         char contentName[30];
-        if ( i < 10 )
-        {
-            sprintf(htmlName,"%s/00%d.html",dir,i);
-            sprintf(contentName,"Chapter 0%d",i);
-        }
-        else if ( i < 100 )
-        {
-            sprintf(htmlName,"%s/0%d.html",dir,i);
-            sprintf(contentName,"Chapter %d",i);
-        }
-        else
-        {
-            sprintf(htmlName,"%s/%d.html",dir,i);
-            sprintf(contentName,"Chapter %d",i);
-        }
+        sprintf(htmlName,"files/%s/%d.html",dir,i);
+        sprintf(contentName,"Chapter %d",i);
+
         printf("%s\n",htmlName);
         printf("%s\n",contentName);
         fprintf(fp,"<a href=\"%s\">\n",htmlName);
@@ -57,9 +45,9 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "xiaojiayu";
-    int len = 102;
-    char title[60] = "小甲鱼 算法与数据结构";
+    char dir[20]      = "gallery";
+    int len = 9;
+    char title[60] = "复杂网络绘图";
     getIndexHtml(len,dir,title);
 }
 /*}}}*/
