@@ -108,11 +108,11 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "linghun";
-    int len = 13;
-    char title[60] = "灵魂摆渡 第三季";
+    char dir[20]      = "chang";
+    int len = 12;
+    char title[60] = "妖出长安";
     getIndexHtml(len,dir,title);
-    char src[120]      = "  src=\"files/linghun";
+    char src[120]      = "  src=\"files/chang";
 
     for(int j = 1;j <= len;j++)
     {
