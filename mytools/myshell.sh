@@ -295,3 +295,20 @@ sub()
     mv now $name
 }
 sub $1
+
+# ffmpeg related
+# concat the videos
+ffmpeg -f concat -i list1.lst -c copy video.mp4
+# distill the audio from a video
+ffmpeg -i ${name}.mp4 -ab 32k ${name}.mp3
+
+#  remove all the files with specific sizes
+name=-10k
+find . -name "*jpg" -a -size $name -exec rm {} \;
+
+
+
+
+
+
+
