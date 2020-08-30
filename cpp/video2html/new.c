@@ -97,8 +97,8 @@ void getIndexHtml(int line,char *dir,char *title)
         printf("%s\n",chapter[i - 1]);
         fprintf(fp,"<a href=\"%s\">\n",htmlName);
         fprintf(fp,"    <div style=\"position:relative\">\n");
-        fprintf(fp,"    <img src = \"chenergou.jpg\" width = \"154\" height = \"216\" />\n");
-        fprintf(fp,"    <div style=\"position:absolute;z-index:8;left:10px;top:8px\">\n");
+        fprintf(fp,"    <img src = \"buliangren.jpg\" width = \"200\" height = \"120\" />\n");
+        fprintf(fp,"    <div style=\"position:absolute;z-index:8;left:100px;top:100px\">\n");
         fprintf(fp, "%s</div> </div>\n",chapter[i - 1]);
     }
     fprintf(fp,"  </body>\n");
@@ -108,18 +108,15 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "chenergou";
-    int len = 17;
-    char title[60] = "陈二狗的妖孽人生";
+    char dir[20]      = "beauty3";
+    int len = 12;
+    char title[60] = "校花的贴身高手 第三季";
     getIndexHtml(len,dir,title);
-    /**
-     * 
-    char src[120]      = "  src=\"files/The.Curious.Journey.Of.Chen.Er-Gou.S01.EP01-17.2016.1080p.WEB-DL.x264.AAC-HQC";
+    char src[120]      = "  src=\"files/beauty3";
 
     for(int j = 1;j <= len;j++)
     {
         writeToFileNew(j,"mp4",dir,src);
     }
-     * */
 }
 /*}}}*/
