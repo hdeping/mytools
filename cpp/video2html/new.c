@@ -1,6 +1,64 @@
 #include "head.h"
 
+const char chapter[20][20] = {
+"第零一集", "第零二集", "第零三集", "第零四集",
+"第零五集", "第零六集", "第零七集", "第零八集",
+"第零九集", "第一十集", "第一一集", "第一二集",
+"第一三集", "第一四集", "第一五集", "第一六集",
+"第一七集", "第一八集", "第一九集" };
 
+/*void writeToFileNew{{{*/
+void writeToFileNew(int j,char *filetype,char *dir,char *src)
+{
+    FILE *fp;
+    char filename[20];
+    int num;
+    if ( j < 10 )
+    {
+        num = 0;
+    }
+    else
+    {
+        num = 1;
+    }
+    switch(num)
+    {
+        case 0:
+            sprintf(filename,"%s/0%d.html",dir,j);
+            break;
+        case 1:
+            sprintf(filename,"%s/%d.html",dir,j);
+            break;
+        default:
+            sprintf(filename,"%s/%d.html",dir,j);
+            break;
+    }
+    fp= fopen(filename,"w");
+    assert(fp != NULL);
+    fprintf(fp,"<video             \n");
+    switch(num)
+    {
+        case 0:
+            fprintf(fp,"%s/0%d.%s\"    \n",src,j,filetype);
+            break;
+        case 1:
+            fprintf(fp,"%s/%d.%s\"    \n",src,j,filetype);
+            break;
+        default:
+            fprintf(fp,"%s/%d.%s\"    \n",src,j,filetype);
+            break;
+    }
+
+    fprintf(fp,"  volume=\"20\"      \n");
+    fprintf(fp,"  controls         \n");
+    fprintf(fp,"  autoplay         \n");
+    fprintf(fp,"  width=\"720\"      \n");
+    fprintf(fp,"  height=\"480\"     \n");
+    fprintf(fp,"  type=\"video/mp4\">\n");
+    fprintf(fp,"</video>           \n");
+    fclose(fp);
+}
+/*}}}*/
 /*void getIndexHtml{{{*/
 void getIndexHtml(int line,char *dir,char *title)
 {
@@ -27,16 +85,21 @@ void getIndexHtml(int line,char *dir,char *title)
     {
         char htmlName[30];
         char contentName[30];
-        sprintf(htmlName,"files/%s/%d.html",dir,i);
-        sprintf(contentName,"Chapter %d",i);
-
+        if ( i < 10 )
+        {
+            sprintf(htmlName,"%s/0%d.html",dir,i);
+        }
+        else
+        {
+            sprintf(htmlName,"%s/%d.html",dir,i);
+        }
         printf("%s\n",htmlName);
-        printf("%s\n",contentName);
+        printf("%s\n",chapter[i - 1]);
         fprintf(fp,"<a href=\"%s\">\n",htmlName);
         fprintf(fp,"    <div style=\"position:relative\">\n");
-        fprintf(fp,"    <img src = \"buliangren.jpg\" width = \"200\" height = \"120\" />\n");
-        fprintf(fp,"    <div style=\"position:absolute;z-index:8;left:100px;top:100px\">\n");
-        fprintf(fp, "%s</div> </div>\n",contentName);
+        fprintf(fp,"    <img src = \"chenergou.jpg\" width = \"154\" height = \"216\" />\n");
+        fprintf(fp,"    <div style=\"position:absolute;z-index:8;left:10px;top:8px\">\n");
+        fprintf(fp, "%s</div> </div>\n",chapter[i - 1]);
     }
     fprintf(fp,"  </body>\n");
     fprintf(fp,"</html>\n");
@@ -45,9 +108,18 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "gallery";
-    int len = 9;
-    char title[60] = "复杂网络绘图";
+    char dir[20]      = "chenergou";
+    int len = 17;
+    char title[60] = "陈二狗的妖孽人生";
     getIndexHtml(len,dir,title);
+    /**
+     * 
+    char src[120]      = "  src=\"files/The.Curious.Journey.Of.Chen.Er-Gou.S01.EP01-17.2016.1080p.WEB-DL.x264.AAC-HQC";
+
+    for(int j = 1;j <= len;j++)
+    {
+        writeToFileNew(j,"mp4",dir,src);
+    }
+     * */
 }
 /*}}}*/
