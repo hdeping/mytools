@@ -109,18 +109,18 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "huanLeSong";
-    int len = 11;
-    char title[60] = "欢乐颂";
+    char dir[20]      = "qiPaShuo";
+    int len = 3;
+    char title[60] = "奇葩说";
     getIndexHtml(len,dir,title);
-    char src[120]      = "  src=\"videos/huanLeSong";
+    char src[120]      = "  src=\"videos/qiPaShuo";
 
-    // char command[30];
-    // sprintf(command,"mkdir %s",dir);
-    // system(command);
+    char command[30];
+    sprintf(command,"mkdir %s",dir);
+    system(command);
     for(int j = 1;j <= len;j++)
     {
-        writeToFileNew(j,"ts",dir,src);
+        writeToFileNew(j,"mp4",dir,src);
     }
 }
 /*}}}*/
