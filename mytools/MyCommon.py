@@ -425,5 +425,17 @@ class MyCommon():
             fp.write("var images = "+data+";")
 
         return
+    def getMyShell(self):
+        """
+        docstring for getMyShell
+        """
+        dirs = a.getCommand("ls ../myshell/*")
+        strings = ""
+        for dir in dirs:
+            str1 = "# ------ %s --------\n"%(dir.split("/")[-1])
+            str2 = "\n".join(a.loadStrings(dir)) + "\n"
+            strings +=  str1 + str2 
+        with open("myshell.sh","w") as fp:
+            fp.write(strings)
 
-
+        return  
