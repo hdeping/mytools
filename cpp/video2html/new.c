@@ -110,6 +110,9 @@ void writeToFileNew(int j,char *filetype,char *dir,char *src)
     switch(num)
     {
         case 0:
+            fprintf(fp,"%s/00%d.%s\"    \n",src,j,filetype);
+            break;
+        case 1:
             fprintf(fp,"%s/0%d.%s\"    \n",src,j,filetype);
             break;
         default:
@@ -185,9 +188,7 @@ int main( int argc,char *argv[]){
     }
      * */
     char title[40] = "小甲鱼  算法与数据结构";
-    getIndexHtml(len,dir,title);
-    /**
-     * 
+    // getIndexHtml(len,dir,title);
     char command[40];
     sprintf(command,"mkdir %s",dir);
     system(command);
@@ -195,6 +196,5 @@ int main( int argc,char *argv[]){
     {
         writeToFileNew(j,filetype,dir,src);
     }
-     * */
 }
 /*}}}*/
