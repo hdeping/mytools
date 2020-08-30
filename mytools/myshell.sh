@@ -167,3 +167,101 @@ rsync -avz hdp@210.45.125.225:/home/http/ /home/hdeping/02_disk/discuz/
 ssh hdp@210.45.125.225  'mysqldump -u root -pnclxin ultrax > ultrax.sql'
 scp hdp@210.45.125.225:ultrax.sql /home/hdeping/02_disk/
 
+# ------ down.sh --------
+#!/bin/bash
+#  program 
+#    to produce a series of numbers
+# by xiaohengdao
+#    2015-03-18 18:37:44    
+
+web=""
+htm=".html"
+wget -b $web${htm}
+n1=1
+n2=20
+for((i = ${n1}; i <= $n2; i = i + 1))
+do
+    wget -b  ${web}${htm}
+done
+
+# deal with the html files
+grep jpg *html|sed 's/jpg/jpg\n/g'|sed 's/http/\nhttp/g'|grep jpg|grep http|sort -u > new.txt
+wget -b -i new.txt
+
+
+# ------ doxy --------
+#!/usr/bin/bash
+
+doxy()
+{
+    cp ~/shell/Doxyfile .
+    sed "s/0000/$1/g" -i Doxyfile
+    doxygen
+}
+doxy $1
+# ------ doxy.sh --------
+#!/usr/bin/bash
+
+doxy()
+{
+for name in `find . -maxdepth 1 -type d|grep ..`
+do
+    cd $name
+    cp ~/shell/Doxyfile .
+    doxygen
+    cd latex
+    make
+    cp refman.pdf ../../${name}.pdf
+    cd ../..
+done
+}
+cp_png()
+{
+    j=0
+    for i in `find . -name "inherit*" -a -name "*png"`
+    do
+        ((j=j+1))
+        if [ $j -lt 10 ];then
+            name="00${j}.png"
+        elif [ $j -lt 100 ];then
+            name="0${j}.png"
+        else
+            name="${j}.png"
+        fi
+        cp $i .
+    done
+}
+main()
+{
+    doxy
+    cp_png
+    mkdir doc
+    mv *pdf doc
+    mv *png doc
+    cd doc
+    mkdir pdf png
+    mv *.pdf pdf
+    mv *.png png
+}
+main
+# ------ doxy_new.sh --------
+#!/usr/bin/bash
+
+doxy()
+{
+for name in `find . -maxdepth 1 -type d|cut -d / -f 2|grep ..`
+do
+    echo "$name"
+    cd $name
+    cd latex
+    cp ~/shell/Doxyfile .
+    sed "s/0000/$name/g" -i Doxyfile
+    doxygen
+    cd latex
+    make
+    cp refman.pdf ../../${name}.pdf
+    cd  ../..
+done
+}
+doxy
+
