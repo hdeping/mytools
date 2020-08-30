@@ -176,10 +176,10 @@ void getIndexHtml(int line,char *dir,char *title)
 /*int main{{{*/
 int main( int argc,char *argv[]){
     // int num[14] = {36,25,17,4,36,29,16,47,33,9,21,15,40,55};
-    char src[40]      = "  src=\"files/c_XiaoJiaYu";
+    char src[40]      = "  src=\"files/2014_standfordAI";
     char filetype[10] = "mp4";
-    char dir[20]      = "xiaojiayu";
-    int len = 102;
+    char dir[20]      = "standfordAI";
+    int len = 18;
     /*
      * 
     for(int j = 1;j <= len;j++)
@@ -187,8 +187,8 @@ int main( int argc,char *argv[]){
         writeToFileNew(j,filetype,dir,src);
     }
      * */
-    char title[40] = "小甲鱼  算法与数据结构";
-    // getIndexHtml(len,dir,title);
+    char title[60] = "斯坦福大学 吴恩达 人工智能教程";
+    getIndexHtml(len,dir,title);
     char command[40];
     sprintf(command,"mkdir %s",dir);
     system(command);
