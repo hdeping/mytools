@@ -265,3 +265,33 @@ done
 }
 doxy
 
+# ------ extern_produce --------
+#!/usr/bin/bash
+sub()
+{
+    name=$1
+    sed -i '/}/'d $name
+    sed -i '/{/'d $name
+    sed -i '/;/'d $name
+    sed -i '/if /'d $name
+    sed -i '/include/'d $name
+    sed -i '/^    /'d $name
+    sed -i '/^$/'d $name
+    sed -i 's/$/;/g' $name
+    sed -i '/\/\//'d $name
+    sed -i '/#define/'d $name
+    awk -v column=1 -v value="extern " '
+        BEGIN {
+            FS = OFS = "";
+        }
+        {
+            for ( i = NF + 1; i > column; i-- ) {
+                $i = $(i-1);
+            }
+            $i = value;
+            print $0;
+        }
+    ' $name > now
+    mv now $name
+}
+sub $1
