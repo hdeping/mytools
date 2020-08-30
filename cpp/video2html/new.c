@@ -57,9 +57,9 @@ void getIndexHtml(int line,char *dir,char *title)
 /*}}}*/
 /*int main{{{*/
 int main( int argc,char *argv[]){
-    char dir[20]      = "standfordAI";
-    int len = 18;
-    char title[60] = "斯坦福-吴恩达-人工智能视频";
+    char dir[20]      = "xiaojiayu";
+    int len = 102;
+    char title[60] = "小甲鱼 算法与数据结构";
     getIndexHtml(len,dir,title);
 }
 /*}}}*/
