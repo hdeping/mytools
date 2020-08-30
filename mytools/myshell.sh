@@ -306,6 +306,29 @@ ffmpeg -i ${name}.mp4 -ab 32k ${name}.mp3
 name=-10k
 find . -name "*jpg" -a -size $name -exec rm {} \;
 
+# ------ font.sh --------
+#!/usr/bin/gnuplot
+set terminal eps
+#set terminal pdfcairo
+#set font "Times-Roman,22"
+set output "pic.eps"
+set xlabel "t" font "Times-Roman,18"
+set ylabel "{/Symbol r}" font "Times-Roman,18"
+set xtics nomirror
+set ytics nomirror
+set tics font "Times-Roman,16"
+set xrange[0:50]
+set yrange[0:1]
+set size square
+set key font "Times-Roman,18"
+set title "{/Symbol b}=0.5,{/Symbol g}=0.1" font "Times-Roman,18"
+set key at 48,0.6
+set pointsize 0.2
+filename="data0.50-0.10.txt" 
+plot filename using 1:2 w l lw 4 title "S" ,\
+    filename using 1:3 w l lw 4  title "I" ,\
+    filename using 1:4 w l lw 4  title "R" 
+
 
 
 
