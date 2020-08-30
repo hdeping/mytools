@@ -356,5 +356,59 @@ ffmpeg -v warning -i $1 \
 ffmpeg -v warning -i $1 -i $palette \
        -lavfi "$filters [x]; [x][1:v] paletteuse" -y $2
 
+# ------ get_ref_tex --------
+#!/usr/bin/bash
+
+add_frame()
+{
+    echo "  %%%%%%%%%%%%%%%%%%%%%%%%%%" >> article.tex
+    echo "  \\begin{frame}" >> article.tex
+    echo "      \\frametitle{Data Pictures}" >> article.tex
+    echo "      \\begin{figure}[h]" >> article.tex
+    echo "          \\includegraphics[height=6cm]{fig${1}.png}" >> article.tex
+    echo "      \\end{figure}" >> article.tex
+    echo "  \\end{frame}" >> article.tex
+}
+addframes()
+{
+    n1=7
+    n2=$1
+    if [ $n2 -ge 7 ];then
+        for(( i = $n1;i <= $n2; i = i + 1 ))
+        do
+            add_frame $i
+        done
+        sed 's/\r//g' -i article.tex
+        sed '74{h;d};$G' -i article.tex
+    fi
+}
+mv ~/pictures/fig*png figures
+rename fig0 fig figures/*png
+i=`ls figures/*png|wc -l`
+# add frames to the tex file
+addframes $i
+cd figures
+pngWidth
+# ------ getnum --------
+#!/usr/bin/bash
+
+name=$1
+i=0
+for num in `cat $name`
+do
+    ((i = i + num))
+done
+echo "total num is $i"
+# ------ getpackage --------
+#!/usr/bin/bash
+
+dnf search $1|\
+    cut -d : -f 1|\
+    sed '/    /'d|\
+    sed '/src/'d > pack.sh
+vim pack.sh
+# ------ getpdf --------
+#!/usr/bin/bash
 
 
+pdftk `cat mv.sh` output total.pdf
