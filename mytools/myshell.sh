@@ -104,3 +104,43 @@ rename Z z *
 bitcoin-cli getblock `bitcoin-cli getblockhash $1`
 # ------ bcctran.sh --------
 bitcoin-cli decoderawtransaction `bitcoin-cli getrawtransaction $1`
+
+
+# ------ check --------
+#!/usr/bin/bash
+
+ping -c 3 202.38.82.29
+ping -c 3 222.195.94.17
+ping -c 3 222.195.94.7
+# ------ clear_picture.sh --------
+#!/usr/bin/bash
+
+mkdir new
+for i in `cat new.sh`
+do
+    mv IMG_${i}.jpg new
+done
+rm -fr *jpg
+mv new/* . && rmdir new
+rm -fr new.sh
+# ------ combinePic.sh --------
+#!/usr/bin/bash
+
+file1=new1.png
+file2=new2.png
+convert $1.png $2.png  +append $file1
+convert $3.png $4.png  +append $file2
+convert $file1 $file2  -append combine_$5.png
+# ------ combinePic9.sh --------
+#!/usr/bin/bash
+
+combine()
+{
+
+file1=new1.png
+file2=new2.png
+convert $1 $2 $3  +append $file1
+convert $4 $5 $6  +append $file2
+convert $7 $8 $9  +append $file3
+convert $file1 $file2 $file3 -append combine_${10}.png
+}
