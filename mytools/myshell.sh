@@ -494,4 +494,36 @@ mv *pdf pdfs
 format=`ls 0*|cut -d . -f 2|sort -u`
 ffmpeg -i ${3}%0${1}d.${format} \
        -vb ${2}M -vcodec mpeg4  new.avi
-       
+
+# ------ nameAllMedias.sh --------
+#!/usr/bin/bash
+
+for j in pdf txt srt mp4
+do
+    for i in {1..20}
+    do
+        rename ' ' '' *$j
+        rename , ''   *$j
+        rename '(' '' *$j
+        rename ')' '' *$j
+    done
+done
+# ------ nameall --------
+#!/usr/bin/bash
+
+for i in {1..20}
+do
+    rename ' ' '' *pdf
+    rename , '' *pdf
+    rename '.' '' *pdf
+    rename '"' '' *pdf
+    rename '(' '' *pdf
+    rename ')' '' *pdf
+    rename "'" '' *pdf
+    rename "[" '' *pdf
+    rename "]" '' *pdf
+    rename "{" '' *pdf
+    rename "}" '' *pdf
+    rename "&" '_' *pdf
+done
+rename pdf '.pdf' *pdf
