@@ -418,12 +418,18 @@ class MyCommon():
         """
         images = self.getCurrentImages()
         filename = "images.js"
-        self.writeJson(images,filename)
+        self.writeJs(images,"images",filename)
+
+        return
+    def writeJs(self,data,title,filename):
+        """
+        docstring for writeJs
+        """
+        self.writeJson(data,filename)
         with open(filename,'r') as fp:
             data = fp.read()
         with open(filename,'w') as fp:
-            fp.write("var images = "+data+";")
-
+            fp.write("var %s = %s;"%(title,data))
         return
     def getMyShell(self):
         """
