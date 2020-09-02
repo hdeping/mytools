@@ -1173,4 +1173,247 @@ class Wechat():
         # self.controlKeyboard()
         return
 
+class SlurmState():
+    """
+    get the status of the GPU server 
+    with the command squeue, which is one 
+    of the tool in slurm
+    """
+    def __init__(self):
+        """
+        self.split_lines:
+            separation line strings
+        self.prefix:
+            formats of the output
+        self.total:
+            number of the remained GPUs
+        self.running_jobs:
+            number of the used GPUs
+        self.waiting_num:
+            number of the waiting jobs
+        """
+        super(SlurmState, self).__init__()
+        self.split_lines  = '             ---------------------------------------------'
+        self.prefix       = "             |%14s |     %d     |       %d       |"
+        self.total        = 0
+        self.running_jobs = 0
+        self.waiting_num  = 0
+        self.formats = [["             %d Jobs are running",
+                         "             No Jobs are running"], 
+                        ["             %d GPUs are available",
+                         "             No GPUs are available"],
+                        ["             %d Jobs Are Waiting",
+                         "             No Jobs Are Waiting"]]
 
+    def printLines(self,num):
+        """
+        docstring for printLines
+        print the separation lines
+        """
+        for i in range(num):
+            print(self.split_lines)
+            
+        return      
+    def getSqueue(self):
+        """
+        get the results by running the command 
+        squeue
+        """
+        squeue = os.popen('squeue').read()
+        # deal with the squeue before spliting
+        squeue = squeue.replace(', ',',')
+        # spliting
+        squeue = squeue.split()
+        # to numpy type
+        squeue = np.array(squeue)
+        # reshape
+        squeue = np.reshape(squeue,(-1,8))
+        nodelist = squeue[1:,-1]
+        return nodelist
+
+    def getAllNodes(self):
+        """
+        get all the names of the nodes 
+        in the GPU server
+        """
+        nodes = []
+        nodes.append('controlmaster')
+        nodes.append('slave3gpu1')
+        for i in range(2,9):
+            nodes.append('slave2gpu%d'%(i))
+        state = {}
+        for node in nodes:
+            state[node] = 0
+        return state
+
+    def printNodeInfo(self,node_state,nodelist):
+        """
+        print the information of a computation node
+        """
+        # update the node info
+        
+        self.updateNodeInfo(node_state,nodelist)
+
+        self.printLines(2)
+        # running jobs
+        self.printRunningInfo(self.formats[0],self.running_jobs)
+        # remained GPUs
+        self.printRunningInfo(self.formats[1],self.total)
+        self.printLines(2)
+        # waiting jobs
+        self.printRunningInfo(self.formats[2],self.waiting_num)
+        return
+    def updateNodeInfo(self,node_state,nodelist):
+        """
+        docstring for updateNodeInfo
+        """
+        for node in nodelist:
+            if node[0] == '(':
+                self.waiting_num += 1
+                continue
+            node_state[node] += 1
+        # output head 
+        print('             |%14s | used gpus | remained gpus |'%(' node list  '))
+        self.printLines(1)
+        
+        for node in node_state:
+            used_number = node_state[node]
+            self.running_jobs += used_number
+            remained_number = 2 - used_number
+            if node == 'slave3gpu1':
+                remained_number = 3 - used_number
+            self.total += remained_number
+            
+            if remained_number:
+                print((self.prefix + " Available")%(node,used_number,remained_number))
+            else:
+                print(self.prefix%(node,used_number,remained_number))
+
+        return
+
+    def printRunningInfo(self, formats, num):
+        """
+        docstring for printRunningInfo
+        input: 
+            formats,string array of two strings
+            num, integer value
+        return: None    
+        """
+        
+        if num:
+            print(formats[0]%(num))
+        else:
+            print(formats[1])
+            
+        return
+    def run(self):
+        """
+        docstring for run
+        
+        """
+        # get all nodes
+        node_state = self.getAllNodes()
+        # get nodelist
+        nodelist = self.getSqueue()
+        #print(nodelist)
+        self.printNodeInfo(node_state,nodelist)
+
+        return
+
+class Discuz():
+    """
+    make backups from the server
+    """
+    def __init__(self):
+        super(Discuz, self).__init__()
+    def run(self):
+        """
+        backup from the server with three shell commands,
+        rsync, ssh and scp
+        """
+        remote_ip     = "hdp@210.45.125.225"
+        dir_disk      = "/home/hdeping/disk/"
+        local_dir     = "%sbak_discuzFromServer/"%(dir_disk)
+        remote_dir    = "%s:/home/http/"%(remote_ip)
+        mysql_command = "mysqldump -u root -pnclxin ultrax > ultrax.sql"
+        database      = "%s:ultrax.sql"%(remote_ip)
+
+        commands   = ["rsync -avz %s %s"%(remote_dir,local_dir),
+                      "ssh %s '%s'"%(remote_ip,mysql_command),
+                      "scp %s %s"%(database,dir_disk)]
+        for command in commands:
+            print(command)
+            os.system(command)
+
+        return
+
+class NodeStatus():
+    """
+    get the status of all nodes in a server
+    """
+    def __init__(self):
+        """
+        self.nodes:
+            all the nodes in a server, usually named 
+            as node1, node2 etc.
+        """
+        super(NodeStatus, self).__init__()
+        self.nodes = None 
+
+    def getNodes(self):
+        """
+        docstring for getNodes
+        input: 
+            None
+        return:
+            None, but self.nodes was changed
+            to ["node1",...,"node14"]
+        """
+        self.nodes = []
+        for i in range(1,15):
+            node = "node%d"%(i)
+            self.nodes.append(node)
+
+        return
+    def getNodesRun(self):
+        """
+        analyze of the output after running the command
+        pbsnodes
+        input: 
+            None
+        return:
+            dicts, a dictionary with nodes names as keys
+            such as {"node1":[]...}
+        """
+        # get results from the command pbsnodes
+        results = os.popen("pbsnodes")
+        results = results.read()
+        results = results.split("\n")
+
+        dicts   = {}
+        for line in results:
+            if line[:4] == "node":
+                key        = line
+                dicts[key] = []
+            line = line.split("=")
+            name = line[0].replace(" ","")
+            if name == "jobs":
+                assert (key in dicts)
+                dicts[key] = line[1].split(",")
+
+        return dicts
+    def run(self):
+        """
+        docstring for run
+        print the results out
+        """
+        self.getNodes()
+        dicts = self.getNodesRun()
+        print("node run remain")
+        for node in self.nodes:
+            runNum    = len(dicts[node])
+            remainNum = 28 - runNum
+            print("%s %3d %3d"%(node,runNum,remainNum))
+            
+
+        return 
