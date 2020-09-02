@@ -753,12 +753,8 @@ class MagicSquare(Formulas):
         # self.getAllSquareFour()
         # self.testRotateMatrix()
         # self.testMagicHexa()
+        # self.setOrder(7)
+        # self.magicSquare1()
         self.testMagicSquareSum()
-        
 
         return
-
-magic = MagicSquare()
-# magic.setOrder(7)
-# magic.magicSquare1()
-magic.test()

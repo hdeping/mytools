@@ -4190,8 +4190,3 @@ class Polygon(MyCommon):
 
         print(x8192)
         return
-
-new = Polygon()
-# new.run()
-new.compute65537()
-

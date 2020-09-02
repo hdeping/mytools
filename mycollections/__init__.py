@@ -15,12 +15,8 @@
 ============================
 """
 
-from .CrawlRecipes import CrawlRecipes
-from .Manikon      import Manikon
-from .SlurmState   import SlurmState
-from .Ris2Bib      import Ris2Bib
-from .QTable       import QTable
-from .             import Triangle
-from .VimSublime   import VimToSublime
-from .Wiki2Txt     import Wiki2Txt
-from .EggCurve     import EggCurve
+from .  import Triangle
+from .  import bondEnergy
+from .Formulas import Formulas
+from .MagicSquare import MagicSquare
+from .Polygon65537 import Polygon
