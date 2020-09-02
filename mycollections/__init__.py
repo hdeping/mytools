@@ -15,8 +15,15 @@
 ============================
 """
 
-from .  import Triangle
-from .  import bondEnergy
-from .Formulas import Formulas
-from .MagicSquare import MagicSquare
+from .             import Triangle,bondEnergy
+from .Formulas     import Formulas
+from .MagicSquare  import MagicSquare
 from .Polygon65537 import Polygon
+from .Algorithms   import QTable,Algorithms
+from .Graph        import MyVpython,CellularAutomata
+from .Graph        import EggCurve,Mandelbrot,Manikon
+from .utils        import AnalyzeTree,Ris2Bib,TianGanDiZhi
+from .utils        import Wiki2Txt,Bitcoin,SublimeToVim
+from .utils        import VimToSublime,Urine,WechatDeal
+from .utils        import Wechat,SlurmState,Discuz,NodeStatus
+from .utils        import Love,CrawlRecipes

@@ -463,5 +463,3 @@ class Algorithms(Formulas):
         # print(self.getCombinatorEqnSolNumByIter(5,95))
         return
         
-# algo = Algorithms()
-# algo.test()
