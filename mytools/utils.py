@@ -21,7 +21,7 @@ from tkinter import messagebox
 import tkinter.ttk as ttk
 from .Triangle import Triangle
 import re 
-import res
+import sys
 
 class GetDoc():
     """
