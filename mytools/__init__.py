@@ -15,19 +15,14 @@
 ============================
 """
 
-from .TurtlePlay      import TurtlePlay
-from .NameAll         import NameAll
-from .DrawPig         import DrawPig
+from .Draw  import TurtlePlay
+from .Draw  import DrawCurve
+from .Draw  import DrawPig
+from .utils import NameAll, GetDoc, MyGUI
+from .utils import GetLines, OpenFiles
+from .utils import RunCommand, MyPdf
+
 from .MyCommon        import MyCommon
 from .Excel           import Excel
 from .Triangle        import Triangle
-from .DrawCurve       import DrawCurve
-from .GetDoc          import GetDoc
-from .MyGUI           import MyGUI
 from .DistanceMeasure import DistanceMeasure
-from .GetLines        import GetLines
-from .OpenFiles       import OpenFiles
-from .RunCommand      import RunCommand
-from .MyPdf           import MyPdf
-
-
