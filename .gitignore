@@ -11,3 +11,5 @@ run.sh
 *zip
 *.txt
 *.png
+*jpg
+*gif
