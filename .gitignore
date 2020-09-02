@@ -17,9 +17,7 @@ run.sh
 *.txt
 *.png
 *out
-*jpg
 *png
-*gif
 *mp4
 *.iml
 .idea
@@ -42,3 +40,5 @@ run.sh
 *zip
 *txt
 run.sh
+*jpg
+*gif
