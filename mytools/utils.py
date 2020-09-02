@@ -20,6 +20,8 @@ import tkinter
 from tkinter import messagebox
 import tkinter.ttk as ttk
 from .Triangle import Triangle
+import re 
+import res
 
 class GetDoc():
     """
@@ -417,4 +419,257 @@ class MyPdf():
         print("there are %d books over %d pages"%(count,threshold))
         return
 
+class NameAll():
+    """docstring for Rename
+    rename the files in the current directory
+    """
+    def __init__(self):
+        super(NameAll, self).__init__()
+    
+    def getCurrentFiles(self):
+        """
+        get the filenames in the current directory,
+        with the help of ls command
+        """
+        filenames = os.popen("ls")
+        filenames = filenames.read()
+        filenames = filenames.split('\n')
+        # get rid of ""
+        filenames.pop()
 
+        return filenames
+
+    def getSuffixIndex(self,filename):
+        """
+        get the suffix of a string
+        such as : foo.xxx -> -3
+        filename[-3:] = "xxx"
+        """
+        # print("------ %s -------"%(filename))
+        num = len(filename)
+        if num > 7:
+            num = 7
+        for i in range(1,num):
+            if filename[-i] == '.':
+                res = 1 - i 
+                return res
+        return -1
+
+    def arr2string(self,arr):
+        """
+        array to string
+        ["a",'b','c'] -> 'abc'
+        one line is enough 
+        string = "".join(arr)
+        """
+        # string = ""
+        # for word in arr:
+        #     string = string + word
+        string = "".join(arr)
+        return string 
+
+    def getStdStr(self,filename):
+        """
+        get a standard string
+        "ab ac ab" -> "AbAcAb"
+        input: filename, string type
+        return: a new string
+        """
+        # get the capital form of a string array
+        # ["a",'b','c'] -> ["A",'B','C']
+        filename = self.getCapitalize(filename)
+        filename = self.arr2string(filename)
+        return filename
+
+    def normallize(self,name):
+        """
+        get the capitalized format of a word
+        """
+        return name.capitalize()
+
+    def getCapitalize(self,filename):
+        """
+        get the capitalized format of a string array
+        map function is used here
+        filename = list(map(self.normallize,filename))
+        """   
+        filename = list(map(self.normallize,filename))
+        return filename
+
+    def getNewFilename(self,filename):
+        """
+        get the new filename of a old one,
+        characters like [?()[]'\"{}#&/\\,. would
+        be deliminated
+        "a .. ? b ..pdf" -> "AB.pdf"
+        """
+        suffix_start = self.getSuffixIndex(filename)
+        # get rid of the redundant characters
+        #name = re.sub(r"[?()[]'\"{}#&/\\,.]",'',filename)
+        name = re.sub(r"[:;'.,#?\\{}()\[\]@*#&%!^]",'',filename)
+        new_name   = name.split(' ')
+        # if there is no strange characters
+        p1 = (len(filename) - len(new_name[0]) == 1) 
+        p2 = (filename == new_name[0])
+        if  p1 or p2: 
+            return filename
+        # split the words with ' '
+        
+        output = self.getStdStr(new_name)
+        if suffix_start != -1:
+            output = "%s.%s"%(output[:suffix_start],new_name[-1][suffix_start:])
+        # get rif of z-lib.org
+        output = output.replace("Z-liborg","")
+        # new_good_times.pdf --> NewGoodTimes.pdf
+        if "_" in output:
+            output = output.split("_")
+            output = self.getStdStr(output)
+        return output
+        
+    def run(self):
+        """
+        rename the files with the help of mv 
+        command after we get the new names
+        """
+        filenames = self.getCurrentFiles() 
+        print(filenames)
+
+        count = 0
+        for name in filenames:
+            new_name = self.getNewFilename(name)
+            if name != new_name:
+                count += 1
+                command = "mv '%s' %s"%(name,new_name)
+                print(count,command)
+                print("running the rename program")
+                os.system(command)
+
+        return 
+
+class OpenFiles():
+    """
+    open files with different commands
+    """
+    def __init__(self):
+        """
+        self.video_types:
+            filename extension for video and audio
+            types,array
+        self.image_types:
+            filename extensions for image types,array
+        self.text_types:
+            filename extensions for text types,array
+        self.other_types:
+            filename extensions and operation commands,
+            dictionary
+        """
+        super(OpenFiles, self).__init__()
+        self.video_types = ["mp4","avi","rmvb","webm","ts",
+                            "mp3","ogg","wav","flac","mov"]
+        self.image_types = ["jpg","jpeg","gif","png","bmp","icon"]
+        self.text_types  = ["txt","py","c","h","html","css","js","gh",
+                            "lisp","cpp","go","f","f90",
+                            "java","pl","log","tex","bbl","aux",
+                            "bib","sh","php","makefile","Makefile",
+                            "rst","config","gitconfig"]
+        self.other_types = {"md":"typora",
+                            "pdf":"evince",
+                            "ps":"evince",
+                            "docx":"wps",
+                            "ppt":"wpp",
+                            "pptx":"wpp",
+                            "xls":"et",
+                            "xlsx":"et",
+                            "doc":"wps",
+                            "lyx":"lyx",
+                            "blend":"blender"
+                            }
+
+    def runCommand(self,program,i):
+        """
+        open the i-th file withe a specific program
+        """
+        command = "%s '%s'"%(program,sys.argv[i])
+        os.system(command)
+        return
+
+    def getSuffix(self,arg):
+        """
+        get the suffix of a path
+        for example:
+            main.py --> py
+            .git/main.py --> py
+            dir/main.py --> py
+        """
+        arg = arg.split("/")
+        arg = arg[-1]
+        arg = arg.split(".")
+        arg = arg[-1]
+        return arg 
+        
+    def run(self,i):
+        """
+        input: i, index number of the command parameters
+        return: None, filename extensions will be classified 
+                and open with the corresponding command
+        """
+        arg = self.getSuffix(sys.argv[i])
+        if   arg in self.video_types:
+            self.runCommand("mplayer",i)
+        elif arg in self.text_types:
+            self.runCommand("subl3",i)
+        elif arg in self.image_types:
+            self.runCommand("eog",i)
+        elif arg in self.other_types:
+            command = self.other_types[arg]
+            self.runCommand(command,i)
+        else:
+            print("unknown type: " + arg)
+
+        return
+
+    def main(self):
+        """
+        main function for analyzing
+        each command parameters
+        """
+        if len(sys.argv) == 1:
+            print("please input a file")
+        else:
+            for i in range(1,len(sys.argv)):
+                self.run(i)
+
+        return
+
+class RunCommand():
+    """
+    run the shell command with os.system
+    """
+    def __init__(self):
+        super(RunCommand, self).__init__()
+    def gitRebase(self,num):
+        """
+        docstring for gitRebase
+        input: 
+            num, an integer number, last commit numbers
+        return:
+            None, but the command git rebase -i HEAD~num
+            was executed
+        """
+        command = "git rebase -i HEAD~%d"%(num)
+        print(command)
+        os.system(command)
+        return
+    def runGitRebase(self):
+        """
+        docstring for runGitRebase
+        run self.gitRebase accepted 
+        a argument from the command line
+        """
+        try:
+            num = int(sys.argv[1])
+            self.gitRebase(num)
+        except IndexError:
+            print("you need a command line argument")
+        return
+        

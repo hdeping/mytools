@@ -16,12 +16,9 @@
 """
 
 from .TurtlePlay      import TurtlePlay
-from .NameAll         import NameAll
-from .DrawPig         import DrawPig
-from .MyCommon        import MyCommon
-from .Excel           import Excel
-from .Triangle        import Triangle
 from .DrawCurve       import DrawCurve
+from .DrawPig         import DrawPig
+from .NameAll         import NameAll
 from .GetDoc          import GetDoc
 from .MyGUI           import MyGUI
 from .DistanceMeasure import DistanceMeasure
@@ -31,3 +28,6 @@ from .RunCommand      import RunCommand
 from .MyPdf           import MyPdf
 
 
+from .MyCommon        import MyCommon
+from .Excel           import Excel
+from .Triangle        import Triangle
