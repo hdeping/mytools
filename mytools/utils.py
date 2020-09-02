@@ -268,4 +268,153 @@ class MyGUI(Triangle):
 
         return
 
+class MySort():
+    """
+    my practice for sorting algorithms """
+    def __init__(self):
+        super(MySort, self).__init__()
+
+        return
+
+    def mergeSort(self,arr):
+        """
+        docstring for mergeSort
+        arr:
+            array 
+        """
+        if len(arr) == 1:
+            return arr 
+        elif len(arr) == 2:
+            m,n = arr 
+            if m > n:
+                m,n = n,m 
+            return [m,n]
+        else:
+            num = len(arr) // 2 
+            res = []
+
+            arr1 = self.mergeSort(arr[:num])
+            arr2 = self.mergeSort(arr[num:])
+            count = 0
+            # print(arr1,arr2)
+            for index,i in enumerate(arr2):
+                tmp = arr1[count:].copy()
+                for j in tmp:
+                    if i < j:
+                        res.append(i)
+                        break
+                    else:
+                        res.append(j)
+                        count += 1
+                if count == num:
+                    break
+            if count == num:
+                res += arr2[index:]
+            else:
+                res += arr1[count:]
+
+            return res
+    def test(self):
+        """
+        docstring for test
+        """
+        arr = [3,5,9,1,10,200,2000,-9,10,200,
+               2000,-9,20,50,60,55,11]
+        # arr = [3,5,9,1,10,200,2000,-9,20,50]
+        # arr = [3,5,9,1]
+        # arr = [3,9,7]
+        print(arr)
+        arr = self.mergeSort(arr)
+        print(arr)
+
+        return 
+
+import sys
+from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfFileMerger
+
+class MyPdf():
+    """
+    dealing with pdf files with PyPDF2
+    """
+    def __init__(self):
+        super(MyPdf, self).__init__()
+    def getPages(self):
+        """
+        docstring for getPages
+        get all the pages of the input pdf files
+        from the command line
+        """  
+        names = sys.argv
+        num = len(names)
+        pages = 0
+        count = 0
+        for j in range(1,num):
+            try:
+                input = PdfFileReader(open(names[j],"rb"))
+                i = input.numPages
+                print("file ",names[j])
+                print("there are",i,"pages")
+                pages += i
+                count += 1
+            except Exception:
+                print("something is wrong with",names[j])
+        print("Total pages are: %d pages"%(pages))
+        print("number: %d/%d"%(count,num-1))
+        return
+
+    def mergePdfs(self,filenames,mergedName,passwords=None):
+        """
+        docstring for mergePdfs
+        filenames:
+            1d array of filenames
+        mergedName:
+            name of the output file
+        passwords:
+            passwords for the pdf files if is needed
+        """
+        # number of the files
+        num = len(filenames)
+        # note that False should be used
+        pdf_merger = PdfFileMerger()
+    
+        for i in range(num):
+            print("adding ",filenames[i])
+            fp =  open(filenames[i],"rb") 
+            pdf_reader = PdfFileReader(fp,strict=False)
+            if not pdf_reader:
+                return
+            pdf_merger.append(pdf_reader)
+            fp.close()
+
+        with open(mergedName, 'wb') as fp:
+            print("output to ",mergedName)
+            pdf_merger.write(fp)
+
+        return
+    def pick100(self,threshold=100):
+        """
+        docstring for getPages
+        get all the pages of the input pdf files
+        with over 100 pages from the command line
+        """  
+        import os 
+
+        names = os.listdir()
+        num = len(names)
+        pages = 0
+        count = 0
+        for j in range(1,num):
+            try:
+                input = PdfFileReader(open(names[j],"rb"))
+                i = input.numPages
+                if i > threshold:
+                    print("%s, %d pages"%(names[j],i))
+                    count += 1
+            except Exception:
+                print("something is wrong with",names[j])
+        print("there are %d books over %d pages"%(count,threshold))
+        return
+
 
