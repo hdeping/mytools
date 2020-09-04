@@ -18,6 +18,8 @@ import json
 import yaml
 import numpy as np
 import os
+from tqdm import tqdm
+
 
 
 class MyCommon():
@@ -460,5 +462,5 @@ class MyCommon():
             sources["keys"].append(line)
             sources["values"].append("\n".join(code))
 
-        self.writeJson(sources,"sources.js")
+        self.writeJs(sources,"sources","sources.js")
 
