@@ -445,3 +445,20 @@ class MyCommon():
             fp.write(strings)
 
         return  
+    def source2Js(self,suffix="kt"):
+        """
+        docstring for source2Js
+        """
+        lists = self.getCommand("find . -name '*.%s'"%(suffix))
+
+        sources = {
+            "keys":[],
+            "values":[]
+        }
+        for line in tqdm(lists):
+            code = self.loadStrings(line)
+            sources["keys"].append(line)
+            sources["values"].append("\n".join(code))
+
+        self.writeJson(sources,"sources.js")
+
