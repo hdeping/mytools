@@ -94,7 +94,7 @@ class ControlADB(MyCommon):
 
         self.keys = EasyDict(self.keys)
 
-        self.path = "./data/"
+        self.path = "/Users/huangdeping/AndroidStudioProjects/02_adb/data/"
 
     def runCommands(self,commands,waiting_time=None):
         """
