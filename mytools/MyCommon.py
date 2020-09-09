@@ -463,4 +463,20 @@ class MyCommon():
             sources["values"].append("\n".join(code))
 
         self.writeJs(sources,"sources","sources.js")
+    def getAllSources(self,filename="lists.txt"):
+        """
+        docstring for getAllSources
+        """
+        data = self.loadStrings(filename)
+        types = ['cpp', 'py', 'java', 'h', 'cuh', 'cu', 'cc', 'c', 'hpp']
+        results = ""
+        for line in tqdm(data):
+            suffix = line.split(".")[-1]
+            if suffix in types:
+                with open(line,"r") as fp:
+                    results += "%s\n%s\n"%(line,fp.read())
+        filename = "sources.txt"
+        with open(filename,'w') as fp:
+            fp.write(results)
 
+        return
