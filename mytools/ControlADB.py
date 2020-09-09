@@ -26,8 +26,7 @@ from mytools import MyCommon
 from tqdm import tqdm
 import pandas
 from datetime import datetime
-
-
+import sys
 
 class ControlADB(MyCommon):
     """docstring for ControlADB"""
@@ -94,7 +93,7 @@ class ControlADB(MyCommon):
 
         self.keys = EasyDict(self.keys)
 
-        self.path = "./data/"
+        self.path = "/Users/huangdeping/AndroidStudioProjects/02_adb/data/"
 
     def runCommands(self,commands,waiting_time=None):
         """
@@ -272,7 +271,7 @@ class ControlADB(MyCommon):
                    cv2.TM_CCORR_NORMED, 
                    cv2.TM_CCOEFF_NORMED]   
         method = methods[0]
-        result = cv2.matchTemplate(target, tpl, method)
+        result = cv2.matchTemplate(target[:900,:,:], tpl, method)
         result = (result < threshold[0])
         result = result*255 
         cv2.imwrite(self.path + "result.png",result)
@@ -305,7 +304,8 @@ class ControlADB(MyCommon):
             # yun's settings, night
             0:["energy3.png","collect.png",[0.03,30]],
             # my settings, day
-            1:["energy2.png","collect.png",[0.05,30]]
+            1:["energy2.png","collect.png",[0.05,30]],
+            2:["energy4.png","collect.png",[0.011,50]]
         }
         template  = para[index][0]
         target    = para[index][1]
@@ -313,7 +313,7 @@ class ControlADB(MyCommon):
         targets = self.templateMatch(template_img=template,
                         target_img=target,
                         threshold=threshold)
-       
+        print("%d targets"%(len(targets)))
         for target in targets:
             print(target)
             self.tap(coor=target)
@@ -896,6 +896,22 @@ class ControlADB(MyCommon):
         os.system(command)
         return
 
+    def alitree(self):
+        """TODO: Docstring for run.
+        :returns: TODO
+
+        """
+        if len(sys.argv) == 1:
+            index = 2
+        else:
+            try:
+                index = int(sys.argv[1])
+            except Exception as e:
+                print("please input correct arguments")
+        self.zhifubaoTree(index=index)
+                
+        return
+
     def inputStrings(self):
         """
         docstring for inputStrings
@@ -911,19 +927,5 @@ class ControlADB(MyCommon):
             commands.append(space)
         commands.append(self.inputText + strings[-1])
         self.runCommands(commands)
-
-        return
-    def test(self):
-        """
-        docstring for test
-        """
-        # self.devices = "222.195.67.90:5555"
-        # self.zhifubaoTree(index=1)
-        # self.collectEnergy(back=False)
-        # self.wechatRed()
-        # self.gaode()
-        # self.tvUp()
-        # self.screencap()
-        # self.inputStrings()
 
         return
