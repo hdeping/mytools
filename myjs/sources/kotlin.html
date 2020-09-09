@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<!-- 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2020-09-01 14:46:52
+    @project      : highlight the code
+    @version      : 1.0
+    @source file  : index.html
+
+============================
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Highlight</title>
+    <link rel="stylesheet" type="text/css" 
+        href="coy.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="prism.js"></script>
+
+</head>
+<body >
+    <button id = "toggle_style" onclick="toggle_style()"> 切换风格</button>
+    <button onclick="last()"> 上一页</button>
+    <button onclick="next()"> 下一页</button>
+    <br>
+    <input type="text" id="page">
+    <button id="goto" onclick="goto()"> 跳转</button>
+    <div>
+      <h2></h2>
+      <h3></h3>
+    </div>
+  <pre>
+<code class="language-kotlin line-numbers">
+</code>
+  </pre>
+  <button id = "toggle_style" onclick="toggle_style()"> 切换风格</button>
+  <button onclick="last()"> 上一页</button>
+  <button onclick="next()"> 下一页</button>
+  <script type="text/javascript" src="styles.js"></script>
+  <script type="text/javascript" src="kotlin.js"></script>
+  <script type="text/javascript" src="code.js">    
+  </script>
+</body>
+</html>
