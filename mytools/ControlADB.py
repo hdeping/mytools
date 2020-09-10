@@ -26,8 +26,7 @@ from mytools import MyCommon
 from tqdm import tqdm
 import pandas
 from datetime import datetime
-
-
+import sys
 
 class ControlADB(MyCommon):
     """docstring for ControlADB"""
@@ -272,7 +271,6 @@ class ControlADB(MyCommon):
                    cv2.TM_CCORR_NORMED, 
                    cv2.TM_CCOEFF_NORMED]   
         method = methods[0]
-        print(target.shape)
         result = cv2.matchTemplate(target[:900,:,:], tpl, method)
         result = (result < threshold[0])
         result = result*255 
@@ -896,6 +894,22 @@ class ControlADB(MyCommon):
         """
         command = self.shell + " pm list package"
         os.system(command)
+        return
+
+    def alitree(self):
+        """TODO: Docstring for run.
+        :returns: TODO
+
+        """
+        if len(sys.argv) == 1:
+            index = 2
+        else:
+            try:
+                index = int(sys.argv[1])
+            except Exception as e:
+                print("please input correct arguments")
+        self.zhifubaoTree(index=index)
+                
         return
 
     def inputStrings(self):
