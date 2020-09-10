@@ -21,6 +21,15 @@ import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
+// navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+
+import android.content.SharedPreferences
+import android.content.Context
+
 
 fun changeBgImage(yuanyuan:ImageView){
     var images:ArrayList<Int> = ArrayList()
@@ -100,4 +109,66 @@ fun getTriangleArea(a:Float,b:Float,c:Float){
         A = asin(A)*180.0f/PI.toFloat()
         angle3.setText(String.format("%.2f",A))
     }
+}
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+    val navController = findNavController(R.id.nav_host_fragment)
+    // Passing each menu ID as a set of Ids because each
+    // menu should be considered as top level destinations.
+    val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.navigation_home, 
+            R.id.navigation_dashboard, 
+            R.id.navigation_notifications))
+
+    setupActionBarWithNavController(navController, appBarConfiguration)
+    navView.setupWithNavController(navController)
+
+}
+fun browseWeb(qixi:WebView,url:String){
+    qixi.settings.setJavaScriptEnabled(true)
+    qixi.settings.setUseWideViewPort(true)
+    qixi.settings.setLoadWithOverviewMode(true)
+    qixi.settings.setUseWideViewPort(true);
+    qixi.settings.setLoadWithOverviewMode(true);
+    qixi.settings.setSupportZoom(true);
+    qixi.settings.setBuiltInZoomControls(true);
+    qixi.settings.setDisplayZoomControls(false);
+    qixi.settings.setAllowFileAccess(true);
+    qixi.settings.setLoadsImagesAutomatically(true);
+    qixi.settings.setDefaultTextEncodingName("utf-8")
+    qixi.setLayerType(View.LAYER_TYPE_HARDWARE,null)
+
+    qixi.loadUrl(url)
+    qixi.setWebViewClient(object : WebViewClient() {
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            //使用WebView加载显示url
+            view.loadUrl(url)
+            //返回true
+            return true
+        }
+
+    })
+}
+
+private lateinit  var values_setting:SharedPreferences
+private lateinit var  values_editor:SharedPreferences.Editor
+fun applyChange(){
+    values_editor.putString("str1",str1)
+    values_editor.putInt("int1",int1)
+    values_editor.apply()
+}
+
+
+fun alert(message:String){
+    val alertdialogbuilder: AlertDialog.Builder = Builder(this)
+    alertdialogbuilder.setMessage(message)
+    alertdialogbuilder.setPositiveButton("确定", null)
+    alertdialogbuilder.setNeutralButton("取消", null)
+    val alertdialog1: AlertDialog = alertdialogbuilder.create()
+    alertdialog1.show()
+
 }
