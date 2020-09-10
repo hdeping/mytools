@@ -271,7 +271,7 @@ class ControlADB(MyCommon):
                    cv2.TM_CCORR_NORMED, 
                    cv2.TM_CCOEFF_NORMED]   
         method = methods[0]
-        result = cv2.matchTemplate(target[:900,:,:], tpl, method)
+        result = cv2.matchTemplate(target, tpl, method)
         result = (result < threshold[0])
         result = result*255 
         cv2.imwrite(self.path + "result.png",result)
