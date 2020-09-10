@@ -1,6 +1,3 @@
-# .zshrc
-
-
 # User specific aliases and functions
 #  about fcitx
 export XMODIFIERS="@im=fcitx"
@@ -8,11 +5,12 @@ export QT_MODULE=fcitx
 export GTK_MODULE=fcitx
 export ZSH=~/.oh-my-zsh
 export LANGUAGE="en_US.UTF-8"
+export KMP_DUPLICATE_LIB_OK=TRUE
 #source ~/.login
 # my paths {{{
 # python path
 # myPythonPath=~/miniconda3/lib/python3.7/site-packages/pymouse:~/c/02_python/44_mytools
-myPythonPath=~/c/02_python/44_mytools
+myPythonPath=/usr/huangdeping/c/02_python/44_mytools:/usr/local/Cellar/py3cairo/1.18.2/lib/python3.7/site-packages
 PYTHONPATH=$myPythonPath:$PYTHONPATH
 export PYTHONPATH
 #PATH=$mender:$ifort/intel64:$icc/intel64:$tex:$PATH:/usr/x86_64-w64-mingw32/bin/qt5
@@ -29,19 +27,25 @@ adb=/Users/huangdeping/Library/Android/sdk/platform-tools
 jni=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
 jni_inc=$jni/include
 jni_lib=$jni/jre/lib
-PATH=$ana:$nmap:$PATH:$myshell:/usr/local/opt/mariadb/bin:$adb
+gap=/Users/huangdeping/myGitDir/test/08_GapPackage/gap-4.11.0
+java=/Users/huangdeping/myGitDir/test/GoldMiner/GoldMiner/src/minegame:/Applications/'Android Studio.app'/Contents/plugins/Kotlin/kotlinc/bin
+runPath=/usr/local/Cellar/iftop/1.0pre4/sbin:/usr/local/opt/mariadb/bin
+PATH=$ana:$nmap:$PATH:$myshell:$runPath:$adb:$gap:$java
 export PATH
 cv=/Users/huangdeping/miniconda3/lib/pkgconfig
+ssl=/usr/local/Cellar/openssl/1.0.2p/lib
 export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$cv
-export LIBRARY_PATH=$LIBRARY_PATH:$analib:$jni_lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$analib:$jni_lib
+export LIBRARY_PATH=$ssl:$LIBRARY_PATH:$analib:$jni_lib
+export LD_LIBRARY_PATH=$ssl:$LD_LIBRARY_PATH:$analib:$jni_lib
+export DYLD_LIBRARY_PATH=$ssl:$DYLD_LIBRARY_PATH
 export C_INCLUDE_PATH=$C_INCLUDE_PATH:$anainc:$jni_inc
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$anainc:$jni_inc
 export MANPATH=$codeMan:$MANPATH
 #}}}
 #some varibales{{{
-lapip=114.214.189.87
-labip=202.38.82.23
+lapip=192.168.1.11
+labip=114.214.200.176
+huahuaip=192.168.1.13
 gpuip=210.45.125.100
 gpuip1=202.38.82.113
 gpuip2=202.38.82.114
@@ -52,9 +56,10 @@ g1=hdp@$gpuip1
 g2=hdp@$gpuip2
 g3=hdp@$gpuip3
 # gpu=ncl@$gpuip
-gpu=ncl@$labip
+gpu=hdp@$gpuip
 yoyoip=172.16.12.200
 yo=yoyo@$yoyoip
+math=~/myGitDir/books/02_math
 
 bl=/home/hdeping/myWorks/02_blender/
 serverip=210.45.125.225
@@ -68,9 +73,9 @@ boat=ouyang@172.16.7.68
 lap=hdeping@${lapip}
 lab=hdeping@${labip}
 dom=hdeping@${domip}
+hua=huahua@${huahuaip}
 mailhdp="hdeping@mail.ustc.edu.cn"
 
-ref=/home/huangdeping/complexNetwork/01_myReference/
 sum=/home/huangdeping/complexNetwork/06_summaryEveryday/
 note=/home/huangdeping/complexNetwork/02_ReferenceNote/
 reftex=/home/huangdeping/complexNetwork/01_myReferrence/08_refTexSummary
@@ -79,24 +84,37 @@ meeting=/home/huangdeping/tex/beamer/01_groupmeeting/08_20170413/01_v1
 code=/home/huangdeping/complexNetwork/00_CCodes
 work=/home/huangdeping/complexNetwork/00_CCodes/19_reactionInversePara/02_enzymeKinetics
 pap=/Users/huangdeping/Desktop/05_myPaper
+ref=/Users/huangdeping/Desktop/references
 ppt=/home/huangdeping/complexNetwork/05_myPaper/02_myGraduation/02_20171125_EnglishSymposium
 vim=/home/huangdeping/.vim/ftplugin
 tex=/home/huangdeping/tex/beamer/01_groupmeeting/05_20160519
 #}}}
 #some common alias command{{{
 # gm for git commit
+alias adp="adb shell input tap"
+alias att="adb shell input text"
+alias adc="adb connect"
+alias tv="adb connect 192.168.1.2"
+alias ain="adb install"
+alias kt="kotlin"
+alias ktc="kotlinc"
+alias saf="open -a Safari"
 alias ga="git add"
+alias gra="git remote add"
 alias ggc="git gc"
-alias gup="git branch --set-upstream"
+alias gup="git branch --set-upstream-to"
+alias gps="git push --set-upstream"
 alias gdi="git log --graph --decorate"
 alias gcp="git cat-file -p"
 alias gme="git merge"
 alias gst="git status"
 alias gm="git commit -m"
 alias gch="git checkout"
+alias gpsh="git push --all"
+alias gpll="git pull --all"
 alias glp="git log --pretty=format:'%h %ad %an'"
 alias gbr="git branch"
-alias gre="git rebase -i"
+alias gstore="git config credential.helper store"
 alias gam="git add . && git commit -m"
 alias ap="sudo apachectl start"
 alias yo="ssh yoyo@$yoyoip"
@@ -165,11 +183,12 @@ alias em="emacs"
 alias gf="gprof"
 alias cr="cp -r"
 alias hdp="ssh hdp@${serverip}"
+alias hua="ssh huahua@${huahuaip}"
 # alias hdp="ssh hdp@${labip} -p 22022"
 alias hdpx="ssh -X  hdp@${serverip}"
 #alias hdp="TERM=screen ssh hdp@210.45.125.225"
-# alias gpu="ssh ncl@$gpuip"
-alias gpu="ssh ncl@$labip -p 22021"
+alias gpu="ssh hdp@$gpuip"
+# alias gpu="ssh ncl@$labip -p 22021"
 alias g0="ssh hdp@$gpuip"
 alias g1="ssh hdp@$gpuip1"
 alias g2="ssh hdp@$gpuip2"
@@ -188,10 +207,12 @@ alias sdb1="sudo umount /dev/sdb1"   #  for the elements
 alias vo="alsamixer"
 alias tel="rlwrap telnet"
 alias mp="mplayer"
+# alias mpl="mplayer -playlist"
 alias sp="smplayer"
 alias ev="evince -f"
 alias detect="sudo tcpdump -i p3p1 -s 0 -X 'tcp and port 80' -w urlcap"
 alias pin="brew install"
+alias pup="brew upgrade"
 alias cin="conda install"
 alias crm="conda uninstall"
 alias prm="brew uninstall"
@@ -203,6 +224,7 @@ alias nin="npm install -g"
 alias nrm="npm uninstall "
 alias nch="npm search"
 alias pyin="pip install"
+alias pych="pip search"
 alias pyrm="pip uninstall"
 alias pin2="yaourt -S"
 alias sr="source"
@@ -346,9 +368,9 @@ export QT_MODULE=fcitx
 export GTK_MODULE=fcitx
 #关于历史纪录的配置 {{{
 #历史纪录条目数量
-export HISTSIZE=10000
+export HISTSIZE=100000
 #注销后保存的历史纪录条目数量
-export SAVEHIST=10000
+export SAVEHIST=100000
 #历史纪录文件
 export HISTFILE=~/.zhistory
 #以附加的方式写入历史纪录
