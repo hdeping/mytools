@@ -1,6 +1,3 @@
-/Users/huangdeping/myGitDir/test/08_GapPackage/gap-4.11.0# .zshrc
-
-
 # User specific aliases and functions
 #  about fcitx
 export XMODIFIERS="@im=fcitx"
@@ -8,6 +5,7 @@ export QT_MODULE=fcitx
 export GTK_MODULE=fcitx
 export ZSH=~/.oh-my-zsh
 export LANGUAGE="en_US.UTF-8"
+export KMP_DUPLICATE_LIB_OK=TRUE
 #source ~/.login
 # my paths {{{
 # python path
@@ -30,7 +28,9 @@ jni=/Library/Java/JavaVirtualMachines/jdk1.8.0_181.jdk/Contents/Home
 jni_inc=$jni/include
 jni_lib=$jni/jre/lib
 gap=/Users/huangdeping/myGitDir/test/08_GapPackage/gap-4.11.0
-PATH=$ana:$nmap:$PATH:$myshell:/usr/local/opt/mariadb/bin:$adb:$gap
+java=/Users/huangdeping/myGitDir/test/GoldMiner/GoldMiner/src/minegame:/Applications/'Android Studio.app'/Contents/plugins/Kotlin/kotlinc/bin
+runPath=/usr/local/Cellar/iftop/1.0pre4/sbin:/usr/local/opt/mariadb/bin
+PATH=$ana:$nmap:$PATH:$myshell:$runPath:$adb:$gap:$java
 export PATH
 cv=/Users/huangdeping/miniconda3/lib/pkgconfig
 ssl=/usr/local/Cellar/openssl/1.0.2p/lib
@@ -43,8 +43,8 @@ export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$anainc:$jni_inc
 export MANPATH=$codeMan:$MANPATH
 #}}}
 #some varibales{{{
-lapip=114.214.189.87
-labip=202.38.82.23
+lapip=192.168.1.11
+labip=114.214.200.176
 huahuaip=192.168.1.13
 gpuip=210.45.125.100
 gpuip1=202.38.82.113
@@ -56,7 +56,7 @@ g1=hdp@$gpuip1
 g2=hdp@$gpuip2
 g3=hdp@$gpuip3
 # gpu=ncl@$gpuip
-gpu=ncl@$labip
+gpu=hdp@$gpuip
 yoyoip=172.16.12.200
 yo=yoyo@$yoyoip
 math=~/myGitDir/books/02_math
@@ -91,9 +91,19 @@ tex=/home/huangdeping/tex/beamer/01_groupmeeting/05_20160519
 #}}}
 #some common alias command{{{
 # gm for git commit
+alias adp="adb shell input tap"
+alias att="adb shell input text"
+alias adc="adb connect"
+alias tv="adb connect 192.168.1.2"
+alias ain="adb install"
+alias kt="kotlin"
+alias ktc="kotlinc"
+alias saf="open -a Safari"
 alias ga="git add"
+alias gra="git remote add"
 alias ggc="git gc"
-alias gup="git branch --set-upstream"
+alias gup="git branch --set-upstream-to"
+alias gps="git push --set-upstream"
 alias gdi="git log --graph --decorate"
 alias gcp="git cat-file -p"
 alias gme="git merge"
@@ -101,7 +111,7 @@ alias gst="git status"
 alias gm="git commit -m"
 alias gch="git checkout"
 alias gpsh="git push --all"
-alias gpll="git push --all"
+alias gpll="git pull --all"
 alias glp="git log --pretty=format:'%h %ad %an'"
 alias gbr="git branch"
 alias gstore="git config credential.helper store"
@@ -177,8 +187,8 @@ alias hua="ssh huahua@${huahuaip}"
 # alias hdp="ssh hdp@${labip} -p 22022"
 alias hdpx="ssh -X  hdp@${serverip}"
 #alias hdp="TERM=screen ssh hdp@210.45.125.225"
-# alias gpu="ssh ncl@$gpuip"
-alias gpu="ssh ncl@$labip -p 22021"
+alias gpu="ssh hdp@$gpuip"
+# alias gpu="ssh ncl@$labip -p 22021"
 alias g0="ssh hdp@$gpuip"
 alias g1="ssh hdp@$gpuip1"
 alias g2="ssh hdp@$gpuip2"
@@ -358,9 +368,9 @@ export QT_MODULE=fcitx
 export GTK_MODULE=fcitx
 #关于历史纪录的配置 {{{
 #历史纪录条目数量
-export HISTSIZE=10000
+export HISTSIZE=100000
 #注销后保存的历史纪录条目数量
-export SAVEHIST=10000
+export SAVEHIST=100000
 #历史纪录文件
 export HISTFILE=~/.zhistory
 #以附加的方式写入历史纪录
