@@ -38,6 +38,10 @@ import java.net.Socket
 import java.io.IOException
 
 
+private lateinit  var values_setting:SharedPreferences
+private lateinit var  values_editor:SharedPreferences.Editor
+
+
 fun changeBgImage(yuanyuan:ImageView){
     var images:ArrayList<Int> = ArrayList()
     images.add(R.drawable.yuanyuan6465)
@@ -157,12 +161,21 @@ fun browseWeb(qixi:WebView,url:String){
             //返回true
             return true
         }
+        override fun onPageFinished(view: WebView, url: String) {
+            //使用WebView加载显示url
+            var count = values_setting.getInt(type,10)
+            var script = """
+                javascript:
+                count = ${count};
+                change_content();
+            """.trimIndent()
+            //返回true
+            view.loadUrl(script)
+            }
 
     })
 }
 
-private lateinit  var values_setting:SharedPreferences
-private lateinit var  values_editor:SharedPreferences.Editor
 fun applyChange(){
     values_editor.putString("str1",str1)
     values_editor.putInt("int1",int1)
@@ -209,12 +222,9 @@ fun checkNetwork(){
 
 fun runJs(web:WebView,script:String){
 
-    web.evaluateJavascript(script, ValueCallback<String>() {
-        override
-        fun onReceiveValue(s:String) {
-            //此处为 js 返回的结果
-            Log.d("结果是",s)
-    
+    web.evaluateJavascript(script,object : ValueCallback<String>{
+        override fun onReceiveValue(count: String) {
+            Log.d("result",count)
         }
     })
 }
