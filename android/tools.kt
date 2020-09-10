@@ -30,6 +30,13 @@ import androidx.navigation.ui.setupWithNavController
 import android.content.SharedPreferences
 import android.content.Context
 
+// network operations
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.Socket
+// files
+import java.io.IOException
+
 
 fun changeBgImage(yuanyuan:ImageView){
     var images:ArrayList<Int> = ArrayList()
@@ -162,6 +169,15 @@ fun applyChange(){
     values_editor.apply()
 }
 
+fun getPreferences(){
+    val prefer = "settings"
+    values_setting = this.getSharedPreferences(prefer, Context.MODE_PRIVATE )
+    values_editor  = values_setting.edit()
+    values_setting.getString("str1","str1")
+    values_setting.getInt("int1",0)
+
+}
+
 
 fun alert(message:String){
     val alertdialogbuilder: AlertDialog.Builder = Builder(this)
@@ -172,3 +188,34 @@ fun alert(message:String){
     alertdialog1.show()
 
 }
+
+fun checkNetwork(){
+    Thread(Runnable{
+        try {
+            var s: Socket? = null
+            if (s == null) {
+                s = Socket()
+            }
+            var ip = "114.114.114.114"
+            val host: InetAddress = InetAddress.getByName(ip) 
+            s.connect(InetSocketAddress(host, 53), 5000) //goo gle:53
+            s.close()
+        } catch (e: IOException) {
+            alert("无法联网,请检查网络连接")
+        }
+    })
+
+}
+
+fun runJs(web:WebView,script:String){
+
+    web.evaluateJavascript(script, ValueCallback<String>() {
+        override
+        fun onReceiveValue(s:String) {
+            //此处为 js 返回的结果
+            Log.d("结果是",s)
+    
+        }
+    })
+}
+
