@@ -21,6 +21,26 @@ import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
+// navigation
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+
+import android.content.SharedPreferences
+import android.content.Context
+
+// network operations
+import java.net.InetAddress
+import java.net.InetSocketAddress
+import java.net.Socket
+// files
+import java.io.IOException
+
+
+private lateinit  var values_setting:SharedPreferences
+private lateinit var  values_editor:SharedPreferences.Editor
+
 
 fun changeBgImage(yuanyuan:ImageView){
     var images:ArrayList<Int> = ArrayList()
@@ -101,3 +121,111 @@ fun getTriangleArea(a:Float,b:Float,c:Float){
         angle3.setText(String.format("%.2f",A))
     }
 }
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+    val navController = findNavController(R.id.nav_host_fragment)
+    // Passing each menu ID as a set of Ids because each
+    // menu should be considered as top level destinations.
+    val appBarConfiguration = AppBarConfiguration(setOf(
+            R.id.navigation_home, 
+            R.id.navigation_dashboard, 
+            R.id.navigation_notifications))
+
+    setupActionBarWithNavController(navController, appBarConfiguration)
+    navView.setupWithNavController(navController)
+
+}
+fun browseWeb(qixi:WebView,url:String){
+    qixi.settings.setJavaScriptEnabled(true)
+    qixi.settings.setUseWideViewPort(true)
+    qixi.settings.setLoadWithOverviewMode(true)
+    qixi.settings.setUseWideViewPort(true);
+    qixi.settings.setLoadWithOverviewMode(true);
+    qixi.settings.setSupportZoom(true);
+    qixi.settings.setBuiltInZoomControls(true);
+    qixi.settings.setDisplayZoomControls(false);
+    qixi.settings.setAllowFileAccess(true);
+    qixi.settings.setLoadsImagesAutomatically(true);
+    qixi.settings.setDefaultTextEncodingName("utf-8")
+    qixi.setLayerType(View.LAYER_TYPE_HARDWARE,null)
+
+    qixi.loadUrl(url)
+    qixi.setWebViewClient(object : WebViewClient() {
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            //使用WebView加载显示url
+            view.loadUrl(url)
+            //返回true
+            return true
+        }
+        override fun onPageFinished(view: WebView, url: String) {
+            //使用WebView加载显示url
+            var count = values_setting.getInt(type,10)
+            var script = """
+                javascript:
+                count = ${count};
+                change_content();
+            """.trimIndent()
+            //返回true
+            view.loadUrl(script)
+            }
+
+    })
+}
+
+fun applyChange(){
+    values_editor.putString("str1",str1)
+    values_editor.putInt("int1",int1)
+    values_editor.apply()
+}
+
+fun getPreferences(){
+    val prefer = "settings"
+    values_setting = this.getSharedPreferences(prefer, Context.MODE_PRIVATE )
+    values_editor  = values_setting.edit()
+    values_setting.getString("str1","str1")
+    values_setting.getInt("int1",0)
+
+}
+
+
+fun alert(message:String){
+    val alertdialogbuilder: AlertDialog.Builder = Builder(this)
+    alertdialogbuilder.setMessage(message)
+    alertdialogbuilder.setPositiveButton("确定", null)
+    alertdialogbuilder.setNeutralButton("取消", null)
+    val alertdialog1: AlertDialog = alertdialogbuilder.create()
+    alertdialog1.show()
+
+}
+
+fun checkNetwork(){
+    Thread(Runnable{
+        try {
+            var s: Socket? = null
+            if (s == null) {
+                s = Socket()
+            }
+            var ip = "114.114.114.114"
+            val host: InetAddress = InetAddress.getByName(ip) 
+            s.connect(InetSocketAddress(host, 53), 5000) //goo gle:53
+            s.close()
+        } catch (e: IOException) {
+            alert("无法联网,请检查网络连接")
+        }
+    })
+
+}
+
+fun runJs(web:WebView,script:String){
+
+    web.evaluateJavascript(script,object : ValueCallback<String>{
+        override fun onReceiveValue(count: String) {
+            Log.d("result",count)
+        }
+    })
+}
+
