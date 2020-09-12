@@ -211,7 +211,7 @@ class Spider(MyCommon):
 
 
 
-        self.exitBrowser()
+        self.exitDriver()
 
 
     def get845665(self):
@@ -231,10 +231,10 @@ class Spider(MyCommon):
         # https://www.845447.com/xmkk/ed0f3a30/m3u8.m3u8
         # https://www.845447.com/xmkk/acf15aad/m3u8.m3u8
 
-        self.exitBrowser()
+        self.exitDriver()
         return 
 
-    def exitBrowser(self):
+    def exitDriver(self):
         """
         exit the webdriver
         """
@@ -303,7 +303,7 @@ class Spider(MyCommon):
                 os.system(command)
 
 
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def getJs2(self):
@@ -354,7 +354,7 @@ class Spider(MyCommon):
         self.writeJson(pages,"pages1.json")
 
 
-        self.exitBrowser()
+        self.exitDriver()
         return
     def dealData(self):
         """
@@ -443,7 +443,7 @@ class Spider(MyCommon):
         with open(filename,"w") as fp:
             fp.write(strings)
 
-        self.exitBrowser()
+        self.exitDriver()
 
         return
 
@@ -463,7 +463,7 @@ class Spider(MyCommon):
         fields = ["//iframe/@src"]
         contents = self.getContent(url,fields)
         print(contents)
-        self.exitBrowser()
+        self.exitDriver()
         return  
 
     def fangzhouzi(self):
@@ -488,7 +488,7 @@ class Spider(MyCommon):
                 texts = self.getContent(href,fields1)
                 print("\n".join(texts[0]))
 
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def annualReview(self):
@@ -539,7 +539,7 @@ class Spider(MyCommon):
             fp.write("var images = [\n")
             fp.write(links)
             fp.write("]")
-        self.exitBrowser()
+        self.exitDriver()
 
     def ReinforceLearning2(self):
         """
@@ -552,7 +552,7 @@ class Spider(MyCommon):
         links = self.getContent(url, fields)
         for link in links[0]:
             print(prefix + link)
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def ReinforceLearning(self):
@@ -711,7 +711,7 @@ class Spider(MyCommon):
             contents = self.analyzePage(fields)
             self.addItems(contents)
 
-        # self.exitBrowser()
+        # self.exitDriver()
 
         self.writeJson(self.items,"gutian_qisushu.json")
         return
@@ -740,7 +740,7 @@ class Spider(MyCommon):
             btn = self.bro.find_element_by_link_text("下一页")
             ActionChains(self.bro).move_to_element(button).click(button).perform()
             sleep(2)
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def guTianQiSu(self):
@@ -782,7 +782,7 @@ class Spider(MyCommon):
         with open("%s.txt"%name,"w") as fp:
             fp.write(total)
 
-        # self.exitBrowser()
+        # self.exitDriver()
 
         self.addItems(contents)
         self.writeJson(self.items,"%s_qisushu.json"%name)
@@ -826,7 +826,7 @@ class Spider(MyCommon):
 
         with open("linyuanxing.txt","w") as fp:
             fp.write(total)
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def getM3uLinks(self):
@@ -861,7 +861,7 @@ class Spider(MyCommon):
         
         self.writeJson(data,"xuexiao_intro.json")
 
-        self.exitBrowser()
+        self.exitDriver()
 
         return
 
@@ -882,7 +882,7 @@ class Spider(MyCommon):
 
         self.writeJson(urls,"luchanghai_links.json")
 
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def luchanghaiContents(self):
@@ -903,7 +903,7 @@ class Spider(MyCommon):
                     line = line.replace("\n\n","")
                     fp.write(line)
                     print(line)
-        self.exitBrowser()
+        self.exitDriver()
 
 
 
@@ -929,7 +929,7 @@ class Spider(MyCommon):
                 if len(m3u8) > 0:
                     print(u,link,m3u8)
                 
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def getPingGuo(self):
@@ -940,7 +940,7 @@ class Spider(MyCommon):
         link = "http://www.gooddyw.cc/vodplay/yemannvwang-1-2/"
         m3u8 = self.getContent(link,["//iframe/@src"])[0]
         print(m3u8)
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def getNovel(self):
@@ -955,7 +955,7 @@ class Spider(MyCommon):
         for i in range(1,11):
             contents = self.getContent(url%i,["//li/a/@href"])[0]
             arr += contents 
-        self.exitBrowser()
+        self.exitDriver()
         arr = np.flip(arr)
 
         res = []
@@ -982,7 +982,7 @@ class Spider(MyCommon):
                 contents = self.getContent(url,fields)[0]
                 print("".join(contents))
                 fp.write("%s\n%s"%(url,"".join(contents)))
-        self.exitBrowser()
+        self.exitDriver()
 
         return
     def testBefore(self):
@@ -1044,7 +1044,7 @@ class Spider(MyCommon):
         fp.close()
 
 
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def dealSludge(self):
@@ -1090,7 +1090,7 @@ class Spider(MyCommon):
 
 
         content
-        self.exitBrowser()
+        self.exitDriver()
         return
 
     def huoxingyizhong(self):
@@ -1116,7 +1116,7 @@ class Spider(MyCommon):
 
 
 
-        self.exitBrowser()
+        self.exitDriver()
         return
     def test(self):
        

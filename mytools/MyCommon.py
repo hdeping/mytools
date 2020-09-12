@@ -20,8 +20,8 @@ import numpy as np
 import os
 from tqdm import tqdm
 import sys
-
-
+import urllib
+from bs4 import BeautifulSoup
 
 class MyCommon():
     """docstring for MyCommon
@@ -520,5 +520,39 @@ class MyCommon():
         movies = a.sortDicts(movies)
         for key in movies:
             print(key,movies[key])
+
+        return
+    def resize(self,size=30):
+        """
+        docstring for run
+        """
+        if len(sys.argv) < 2:
+            print("Please input image files")
+            print("such as: resize *.jpg *.png")
+            return 
+        names = sys.argv[1:]
+        for i,name in enumerate(names):
+            string = name.split(".")[0]
+            formats = "convert -resize %d%s %s %s_resize%d.jpg"
+            command = formats%(size,"%",name,string,size)
+            print(i+1,command)
+            os.system(command)
+    def getHtmlSoup(self,url):
+        """
+        docstring for getHtmlSoup
+        """
+        html = urllib.request.urlopen(url).read()
+        soup = BeautifulSoup(html,"lxml")
+        
+        return soup
+    def saveContents(self,contents,filename):
+        """
+        docstring for saveContents
+        contents: string
+        filename: name of the output file
+        """
+
+        with open(filename,'w') as fp:
+            fp.write(contents)
 
         return
