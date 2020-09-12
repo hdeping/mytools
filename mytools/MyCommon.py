@@ -19,6 +19,7 @@ import yaml
 import numpy as np
 import os
 from tqdm import tqdm
+import sys
 
 
 
@@ -447,22 +448,25 @@ class MyCommon():
             fp.write(strings)
 
         return  
-    def source2Js(self,suffix="kt"):
+    def source2Js(self,suffix=["kt"]):
         """
         docstring for source2Js
         """
-        lists = self.getCommand("find . -name '*.%s'"%(suffix))
+        lists = self.getCommand("find . -type f")
 
         sources = {
             "keys":[],
             "values":[]
         }
         for line in tqdm(lists):
-            code = self.loadStrings(line)
-            sources["keys"].append(line)
-            sources["values"].append("\n".join(code))
+            suf = line.split(".")[-1]
+            if suf in suffix:
+                code = self.loadStrings(line)
+                sources["keys"].append(line)
+                sources["values"].append("\n".join(code))
 
         self.writeJs(sources,"sources","sources.js")
+
     def getAllSources(self,filename="lists.txt"):
         """
         docstring for getAllSources
@@ -478,5 +482,43 @@ class MyCommon():
         filename = "sources.txt"
         with open(filename,'w') as fp:
             fp.write(results)
+
+        return
+    def getCode(self):
+        """
+        docstring for getCode
+        get the source code under 
+        the current directory
+        """
+        code_types = {
+            "c":["c","h"],
+            "cpp":["cpp","hpp","c","h","cc"],
+            "cu":["cu","cuh"]
+        }
+        try:
+            types = []
+            for item in sys.argv[1:]:
+                if item in code_types:
+                    types += code_types[item]
+                else:
+                    types.append(item)
+            print(types)
+            self.source2Js(suffix=types)
+        except Exception:
+            print("wrong with input")
+        return
+    def getMovies(self,filename="xie"):
+        """
+        docstring for getMovies
+        """
+        data = a.loadStrings("xie",encoding="utf-8")
+
+        movies = {}
+        for i,line in enumerate(data):
+            if len(line) == 3 and line[1] == ".":
+                movies[data[i-1]] = float(line)
+        movies = a.sortDicts(movies)
+        for key in movies:
+            print(key,movies[key])
 
         return
