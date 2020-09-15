@@ -17,7 +17,7 @@
 
 import cv2
 
-class MyImage(cv2):
+class MyImage():
     """docstring for MyImage"""
     def __init__(self):
         super(MyImage, self).__init__()
@@ -30,12 +30,12 @@ class MyImage(cv2):
         """
         path = "./"
         filename = path + "book.png"
-        data = self.imread(filename,self.IMREAD_UNCHANGED)
+        data = cv2.imread(filename,cv2.IMREAD_UNCHANGED)
         image = np.zeros(data.shape)
         threshold = np.average(data[:,:,:2],axis=2)
         p = (threshold < 100)
         image[:,:,2] = 255
         image[:,:,0] = p*255
         image[:,:,1] = p*255
-        self.imwrite(path + "book2.png",image)
+        cv2.imwrite(path + "book2.png",image)
         return 
