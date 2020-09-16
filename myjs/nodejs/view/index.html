@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- 
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-05-31 10:31:42
+    @project      : HPC monitor
+    @version      : 1.5
+    @source file  : index.html
+
+============================
+ -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NCL-Monitor</title>
+    <link rel="stylesheet" href="style.css">
+     <script 
+        type="text/javascript" 
+        src = "http://210.45.125.225/d3.min.js">
+            
+    </script>
+    <script 
+        type="text/javascript" 
+        src = "http://210.45.125.225/jquery.min.js">
+            
+    </script>
+</head>
+<body>
+        <div class="title" id="title1">任务运行情况</div>
+        
+        <br>
+        <button class="refresh"
+                onclick = "refresh()"
+                >刷新</button>
+        <br>
+            <span class="note">请点击刷新并重新加载网页</span>
+
+    <script type="text/javascript" src = "server17.js"></script>
+    <script type="text/javascript" src = "server7.js"></script>
+    <script type="text/javascript" src = "server225.js"></script>
+    <script type="text/javascript" src = "server100.js"></script>
+    <script type="text/javascript" src = "run.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+/*
+============================
+
+    @author       : Deping Huang
+    @mail address : xiaohengdao@gmail.com
+    @date         : 2019-05-31 10:31:50
+    @project      : HPC monitor
+    @version      : 0.9
+    @source file  : style.css
+
+============================*/
+
+*{
+    -moz-user-select: none;
+}
+
+body{
+    /*background: #faf9f9;*/
+    background: #CCFFFF;
+    /*margin:auto;*/
+}
+.title{
+    font-size:50px;
+    color:#FF9966;
+    position: relative;
+    left:420px;
+    top:50px;
+    font-weight: bold;
+    }
+.refresh{
+    font-size:50px;
+    color:#FF9966;
+    width: 200px;
+    height: 100px;
+    position: relative;
+    background: aqua;
+    /*left:420px;*/
+    /*top:50px;*/
+    font-weight: bold;
+    }
+.title1{
+    font-size:40px;
+    color:#aa9966;
+    // position: absolute;
+    position: relative;
+    background: #5050aa;
+    /*left:220px;*/
+    top:100px;
+    font-weight: bold;
+    }
+.title2{
+    font-size:40px;
+    color:#aa9966;
+    position: relative;
+    background: #5050aa;
+    /*left:220px;*/
+    /*top:-20px;*/
+    font-weight: bold;
+    }
+
+.node{
+    width: 1160px;
+    height: 40px;
+    background: white;
+    position: relative;
+    top:100px;
+    border-radius: 10px;
+}
+.node17{
+    width: 520px;
+    height: 40px;
+    background: white;
+    position: relative;
+    top:100px;
+    border-radius: 10px;
+}
+.node7{
+    width: 680px;
+    height: 40px;
+    background: white;
+    position: relative;
+    top:100px;
+    border-radius: 10px;
+}
+
+.node div{
+    float:left;
+}
+.node17 div{
+    float:left;
+}
+.node7 div{
+    float:left;
+}
+.node100 div{
+    float:left;
+}
+.block{
+    width: 700px;
+    height:700px;
+
+}
+/*.block div{
+    float:left;
+}*/
+
+.nodename{
+    width:40px;
+    height:100%;
+    background: #006699;
+    color:#CC99CC;
+    position: relative;
+    border-radius: 6px;
+    font-size:25px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+}
+.nodename1{
+    width:240px;
+    height:100%;
+    background: #006699;
+    color:#CC99CC;
+    position: relative;
+    border-radius: 6px;
+    font-size:25px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+}
+.node100{
+    width: 360px;
+    height: 40px;
+    /*background: white;*/
+    position: relative;
+    top:100px;
+    border-radius: 10px;
+}
+.job{
+    width:46%;
+    height:30px;
+    background: #FFCC99;
+    position: relative;
+    border-radius: 5px;
+    margin:2px;
+    font-size:20px;
+    text-align: center;
+    line-height: 30px;
+    font-weight: bold;
+}
+.note{
+    font-size:20px;
+    color:blue;
+    font-weight:bold;
+    
+}
+#job0{
+    color:red;
+}
+#job1{
+    color:green;
+}
