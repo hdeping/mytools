@@ -20,8 +20,13 @@ import numpy as np
 import os
 from tqdm import tqdm
 import sys
+<<<<<<< HEAD
 import urllib
 from bs4 import BeautifulSoup
+=======
+
+
+>>>>>>> db50a8cbece45201fe4d8848da73b7d62ff6a68a
 
 class MyCommon():
     """docstring for MyCommon
