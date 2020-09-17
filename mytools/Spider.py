@@ -1118,6 +1118,38 @@ class Spider(MyCommon):
 
         self.exitDriver()
         return
+
+    def connectWlt(self):
+        """
+        docstring for connectWlt
+        """
+        self.initDriver()
+        self.bro.get("http://wlt.ustc.edu.cn")
+        time.sleep(1)
+        jscode = """
+        var selectors = [];
+        selectors.push("input[name='name']");
+        selectors.push("input[name='password']");
+        selectors.push("input[name='go']");
+        document.querySelector(selectors[0]).value = "hdeping";
+        document.querySelector(selectors[1]).value = "10709";
+        document.querySelector(selectors[2]).click();
+        """
+        self.bro.execute_script(jscode);
+        time.sleep(1);
+        jscode = """
+        var selectors = [];
+        selectors.push("#t0");
+        selectors.push("#e4");
+        selectors.push("input[name='go']");
+        for(var i = 0; i < selectors.length; i ++)
+        {
+            document.querySelector(selectors[i]).click();
+        }
+        """
+        self.bro.execute_script(jscode);
+        self.exitDriver()
+        return
     def test(self):
        
         # self.get232y()
