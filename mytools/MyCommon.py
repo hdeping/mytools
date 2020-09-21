@@ -22,6 +22,7 @@ from tqdm import tqdm
 import sys
 import urllib
 from bs4 import BeautifulSoup
+import sqlite3
 
 class MyCommon():
     """docstring for MyCommon
@@ -555,4 +556,22 @@ class MyCommon():
         with open(filename,'w') as fp:
             fp.write(contents)
 
+        return
+    def connectDB(self,db_name="./sqlite3.db"):
+        """
+        docstring for connectDB
+        initialize self.db and self.conn
+        """
+        self.db = sqlite3.connect(db_name)
+        print("opened %s successfully!"%db_name)
+        self.conn = self.db.cursor()
+        return
+    def exitDB(self):
+        """
+        docstring for exitDB
+        """
+        self.db.commit()
+        self.db.execute("vacuum;")
+        self.conn.close()
+        self.db.close()
         return
