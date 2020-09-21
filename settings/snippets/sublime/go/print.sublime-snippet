@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+fmt.Println(${1:contents})
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>pr</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.go</scope>
+</snippet>
