@@ -6,3 +6,8 @@ src = example.cpp
 out = -o example`python3-config --extension-suffix`
 run:
 	$(CXX) $(options) $(src) $(out)
+src = GrayScott.cpp 
+out = -o GrayScott`python3-config --extension-suffix`
+r2:
+	$(CXX) $(options) $(src) $(out)
+
