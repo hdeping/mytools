@@ -23,6 +23,7 @@ import sys
 import urllib
 from bs4 import BeautifulSoup
 import sqlite3
+import datetime
 
 class MyCommon():
     """docstring for MyCommon
@@ -575,3 +576,10 @@ class MyCommon():
         self.conn.close()
         self.db.close()
         return
+    def getDate(self):
+        """
+        docstring for getData
+        """
+        formats = '{0:%Y-%m-%d %H:%M:%S}'
+        date = datetime.datetime.now()
+        return formats.format(date)
