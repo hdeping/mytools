@@ -269,4 +269,10 @@ fun verifyStoragePermissions(activity: Activity?) {
     }
 }
 
+fun loadImageFromUrl(url:String) Drawable{
+    var img:InputStream = URL(url).getContent() as InputStream
+    var d:Drawable = Drawable.createFromStream(img,"image")
+    return d
+}
+
 
