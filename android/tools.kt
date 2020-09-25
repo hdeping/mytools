@@ -36,10 +36,17 @@ import java.net.InetSocketAddress
 import java.net.Socket
 // files
 import java.io.IOException
+import android.Manifest
 
 
 private lateinit  var values_setting:SharedPreferences
 private lateinit var  values_editor:SharedPreferences.Editor
+
+private val REQUEST_EXTERNAL_STORAGE = 1
+private val PERMISSIONS_STORAGE = arrayOf<String>(
+    Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE
+)
 
 
 fun changeBgImage(yuanyuan:ImageView){
@@ -228,4 +235,38 @@ fun runJs(web:WebView,script:String){
         }
     })
 }
+
+fun writeTxtFile(content: String, filePath: String, fileName: String, append: Boolean): Boolean {
+    var flag: Boolean = true
+    val thisFile = File("$filePath/$fileName")
+    try {
+        if (!thisFile.parentFile.exists()) {
+            thisFile.parentFile.mkdirs()
+        }
+        val fw = FileWriter("$filePath/$fileName", append)
+        fw.write(content)
+        fw.close()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return flag
+}
+
+fun verifyStoragePermissions(activity: Activity?) {
+    // Check if we have write permission
+    val permission =
+        ActivityCompat.checkSelfPermission(
+            activity!!,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+    if (permission != PackageManager.PERMISSION_GRANTED) {
+        // We don't have permission so prompt the user
+        ActivityCompat.requestPermissions(
+            activity,
+            PERMISSIONS_STORAGE,
+            REQUEST_EXTERNAL_STORAGE
+        )
+    }
+}
+
 
