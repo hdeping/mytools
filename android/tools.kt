@@ -37,6 +37,8 @@ import java.net.Socket
 // files
 import java.io.IOException
 import android.Manifest
+// Jsoup for crawlers
+import org.jsoup.Jsoup
 
 
 private lateinit  var values_setting:SharedPreferences
@@ -273,6 +275,26 @@ fun loadImageFromUrl(url:String) Drawable{
     var img:InputStream = URL(url).getContent() as InputStream
     var d:Drawable = Drawable.createFromStream(img,"image")
     return d
+}
+
+fun update(){
+    Thread(Runnable {
+        try{
+            var text = Jsoup.connect(url).timeout(2000).get()
+            var image_url = text.select("#bigpicimg").src
+            var links = text.select(".pages>ul>li")
+            url = links[links.size - 1]
+            runOnUiThread(Runnable {
+                
+            })
+        }
+
+        catch(e:Exception){
+            runOnUiThread(Runnable {
+                alert("无法打开网页！")
+            })
+        }
+    }).start()
 }
 
 
