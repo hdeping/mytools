@@ -22,7 +22,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from mytools import MyCommon
+from . import MyCommon
 from tqdm import tqdm
 import pandas
 from datetime import datetime
@@ -321,10 +321,26 @@ class ControlADB(MyCommon):
             self.back()
         sleep(2)
         return
+
+    def getDate(self):
+        """
+        docstring for getData
+        """
+        formats = '{0:%Y-%m-%d %H:%M:%S}'
+        date = datetime.datetime.now()
+        return formats.format(date)
+
     def zhifubaoTree(self,index=1):
         """
         docstring for zhifubaoTree
         """
+        self.connectDB(db_name=self.path+"tree_history.db")
+        command = """
+        create table if not exists tree(
+        date char[50] primary key not null 
+        );
+        """
+        self.conn.execute(command)
         for i in range(9):
             self.screencap("screen")
             targets = self.templateMatch()
