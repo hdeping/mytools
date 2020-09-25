@@ -49,6 +49,7 @@ private val PERMISSIONS_STORAGE = arrayOf<String>(
     Manifest.permission.READ_EXTERNAL_STORAGE,
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
+private var urls :List<String> = ArrayList()
 
 
 fun changeBgImage(yuanyuan:ImageView){
