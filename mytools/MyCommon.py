@@ -24,6 +24,7 @@ import urllib
 from bs4 import BeautifulSoup
 import sqlite3
 import datetime
+import cv2 
 
 class MyCommon():
     """docstring for MyCommon
@@ -604,4 +605,18 @@ class MyCommon():
         command = command%(table_name,fields_name,data_type)
         print("insert ",command,data)
         self.conn.executemany(command,data)
+        return
+    def showVideo(self):
+        """
+        docstring for showVideo
+        """
+        cap = cv2.VideoCapture(0)
+        while True:
+            flag, img = cap.read()
+            cv2.imshow("img",img)
+            key = cv2.waitKey(1)
+            if key & 0xff == ord("q"):
+                break
+        cap.release()
+        cv2.destroyAllWindows()
         return
