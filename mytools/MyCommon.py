@@ -603,7 +603,6 @@ class MyCommon():
         fields_name = ",".join(fields)
         data_type = ",".join(["?"]*len(fields))
         command = command%(table_name,fields_name,data_type)
-        print("insert ",command,data)
         self.conn.executemany(command,data)
         return
     def showVideo(self):
