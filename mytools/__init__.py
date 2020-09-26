@@ -18,7 +18,10 @@
 from .Draw  import TurtlePlay
 from .Draw  import DrawCurve
 from .Draw  import DrawPig
-from .utils import NameAll, GetDoc, MyGUI
+try:
+    from .utils import NameAll, GetDoc, MyGUI
+except Exception:
+    print("there is no GUI for utils")
 from .utils import GetLines, OpenFiles
 from .utils import RunCommand, MyPdf
 
