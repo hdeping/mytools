@@ -583,3 +583,12 @@ class MyCommon():
         formats = '{0:%Y-%m-%d %H:%M:%S}'
         date = datetime.datetime.now()
         return formats.format(date)
+    def createTable(self,table_name,fields):
+        """
+        docstring for createTable
+        """
+        command = "create table if not exists %s(%s);"
+        command = command%(table_name,",".join(fields))
+        self.conn.execute(command)
+        return
+    
