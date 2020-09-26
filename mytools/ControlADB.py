@@ -322,22 +322,48 @@ class ControlADB(MyCommon):
                         target_img=target,
                         threshold=threshold)
         print("%d targets"%(len(targets)))
-        fields = ["date","type","x","y","device"]
-        for target in targets:
-            print(target,target[0],target[1])
-            self.tap(coor=target)
-            data = []
-            data.append(self.getDate())
-            data.append("running")
-            data.append(target[0])
-            data.append(target[1])
-            data.append(self.devices)
-            self.insertTable("tree",fields,[tuple(data)])
-            self.db.commit()
+        for i,target in enumerate(targets):
+            print("collecting",target)
+            self.insertTarget(target,"collecting",shift=i+1)
+        self.tapAll(targets)
         if back:
             self.back()
         sleep(2)
         return len(targets)
+
+    def tapAll(self,targets):
+        """
+        docstring for tapAll
+        targets: [[x0,y0],[x1,y1]...]
+        """
+
+        command = "input tap %d %d\n"
+        texts = ""
+        for target in targets:
+            texts += command%tuple(target)
+        filename = self.path + "input.sh"
+        with open(filename,'w') as fp:
+            fp.write(texts)
+        os.system("%s shell < %s"%(self.adb,filename))
+
+        
+        return
+    def insertTarget(self,target,status,shift=0):
+        """
+        docstring for insertTable
+        target: [x,y]
+        status: "test","collecting" and so on
+        """
+        fields = ["date","type","x","y","device"]
+        data = []
+        data.append(self.getDate(shift=shift))
+        data.append(status)
+        data.append(int(target[0]))
+        data.append(int(target[1]))
+        data.append(self.devices)
+        self.insertTable("tree",fields,[tuple(data)])
+        self.db.commit()
+        return
 
     def getDevice(self):
         """
@@ -388,7 +414,8 @@ class ControlADB(MyCommon):
 
             targets = self.templateMatch()
             for target in targets:
-                print(target)
+                print("clicking",target)
+                self.insertTarget(target,"clicking")
                 self.tap(coor=target)
                 clicks += 1
                 sleep(1)
@@ -398,8 +425,6 @@ class ControlADB(MyCommon):
 
         fields = ["date","type","clicks","targets","device"]
         data.append((self.getDate(),"end",clicks,n_targets,self.devices))
-        fields = ["date","type","x","y","device"]
-        data = [(self.getDate(),"test",343,3434,self.devices)]
         self.insertTable(table_name,fields,data)
         self.exitDB()
         return

@@ -577,13 +577,16 @@ class MyCommon():
         self.conn.close()
         self.db.close()
         return
-    def getDate(self):
+    def getDate(self,shift=-1):
         """
         docstring for getData
         """
         formats = '{0:%Y-%m-%d %H:%M:%S}'
         date = datetime.datetime.now()
-        return formats.format(date)
+        date = formats.format(date)
+        if shift > 0:
+            date += "+%d"%shift
+        return date
     def createTable(self,table_name,fields):
         """
         docstring for createTable
@@ -592,6 +595,25 @@ class MyCommon():
         command = command%(table_name,",".join(fields))
         self.conn.execute(command)
         return
+
+    def getTableFields(self,lines):
+        """
+        docstring for getTableFields
+        """
+        self.types = {}
+        self.types["float64"] = "real"
+        self.types["int64"]   = "integer"
+        self.types["str"]     = "char[50]"
+        fields = []
+        keys   = []
+        for key in lines:
+            keys.append(key)
+            key_type = type(lines[key][0]).__name__
+            key_type = self.types[key_type]
+            fields.append("%s %s"%(key,key_type))
+
+        return keys,fields 
+        
     def insertTable(self,table_name,fields,data):
         """
         docstring for insertTable
@@ -605,6 +627,17 @@ class MyCommon():
         command = command%(table_name,fields_name,data_type)
         self.conn.executemany(command,data)
         return
+
+    def queryTable(self,command):
+        """
+        docstring for queryTable
+        """
+        data = self.conn.execute(command)
+        results = []
+        for line in data:
+            results.append(list(line))
+        return results
+        
     def showVideo(self):
         """
         docstring for showVideo
