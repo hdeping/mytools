@@ -322,35 +322,35 @@ class ControlADB(MyCommon):
         sleep(2)
         return
 
-    def getDate(self):
-        """
-        docstring for getData
-        """
-        formats = '{0:%Y-%m-%d %H:%M:%S}'
-        date = datetime.datetime.now()
-        return formats.format(date)
-
     def zhifubaoTree(self,index=1):
         """
         docstring for zhifubaoTree
         """
         self.connectDB(db_name=self.path+"tree_history.db")
-        command = """
-        create table if not exists tree(
-        date char[50] primary key not null 
-        );
-        """
-        self.conn.execute(command)
+        fields = ["date char[50] primary key not null",
+                  "type char[10] not null",
+                  "clicks int"]
+        table_name = "tree"
+        self.createTable(table_name,fields)
+        clicks = 0
+        data = []
+        data.append((self.getDate(),"begin",0))
         for i in range(9):
             self.screencap("screen")
             targets = self.templateMatch()
             for target in targets:
                 print(target)
                 self.tap(coor=target)
+                clicks += 1
                 sleep(1)
                 self.collectEnergy(index=index)
             self.nextScreen()
             sleep(1)
+
+        fields = ["date","type","clicks"]
+        data.append((self.getDate(),"end",clicks))
+        self.insertTable(table_name,fields,data)
+        self.exitDB()
         return
 
     def uiautomator(self,name="ui.xml"):
