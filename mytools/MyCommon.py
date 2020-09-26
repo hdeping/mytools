@@ -23,6 +23,8 @@ import sys
 import urllib
 from bs4 import BeautifulSoup
 import sqlite3
+import datetime
+import cv2 
 
 class MyCommon():
     """docstring for MyCommon
@@ -574,4 +576,47 @@ class MyCommon():
         self.db.execute("vacuum;")
         self.conn.close()
         self.db.close()
+        return
+    def getDate(self):
+        """
+        docstring for getData
+        """
+        formats = '{0:%Y-%m-%d %H:%M:%S}'
+        date = datetime.datetime.now()
+        return formats.format(date)
+    def createTable(self,table_name,fields):
+        """
+        docstring for createTable
+        """
+        command = "create table if not exists %s(%s);"
+        command = command%(table_name,",".join(fields))
+        self.conn.execute(command)
+        return
+    def insertTable(self,table_name,fields,data):
+        """
+        docstring for insertTable
+        table_name: name of the table
+        fields:     fields name
+        data:       data for the fields
+        """
+        command = "INSERT INTO %s(%s) VALUES(%s)"
+        fields_name = ",".join(fields)
+        data_type = ",".join(["?"]*len(fields))
+        command = command%(table_name,fields_name,data_type)
+        print("insert ",command,data)
+        self.conn.executemany(command,data)
+        return
+    def showVideo(self):
+        """
+        docstring for showVideo
+        """
+        cap = cv2.VideoCapture(0)
+        while True:
+            flag, img = cap.read()
+            cv2.imshow("img",img)
+            key = cv2.waitKey(1)
+            if key & 0xff == ord("q"):
+                break
+        cap.release()
+        cv2.destroyAllWindows()
         return

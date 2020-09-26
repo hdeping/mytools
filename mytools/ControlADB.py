@@ -22,7 +22,7 @@ import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
-from mytools import MyCommon
+from . import MyCommon
 from tqdm import tqdm
 import pandas
 from datetime import datetime
@@ -84,6 +84,17 @@ class ControlADB(MyCommon):
 
         self.adb       = "/Users/huangdeping/Library/Android/sdk/platform-tools/adb "
         self.devices = None
+        self.initCommands()
+
+        self.keys = EasyDict(self.keys)
+
+        self.path = "/Users/huangdeping/AndroidStudioProjects/02_adb/data/"
+
+    def initCommands(self):
+        """
+        docstring for initCommands
+        """
+
         if self.devices is not None:
             self.adb += "-s " + self.devices
         self.shell     = self.adb + " shell "
@@ -91,10 +102,7 @@ class ControlADB(MyCommon):
         self.inputText = self.shell + " input text "
         self.inputKey  = self.shell + " input keyevent "
 
-        self.keys = EasyDict(self.keys)
-
-        self.path = "/Users/huangdeping/AndroidStudioProjects/02_adb/data/"
-
+        return
     def runCommands(self,commands,waiting_time=None):
         """
         docstring for runCommands
@@ -314,27 +322,86 @@ class ControlADB(MyCommon):
                         target_img=target,
                         threshold=threshold)
         print("%d targets"%(len(targets)))
+        fields = ["date","type","x","y","device"]
         for target in targets:
-            print(target)
+            print(target,target[0],target[1])
             self.tap(coor=target)
+            data = []
+            data.append(self.getDate())
+            data.append("running")
+            data.append(target[0])
+            data.append(target[1])
+            data.append(self.devices)
+            self.insertTable("tree",fields,[tuple(data)])
+            self.db.commit()
         if back:
             self.back()
         sleep(2)
-        return
+        return len(targets)
+
+    def getDevice(self):
+        """
+        docstring for getDevice
+        """
+        dev = os.popen("adb devices").read()
+        dev = dev.split("\n")[1]
+        dev = dev.split("\t")[0]
+        return dev
+
+    def getScreenMD5(self):
+        """
+        docstring for getScreenMD5
+        """
+        name = self.path + "screen.png"
+        md5 = os.popen("md5 "+name).read()
+        md5 = md5.split(" ")[-1][:-1]
+        return md5
     def zhifubaoTree(self,index=1):
         """
         docstring for zhifubaoTree
         """
+        self.devices = self.getDevice()
+        self.connectDB(db_name=self.path+"tree_history.db")
+        fields = ["date char[50] primary key not null",
+                  "type char[10] not null",
+                  "clicks int",
+                  "targets int",
+                  "x int",
+                  "y int",
+                  "device char[20] not null"]
+        table_name = "tree"
+        self.createTable(table_name,fields)
+        clicks  = 0
+        n_targets = 0
+        data = []
+        data.append((self.getDate(),"begin",0,0,self.devices))
+
+        md5_stores = []
         for i in range(9):
             self.screencap("screen")
+            sleep(0.2)
+            md5  = self.getScreenMD5()
+            if md5 in md5_stores:
+                break 
+            else:
+                md5_stores.append(md5)
+
             targets = self.templateMatch()
             for target in targets:
                 print(target)
                 self.tap(coor=target)
+                clicks += 1
                 sleep(1)
-                self.collectEnergy(index=index)
+                n_targets += self.collectEnergy(index=index)
             self.nextScreen()
             sleep(1)
+
+        fields = ["date","type","clicks","targets","device"]
+        data.append((self.getDate(),"end",clicks,n_targets,self.devices))
+        fields = ["date","type","x","y","device"]
+        data = [(self.getDate(),"test",343,3434,self.devices)]
+        self.insertTable(table_name,fields,data)
+        self.exitDB()
         return
 
     def uiautomator(self,name="ui.xml"):
