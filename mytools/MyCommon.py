@@ -591,4 +591,16 @@ class MyCommon():
         command = command%(table_name,",".join(fields))
         self.conn.execute(command)
         return
-    
+    def insertTable(self,table_name,fields,data):
+        """
+        docstring for insertTable
+        table_name: name of the table
+        fields:     fields name
+        data:       data for the fields
+        """
+        command = "INSERT INTO %s(%s) VALUES(%s)"
+        fields_name = ",".join(fields)
+        data_type = ",".join(["?"]*len(fields))
+        command = command%(table_name,fields_name,data_type)
+        self.conn.executemany(command,data)
+        return
