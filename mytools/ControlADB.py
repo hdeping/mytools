@@ -324,7 +324,7 @@ class ControlADB(MyCommon):
         print("%d targets"%(len(targets)))
         fields = ["date","type","x","y","device"]
         for target in targets:
-            print(target)
+            print(target,target[0],target[1])
             self.tap(coor=target)
             data = []
             data.append(self.getDate())
@@ -348,6 +348,14 @@ class ControlADB(MyCommon):
         dev = dev.split("\t")[0]
         return dev
 
+    def getScreenMD5(self):
+        """
+        docstring for getScreenMD5
+        """
+        name = self.path + "screen.png"
+        md5 = os.popen("md5 "+name).read()
+        md5 = md5.split(" ")[-1][:-1]
+        return md5
     def zhifubaoTree(self,index=1):
         """
         docstring for zhifubaoTree
@@ -367,8 +375,17 @@ class ControlADB(MyCommon):
         n_targets = 0
         data = []
         data.append((self.getDate(),"begin",0,0,self.devices))
+
+        md5_stores = []
         for i in range(9):
             self.screencap("screen")
+            sleep(0.2)
+            md5  = self.getScreenMD5()
+            if md5 in md5_stores:
+                break 
+            else:
+                md5_stores.append(md5)
+
             targets = self.templateMatch()
             for target in targets:
                 print(target)
@@ -381,6 +398,8 @@ class ControlADB(MyCommon):
 
         fields = ["date","type","clicks","targets","device"]
         data.append((self.getDate(),"end",clicks,n_targets,self.devices))
+        fields = ["date","type","x","y","device"]
+        data = [(self.getDate(),"test",343,3434,self.devices)]
         self.insertTable(table_name,fields,data)
         self.exitDB()
         return
