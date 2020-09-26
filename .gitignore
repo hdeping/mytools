@@ -34,7 +34,6 @@ run.sh
 /captures
 .externalNativeBuild
 *png
-*gradle*
 *bib
 *ris
 *zip
