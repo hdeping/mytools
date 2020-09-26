@@ -186,11 +186,16 @@ fun browseWeb(qixi:WebView,url:String){
     })
 }
 
-fun applyChange(){
-    values_editor.putString("str1",str1)
-    values_editor.putInt("int1",int1)
-    values_editor.apply()
+fun applyChange(qixi:WebView,type:String){
+    val script = "javascript:get_count()"
+    qixi.evaluateJavascript(script,object : ValueCallback<String>{
+        override fun onReceiveValue(count: String) {
+            values_editor.putInt(type,count.toInt())
+            values_editor.apply()
+        }
+    })
 }
+
 
 fun getPreferences(){
     val prefer = "settings"
