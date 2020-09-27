@@ -436,3 +436,19 @@ other_pages[num].click();
 var text = document.querySelector(".stream-items").textContent;
 exportRaw(prompt("请输入文件名","1.json"),text);
 document.querySelector(".next>a").click();
+
+// get current ip
+function getIpByIpify(){
+    $.ajax({
+        url : "https://api.ipify.org/?format=json",
+        type : "GET",
+        data : {},
+        dataType : "json",
+        success : function(result) {
+            console.log(result.ip);
+        },
+        error : function(){
+             
+        }
+    });
+};
