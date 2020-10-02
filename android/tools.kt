@@ -415,24 +415,31 @@ fun connectSocket(){
                 // create a data output stream from the output stream so we can send data through it
                 val dataOutputStream = DataOutputStream(outputStream)
                 // write the message we want to send
-                val value = input.text.toString()
-                alert(value)
+                var value = input.text.toString()
                 dataOutputStream.writeUTF(value)
                 dataOutputStream.flush() // send the message
-                dataOutputStream.close() // close the output stream when we're done.
+                socket.shutdownOutput()
                 // get data from the server
                 val inputStream: InputStream = socket.getInputStream()
                 val dataInputStream = DataInputStream(inputStream)
-                val message = dataInputStream.readUTF()
+                var message:String = ""
+                var res:Byte = 0
+                try {
+                    while (true) {
+                        res = dataInputStream.readByte()
+                        message += res.toChar()
+                    }
+                } catch (e: java.lang.Exception) {
+                    println("something wrong with reading data")
+                    System.out.println(value)
+                }
                 socket.close()
                 runOnUiThread(Runnable {
                     output.setText(message)
                 })
             }
             catch(e:Exception){
-                runOnUiThread(Runnable {
-                    alert("无法连接远程服务器！")
-                })
+                uiAlert("无法连接远程服务器！")
             }
         }).start()
     }
