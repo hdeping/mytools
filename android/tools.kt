@@ -401,3 +401,39 @@ class DatabaseHandler(context: Context): SQLiteOpenHelper(context,DATABASE_NAME,
     }  
 
 
+import java.io.DataInputStream
+import java.io.DataOutputStream
+import java.io.InputStream
+import java.io.OutputStream
+import java.net.Socket
+fun connectSocket(){
+    go.setOnClickListener{
+        Thread(Runnable {
+            try{
+                val socket = Socket("114.214.200.176", 1991)
+                val outputStream: OutputStream = socket.getOutputStream()
+                // create a data output stream from the output stream so we can send data through it
+                val dataOutputStream = DataOutputStream(outputStream)
+                // write the message we want to send
+                val value = input.text.toString()
+                alert(value)
+                dataOutputStream.writeUTF(value)
+                dataOutputStream.flush() // send the message
+                dataOutputStream.close() // close the output stream when we're done.
+                // get data from the server
+                val inputStream: InputStream = socket.getInputStream()
+                val dataInputStream = DataInputStream(inputStream)
+                val message = dataInputStream.readUTF()
+                socket.close()
+                runOnUiThread(Runnable {
+                    output.setText(message)
+                })
+            }
+            catch(e:Exception){
+                runOnUiThread(Runnable {
+                    alert("无法连接远程服务器！")
+                })
+            }
+        }).start()
+    }
+}
