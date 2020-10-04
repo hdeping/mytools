@@ -652,3 +652,26 @@ class MyCommon():
         cap.release()
         cv2.destroyAllWindows()
         return
+    def connectSQL(self,para={}):
+        """TODO: Docstring for connectSQL.
+        :returns: TODO
+
+        """
+        import pymysql
+        self.sql = pymysql.connect(
+                        host=para["host"],
+                        user=para["user"],
+                        passwd=para["passwd"],
+                        db=para["db"])
+        self.sql_conn = self.sql.cursor()
+        return
+
+    def exitSQL(self):
+        """TODO: Docstring for exitSQL.
+        :returns: TODO
+
+        """
+        self.sql.commit()
+        self.sql_conn.close()
+        self.sql.close()
+        return
