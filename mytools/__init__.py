@@ -16,18 +16,37 @@
 """
 
 try:
-    from .Draw  import TurtlePlay
-    from .Draw  import DrawCurve
-    from .Draw  import DrawPig
-    from .utils import NameAll, GetDoc, MyGUI
+    from .Draw  import (
+        TurtlePlay,
+        DrawCurve,
+        DrawPig
+    )
 except Exception:
-    print("there is no GUI for utils")
-from .utils import GetLines, OpenFiles
-from .utils import RunCommand, MyPdf
-
+    print("there is no GUI for .Draw")
+try:
+    from .utils import (
+        NameAll, 
+        GetDoc, 
+        MyGUI,
+        GetLines, 
+        OpenFiles,
+        RunCommand, 
+        MyPdf
+    )
+except Exception:
+    print("there is no GUI for .utils")
+try:
+    from .Triangle import Triangle
+except Exception:
+    print("there is no GUI for .Triangle")
+try:
+    from .ControlADB      import ControlADB
+except Exception:
+    print("there is no GUI for .ControlADB")
+try:
+    from .Spider          import Spider
+except Exception:
+    print("there is no GUI for .Spider")
 from .MyCommon        import MyCommon
 from .Excel           import Excel
-from .Triangle        import Triangle
 from .DistanceMeasure import DistanceMeasure
-from .ControlADB      import ControlADB
-from .Spider          import Spider
