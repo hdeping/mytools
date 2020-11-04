@@ -1,0 +1,8 @@
+1604046707370	mozrunner::runner	INFO	Running command: "/sbin/firefox" "-marionette" "--headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileJvzclA"
+*** You are running in headless mode.
+console.error: SearchCache: "_readCacheFile: Error reading cache file:" (new Error("", "(unknown module)"))
+1604046709434	Marionette	INFO	Listening on port 35739
+1604046709478	Marionette	WARN	TLS certificate errors will be ignored for this session
+1604046711606	Marionette	INFO	Stopped listening on port 35739
+console.error: Region.jsm: "Error fetching region" (new TypeError("NetworkError when attempting to fetch resource.", ""))
+console.error: Region.jsm: "Failed to fetch region" (new Error("NO_RESULT", "resource://gre/modules/Region.jsm", 351))
